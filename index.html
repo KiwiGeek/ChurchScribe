@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Service Notes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">Church Service Companion</p>
+        <h1>Sermon Notes</h1>
+      </div>
+      <div class="header-actions">
+        <div class="header-controls">
+          <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false">
+            <span class="theme-toggle-label">Dark mode</span>
+            <span class="theme-toggle-state" id="theme-toggle-state">Off</span>
+          </button>
+          <button class="theme-toggle" id="pane-order-toggle" type="button" aria-pressed="false">
+            <span class="theme-toggle-label">Scripture left</span>
+            <span class="theme-toggle-state" id="pane-order-toggle-state">Off</span>
+          </button>
+          <button class="theme-toggle" id="settings-button" type="button">
+            <span class="theme-toggle-label">Settings</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="pane-grid">
+      <section class="panel note-panel" aria-labelledby="note-panel-title">
+        <div class="panel-header">
+          <div>
+            <p class="panel-kicker">Notebook</p>
+            <h2 id="note-panel-title">Service Notes</h2>
+          </div>
+          <div class="note-actions">
+            <button class="ghost-button" id="new-note-direct-button" type="button">New note</button>
+            <details class="inline-action-menu" id="new-note-menu">
+              <summary class="ghost-button">New note</summary>
+              <div class="overflow-menu-panel inline-action-panel">
+                <label class="field compact-field" id="new-note-type-field">
+                  <span>Type</span>
+                  <select id="new-note-type-select" name="new-note-type"></select>
+                </label>
+                <button class="ghost-button overflow-action" id="new-note-button" type="button">Create note</button>
+              </div>
+            </details>
+            <details class="overflow-menu">
+              <summary class="ghost-button">More</summary>
+              <div class="overflow-menu-panel">
+                <label class="field compact-field" id="active-note-type-field">
+                  <span>Note type</span>
+                  <select id="note-type-select" name="note-type"></select>
+                </label>
+                <button class="ghost-button overflow-action" id="duplicate-note-button" type="button">Duplicate note</button>
+                <button class="ghost-button overflow-action" id="manage-notes-button" type="button">Manage notes</button>
+                <button class="ghost-button overflow-action" id="delete-note-button" type="button">Delete note</button>
+              </div>
+            </details>
+          </div>
+        </div>
+
+        <section class="note-switcher" aria-labelledby="note-list-title">
+          <div class="note-switcher-header">
+            <h3 id="note-list-title">Saved Notes</h3>
+          </div>
+          <div class="note-list" id="note-list" role="listbox" aria-label="Saved notes"></div>
+        </section>
+
+        <div class="note-meta-bar">
+          <div class="metadata-summary" id="metadata-summary"></div>
+          <button class="ghost-button" id="note-details-button" type="button">Note details</button>
+        </div>
+
+        <div class="toolbar" role="toolbar" aria-label="Rich text controls">
+          <button class="tool-button" type="button" data-command="bold" aria-label="Bold"><strong>B</strong></button>
+          <button class="tool-button" type="button" data-command="italic" aria-label="Italic"><em>I</em></button>
+          <button class="tool-button" type="button" data-command="underline" aria-label="Underline"><span class="underline">U</span></button>
+          <button class="tool-button" type="button" data-command="insertUnorderedList" aria-label="Bullet list">• List</button>
+          <button class="tool-button" type="button" data-command="insertOrderedList" aria-label="Numbered list">1. List</button>
+          <button class="tool-button" type="button" data-block="h2" aria-label="Heading">Heading</button>
+          <button class="tool-button" type="button" data-block="blockquote" aria-label="Quote">Quote</button>
+          <button class="tool-button" type="button" data-command="removeFormat" aria-label="Clear formatting">Reset</button>
+        </div>
+
+        <div
+          id="note-editor"
+          class="note-editor"
+          contenteditable="true"
+          spellcheck="true"
+          role="textbox"
+          aria-multiline="true"
+          data-placeholder="Start typing sermon notes, key points, or prayer requests..."
+        ></div>
+
+        <div class="panel-footer">
+          <p id="save-status">Notes save automatically in this browser.</p>
+        </div>
+      </section>
+
+      <aside class="panel scripture-panel" aria-labelledby="scripture-panel-title">
+        <div class="panel-header">
+          <div>
+            <p class="panel-kicker">Scripture</p>
+            <h2 id="scripture-panel-title">Bible Verses</h2>
+          </div>
+        </div>
+
+        <form class="verse-picker" id="verse-picker">
+          <label class="field">
+            <span>Translation</span>
+            <select id="translation-select" name="translation">
+              <option value="KJV">KJV</option>
+              <option value="ASV">ASV</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Book</span>
+            <select id="book-select" name="book"></select>
+          </label>
+
+          <label class="field">
+            <span>Chapter</span>
+            <select id="chapter-select" name="chapter"></select>
+          </label>
+        </form>
+
+        <article class="verse-display" aria-live="polite">
+          <p class="verse-reference" id="verse-reference"></p>
+          <div class="chapter-text" id="chapter-text"></div>
+          <p class="verse-translation" id="verse-translation"></p>
+        </article>
+      </aside>
+    </main>
+  </div>
+
+  <dialog class="management-dialog" id="note-manager-dialog">
+    <form class="dialog-shell" method="dialog">
+      <div class="dialog-header">
+        <div>
+          <p class="panel-kicker">Manage Notes</p>
+          <h2>Notes Library</h2>
+        </div>
+        <button class="ghost-button" id="close-note-manager-button" type="submit">Close</button>
+      </div>
+
+      <div class="dialog-body">
+        <div class="note-manager-list" id="note-manager-list"></div>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="management-dialog compact-dialog" id="note-details-dialog">
+    <form class="dialog-shell compact-shell" method="dialog">
+      <div class="dialog-header">
+        <div>
+          <p class="panel-kicker">Note Details</p>
+          <h2>Metadata</h2>
+        </div>
+        <button class="ghost-button" type="submit">Close</button>
+      </div>
+
+      <div class="dialog-body">
+        <div class="note-meta details-meta" id="note-meta-fields"></div>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="management-dialog" id="settings-dialog">
+    <form class="dialog-shell" method="dialog">
+      <div class="dialog-header">
+        <div>
+          <p class="panel-kicker">Settings</p>
+          <h2>Workspace Settings</h2>
+        </div>
+        <button class="ghost-button" id="close-settings-button" type="submit">Close</button>
+      </div>
+
+      <div class="dialog-body settings-layout">
+        <nav class="settings-tab-nav" id="settings-tab-nav" aria-label="Settings sections"></nav>
+
+        <section class="type-editor-panel settings-type-editor" data-settings-panel="note-types" aria-labelledby="type-editor-title">
+          <div class="note-switcher-header">
+            <h3 id="type-editor-title">Note Types</h3>
+            <button class="ghost-button" id="add-type-button" type="button">Add type</button>
+          </div>
+
+          <div class="type-editor-empty" id="type-editor-empty">
+            <p>Select a type to edit its name and metadata fields.</p>
+          </div>
+
+          <div class="type-editor-form" id="type-editor-form" hidden>
+            <label class="field">
+              <span>Selected Type</span>
+              <select id="type-select" name="type-select"></select>
+            </label>
+
+            <label class="field">
+              <span>Type Name</span>
+              <input id="type-name-input" name="type-name" type="text" placeholder="Bible Study">
+            </label>
+
+            <div class="display-field-editor">
+              <div class="note-switcher-header">
+                <h3>Note Card Fields</h3>
+              </div>
+              <div class="display-field-grid">
+                <label class="field">
+                  <span>Primary Line</span>
+                  <select id="card-title-field-select" name="card-title-field"></select>
+                </label>
+                <label class="field">
+                  <span>Secondary Line</span>
+                  <select id="card-subtitle-field-select" name="card-subtitle-field"></select>
+                </label>
+              </div>
+            </div>
+
+            <div class="metadata-field-editor">
+              <div class="note-switcher-header">
+                <h3>Metadata Fields</h3>
+                <button class="ghost-button" id="add-metadata-field-button" type="button">Add field</button>
+              </div>
+              <div class="metadata-field-list" id="metadata-field-list"></div>
+            </div>
+
+            <div class="dialog-actions">
+              <button class="ghost-button" id="delete-type-button" type="button">Delete type</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="type-editor-panel settings-alias-panel" data-settings-panel="scripture-aliases" aria-labelledby="alias-editor-title">
+          <div class="note-switcher-header">
+            <h3 id="alias-editor-title">Scripture Abbreviations</h3>
+          </div>
+          <p class="settings-copy">Add comma-separated aliases like `Jn, Jon` for each book. These are used when linking references in notes.</p>
+          <div class="alias-list" id="alias-list"></div>
+        </section>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="kjv.js"></script>
+  <script src="asv.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
