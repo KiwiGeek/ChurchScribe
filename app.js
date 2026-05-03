@@ -78,6 +78,7 @@ const paneOrderStorageKey = "service-notes-pane-order";
 const translationStorageKey = "service-notes-translation";
 const cloudSyncStorageKey = "service-notes-cloud-sync";
 const colorThemeStorageKey = "service-notes-color-theme";
+const lastBookChapterStorageKey = "service-notes-last-book-chapter";
 const autoCloudSyncDelayMs = 10000;
 
 const noOpProvider = {
@@ -1280,6 +1281,39 @@ const getPreferredTranslation = async () => {
   return translationLibrary[savedTranslation] ? savedTranslation : "KJV";
 };
 
+const saveLastBookChapter = () => {
+  void writeStoredValue(lastBookChapterStorageKey, { book: bookSelect.value, chapter: chapterSelect.value });
+};
+
+const restoreLastBookChapter = async () => {
+  const saved = await readStoredValue(lastBookChapterStorageKey);
+
+  if (!saved?.book) {
+    return;
+  }
+
+  const scriptureLibrary = getCurrentScriptureLibrary();
+
+  if (!scriptureLibrary[saved.book]) {
+    return;
+  }
+
+  if (saved.chapter == null) {
+    return;
+  }
+
+  const chapterIndex = Number(saved.chapter);
+
+  if (isNaN(chapterIndex) || chapterIndex < 0 || chapterIndex >= scriptureLibrary[saved.book].length) {
+    return;
+  }
+
+  bookSelect.value = saved.book;
+  populateChapterOptions(saved.book);
+  chapterSelect.value = String(chapterIndex);
+  renderChapter();
+};
+
 const getResolvedThemeForMode = (mode = currentThemeMode, themeId = currentColorThemeId) => {
   const normalizedMode = normalizeThemeMode(mode);
   const requestedTheme = normalizedMode === "system" ? getSystemTheme() : normalizedMode;
@@ -1846,6 +1880,7 @@ const jumpToResolvedScripture = (parsedReference) => {
   populateChapterOptions(parsedReference.book);
   chapterSelect.value = String(chapterIndex);
   renderChapter();
+  saveLastBookChapter();
 };
 
 const jumpToScripture = (referenceText) => {
@@ -3077,11 +3112,13 @@ bookSelect.addEventListener("change", () => {
   populateChapterOptions(bookSelect.value);
   chapterSelect.value = "0";
   renderChapter();
+  saveLastBookChapter();
 });
 
 chapterSelect.addEventListener("change", () => {
   activeScriptureFocus = null;
   renderChapter();
+  saveLastBookChapter();
 });
 
 noteManagerList.addEventListener("click", (event) => {
@@ -3308,6 +3345,7 @@ const bootstrap = async () => {
   applyThemeMode(await getPreferredTheme(), { rerender: false });
   applyPaneOrder(await getPreferredPaneOrder());
   applyTranslation(await getPreferredTranslation());
+  await restoreLastBookChapter();
   applyColorTheme(await getPreferredColorTheme());
   await restoreCloudSyncSettings();
   activeProvider.waitForReady(() => {
