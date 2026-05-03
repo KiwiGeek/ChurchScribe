@@ -3375,7 +3375,7 @@ body.is-pane-dragging {
   display: none;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 980px) {
   .mobile-warning {
     display: flex;
     align-items: center;
