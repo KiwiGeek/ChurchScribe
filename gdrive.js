@@ -91,8 +91,7 @@
     "openid",
     "email",
     "profile",
-    "https://www.googleapis.com/auth/drive.appdata",
-    "https://www.googleapis.com/auth/drive.file"
+    "https://www.googleapis.com/auth/drive.appdata"
   ].join(" ");
 
   let tokenClient = null;
@@ -119,7 +118,9 @@
 
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(errorText || `Google Drive request failed with ${response.status}.`);
+      const err = new Error(errorText || `Google Drive request failed with ${response.status}.`);
+      err.status = response.status;
+      throw err;
     }
 
     return response;
@@ -162,57 +163,12 @@
     };
   };
 
-  const ensureVisibleDriveFolderId = async (cachedParentId) => {
-    if (cachedParentId) {
-      return cachedParentId;
-    }
-
-    const query = encodeURIComponent(
-      "name='ChurchScribe' and mimeType='application/vnd.google-apps.folder' and trashed=false"
-    );
-    const listResponse = await apiFetch(
-      `https://www.googleapis.com/drive/v3/files?q=${query}&spaces=drive&fields=files(id,name)`
-    );
-    const listPayload = await listResponse.json();
-    const existingFolderId = listPayload.files?.[0]?.id ?? "";
-
-    if (existingFolderId) {
-      return existingFolderId;
-    }
-
-    const createResponse = await apiFetch(
-      "https://www.googleapis.com/drive/v3/files?fields=id",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: "ChurchScribe",
-          mimeType: "application/vnd.google-apps.folder"
-        })
-      }
-    );
-    const createdFolder = await createResponse.json();
-    return createdFolder.id ?? "";
-  };
-
-  const resolveLocation = async (useVisibleDriveFolder, cachedParentId) => {
-    if (useVisibleDriveFolder) {
-      const folderId = await ensureVisibleDriveFolderId(cachedParentId);
-      return {
-        spaces: "drive",
-        parents: [folderId],
-        query: `name='${workspaceFileName}' and '${folderId}' in parents and trashed=false`,
-        remoteWorkspaceParentId: folderId
-      };
-    }
-
-    return {
-      spaces: "appDataFolder",
-      parents: ["appDataFolder"],
-      query: `name='${workspaceFileName}' and 'appDataFolder' in parents and trashed=false`,
-      remoteWorkspaceParentId: ""
-    };
-  };
+  const resolveLocation = () => ({
+    spaces: "appDataFolder",
+    parents: ["appDataFolder"],
+    query: `name='${workspaceFileName}' and 'appDataFolder' in parents and trashed=false`,
+    remoteWorkspaceParentId: ""
+  });
 
   const findWorkspaceFileId = async (cachedFileId, location) => {
     if (cachedFileId) {
@@ -323,24 +279,33 @@
     });
   };
 
-  const upload = async (payload, { useVisibleDriveFolder, remoteWorkspaceFileId, remoteWorkspaceParentId }) => {
+  const upload = async (payload, { remoteWorkspaceFileId, remoteWorkspaceParentId }) => {
     try {
-      const location = await resolveLocation(useVisibleDriveFolder, remoteWorkspaceParentId);
+      const location = resolveLocation();
       const updatedParentId = location.remoteWorkspaceParentId;
       let fileId = await findWorkspaceFileId(remoteWorkspaceFileId, location);
 
       if (fileId) {
-        const multipart = buildMultipartJsonBody({ mimeType: "application/json" }, payload);
-        await apiFetch(
-          `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=multipart&fields=id`,
-          {
-            method: "PATCH",
-            headers: { "Content-Type": multipart.contentType },
-            body: multipart.body
-          }
-        );
+        try {
+          const multipart = buildMultipartJsonBody({ mimeType: "application/json" }, payload);
+          await apiFetch(
+            `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=multipart&fields=id`,
+            {
+              method: "PATCH",
+              headers: { "Content-Type": multipart.contentType },
+              body: multipart.body
+            }
+          );
 
-        return { remoteWorkspaceFileId: fileId, remoteWorkspaceParentId: updatedParentId };
+          return { remoteWorkspaceFileId: fileId, remoteWorkspaceParentId: updatedParentId };
+        } catch (patchError) {
+          if (patchError.status !== 404) {
+            throw patchError;
+          }
+
+          // The cached file ID no longer exists — fall through to create a new one.
+          fileId = "";
+        }
       }
 
       const multipart = buildMultipartJsonBody(
@@ -368,9 +333,9 @@
     }
   };
 
-  const download = async ({ useVisibleDriveFolder, remoteWorkspaceFileId, remoteWorkspaceParentId }) => {
+  const download = async ({ remoteWorkspaceFileId }) => {
     try {
-      const location = await resolveLocation(useVisibleDriveFolder, remoteWorkspaceParentId);
+      const location = resolveLocation();
       const updatedParentId = location.remoteWorkspaceParentId;
       const fileId = await findWorkspaceFileId(remoteWorkspaceFileId, location);
 
@@ -378,40 +343,33 @@
         return { data: null, remoteWorkspaceFileId: "", remoteWorkspaceParentId: updatedParentId };
       }
 
-      const response = await apiFetch(
-        `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`
-      );
-      const data = await response.json();
+      try {
+        const response = await apiFetch(
+          `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`
+        );
+        const data = await response.json();
 
-      return { data, remoteWorkspaceFileId: fileId, remoteWorkspaceParentId: updatedParentId };
+        return { data, remoteWorkspaceFileId: fileId, remoteWorkspaceParentId: updatedParentId };
+      } catch (getError) {
+        if (getError.status !== 404) {
+          throw getError;
+        }
+
+        // The cached file ID no longer exists — treat as no file present.
+        return { data: null, remoteWorkspaceFileId: "", remoteWorkspaceParentId: updatedParentId };
+      }
     } catch (error) {
       throw new Error(parseErrorMessage(error));
     }
   };
 
-  const getSettingsFields = () => [
-    {
-      key: "useVisibleDriveFolder",
-      label: "Visible Drive Folder",
-      type: "checkbox",
-      helpText: "Store files in a user-visible \"ChurchScribe\" folder in Google Drive instead of hidden app storage. Useful for testing and manual inspection of synced files."
-    }
-  ];
+  const getSettingsFields = () => [];
 
-  const getSettingsValues = () => ({
-    useVisibleDriveFolder: false
-  });
+  const getSettingsValues = () => ({});
 
-  const applySettingChange = (key, _value) => {
-    if (key === "useVisibleDriveFolder") {
-      return { clearRemoteState: true };
-    }
+  const applySettingChange = () => ({});
 
-    return {};
-  };
-
-  const getLocationLabel = (settings) =>
-    settings.useVisibleDriveFolder ? "visible Drive folder" : "hidden app storage";
+  const getLocationLabel = () => "";
 
   window.GoogleDriveProvider = {
     id: "google-drive",
