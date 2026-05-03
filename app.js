@@ -2755,6 +2755,9 @@ aliasList.addEventListener("change", (event) => {
 cloudProviderSelect.addEventListener("change", () => {
   const newProviderId = cloudProviderSelect.value;
 
+  // Persist current provider's settings before switching
+  persistCloudSyncSettings();
+
   stopCloudPolling();
 
   if (pendingAutoSyncTimer) {
