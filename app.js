@@ -122,6 +122,27 @@ let activeProvider = noOpProvider;
 
 const bookAliasMap = new Map();
 const domainValidationCache = new Map();
+const knownTlds = [
+  "ac","ad","ae","af","ag","ai","al","am","ao","ar","as","at","au","aw","az",
+  "ba","bb","bd","be","bf","bg","bh","bi","bj","bm","bn","bo","br","bs","bt","bw","by","bz",
+  "ca","cc","cd","cf","cg","ch","ci","ck","cl","cm","cn","co","cr","cu","cv","cw","cx","cy","cz",
+  "de","dj","dk","dm","do","dz","ec","ee","eg","er","es","et","eu",
+  "fi","fj","fk","fm","fo","fr","ga","gb","gd","ge","gf","gg","gh","gi","gl","gm","gn","gp","gq",
+  "gr","gs","gt","gu","gw","gy","hk","hn","hr","ht","hu",
+  "id","ie","il","im","in","io","iq","ir","is","it","je","jm","jo","jp",
+  "ke","kg","kh","ki","km","kn","kr","kw","ky","kz","la","lb","lc","li","lk","lr","ls","lt","lu","lv","ly",
+  "ma","mc","md","me","mg","mh","mk","ml","mm","mn","mo","mp","mq","mr","ms","mt","mu","mv","mw","mx","my","mz",
+  "na","nc","ne","nf","ng","ni","nl","no","np","nr","nu","nz",
+  "om","pa","pe","pf","pg","ph","pk","pl","pm","pn","pr","ps","pt","pw","py",
+  "qa","re","ro","rs","ru","rw","sa","sb","sc","sd","se","sg","sh","si","sk","sl","sm","sn","so",
+  "sr","ss","st","sv","sx","sy","sz","tc","td","tf","tg","th","tj","tk","tl","tm","tn","to","tr","tt","tv","tz",
+  "ua","ug","us","uy","uz","va","vc","ve","vg","vi","vn","vu","wf","ws",
+  "ye","yt","za","zm","zw",
+  "aero","app","asia","bible","biz","blog","cat","church","cloud","coop","dev",
+  "digital","edu","faith","global","gov","health","info","int","io","live",
+  "media","mil","ministry","mobi","museum","name","net","news","online","org",
+  "pro","shop","site","store","tech","travel","tv","wiki"
+];
 let explicitScriptureReferencePattern;
 let fullExplicitScriptureReferencePattern;
 let contextualScriptureReferencePattern;
@@ -2049,7 +2070,7 @@ const validateDomainWithDoh = async (domain) => {
   try {
     const response = await fetch(
       `https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(domain)}&type=A`,
-      { headers: { Accept: "application/dns-json" } }
+      { headers: { Accept: "application/dns-json" }, signal: AbortSignal.timeout(5000) }
     );
     const data = await response.json();
     const isValid = data.Status === 0 && Array.isArray(data.Answer) && data.Answer.length > 0;
@@ -2064,6 +2085,7 @@ const validateDomainWithDoh = async (domain) => {
 };
 
 const linkifyUrls = () => {
+  const tldGroup = knownTlds.join("|");
   const urlPatterns = [
     {
       regex: /\b(https?|ftp|spotify):\/\/[^\s<>"'\)\]]+/gi,
@@ -2078,11 +2100,14 @@ const linkifyUrls = () => {
       type: "www"
     },
     {
-      regex: /\b[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/gi,
+      regex: /\b[a-zA-Z0-9_%+\-]+(?:\.[a-zA-Z0-9_%+\-]+)*@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/gi,
       type: "email"
     },
     {
-      regex: /\b(?!www\.)([a-zA-Z][a-zA-Z0-9\-]*(?:\.[a-zA-Z0-9][a-zA-Z0-9\-]*)*\.(?:ac|ad|ae|af|ag|ai|al|am|ao|ar|as|at|au|aw|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cu|cv|cw|cx|cy|cz|de|dj|dk|dm|do|dz|ec|ee|eg|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sk|sl|sm|sn|so|sr|ss|st|sv|sx|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tr|tt|tv|tz|ua|ug|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|za|zm|zw|app|biz|dev|edu|gov|info|int|mil|mobi|net|org|pro|aero|asia|cat|coop|museum|travel|ai|app|bible|blog|church|cloud|dev|digital|faith|global|health|io|live|media|ministry|name|news|online|pro|shop|site|store|tech|tv|wiki))(?:\/[^\s<>"'\)\]]*)?/gi,
+      regex: new RegExp(
+        `\\b(?!www\\.)([a-zA-Z][a-zA-Z0-9\\-]*(?:\\.[a-zA-Z0-9][a-zA-Z0-9\\-]*)*\\.(?:${tldGroup}))(?:\\/[^\\s<>"'\\)\\]]*)?`,
+        "gi"
+      ),
       type: "bare"
     }
   ];
