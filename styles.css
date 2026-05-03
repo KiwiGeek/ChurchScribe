@@ -546,10 +546,6 @@ h1 {
 }
 
 .note-meta-bar {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: end;
-  gap: 14px;
   padding: 0 20px 12px;
 }
 
@@ -1510,17 +1506,12 @@ body.is-pane-dragging {
     padding-right: 18px;
   }
 
-  .active-note-bar,
-  .note-meta-bar {
+  .active-note-bar {
     grid-template-columns: 1fr;
     align-items: start;
   }
 
   .note-meta {
-    grid-template-columns: 1fr;
-  }
-
-  .note-meta-bar {
     grid-template-columns: 1fr;
   }
 
