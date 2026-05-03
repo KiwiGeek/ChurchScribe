@@ -319,6 +319,35 @@
     </form>
   </dialog>
 
+  <dialog class="management-dialog compact-dialog" id="sync-conflict-dialog">
+    <div class="dialog-shell compact-shell">
+      <div class="dialog-header">
+        <div>
+          <p class="panel-kicker">Cloud Sync</p>
+          <h2>Sync Conflict Detected</h2>
+        </div>
+      </div>
+      <div class="dialog-body">
+        <p class="settings-copy">Your local data and the cloud copy have both been changed since the last sync. Choose which version to keep.</p>
+        <div class="conflict-versions">
+          <div class="conflict-version-card">
+            <p class="conflict-version-label">Local version</p>
+            <p class="conflict-version-time" id="conflict-local-time">—</p>
+          </div>
+          <div class="conflict-version-card">
+            <p class="conflict-version-label">Cloud version</p>
+            <p class="conflict-version-time" id="conflict-remote-time">—</p>
+          </div>
+        </div>
+        <p class="settings-copy conflict-warning">The version you do not choose will be permanently overwritten.</p>
+        <div class="dialog-actions conflict-actions">
+          <button class="ghost-button" id="conflict-keep-local-button" type="button">Keep local data</button>
+          <button class="ghost-button" id="conflict-use-cloud-button" type="button">Use cloud data</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
   <script src="kjv.js"></script>
   <script src="asv.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
