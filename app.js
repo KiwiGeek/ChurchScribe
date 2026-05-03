@@ -107,8 +107,14 @@ if (window.LocalDriveProvider) {
 
 if (window.GoogleDriveProvider) {
   providerRegistry[window.GoogleDriveProvider.id] = window.GoogleDriveProvider;
-} else {
-  console.error("No storage providers registered. Ensure provider scripts (e.g. gdrive.js, localdrive.js) are loaded before app.js.");
+}
+
+if (window.OneDriveProvider) {
+  providerRegistry[window.OneDriveProvider.id] = window.OneDriveProvider;
+}
+
+if (!Object.keys(providerRegistry).length) {
+  console.error("No storage providers registered. Ensure provider scripts (e.g. gdrive.js, localdrive.js, onedrive.js) are loaded before app.js.");
 }
 
 let activeProvider = noOpProvider;
@@ -2385,6 +2391,13 @@ const renderProviderSettings = () => {
       label.append(span, input);
     }
 
+    if (field.helpText) {
+      const help = document.createElement("p");
+      help.className = "settings-copy";
+      help.textContent = field.helpText;
+      label.append(help);
+    }
+
     grid.append(label);
   });
 
@@ -2537,7 +2550,7 @@ const renderSettings = () => {
     googleSyncNowButton.classList.toggle("is-hidden", !hasActiveStorageSession);
     googleSyncNowButton.disabled = !hasActiveStorageSession;
   } else {
-    googleConnectButton.textContent = "Connect Google Drive";
+    googleConnectButton.textContent = `Connect ${activeProvider.displayName}`;
     googleConnectButton.classList.toggle("is-hidden", hasActiveStorageSession);
     googleDisconnectButton.classList.toggle("is-hidden", !hasActiveStorageSession);
     googleSyncNowButton.classList.toggle("is-hidden", !hasActiveStorageSession);
