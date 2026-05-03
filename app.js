@@ -1013,15 +1013,8 @@ const pullFromCloud = async () => {
     const remotePayload = result.data;
 
     if (!remotePayload) {
-      console.log("[CloudSync] No remote file found.");
-
-      if (hasLocalCloudData()) {
-        console.log("[CloudSync] Local data exists with no cloud copy; triggering initial upload.");
-        void syncWorkspaceToCloud({ reason: "initial" });
-      } else {
-        console.log("[CloudSync] No local data to upload; nothing to do.");
-      }
-
+      console.log("[CloudSync] No remote file found; uploading local workspace.");
+      void syncWorkspaceToCloud({ reason: "initial" });
       return;
     }
 
@@ -3882,11 +3875,12 @@ cloudProviderSelect.addEventListener("change", () => {
   cloudSyncSettings.provider = newProviderId;
   activeProvider = providerRegistry[newProviderId] ?? noOpProvider;
 
-  // Remote file/folder IDs are provider-specific and must not carry over between providers.
+  // Remote file/folder IDs and sync timestamps are provider-specific and must not carry over.
   cloudSyncSettings.remoteSettingsFileId = "";
   cloudSyncSettings.remoteNoteFileIds = {};
   cloudSyncSettings.remoteWorkspaceFileId = "";
   cloudSyncSettings.remoteWorkspaceParentId = "";
+  cloudSyncSettings.lastSyncAt = null;
 
   const defaults = activeProvider.getSettingsValues();
 
