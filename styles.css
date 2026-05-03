@@ -1093,6 +1093,34 @@ h1 {
   gap: 12px;
 }
 
+.note-browser-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.9fr) minmax(320px, 1.1fr);
+  gap: 18px;
+  min-height: 0;
+}
+
+.note-manager-list,
+.note-browser-details {
+  min-height: 0;
+}
+
+.note-manager-list {
+  align-content: start;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.note-browser-details {
+  display: grid;
+  align-content: start;
+  gap: 16px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface-strong);
+}
+
 .note-browser-toolbar {
   display: grid;
   grid-template-columns: minmax(0, 1.5fr) minmax(180px, 0.8fr) minmax(180px, 0.8fr);
@@ -1154,36 +1182,6 @@ h1 {
   justify-content: flex-end;
 }
 
-.note-manager-row {
-  grid-template-columns: minmax(0, 1.4fr) minmax(180px, 0.8fr) auto auto auto;
-  align-items: center;
-  padding: 14px 16px;
-}
-
-.note-manager-row.is-active {
-  border-color: var(--tool-hover-border);
-  background: var(--note-chip-active);
-}
-
-.note-manager-summary {
-  display: grid;
-  gap: 4px;
-}
-
-.note-manager-title,
-.note-manager-meta {
-  display: block;
-}
-
-.note-manager-title {
-  font-weight: 700;
-}
-
-.note-manager-meta {
-  color: var(--muted);
-  font-size: 0.88rem;
-}
-
 .note-browser-group {
   display: grid;
   gap: 10px;
@@ -1220,6 +1218,105 @@ h1 {
   color: var(--muted);
   font-size: 0.95rem;
   padding: 8px 2px;
+}
+
+.note-browser-list-item {
+  display: grid;
+  gap: 4px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-strong);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
+}
+
+.note-browser-list-item:hover,
+.note-browser-list-item:focus-visible {
+  transform: translateY(-1px);
+  border-color: var(--tool-hover-border);
+  outline: none;
+}
+
+.note-browser-list-item.is-selected {
+  border-color: var(--tool-hover-border);
+  background: var(--note-chip-active);
+}
+
+.note-browser-list-title,
+.note-browser-list-meta {
+  display: block;
+}
+
+.note-browser-list-title {
+  font-weight: 700;
+}
+
+.note-browser-list-meta {
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.note-browser-detail-header,
+.note-browser-detail-block {
+  display: grid;
+  gap: 8px;
+}
+
+.note-browser-detail-title,
+.note-browser-detail-meta,
+.note-browser-detail-block-title,
+.note-browser-detail-preview {
+  margin: 0;
+}
+
+.note-browser-detail-title {
+  font-size: 1.1rem;
+  line-height: 1.25;
+}
+
+.note-browser-detail-meta {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.note-browser-detail-controls {
+  display: grid;
+  gap: 14px;
+}
+
+.note-browser-detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.note-browser-detail-block {
+  padding-top: 4px;
+}
+
+.note-browser-detail-block-title {
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.note-browser-detail-metadata {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.note-browser-detail-preview {
+  color: var(--text);
+  line-height: 1.55;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .conflict-versions {
@@ -1296,8 +1393,8 @@ body.is-pane-dragging {
 
   .type-manager-layout,
   .settings-layout,
+  .note-browser-layout,
   .note-browser-toolbar,
-  .note-manager-row,
   .metadata-field-row,
   .display-field-grid,
   .alias-row {
