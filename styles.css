@@ -341,7 +341,10 @@ h1 {
 }
 
 .inline-action-menu > summary.overflow-action {
+  display: flex;
+  align-items: center;
   justify-content: center;
+  text-align: center;
 }
 
 .inline-action-panel {
