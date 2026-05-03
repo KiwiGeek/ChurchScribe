@@ -287,12 +287,7 @@
               </label>
             </div>
 
-            <div class="display-field-grid">
-              <label class="field checkbox-field">
-                <span>Visible Drive Folder (Testing)</span>
-                <input id="cloud-visible-folder-input" name="cloud-visible-folder" type="checkbox">
-              </label>
-            </div>
+            <div id="provider-settings-container"></div>
 
             <div class="display-field-grid">
               <label class="field">
@@ -312,7 +307,7 @@
               <button class="ghost-button" id="google-sync-now-button" type="button">Sync Now</button>
             </div>
 
-            <p class="settings-copy" id="cloud-help-text">In Google Cloud Console, authorize `https://joshua.penman.dev` for production and `http://localhost:8000` for local development. Turn on `Visible Drive Folder (Testing)` if you want uploads to appear in normal Google Drive while debugging.</p>
+            <p class="settings-copy" id="cloud-help-text">Turn on `Visible Drive Folder` if you want uploads to appear in normal Google Drive.</p>
           </div>
         </section>
       </div>
@@ -351,6 +346,7 @@
   <script src="kjv.js"></script>
   <script src="asv.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="gdrive.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
