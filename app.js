@@ -810,15 +810,19 @@ const showSyncConflictDialog = (remotePayload) => new Promise((resolve) => {
     ? new Date(remotePayload.updatedAt).toLocaleString()
     : "Timestamp unavailable";
 
+  console.log(`[CloudSync] Showing conflict dialog — local: ${localTime}, cloud: ${remoteTime}`);
+
   conflictLocalTime.textContent = localTime;
   conflictRemoteTime.textContent = remoteTime;
 
   const handleKeepLocal = () => {
+    console.log("[CloudSync] User chose: keep local data.");
     cleanup();
     resolve("local");
   };
 
   const handleUseCloud = () => {
+    console.log("[CloudSync] User chose: use cloud data.");
     cleanup();
     resolve("remote");
   };
@@ -841,36 +845,69 @@ const showSyncConflictDialog = (remotePayload) => new Promise((resolve) => {
 });
 
 const pullFromCloud = async () => {
-  if (!hasActiveGoogleDriveSession() || syncInFlightPromise || isPullInFlight) {
+  if (!hasActiveGoogleDriveSession()) {
+    console.log("[CloudSync] Pull skipped: no active Google Drive session.");
+    return;
+  }
+
+  if (syncInFlightPromise) {
+    console.log("[CloudSync] Pull skipped: upload is currently in progress.");
+    return;
+  }
+
+  if (isPullInFlight) {
+    console.log("[CloudSync] Pull skipped: another pull is already in progress.");
     return;
   }
 
   isPullInFlight = true;
+  console.log("[CloudSync] Starting pull from cloud...");
 
   try {
     const remotePayload = await downloadWorkspaceFromGoogleDrive();
 
     if (!remotePayload) {
+      console.log("[CloudSync] No remote file found on Google Drive.");
+
+      if (hasLocalNoteData()) {
+        console.log("[CloudSync] Local data exists with no cloud copy; triggering initial upload.");
+        void syncWorkspaceToCloud({ reason: "initial" });
+      } else {
+        console.log("[CloudSync] No local data to upload; nothing to do.");
+      }
+
       return;
     }
 
     const remoteUpdatedAt = remotePayload.updatedAt ? new Date(remotePayload.updatedAt) : null;
     const lastSyncAt = cloudSyncSettings.lastSyncAt ? new Date(cloudSyncSettings.lastSyncAt) : null;
 
+    console.log(`[CloudSync] Remote updatedAt: ${remoteUpdatedAt?.toISOString() ?? "missing"}`);
+    console.log(`[CloudSync] Last synced at:   ${lastSyncAt?.toISOString() ?? "never"}`);
+
     if (lastSyncAt && remoteUpdatedAt && remoteUpdatedAt <= lastSyncAt) {
+      console.log("[CloudSync] Remote data is not newer than last sync; nothing to apply.");
       return;
     }
 
     const localHasChanges = hasLocalChangesSinceLastSync();
+    console.log(`[CloudSync] Local changes since last sync: ${localHasChanges}`);
+
     let resolution;
 
     if (!lastSyncAt) {
-      resolution = hasLocalNoteData() ? await showSyncConflictDialog(remotePayload) : "remote";
+      const hasData = hasLocalNoteData();
+      console.log(`[CloudSync] First sync — local has data: ${hasData}. ${hasData ? "Showing conflict dialog." : "Auto-applying remote."}`);
+      resolution = hasData ? await showSyncConflictDialog(remotePayload) : "remote";
     } else if (localHasChanges) {
+      console.log("[CloudSync] Both sides changed since last sync — showing conflict dialog.");
       resolution = await showSyncConflictDialog(remotePayload);
     } else {
+      console.log("[CloudSync] No local changes since last sync — auto-applying remote data.");
       resolution = "remote";
     }
+
+    console.log(`[CloudSync] Conflict resolution: ${resolution}`);
 
     if (resolution === "remote") {
       applyCloudPayload(remotePayload);
@@ -878,18 +915,20 @@ const pullFromCloud = async () => {
       if (remotePayload.updatedAt) {
         cloudSyncSettings.lastSyncAt = remotePayload.updatedAt;
       } else {
-        console.warn("Remote payload is missing updatedAt timestamp; unable to update last sync time. Sync state may be inconsistent.");
+        console.warn("[CloudSync] Remote payload is missing updatedAt timestamp; unable to update last sync time. Sync state may be inconsistent.");
       }
 
       cloudSyncSettings.lastError = "";
       persistCloudSyncSettings();
       renderSettings();
       refreshSaveStatus();
+      console.log("[CloudSync] Remote data applied successfully.");
     } else {
+      console.log("[CloudSync] Keeping local data; scheduling upload to overwrite cloud.");
       void syncWorkspaceToCloud({ reason: "conflict-keep-local" });
     }
   } catch (error) {
-    console.error("Cloud pull failed:", error);
+    console.error("[CloudSync] Pull failed:", error);
   } finally {
     isPullInFlight = false;
   }
@@ -899,6 +938,7 @@ const stopCloudPolling = () => {
   if (cloudPollTimer) {
     window.clearInterval(cloudPollTimer);
     cloudPollTimer = null;
+    console.log("[CloudSync] Background polling stopped.");
   }
 };
 
@@ -906,12 +946,16 @@ const startCloudPolling = () => {
   stopCloudPolling();
 
   if (!cloudSyncSettings.autoSync || !hasActiveGoogleDriveSession()) {
+    console.log(`[CloudSync] Background polling not started (autoSync=${cloudSyncSettings.autoSync}, connected=${hasActiveGoogleDriveSession()}).`);
     return;
   }
 
   cloudPollTimer = window.setInterval(() => {
+    console.log("[CloudSync] Poll timer fired.");
     void pullFromCloud();
   }, cloudSyncSettings.pollIntervalSeconds * 1000);
+
+  console.log(`[CloudSync] Background polling started (interval: ${cloudSyncSettings.pollIntervalSeconds}s).`);
 };
 
 const syncWorkspaceToCloud = async ({ reason = "manual" } = {}) => {
@@ -924,8 +968,11 @@ const syncWorkspaceToCloud = async ({ reason = "manual" } = {}) => {
   }
 
   if (syncInFlightPromise) {
+    console.log("[CloudSync] Upload already in progress; awaiting existing request.");
     return syncInFlightPromise;
   }
+
+  console.log(`[CloudSync] Starting upload (reason: ${reason})...`);
 
   syncInFlightPromise = (async () => {
     try {
@@ -943,9 +990,10 @@ const syncWorkspaceToCloud = async ({ reason = "manual" } = {}) => {
       persistCloudSyncSettings();
       renderSettings();
       refreshSaveStatus();
+      console.log(`[CloudSync] Upload succeeded (reason: ${reason}). lastSyncAt=${cloudSyncSettings.lastSyncAt}`);
       return true;
     } catch (error) {
-      console.error(error);
+      console.error("[CloudSync] Upload failed:", error);
       const errorMessage = extractGoogleErrorMessage(error);
       cloudSyncSettings.status = `Google Drive sync failed: ${errorMessage}`;
       cloudSyncSettings.lastError = errorMessage;
@@ -1004,6 +1052,7 @@ const finalizeGoogleDriveConnection = async (accessToken, { triggerInitialSync =
   cloudSyncSettings.lastError = "";
   persistCloudSyncSettings();
   renderSettings();
+  console.log(`[CloudSync] Google Drive connected as ${connectedEmail || "(unknown)"}. triggerInitialSync=${triggerInitialSync}`);
   startCloudPolling();
 
   if (triggerInitialSync) {
