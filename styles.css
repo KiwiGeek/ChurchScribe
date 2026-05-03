@@ -2739,9 +2739,15 @@ h1 {
   border-radius: 0;
   background: transparent;
   color: inherit;
+  color-scheme: inherit;
   font: inherit;
   font-weight: inherit;
   cursor: pointer;
+}
+
+.ui-inline-select select option {
+  background: var(--surface-strong);
+  color: var(--text);
 }
 
 .ui-inline-select:hover,
