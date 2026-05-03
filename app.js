@@ -85,9 +85,9 @@ const translationStorageKey = "service-notes-translation";
 const cloudSyncStorageKey = "service-notes-cloud-sync";
 const autoCloudSyncDelayMs = 10000;
 
-const activeProvider = window.GoogleDriveProvider ?? {
+const noOpProvider = {
   id: "none",
-  displayName: "Cloud Storage",
+  displayName: "Storage",
   isAvailable: () => false,
   hasActiveSession: () => false,
   ensureTokenClient: () => {},
@@ -103,9 +103,19 @@ const activeProvider = window.GoogleDriveProvider ?? {
   download: () => Promise.reject(new Error("No storage provider configured."))
 };
 
-if (!window.GoogleDriveProvider) {
-  console.error("No storage provider registered. Ensure a provider script (e.g. gdrive.js) is loaded before app.js.");
+const providerRegistry = {};
+
+if (window.LocalDriveProvider) {
+  providerRegistry[window.LocalDriveProvider.id] = window.LocalDriveProvider;
 }
+
+if (window.GoogleDriveProvider) {
+  providerRegistry[window.GoogleDriveProvider.id] = window.GoogleDriveProvider;
+} else {
+  console.error("No cloud storage provider registered. Ensure a provider script (e.g. gdrive.js) is loaded before app.js.");
+}
+
+let activeProvider = noOpProvider;
 
 const bookAliasMap = new Map();
 let explicitScriptureReferencePattern;
@@ -140,7 +150,7 @@ const settingsTabs = [
   },
   {
     id: "cloud-sync",
-    label: "Cloud Sync"
+    label: "Auxiliary Storage"
   }
 ];
 
@@ -499,6 +509,8 @@ const restoreCloudSyncSettings = async () => {
   const savedSettings = await readStoredValue(cloudSyncStorageKey);
   Object.assign(cloudSyncSettings, normalizeCloudSyncSettings(savedSettings));
 
+  activeProvider = providerRegistry[cloudSyncSettings.provider] ?? noOpProvider;
+
   const providerId = activeProvider.id;
   const defaults = activeProvider.getSettingsValues();
 
@@ -525,7 +537,9 @@ const restoreCloudSyncSettings = async () => {
 
 const buildCloudStatusText = () => {
   if (!activeProvider.isAvailable()) {
-    return "Cloud provider not loaded";
+    return activeProvider.id === "local-drive"
+      ? "Local file access not supported in this browser"
+      : "Storage provider not available";
   }
 
   if (
@@ -545,13 +559,13 @@ const buildCloudStatusText = () => {
 
 const buildSaveStatusText = (savedAt = new Date(), syncedAt = cloudSyncSettings.lastSyncAt) => {
   const localLabel = `Saved locally ${new Date(savedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}`;
-  const cloudLabel = cloudSyncSettings.lastError
-    ? `Cloud sync failed: ${cloudSyncSettings.lastError}`
+  const syncLabel = cloudSyncSettings.lastError
+    ? `Sync failed: ${cloudSyncSettings.lastError}`
     : syncedAt
-      ? `Synced to cloud ${new Date(syncedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}`
-      : "Not synced to cloud yet";
+      ? `Synced ${new Date(syncedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}`
+      : "Not synced yet";
 
-  return `${localLabel} • ${cloudLabel}`;
+  return `${localLabel} • ${syncLabel}`;
 };
 
 const refreshSaveStatus = () => {
@@ -2057,13 +2071,32 @@ const renderSettings = () => {
   renderProviderSettings();
   cloudStatusInput.value = buildCloudStatusText();
   cloudLastSyncInput.value = formatSyncTimestamp(cloudSyncSettings.lastSyncAt);
-  const hasConnectedDriveSession = activeProvider.hasActiveSession();
-  googleConnectButton.classList.toggle("is-hidden", hasConnectedDriveSession);
-  googleDisconnectButton.classList.toggle("is-hidden", !hasConnectedDriveSession);
-  googleSyncNowButton.classList.toggle("is-hidden", !hasConnectedDriveSession);
-  googleConnectButton.disabled = !activeProvider.isAvailable() || hasConnectedDriveSession;
-  googleDisconnectButton.disabled = !hasConnectedDriveSession;
-  googleSyncNowButton.disabled = !hasConnectedDriveSession;
+  const hasActiveStorageSession = activeProvider.hasActiveSession();
+  const isLocalDrive = activeProvider.id === "local-drive";
+
+  if (isLocalDrive) {
+    googleConnectButton.textContent = hasActiveStorageSession ? "Change Folder" : "Choose Folder";
+    googleConnectButton.classList.remove("is-hidden");
+    googleConnectButton.disabled = !activeProvider.isAvailable();
+    googleDisconnectButton.classList.add("is-hidden");
+    googleDisconnectButton.disabled = true;
+    googleSyncNowButton.classList.toggle("is-hidden", !hasActiveStorageSession);
+    googleSyncNowButton.disabled = !hasActiveStorageSession;
+  } else {
+    googleConnectButton.textContent = "Connect Google Drive";
+    googleConnectButton.classList.toggle("is-hidden", hasActiveStorageSession);
+    googleDisconnectButton.classList.toggle("is-hidden", !hasActiveStorageSession);
+    googleSyncNowButton.classList.toggle("is-hidden", !hasActiveStorageSession);
+    googleConnectButton.disabled = !activeProvider.isAvailable() || hasActiveStorageSession;
+    googleDisconnectButton.disabled = !hasActiveStorageSession;
+    googleSyncNowButton.disabled = !hasActiveStorageSession;
+  }
+
+  const cloudHelpText = document.querySelector("#cloud-help-text");
+
+  if (cloudHelpText) {
+    cloudHelpText.classList.toggle("is-hidden", isLocalDrive);
+  }
 
   const selectedType = getSelectedTypeForManager();
 
@@ -2720,9 +2753,35 @@ aliasList.addEventListener("change", (event) => {
 });
 
 cloudProviderSelect.addEventListener("change", () => {
-  cloudSyncSettings.provider = cloudProviderSelect.value;
+  const newProviderId = cloudProviderSelect.value;
+
+  stopCloudPolling();
+
+  if (pendingAutoSyncTimer) {
+    window.clearTimeout(pendingAutoSyncTimer);
+    pendingAutoSyncTimer = null;
+  }
+
+  cloudSyncSettings.provider = newProviderId;
+  activeProvider = providerRegistry[newProviderId] ?? noOpProvider;
+
+  const defaults = activeProvider.getSettingsValues();
+
+  if (!cloudSyncSettings.providerSettings[newProviderId]) {
+    cloudSyncSettings.providerSettings[newProviderId] = { ...defaults };
+  }
+
+  resetTransientCloudSessionState();
   persistCloudSyncSettings();
-  scheduleAutoCloudSync();
+  renderSettings();
+
+  activeProvider.waitForReady(() => {
+    void reconnectCloud();
+
+    if (settingsDialog.open) {
+      renderSettings();
+    }
+  });
 });
 
 cloudPollIntervalSelect.addEventListener("change", () => {
