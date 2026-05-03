@@ -36,15 +36,7 @@
             <details class="overflow-menu">
               <summary class="ghost-button">Actions ▾</summary>
               <div class="overflow-menu-panel">
-                <label class="field compact-field" id="new-note-type-field">
-                  <span>Type</span>
-                  <select id="new-note-type-select" name="new-note-type"></select>
-                </label>
-                <button class="ghost-button overflow-action" id="new-note-button" type="button">New note</button>
-                <label class="field compact-field" id="active-note-type-field">
-                  <span>Note type</span>
-                  <select id="note-type-select" name="note-type"></select>
-                </label>
+                <div id="new-note-actions"></div>
                 <button class="ghost-button overflow-action" id="manage-notes-button" type="button">Browse notes</button>
                 <button class="ghost-button overflow-action" id="delete-note-button" type="button">Delete note</button>
               </div>
@@ -62,7 +54,7 @@
 
         <div class="note-meta-bar">
           <div class="metadata-summary" id="metadata-summary"></div>
-          <button class="ghost-button" id="note-details-button" type="button">Note details…</button>
+          <button class="ghost-button" id="note-details-button" type="button">Note options…</button>
         </div>
 
         <div class="toolbar" role="toolbar" aria-label="Rich text controls">
@@ -177,8 +169,8 @@
     <form class="dialog-shell compact-shell" method="dialog">
       <div class="dialog-header">
         <div>
-          <p class="panel-kicker">Note Details</p>
-          <h2>Metadata</h2>
+          <p class="panel-kicker">Note Options</p>
+          <h2>Edit Note Details</h2>
         </div>
         <button class="ghost-button" type="submit">Close</button>
       </div>
