@@ -3558,6 +3558,30 @@ chapterText.addEventListener("copy", (event) => {
     el.style.removeProperty("background-color");
   });
 
+  // Convert .verse-red-letter CSS-class color to an inline style so the notes
+  // editor's "Automatic" button (which walks el.style.color) can clear it.
+  const liveRedLetterEl = chapterText.querySelector(".verse-red-letter");
+  const redLetterColor = liveRedLetterEl ? getComputedStyle(liveRedLetterEl).color : "";
+  wrapper.querySelectorAll(".verse-red-letter").forEach((el) => {
+    if (redLetterColor) {
+      el.style.color = redLetterColor;
+    }
+    el.classList.remove("verse-red-letter");
+  });
+
+  // Convert .verse-added-words CSS-class italic to a plain <em> element so the
+  // notes editor's italic button can toggle it off.
+  // Note: this runs after the red-letter loop so el.style.color may already be
+  // set on combined red-letter+added-words spans — carry it over to the <em>.
+  wrapper.querySelectorAll(".verse-added-words").forEach((el) => {
+    const em = document.createElement("em");
+    if (el.style.color) {
+      em.style.color = el.style.color;
+    }
+    em.append(...el.childNodes);
+    el.replaceWith(em);
+  });
+
   wrapper.querySelectorAll(".chapter-verse-number").forEach((numEl) => {
     numEl.replaceWith(`[${numEl.textContent.trim()}] `);
   });
