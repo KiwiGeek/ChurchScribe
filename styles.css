@@ -3368,3 +3368,48 @@ body.is-pane-dragging {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
+
+/* ===================== MOBILE WARNING ===================== */
+
+.mobile-warning {
+  display: none;
+}
+
+@media (max-width: 980px) {
+  .mobile-warning {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    background: var(--accent);
+    color: var(--surface-strong);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+  }
+}
+
+.mobile-warning-text {
+  flex: 1;
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.mobile-warning-dismiss {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 4px 6px;
+  font-size: 1rem;
+  opacity: 0.8;
+  line-height: 1;
+}
+
+.mobile-warning-dismiss:hover {
+  opacity: 1;
+}

@@ -70,6 +70,8 @@ const firstSyncKeepLocalButton = document.querySelector("#first-sync-keep-local-
 const firstSyncUseCloudButton = document.querySelector("#first-sync-use-cloud-button");
 const firstSyncCancelButton = document.querySelector("#first-sync-cancel-button");
 const aboutVersionInfo = document.querySelector("#about-version-info");
+const mobileWarning = document.querySelector("#mobile-warning");
+const mobileWarningDismissButton = document.querySelector("#mobile-warning-dismiss");
 
 const dbName = "churchscribe-db";
 const dbVersion = 1;
@@ -4141,4 +4143,13 @@ paneDivider.addEventListener("mousedown", (startEvent) => {
 
   document.addEventListener("mousemove", onMouseMove);
   document.addEventListener("mouseup", onMouseUp);
+});
+
+if (sessionStorage.getItem("mobile-warning-dismissed")) {
+  mobileWarning.classList.add("is-hidden");
+}
+
+mobileWarningDismissButton.addEventListener("click", () => {
+  mobileWarning.classList.add("is-hidden");
+  sessionStorage.setItem("mobile-warning-dismissed", "1");
 });
