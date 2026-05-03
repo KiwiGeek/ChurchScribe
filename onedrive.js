@@ -26,21 +26,17 @@
  *      Authentication → "Single-page application" → "Add URI".)
  *  6. Click "Register".
  *  7. On the Overview page, copy the value labelled "Application (client) ID".
- *  8. Replace the placeholder below with that ID:
- *
- *       const clientId = "YOUR_AZURE_APP_CLIENT_ID";
- *
- *  9. Under "API permissions" → "Add a permission" → "Microsoft Graph"
+ *  8. Under "API permissions" → "Add a permission" → "Microsoft Graph"
  *     → "Delegated permissions", add:
  *       • Files.ReadWrite.AppFolder
  *       • User.Read
  *     (Both are low-privilege delegated scopes — no admin consent required for
  *      personal Microsoft accounts.)
- * 10. Save. Users will be prompted to consent on their first sign-in.
+ *  9. Save. Users will be prompted to consent on their first sign-in.
  * ──────────────────────────────────────────────────────────────────────────────
  */
 (() => {
-  const clientId = "YOUR_AZURE_APP_CLIENT_ID";
+  const clientId = "60869d80-c4cb-4d64-a753-ddecd3bb2752";
   const authority = "https://login.microsoftonline.com/common";
   const scopes = ["Files.ReadWrite.AppFolder", "User.Read"];
 
@@ -163,13 +159,6 @@
   };
 
   const connect = async () => {
-    if (clientId === "YOUR_AZURE_APP_CLIENT_ID") {
-      throw new Error(
-        "OneDrive is not configured. Replace the clientId placeholder in onedrive.js " +
-        "with your Azure App Registration client ID (see the setup instructions at the top of the file)."
-      );
-    }
-
     const msalInst = await getMsalInstance();
 
     try {
