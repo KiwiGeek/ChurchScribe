@@ -1768,6 +1768,30 @@ const restoreCaretTextOffset = (root, targetOffset) => {
   selection.addRange(range);
 };
 
+const isValidScriptureReference = (canonicalBook, chapter, verseStart = null, verseEnd = null) => {
+  const scriptureLibrary = getCurrentScriptureLibrary();
+  const bookChapters = scriptureLibrary[canonicalBook];
+
+  if (!bookChapters) {
+    return false;
+  }
+
+  const chapterData = bookChapters.find((c) => c.chapter === chapter);
+
+  if (!chapterData) {
+    return false;
+  }
+
+  if (verseStart === null) {
+    return true;
+  }
+
+  const maxVerse = chapterData.verses[chapterData.verses.length - 1]?.verse ?? 0;
+  const effectiveVerseEnd = verseEnd ?? verseStart;
+
+  return verseStart >= 1 && effectiveVerseEnd <= maxVerse;
+};
+
 const parseScriptureReference = (referenceText) => {
   const match = referenceText.match(fullExplicitScriptureReferencePattern);
 
@@ -1800,6 +1824,11 @@ const parseScriptureReference = (referenceText) => {
       currentChapter = Number(crossChapterSegment[1]);
       const verseStart = Number(crossChapterSegment[2]);
       const verseEnd = Number(crossChapterSegment[3] ?? crossChapterSegment[2]);
+
+      if (!isValidScriptureReference(canonicalBook, currentChapter, verseStart, verseEnd)) {
+        return null;
+      }
+
       const verses = chapterHighlights.get(currentChapter) ?? new Set();
 
       for (let verse = verseStart; verse <= verseEnd; verse += 1) {
@@ -1819,6 +1848,11 @@ const parseScriptureReference = (referenceText) => {
       currentChapter = Number(fullChapterSegment[1]);
       const verseStart = Number(fullChapterSegment[2]);
       const verseEnd = Number(fullChapterSegment[3] ?? fullChapterSegment[2]);
+
+      if (!isValidScriptureReference(canonicalBook, currentChapter, verseStart, verseEnd)) {
+        return null;
+      }
+
       const verses = chapterHighlights.get(currentChapter) ?? new Set();
 
       for (let verse = verseStart; verse <= verseEnd; verse += 1) {
@@ -1836,6 +1870,11 @@ const parseScriptureReference = (referenceText) => {
 
     if (currentChapter === null) {
       currentChapter = Number(fullChapterSegment[1]);
+
+      if (!isValidScriptureReference(canonicalBook, currentChapter)) {
+        return null;
+      }
+
       continue;
     }
 
@@ -1845,6 +1884,11 @@ const parseScriptureReference = (referenceText) => {
 
     const verseStart = Number(verseOnlySegment[1]);
     const verseEnd = Number(verseOnlySegment[2] ?? verseOnlySegment[1]);
+
+    if (!isValidScriptureReference(canonicalBook, currentChapter, verseStart, verseEnd)) {
+      return null;
+    }
+
     const verses = chapterHighlights.get(currentChapter) ?? new Set();
 
     for (let verse = verseStart; verse <= verseEnd; verse += 1) {
@@ -1874,6 +1918,11 @@ const resolveReferenceSegment = (canonicalBook, segment, currentChapter) => {
     const chapter = Number(chapterVerseMatch[1]);
     const verseStart = Number(chapterVerseMatch[2]);
     const verseEnd = Number(chapterVerseMatch[3] ?? chapterVerseMatch[2]);
+
+    if (!isValidScriptureReference(canonicalBook, chapter, verseStart, verseEnd)) {
+      return null;
+    }
+
     const verses = new Set();
 
     for (let verse = verseStart; verse <= verseEnd; verse += 1) {
@@ -1900,19 +1949,30 @@ const resolveReferenceSegment = (canonicalBook, segment, currentChapter) => {
   }
 
   if (currentChapter === null) {
+    const chapter = Number(verseOnlyMatch[1]);
+
+    if (!isValidScriptureReference(canonicalBook, chapter)) {
+      return null;
+    }
+
     return {
       parsedReference: {
         book: canonicalBook,
-        chapter: Number(verseOnlyMatch[1]),
+        chapter,
         firstVerse: null,
         chapterHighlights: new Map()
       },
-      currentChapter: Number(verseOnlyMatch[1])
+      currentChapter: chapter
     };
   }
 
   const verseStart = Number(verseOnlyMatch[1]);
   const verseEnd = Number(verseOnlyMatch[2] ?? verseOnlyMatch[1]);
+
+  if (!isValidScriptureReference(canonicalBook, currentChapter, verseStart, verseEnd)) {
+    return null;
+  }
+
   const verses = new Set();
 
   for (let verse = verseStart; verse <= verseEnd; verse += 1) {
@@ -1996,6 +2056,11 @@ const parseContextualScriptureReference = (referenceText, context) => {
 
   const verseStart = Number(match[1]);
   const verseEnd = Number(match[2] ?? match[1]);
+
+  if (!isValidScriptureReference(context.book, context.chapter, verseStart, verseEnd)) {
+    return null;
+  }
+
   const verses = new Set();
 
   for (let verse = verseStart; verse <= verseEnd; verse += 1) {
