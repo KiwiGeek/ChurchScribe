@@ -394,7 +394,7 @@
       key: "useVisibleDriveFolder",
       label: "Visible Drive Folder",
       type: "checkbox",
-      helpText: "Store files in a user-visible \"ChurchScribe\" folder in Google Drive instead of hidden app storage. Useful for debugging."
+      helpText: "Store files in a user-visible \"ChurchScribe\" folder in Google Drive instead of hidden app storage. Useful for testing and manual inspection of synced files."
     }
   ];
 
@@ -402,7 +402,7 @@
     useVisibleDriveFolder: false
   });
 
-  const applySettingChange = (key) => {
+  const applySettingChange = (key, _value) => {
     if (key === "useVisibleDriveFolder") {
       return { clearRemoteState: true };
     }
