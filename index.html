@@ -276,23 +276,11 @@
               </label>
             </div>
 
-            <div class="display-field-grid">
-              <label class="field checkbox-field">
-                <span>Auto Sync</span>
-                <input id="cloud-auto-sync-input" name="cloud-auto-sync" type="checkbox">
-              </label>
-
-              <label class="field checkbox-field">
-                <span>Sync Imported Translations</span>
-                <input id="cloud-sync-translations-input" name="cloud-sync-translations" type="checkbox">
-              </label>
-            </div>
-
             <div id="provider-settings-container"></div>
 
             <div class="display-field-grid">
               <label class="field">
-                <span>Connection Status</span>
+                <span id="cloud-status-label">Connection Status</span>
                 <input id="cloud-status-input" name="cloud-status" type="text" readonly>
               </label>
 
@@ -307,8 +295,6 @@
               <button class="ghost-button" id="google-disconnect-button" type="button">Disconnect</button>
               <button class="ghost-button" id="google-sync-now-button" type="button">Sync Now</button>
             </div>
-
-            <p class="settings-copy" id="cloud-help-text">Turn on `Visible Drive Folder` if you want uploads to appear in normal Google Drive.</p>
           </div>
         </section>
       </div>
