@@ -2084,8 +2084,8 @@ const validateDomainWithDoh = async (domain) => {
   }
 };
 
-const linkifyUrls = () => {
-  const tldGroup = knownTlds.join("|");
+const linkifyUrls = ({ suppressAtCaret = false } = {}) => {
+  const tldGroup = [...knownTlds].sort((a, b) => b.length - a.length).join("|");
   const urlPatterns = [
     {
       regex: /\b(https?|ftp|spotify):\/\/[^\s<>"'\)\]]+/gi,
@@ -2114,6 +2114,20 @@ const linkifyUrls = () => {
 
   const caretOffset = getCaretTextOffset(noteEditor);
   unwrapAutoUrlLinks();
+
+  const globalOffsets = new Map();
+
+  if (suppressAtCaret && caretOffset !== null) {
+    const allTextWalker = document.createTreeWalker(noteEditor, NodeFilter.SHOW_TEXT);
+    let offset = 0;
+    let n;
+
+    while ((n = allTextWalker.nextNode())) {
+      globalOffsets.set(n, offset);
+      offset += n.nodeValue.length;
+    }
+  }
+
   const walker = document.createTreeWalker(
     noteEditor,
     NodeFilter.SHOW_TEXT,
@@ -2141,6 +2155,7 @@ const linkifyUrls = () => {
 
   textNodes.forEach((textNode) => {
     const sourceText = textNode.nodeValue;
+    const nodeGlobalStart = globalOffsets.get(textNode) ?? 0;
 
     const allMatches = [];
 
@@ -2199,6 +2214,10 @@ const linkifyUrls = () => {
         href = `https://${matchedText}`;
       } else if (type === "email") {
         href = `mailto:${matchedText}`;
+      }
+
+      if (suppressAtCaret && caretOffset !== null && caretOffset === nodeGlobalStart + match.index + match[0].length) {
+        continue;
       }
 
       if (match.index > lastIndex) {
@@ -3434,7 +3453,7 @@ noteEditor.addEventListener("input", (event) => {
   }
 
   linkifyScriptureReferences({ jumpToCaretReference: true });
-  linkifyUrls();
+  linkifyUrls({ suppressAtCaret: event.inputType !== "insertFromPaste" });
   saveActiveNote();
 });
 
