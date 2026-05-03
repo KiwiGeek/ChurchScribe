@@ -572,19 +572,81 @@ const getDefaultCardSubtitleFieldId = (type) => {
   return fallbackField?.id ?? "";
 };
 
+const BOOK_ALIASES = {
+  "Genesis":         ["Gen", "Ge", "Gn"],
+  "Exodus":          ["Exo", "Ex"],
+  "Leviticus":       ["Lev", "Le", "Lv"],
+  "Numbers":         ["Num", "Nu", "Nm", "Nb"],
+  "Deuteronomy":     ["Deut", "Dt", "De", "Deu"],
+  "Joshua":          ["Josh", "Jos", "Jsh"],
+  "Judges":          ["Judg", "Jdg", "Jg", "Jdgs"],
+  "Ruth":            ["Rth", "Ru", "Rut"],
+  "1 Samuel":        ["I Samuel", "I Sam", "1 Sam", "1 Sm", "1 Sa", "1 S", "1Sam", "1Sm", "1Sa", "1S"],
+  "2 Samuel":        ["II Samuel", "II Sam", "2 Sam", "2 Sm", "2 Sa", "2 S", "2Sam", "2Sm", "2Sa", "2S"],
+  "1 Kings":         ["I Kings", "I Kgs", "1 Kgs", "1 Kin", "1 Ki", "1 K", "1Kgs", "1Kin", "1Ki", "1K"],
+  "2 Kings":         ["II Kings", "II Kgs", "2 Kgs", "2 Kin", "2 Ki", "2 K", "2Kgs", "2Kin", "2Ki", "2K"],
+  "1 Chronicles":    ["I Chronicles", "I Chr", "1 Chr", "1 Ch", "1 Chron", "1Ch", "1Chr", "1Chron"],
+  "2 Chronicles":    ["II Chronicles", "II Chr", "2 Chr", "2 Ch", "2 Chron", "2Ch", "2Chr", "2Chron"],
+  "Ezra":            ["Ezr", "Ez"],
+  "Nehemiah":        ["Neh", "Ne"],
+  "Esther":          ["Esth", "Est", "Es"],
+  "Job":             ["Jb"],
+  "Psalms":          ["Psalm", "Ps", "Pslm", "Psa", "Psm"],
+  "Proverbs":        ["Prov", "Prv", "Pr", "Pro"],
+  "Ecclesiastes":    ["Eccles", "Eccle", "Ecc", "Ec"],
+  "Song of Solomon": ["Song", "Sng", "Song of Songs", "SOS"],
+  "Isaiah":          ["Isa", "Is"],
+  "Jeremiah":        ["Jer", "Je", "Jr"],
+  "Lamentations":    ["Lam", "La"],
+  "Ezekiel":         ["Ezek", "Eze", "Ezk"],
+  "Daniel":          ["Dan", "Da", "Dn"],
+  "Hosea":           ["Hos", "Ho"],
+  "Joel":            ["Jl", "Jol"],
+  "Amos":            ["Am", "Amo"],
+  "Obadiah":         ["Oba", "Obd"],
+  "Jonah":           ["Jon"],
+  "Micah":           ["Mic", "Mc"],
+  "Nahum":           ["Nah", "Na", "Nam"],
+  "Habakkuk":        ["Hab"],
+  "Zephaniah":       ["Zeph", "Zep", "Zp"],
+  "Haggai":          ["Hag", "Hg"],
+  "Zechariah":       ["Zech", "Zec", "Zc"],
+  "Malachi":         ["Mal", "Ml"],
+  "Matthew":         ["Matt", "Mat", "Mt"],
+  "Mark":            ["Mk", "Mrk"],
+  "Luke":            ["Luk", "Lk"],
+  "John":            ["Jhn", "Jn"],
+  "Acts":            ["Act"],
+  "Romans":          ["Rom", "Ro", "Rm"],
+  "1 Corinthians":   ["I Corinthians", "I Cor", "1 Cor", "1Cor", "1 Co", "1Co"],
+  "2 Corinthians":   ["II Corinthians", "II Cor", "2 Cor", "2Cor", "2 Co", "2Co"],
+  "Galatians":       ["Gal", "Ga"],
+  "Ephesians":       ["Eph", "Ephes"],
+  "Philippians":     ["Phil", "Php", "Pp"],
+  "Colossians":      ["Col"],
+  "1 Thessalonians": ["I Thessalonians", "I Thess", "1 Thess", "1Thess", "1 Thes", "1Thes", "1 Th", "1Th"],
+  "2 Thessalonians": ["II Thessalonians", "II Thess", "2 Thess", "2Thess", "2 Thes", "2Thes", "2 Th", "2Th"],
+  "1 Timothy":       ["I Timothy", "I Tim", "1 Tim", "1 Ti", "1Tim", "1Ti"],
+  "2 Timothy":       ["II Timothy", "II Tim", "2 Tim", "2 Ti", "2Tim", "2Ti"],
+  "Titus":           ["Tit", "Ti"],
+  "Philemon":        ["Philem", "Phm", "Pm"],
+  "Hebrews":         ["Heb"],
+  "James":           ["Jas", "Jm"],
+  "1 Peter":         ["I Peter", "I Pet", "1 Pet", "1 Pe", "1 Pt", "1 P", "1Pet", "1Pe", "1Pt", "1P"],
+  "2 Peter":         ["II Peter", "II Pet", "2 Pet", "2 Pe", "2 Pt", "2 P", "2Pet", "2Pe", "2Pt", "2P"],
+  "1 John":          ["I John", "I Jn", "1 Jn", "1 Jhn", "1 J", "1Jn", "1Jhn", "1J"],
+  "2 John":          ["II John", "II Jn", "2 Jn", "2 Jhn", "2 J", "2Jn", "2Jhn", "2J"],
+  "3 John":          ["III John", "III Jn", "3 Jn", "3 Jhn", "3 J", "3Jn", "3Jhn", "3J"],
+  "Jude":            ["Jud", "Jd"],
+  "Revelation":      ["Rev", "Rv"],
+};
+
 const getBuiltInAliasesForBook = (book) => {
   const aliases = new Set([book, book.replace(/\s+/g, "")]);
 
-  if (book === "Psalms") {
-    aliases.add("Psalm");
-    aliases.add("Ps");
-    aliases.add("Psa");
-  }
-
-  if (book === "Song of Solomon") {
-    aliases.add("Song");
-    aliases.add("Song of Songs");
-    aliases.add("SOS");
+  if (Object.prototype.hasOwnProperty.call(BOOK_ALIASES, book)) {
+    BOOK_ALIASES[book].forEach((alias) => aliases.add(alias));
+    return [...aliases];
   }
 
   const numberedMatch = book.match(/^([1-3])\s+(.+)$/);
