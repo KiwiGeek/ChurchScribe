@@ -75,6 +75,7 @@ const notesStorageKey = "service-notes";
 const legacyNotesStorageKey = "service-notes-content";
 const themeStorageKey = "service-notes-theme";
 const paneOrderStorageKey = "service-notes-pane-order";
+const paneSplitStorageKey = "service-notes-pane-split";
 const translationStorageKey = "service-notes-translation";
 const cloudSyncStorageKey = "service-notes-cloud-sync";
 const colorThemeStorageKey = "service-notes-color-theme";
@@ -129,6 +130,7 @@ let activeTypeEditorId = null;
 let activeSettingsTabId = "ui-settings";
 let currentColorThemeId = "default";
 let currentThemeMode = "system";
+let currentPaneSplit = 0.6;
 let dbPromise;
 let pendingAutoSyncTimer = null;
 let syncInFlightPromise = null;
@@ -791,6 +793,7 @@ const buildCloudSettingsPayload = (updatedAt = new Date().toISOString()) => ({
   preferences: {
     theme: currentThemeMode,
     paneOrder: paneGrid.dataset.order === "scripture-first" ? "scripture-first" : "notes-first",
+    paneSplit: currentPaneSplit,
     translation: currentTranslationCode,
     colorTheme: currentColorThemeId
   },
@@ -838,6 +841,11 @@ const applyCloudPayload = (payload) => {
     if (payload.preferences.paneOrder) {
       applyPaneOrder(payload.preferences.paneOrder);
       void writeStoredValue(paneOrderStorageKey, payload.preferences.paneOrder);
+    }
+
+    if (typeof payload.preferences.paneSplit === "number") {
+      applySplit(payload.preferences.paneSplit);
+      void writeStoredValue(paneSplitStorageKey, currentPaneSplit);
     }
 
     if (payload.preferences.translation) {
@@ -1282,6 +1290,11 @@ const getPreferredPaneOrder = async () => {
   return savedOrder === "scripture-first" ? "scripture-first" : "notes-first";
 };
 
+const getPreferredSplit = async () => {
+  const saved = await readStoredValue(paneSplitStorageKey);
+  return typeof saved === "number" && saved >= 0.2 && saved <= 0.8 ? saved : 0.6;
+};
+
 const getPreferredTranslation = async () => {
   const savedTranslation = await migrateLegacyPreference(translationStorageKey);
   return translationLibrary[savedTranslation] ? savedTranslation : "KJV";
@@ -1381,9 +1394,21 @@ const syncPaneOrderToggle = (order) => {
   }
 };
 
+const applySplit = (fraction) => {
+  currentPaneSplit = Math.max(0.2, Math.min(0.8, fraction));
+  const isScriptureFirst = paneGrid.dataset.order === "scripture-first";
+
+  if (isScriptureFirst) {
+    paneGrid.style.gridTemplateColumns = `minmax(0, ${1 - currentPaneSplit}fr) 20px minmax(320px, ${currentPaneSplit}fr)`;
+  } else {
+    paneGrid.style.gridTemplateColumns = `minmax(0, ${currentPaneSplit}fr) 20px minmax(320px, ${1 - currentPaneSplit}fr)`;
+  }
+};
+
 const applyPaneOrder = (order) => {
   paneGrid.dataset.order = order;
   syncPaneOrderToggle(order);
+  applySplit(currentPaneSplit);
 };
 
 const togglePaneOrder = () => {
@@ -3357,6 +3382,7 @@ const bootstrap = async () => {
   buildBookAliasMap();
   applyThemeMode(await getPreferredTheme(), { rerender: false });
   applyPaneOrder(await getPreferredPaneOrder());
+  applySplit(await getPreferredSplit());
   applyTranslation(await getPreferredTranslation());
   await restoreLastBookChapter();
   applyColorTheme(await getPreferredColorTheme());
@@ -3372,3 +3398,32 @@ const bootstrap = async () => {
 };
 
 void bootstrap();
+
+const paneDivider = document.querySelector("#pane-divider");
+
+paneDivider.addEventListener("mousedown", (startEvent) => {
+  startEvent.preventDefault();
+  document.body.classList.add("is-pane-dragging");
+
+  const gridRect = paneGrid.getBoundingClientRect();
+  const availableWidth = gridRect.width - 20;
+
+  const onMouseMove = (moveEvent) => {
+    const rawFraction = (moveEvent.clientX - gridRect.left) / availableWidth;
+    const isScriptureFirst = paneGrid.dataset.order === "scripture-first";
+    const noteFraction = isScriptureFirst ? 1 - rawFraction : rawFraction;
+    applySplit(noteFraction);
+  };
+
+  const onMouseUp = () => {
+    document.removeEventListener("mousemove", onMouseMove);
+    document.removeEventListener("mouseup", onMouseUp);
+    document.body.classList.remove("is-pane-dragging");
+    void writeStoredValue(paneSplitStorageKey, currentPaneSplit);
+    markLocalSettingsUpdated();
+    scheduleAutoCloudSync();
+  };
+
+  document.addEventListener("mousemove", onMouseMove);
+  document.addEventListener("mouseup", onMouseUp);
+});

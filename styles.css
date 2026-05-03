@@ -223,14 +223,22 @@ h1 {
 
 .pane-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
-  gap: 20px;
+  grid-template-columns: minmax(0, 1.2fr) 20px minmax(320px, 0.8fr);
+  gap: 0;
   align-items: stretch;
   flex: 1;
   min-height: 0;
 }
 
+.pane-divider {
+  cursor: col-resize;
+}
+
 .pane-grid[data-order="scripture-first"] .note-panel {
+  order: 3;
+}
+
+.pane-grid[data-order="scripture-first"] .pane-divider {
   order: 2;
 }
 
@@ -1080,11 +1088,20 @@ h1 {
   margin-top: 16px;
 }
 
+body.is-pane-dragging {
+  cursor: col-resize;
+  user-select: none;
+}
+
 @media (max-width: 980px) {
 .app-header,
 .pane-grid {
     grid-template-columns: 1fr;
     display: grid;
+  }
+
+  .pane-divider {
+    display: none;
   }
 
   .app-header,
