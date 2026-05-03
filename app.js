@@ -11,11 +11,6 @@ const translationLibrary = {
 
 const noteEditor = document.querySelector("#note-editor");
 const saveStatus = document.querySelector("#save-status");
-const themeToggle = document.querySelector("#theme-toggle");
-const themeToggleState = document.querySelector("#theme-toggle-state");
-const themeToggleLabel = document.querySelector(".theme-toggle-label");
-const paneOrderToggle = document.querySelector("#pane-order-toggle");
-const paneOrderToggleState = document.querySelector("#pane-order-toggle-state");
 const toolbarButtons = document.querySelectorAll(".tool-button");
 const newNoteDirectButton = document.querySelector("#new-note-direct-button");
 const newNoteButton = document.querySelector("#new-note-button");
@@ -82,6 +77,7 @@ const themeStorageKey = "service-notes-theme";
 const paneOrderStorageKey = "service-notes-pane-order";
 const translationStorageKey = "service-notes-translation";
 const cloudSyncStorageKey = "service-notes-cloud-sync";
+const colorThemeStorageKey = "service-notes-color-theme";
 const autoCloudSyncDelayMs = 10000;
 
 const noOpProvider = {
@@ -123,7 +119,8 @@ let contextualScriptureReferencePattern;
 let activeScriptureFocus = null;
 let currentTranslationCode = "KJV";
 let activeTypeEditorId = null;
-let activeSettingsTabId = "note-types";
+let activeSettingsTabId = "ui-settings";
+let currentColorThemeId = "default";
 let dbPromise;
 let pendingAutoSyncTimer = null;
 let syncInFlightPromise = null;
@@ -140,6 +137,10 @@ const workspace = {
 
 const settingsTabs = [
   {
+    id: "ui-settings",
+    label: "Display"
+  },
+  {
     id: "note-types",
     label: "Note Types"
   },
@@ -150,6 +151,147 @@ const settingsTabs = [
   {
     id: "cloud-sync",
     label: "Auxiliary Storage"
+  }
+];
+
+const colorThemes = [
+  {
+    id: "default",
+    name: "Parchment Scroll",
+    supports: "both",
+    swatches: ["#fffaf1", "#8c4b2f", "#f0e4ce", "#2a2118"]
+  },
+  {
+    id: "sage-chapel",
+    name: "Sage Chapel",
+    supports: "both",
+    swatches: ["#f2f8f2", "#3a6e42", "#d5ead6", "#1b2e1d"]
+  },
+  {
+    id: "cyberpunk",
+    name: "Cyberpunk",
+    supports: "dark",
+    swatches: ["#050514", "#00ffff", "#0a0a2e", "#e0f7fa"]
+  },
+  {
+    id: "hot-pink",
+    name: "Hot Pink",
+    supports: "both",
+    swatches: ["#fff5fa", "#e91e8c", "#fce4f0", "#1a0011"]
+  },
+  {
+    id: "midnight-cathedral",
+    name: "Midnight Cathedral",
+    supports: "dark",
+    swatches: ["#0a1529", "#d4af37", "#122040", "#f5f0e8"]
+  },
+  {
+    id: "ocean-executive",
+    name: "Ocean Executive",
+    supports: "both",
+    swatches: ["#f3f9ff", "#1565c0", "#dbeafe", "#0d1f3c"]
+  },
+  {
+    id: "cherry-blossom",
+    name: "Cherry Blossom",
+    supports: "light",
+    swatches: ["#fff5f8", "#c2185b", "#fce4ec", "#2a0d1a"]
+  },
+  {
+    id: "royal-purple",
+    name: "Royal Purple",
+    supports: "both",
+    swatches: ["#faf2fe", "#6a1b9a", "#ede7f6", "#1a0836"]
+  },
+  {
+    id: "golden-hour",
+    name: "Golden Hour",
+    supports: "both",
+    swatches: ["#fffdf0", "#f59f00", "#fff3cd", "#1a1200"]
+  },
+  {
+    id: "arctic-frost",
+    name: "Arctic Frost",
+    supports: "both",
+    swatches: ["#f5fbff", "#0277bd", "#dbeeff", "#032340"]
+  },
+  {
+    id: "crimson-faith",
+    name: "Crimson Faith",
+    supports: "both",
+    swatches: ["#fff5f5", "#c62828", "#fce4e4", "#1a0404"]
+  },
+  {
+    id: "forest-vespers",
+    name: "Forest Vespers",
+    supports: "dark",
+    swatches: ["#06120a", "#66bb6a", "#0b1e0e", "#c8e6c9"]
+  },
+  {
+    id: "teal-modern",
+    name: "Teal Modern",
+    supports: "both",
+    swatches: ["#f0fbfa", "#00897b", "#b2dfdb", "#002420"]
+  },
+  {
+    id: "coffee-house",
+    name: "Coffee House",
+    supports: "both",
+    swatches: ["#faf8f5", "#5d4037", "#ede0d4", "#1e0e06"]
+  },
+  {
+    id: "lavender-grace",
+    name: "Lavender Grace",
+    supports: "both",
+    swatches: ["#f8f4fe", "#7e57c2", "#e8dcf8", "#1a0a30"]
+  },
+  {
+    id: "volcanic-rock",
+    name: "Volcanic Rock",
+    supports: "dark",
+    swatches: ["#1a1614", "#ff5722", "#252020", "#f5f0ed"]
+  },
+  {
+    id: "linen-sunlit",
+    name: "Linen Sunlit",
+    supports: "light",
+    swatches: ["#ffffff", "#455a64", "#f0f0ec", "#1a1a18"]
+  },
+  {
+    id: "retro-arcade",
+    name: "Retro Arcade",
+    supports: "dark",
+    swatches: ["#0c0521", "#39ff14", "#14082e", "#f0ffe0"]
+  },
+  {
+    id: "deep-space",
+    name: "Deep Space",
+    supports: "dark",
+    swatches: ["#080214", "#7c4dff", "#100520", "#e8e0ff"]
+  },
+  {
+    id: "coral-reef",
+    name: "Coral Reef",
+    supports: "both",
+    swatches: ["#fff6f4", "#e64a19", "#ffdad5", "#1a0800"]
+  },
+  {
+    id: "autumn-harvest",
+    name: "Autumn Harvest",
+    supports: "both",
+    swatches: ["#fffaf5", "#e65100", "#ffe0b2", "#1a0900"]
+  },
+  {
+    id: "slate-clean",
+    name: "Slate Clean",
+    supports: "both",
+    swatches: ["#fafafa", "#455a64", "#eceff1", "#1a1f22"]
+  },
+  {
+    id: "sunset-revival",
+    name: "Sunset Revival",
+    supports: "both",
+    swatches: ["#fff8f6", "#e91e63", "#fce4da", "#1a0508"]
   }
 ];
 
@@ -579,7 +721,8 @@ const buildCloudSyncPayload = () => ({
   preferences: {
     theme: document.documentElement.dataset.theme === "dark" ? "dark" : "light",
     paneOrder: paneGrid.dataset.order === "scripture-first" ? "scripture-first" : "notes-first",
-    translation: currentTranslationCode
+    translation: currentTranslationCode,
+    colorTheme: currentColorThemeId
   },
   syncSettings: {
     provider: cloudSyncSettings.provider,
@@ -620,6 +763,11 @@ const applyCloudPayload = (payload) => {
     if (payload.preferences.translation) {
       applyTranslation(payload.preferences.translation);
       void writeStoredValue(translationStorageKey, payload.preferences.translation);
+    }
+
+    if (payload.preferences.colorTheme) {
+      applyColorTheme(payload.preferences.colorTheme);
+      void writeStoredValue(colorThemeStorageKey, payload.preferences.colorTheme);
     }
   }
 
@@ -1047,9 +1195,16 @@ const getPreferredTranslation = async () => {
 
 const syncThemeToggle = (theme) => {
   const darkModeEnabled = theme === "dark";
-  themeToggle.setAttribute("aria-pressed", String(darkModeEnabled));
-  themeToggleLabel.textContent = "Dark mode";
-  themeToggleState.textContent = darkModeEnabled ? "On" : "Off";
+  const btn = document.querySelector("#ui-dark-mode-toggle");
+
+  if (btn) {
+    btn.setAttribute("aria-pressed", String(darkModeEnabled));
+    const state = btn.querySelector(".ui-toggle-state");
+
+    if (state) {
+      state.textContent = darkModeEnabled ? "On" : "Off";
+    }
+  }
 };
 
 const applyTheme = (theme) => {
@@ -1067,8 +1222,16 @@ const toggleTheme = () => {
 
 const syncPaneOrderToggle = (order) => {
   const scriptureFirst = order === "scripture-first";
-  paneOrderToggle.setAttribute("aria-pressed", String(scriptureFirst));
-  paneOrderToggleState.textContent = scriptureFirst ? "On" : "Off";
+  const btn = document.querySelector("#ui-scripture-left-toggle");
+
+  if (btn) {
+    btn.setAttribute("aria-pressed", String(scriptureFirst));
+    const state = btn.querySelector(".ui-toggle-state");
+
+    if (state) {
+      state.textContent = scriptureFirst ? "On" : "Off";
+    }
+  }
 };
 
 const applyPaneOrder = (order) => {
@@ -1082,6 +1245,42 @@ const togglePaneOrder = () => {
   void writeStoredValue(paneOrderStorageKey, nextOrder);
   applyPaneOrder(nextOrder);
   scheduleAutoCloudSync();
+};
+
+const getPreferredColorTheme = async () => {
+  const saved = await readStoredValue(colorThemeStorageKey);
+  const validIds = colorThemes.map((t) => t.id);
+  return validIds.includes(saved) ? saved : "default";
+};
+
+const applyColorTheme = (themeId) => {
+  currentColorThemeId = themeId;
+
+  if (themeId === "default") {
+    document.documentElement.removeAttribute("data-color-theme");
+  } else {
+    document.documentElement.dataset.colorTheme = themeId;
+  }
+
+  const themeDef = colorThemes.find((t) => t.id === themeId);
+
+  if (themeDef) {
+    const currentDark = document.documentElement.dataset.theme === "dark";
+
+    if (themeDef.supports === "light" && currentDark) {
+      applyTheme("light");
+      void writeStoredValue(themeStorageKey, "light");
+    } else if (themeDef.supports === "dark" && !currentDark) {
+      applyTheme("dark");
+      void writeStoredValue(themeStorageKey, "dark");
+    }
+  }
+
+  const uiContent = document.querySelector("#ui-settings-content");
+
+  if (uiContent) {
+    renderUiSettings(uiContent);
+  }
 };
 
 const populateBookOptions = () => {
@@ -2045,6 +2244,99 @@ const renderProviderSettings = () => {
   providerSettingsContainer.append(grid);
 };
 
+const renderUiSettings = (container) => {
+  container.innerHTML = "";
+
+  const toggleSection = document.createElement("div");
+  toggleSection.className = "ui-settings-section";
+
+  const toggleTitle = document.createElement("p");
+  toggleTitle.className = "ui-settings-section-title";
+  toggleTitle.textContent = "Layout & Mode";
+  toggleSection.append(toggleTitle);
+
+  const toggleRow = document.createElement("div");
+  toggleRow.className = "ui-toggle-row";
+
+  const currentTheme = document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+  const darkBtn = document.createElement("button");
+  darkBtn.type = "button";
+  darkBtn.id = "ui-dark-mode-toggle";
+  darkBtn.className = "ui-toggle-button";
+  darkBtn.setAttribute("aria-pressed", String(currentTheme === "dark"));
+  darkBtn.innerHTML = `<span>Dark mode</span><span class="ui-toggle-state">${currentTheme === "dark" ? "On" : "Off"}</span>`;
+  darkBtn.addEventListener("click", () => {
+    toggleTheme();
+  });
+  toggleRow.append(darkBtn);
+
+  const currentOrder = paneGrid.dataset.order === "scripture-first" ? "scripture-first" : "notes-first";
+  const paneBtn = document.createElement("button");
+  paneBtn.type = "button";
+  paneBtn.id = "ui-scripture-left-toggle";
+  paneBtn.className = "ui-toggle-button";
+  paneBtn.setAttribute("aria-pressed", String(currentOrder === "scripture-first"));
+  paneBtn.innerHTML = `<span>Scripture left</span><span class="ui-toggle-state">${currentOrder === "scripture-first" ? "On" : "Off"}</span>`;
+  paneBtn.addEventListener("click", () => {
+    togglePaneOrder();
+  });
+  toggleRow.append(paneBtn);
+  toggleSection.append(toggleRow);
+  container.append(toggleSection);
+
+  const themeSection = document.createElement("div");
+  themeSection.className = "ui-settings-section";
+
+  const themeTitle = document.createElement("p");
+  themeTitle.className = "ui-settings-section-title";
+  themeTitle.textContent = "Color Theme";
+  themeSection.append(themeTitle);
+
+  const themeGrid = document.createElement("div");
+  themeGrid.className = "theme-grid";
+
+  colorThemes.forEach((theme) => {
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = `theme-card${theme.id === currentColorThemeId ? " is-active" : ""}`;
+    card.dataset.themeId = theme.id;
+
+    const swatch = document.createElement("div");
+    swatch.className = "theme-swatch";
+    theme.swatches.forEach((color) => {
+      const dot = document.createElement("div");
+      dot.className = "theme-swatch-color";
+      dot.style.background = color;
+      swatch.append(dot);
+    });
+
+    const name = document.createElement("p");
+    name.className = "theme-card-name";
+    name.textContent = theme.name;
+
+    const meta = document.createElement("p");
+    meta.className = "theme-card-meta";
+    const modeLabel = theme.supports === "both" ? "Light & dark" : theme.supports === "dark" ? "Dark only" : "Light only";
+    meta.textContent = modeLabel;
+
+    const check = document.createElement("span");
+    check.className = "theme-card-check";
+    check.setAttribute("aria-hidden", "true");
+    check.textContent = "✓";
+
+    card.append(swatch, name, meta, check);
+    card.addEventListener("click", () => {
+      void writeStoredValue(colorThemeStorageKey, theme.id);
+      applyColorTheme(theme.id);
+      scheduleAutoCloudSync();
+    });
+    themeGrid.append(card);
+  });
+
+  themeSection.append(themeGrid);
+  container.append(themeSection);
+};
+
 const renderSettings = () => {
   settingsTabNav.innerHTML = "";
   settingsTabs.forEach((tab) => {
@@ -2059,6 +2351,12 @@ const renderSettings = () => {
   settingsPanels.forEach((panel) => {
     panel.classList.toggle("is-active", panel.dataset.settingsPanel === activeSettingsTabId);
   });
+
+  const uiContent = document.querySelector("#ui-settings-content");
+
+  if (uiContent) {
+    renderUiSettings(uiContent);
+  }
 
   cloudProviderSelect.value = cloudSyncSettings.provider;
   cloudPollIntervalSelect.value = String(cloudSyncSettings.pollIntervalSeconds);
@@ -2553,9 +2851,6 @@ settingsButton.addEventListener("click", () => {
   openDialog(settingsDialog);
 });
 
-themeToggle.addEventListener("click", toggleTheme);
-paneOrderToggle.addEventListener("click", togglePaneOrder);
-
 noteTypeSelect.addEventListener("change", () => {
   changeNoteType(workspace.activeNoteId, noteTypeSelect.value);
 });
@@ -2875,6 +3170,7 @@ const bootstrap = async () => {
   applyTheme(await getPreferredTheme());
   applyPaneOrder(await getPreferredPaneOrder());
   applyTranslation(await getPreferredTranslation());
+  applyColorTheme(await getPreferredColorTheme());
   await restoreCloudSyncSettings();
   activeProvider.waitForReady(() => {
     void reconnectCloud();
