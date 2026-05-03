@@ -60,6 +60,8 @@ const addMetadataFieldButton = document.querySelector("#add-metadata-field-butto
 const deleteTypeButton = document.querySelector("#delete-type-button");
 const overflowMenu = document.querySelector(".overflow-menu");
 const syncConflictDialog = document.querySelector("#sync-conflict-dialog");
+const conflictDialogTitle = document.querySelector("#conflict-dialog-title");
+const conflictDialogDescription = document.querySelector("#conflict-dialog-description");
 const conflictLocalTime = document.querySelector("#conflict-local-time");
 const conflictRemoteTime = document.querySelector("#conflict-remote-time");
 const conflictKeepLocalButton = document.querySelector("#conflict-keep-local-button");
@@ -921,7 +923,7 @@ const hasLocalChangesSinceLastSync = () => {
   );
 };
 
-const showSyncConflictDialog = (remotePayload) => new Promise((resolve) => {
+const showSyncConflictDialog = (remotePayload, mode = "conflict") => new Promise((resolve) => {
   const mostRecentNote = workspace.notes.reduce(
     (latest, note) => (!latest || new Date(note.updatedAt) > new Date(latest.updatedAt) ? note : latest),
     null
@@ -934,6 +936,14 @@ const showSyncConflictDialog = (remotePayload) => new Promise((resolve) => {
     : "Timestamp unavailable";
 
   console.log(`[CloudSync] Showing conflict dialog — local: ${localTime}, cloud: ${remoteTime}`);
+
+  if (mode === "first-sync") {
+    conflictDialogTitle.textContent = "Existing Cloud Data Found";
+    conflictDialogDescription.textContent = "This provider already contains a workspace from another device. Do you want to link this device to that existing cloud workspace, or keep your current local data?";
+  } else {
+    conflictDialogTitle.textContent = "Sync Conflict Detected";
+    conflictDialogDescription.textContent = "Your local data and the cloud copy have both been changed since the last sync. Choose which version to keep.";
+  }
 
   conflictLocalTime.textContent = localTime;
   conflictRemoteTime.textContent = remoteTime;
@@ -1033,8 +1043,8 @@ const pullFromCloud = async () => {
 
     if (!lastSyncAt) {
       const hasData = hasLocalCloudData();
-      console.log(`[CloudSync] First sync — local has data: ${hasData}. ${hasData ? "Showing conflict dialog." : "Auto-applying remote."}`);
-      resolution = hasData ? await showSyncConflictDialog(remotePayload) : "remote";
+      console.log(`[CloudSync] First sync — local has data: ${hasData}. ${hasData ? "Showing first-sync dialog." : "Auto-applying remote."}`);
+      resolution = hasData ? await showSyncConflictDialog(remotePayload, "first-sync") : "remote";
     } else if (localHasChanges) {
       console.log("[CloudSync] Both sides changed since last sync — showing conflict dialog.");
       resolution = await showSyncConflictDialog(remotePayload);
