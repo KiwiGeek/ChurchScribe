@@ -138,6 +138,7 @@ let activeProvider = noOpProvider;
 
 const bookAliasMap = new Map();
 const domainValidationCache = new Map();
+const MIN_EMBED_WIDTH = 240;
 const knownTlds = [
   "ac","ad","ae","af","ag","ai","al","am","ao","ar","as","at","au","aw","az",
   "ba","bb","bd","be","bf","bg","bh","bi","bj","bm","bn","bo","br","bs","bt","bw","by","bz",
@@ -2163,7 +2164,6 @@ const createYouTubeEmbed = (videoId, width = 560) => {
   const iframe = document.createElement("iframe");
   iframe.className = "youtube-embed-frame";
   iframe.src = `https://www.youtube.com/embed/${videoId}`;
-  iframe.setAttribute("frameborder", "0");
   iframe.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share");
   iframe.setAttribute("allowfullscreen", "");
   iframe.title = "YouTube video";
@@ -2201,7 +2201,7 @@ const processYouTubeEmbeds = () => {
     }
 
     const cloned = block.cloneNode(true);
-    cloned.querySelectorAll("a").forEach((a) => a.remove());
+    cloned.querySelectorAll("a").forEach((anchor) => anchor.remove());
     const remainingText = cloned.textContent.trim();
 
     if (remainingText) {
@@ -3924,7 +3924,7 @@ noteEditor.addEventListener("mousedown", (event) => {
   document.body.style.cursor = "ew-resize";
 
   const onMouseMove = (e) => {
-    const newWidth = Math.min(maxWidth, Math.max(240, startWidth + (e.clientX - startX)));
+    const newWidth = Math.min(maxWidth, Math.max(MIN_EMBED_WIDTH, startWidth + (e.clientX - startX)));
     wrapper.style.width = `${newWidth}px`;
   };
 
