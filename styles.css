@@ -340,6 +340,10 @@ h1 {
   justify-content: flex-start;
 }
 
+.inline-action-menu > summary.overflow-action {
+  justify-content: center;
+}
+
 .inline-action-panel {
   min-width: 220px;
 }
@@ -592,6 +596,10 @@ h1 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
   padding: 0 20px 12px;
+}
+
+.note-meta-primary-field {
+  grid-column: 1 / -1;
 }
 
 .toolbar {

@@ -2525,7 +2525,7 @@ const renderNoteMetadataFields = () => {
 
   if (workspace.noteTypes.length > 1) {
     const typeField = document.createElement("label");
-    typeField.className = "field";
+    typeField.className = "field note-meta-primary-field";
 
     const typeLabel = document.createElement("span");
     typeLabel.textContent = "Note type";
@@ -3579,6 +3579,10 @@ colorPickerTrigger.addEventListener("click", (e) => {
 document.addEventListener("click", (e) => {
   if (!colorPickerWrapper.contains(e.target)) {
     closeColorPicker();
+  }
+
+  if (!overflowMenu.contains(e.target)) {
+    overflowMenu.removeAttribute("open");
   }
 });
 
