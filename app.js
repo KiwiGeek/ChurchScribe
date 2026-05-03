@@ -1092,8 +1092,8 @@ const pullFromCloud = async () => {
       refreshSaveStatus();
       console.log("[CloudSync] Remote data applied successfully.");
     } else if (resolution === "cancel") {
-      console.log("[CloudSync] User deferred first-sync decision; stopping polling until next provider reconnect.");
-      stopCloudPolling();
+      console.log("[CloudSync] User deferred first-sync decision; disconnecting provider.");
+      disconnectCloud();
     } else {
       console.log("[CloudSync] Keeping local data; scheduling upload to overwrite cloud.");
       void syncWorkspaceToCloud({ reason: "conflict-keep-local" });
