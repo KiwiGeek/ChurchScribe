@@ -80,6 +80,12 @@
           <button class="tool-button" type="button" data-block="h2" aria-label="Heading">Heading</button>
           <button class="tool-button" type="button" data-block="blockquote" aria-label="Quote">Quote</button>
           <button class="tool-button" type="button" data-command="removeFormat" aria-label="Clear formatting">Reset</button>
+          <div class="color-picker-wrapper" id="color-picker-wrapper">
+            <button class="tool-button color-picker-trigger" type="button" id="color-picker-trigger" aria-label="Text color" aria-expanded="false" aria-haspopup="true">
+              <span class="color-button-a">A</span><span class="color-button-swatch" id="color-button-swatch"></span>
+            </button>
+            <div class="color-picker-dropdown" id="color-picker-dropdown" hidden role="dialog" aria-label="Text color"></div>
+          </div>
         </div>
 
         <div

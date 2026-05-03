@@ -3020,6 +3020,141 @@ toolbarButtons.forEach((button) => {
   });
 });
 
+// ── Color picker ───────────────────────────────────────────────────────
+const colorPickerWrapper = document.querySelector("#color-picker-wrapper");
+const colorPickerTrigger = document.querySelector("#color-picker-trigger");
+const colorPickerDropdown = document.querySelector("#color-picker-dropdown");
+const colorButtonSwatch = document.querySelector("#color-button-swatch");
+
+const colorPalette = [
+  { label: "Black",       hex: "#000000" },
+  { label: "Dark Gray",   hex: "#404040" },
+  { label: "Gray",        hex: "#808080" },
+  { label: "Silver",      hex: "#c0c0c0" },
+  { label: "White",       hex: "#ffffff" },
+  { label: "Dark Red",    hex: "#c00000" },
+  { label: "Red",         hex: "#ff0000" },
+  { label: "Orange",      hex: "#ff6600" },
+  { label: "Yellow",      hex: "#ffff00" },
+  { label: "Light Green", hex: "#92d050" },
+  { label: "Green",       hex: "#00b050" },
+  { label: "Light Blue",  hex: "#00b0f0" },
+  { label: "Blue",        hex: "#0070c0" },
+  { label: "Dark Blue",   hex: "#002060" },
+  { label: "Purple",      hex: "#7030a0" },
+  { label: "Pink",        hex: "#ff00ff" },
+];
+
+let activeTextColor = null;
+
+const buildColorPickerDropdown = () => {
+  colorPickerDropdown.innerHTML = "";
+
+  const automaticBtn = document.createElement("button");
+  automaticBtn.type = "button";
+  automaticBtn.className = "color-automatic-btn";
+  const icon = document.createElement("span");
+  icon.className = "color-automatic-icon";
+  const label = document.createElement("span");
+  label.textContent = "Automatic";
+  automaticBtn.append(icon, label);
+  automaticBtn.addEventListener("click", () => {
+    applyTextColor(null);
+    closeColorPicker();
+  });
+  colorPickerDropdown.append(automaticBtn);
+
+  const sectionLabel = document.createElement("p");
+  sectionLabel.className = "color-section-label";
+  sectionLabel.textContent = "Standard Colors";
+  colorPickerDropdown.append(sectionLabel);
+
+  const grid = document.createElement("div");
+  grid.className = "color-swatch-grid";
+
+  colorPalette.forEach(({ label: colorLabel, hex }) => {
+    const swatch = document.createElement("button");
+    swatch.type = "button";
+    swatch.className = "color-swatch";
+    if (activeTextColor === hex) {
+      swatch.classList.add("is-selected");
+    }
+    swatch.style.background = hex;
+    swatch.setAttribute("aria-label", colorLabel);
+    swatch.setAttribute("title", colorLabel);
+    swatch.addEventListener("click", () => {
+      applyTextColor(hex);
+      closeColorPicker();
+    });
+    grid.append(swatch);
+  });
+
+  colorPickerDropdown.append(grid);
+};
+
+const applyTextColor = (color) => {
+  noteEditor.focus();
+  if (color === null) {
+    const selection = window.getSelection();
+    if (selection && selection.rangeCount > 0 && !selection.isCollapsed) {
+      const range = selection.getRangeAt(0);
+      // Use styleWithCSS off so execCommand generates font tags we can clear
+      document.execCommand("styleWithCSS", false, false);
+      document.execCommand("foreColor", false, "inherit");
+      // Also strip any inline color styles from affected nodes via a mutation approach
+      const start = range.startContainer.parentElement;
+      const end = range.endContainer.parentElement;
+      [start, end].forEach((node) => {
+        if (node && node !== noteEditor) {
+          node.style.removeProperty("color");
+          if (node.tagName === "FONT") {
+            node.removeAttribute("color");
+          }
+        }
+      });
+    }
+    activeTextColor = null;
+  } else {
+    document.execCommand("styleWithCSS", false, true);
+    document.execCommand("foreColor", false, color);
+    activeTextColor = color;
+  }
+  colorButtonSwatch.style.background = color ? color : "var(--text)";
+};
+
+const openColorPicker = () => {
+  buildColorPickerDropdown();
+  colorPickerDropdown.hidden = false;
+  colorPickerTrigger.setAttribute("aria-expanded", "true");
+};
+
+const closeColorPicker = () => {
+  colorPickerDropdown.hidden = true;
+  colorPickerTrigger.setAttribute("aria-expanded", "false");
+};
+
+colorPickerTrigger.addEventListener("click", (e) => {
+  e.stopPropagation();
+  if (colorPickerDropdown.hidden) {
+    openColorPicker();
+  } else {
+    closeColorPicker();
+  }
+});
+
+document.addEventListener("click", (e) => {
+  if (!colorPickerWrapper.contains(e.target)) {
+    closeColorPicker();
+  }
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && !colorPickerDropdown.hidden) {
+    closeColorPicker();
+    colorPickerTrigger.focus();
+  }
+});
+
 newNoteDirectButton.addEventListener("click", createNote);
 newNoteButton.addEventListener("click", () => {
   createNote();
@@ -3416,6 +3551,10 @@ chapterText.addEventListener("copy", (event) => {
     el.classList.remove("is-highlighted");
     el.style.removeProperty("background");
     el.style.removeProperty("background-color");
+  });
+
+  wrapper.querySelectorAll(".chapter-verse-number").forEach((numEl) => {
+    numEl.replaceWith(`[${numEl.textContent.trim()}] `);
   });
 
   event.clipboardData.setData("text/html", wrapper.innerHTML);
