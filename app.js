@@ -121,6 +121,28 @@ if (!Object.keys(providerRegistry).length) {
 let activeProvider = noOpProvider;
 
 const bookAliasMap = new Map();
+const domainValidationCache = new Map();
+const knownTlds = [
+  "ac","ad","ae","af","ag","ai","al","am","ao","ar","as","at","au","aw","az",
+  "ba","bb","bd","be","bf","bg","bh","bi","bj","bm","bn","bo","br","bs","bt","bw","by","bz",
+  "ca","cc","cd","cf","cg","ch","ci","ck","cl","cm","cn","co","cr","cu","cv","cw","cx","cy","cz",
+  "de","dj","dk","dm","do","dz","ec","ee","eg","er","es","et","eu",
+  "fi","fj","fk","fm","fo","fr","ga","gb","gd","ge","gf","gg","gh","gi","gl","gm","gn","gp","gq",
+  "gr","gs","gt","gu","gw","gy","hk","hn","hr","ht","hu",
+  "id","ie","il","im","in","io","iq","ir","is","it","je","jm","jo","jp",
+  "ke","kg","kh","ki","km","kn","kr","kw","ky","kz","la","lb","lc","li","lk","lr","ls","lt","lu","lv","ly",
+  "ma","mc","md","me","mg","mh","mk","ml","mm","mn","mo","mp","mq","mr","ms","mt","mu","mv","mw","mx","my","mz",
+  "na","nc","ne","nf","ng","ni","nl","no","np","nr","nu","nz",
+  "om","pa","pe","pf","pg","ph","pk","pl","pm","pn","pr","ps","pt","pw","py",
+  "qa","re","ro","rs","ru","rw","sa","sb","sc","sd","se","sg","sh","si","sk","sl","sm","sn","so",
+  "sr","ss","st","sv","sx","sy","sz","tc","td","tf","tg","th","tj","tk","tl","tm","tn","to","tr","tt","tv","tz",
+  "ua","ug","us","uy","uz","va","vc","ve","vg","vi","vn","vu","wf","ws",
+  "ye","yt","za","zm","zw",
+  "com","aero","app","asia","bible","biz","blog","cat","church","cloud","coop","dev",
+  "digital","edu","faith","global","gov","health","info","int","io","live",
+  "media","mil","ministry","mobi","museum","name","net","news","online","org",
+  "pro","shop","site","store","tech","travel","tv","wiki"
+];
 let explicitScriptureReferencePattern;
 let fullExplicitScriptureReferencePattern;
 let contextualScriptureReferencePattern;
@@ -1938,7 +1960,7 @@ const linkifyScriptureReferences = ({ jumpToCaretReference = false } = {}) => {
           return NodeFilter.FILTER_REJECT;
         }
 
-        if (node.parentElement?.closest("a[data-auto-scripture-link='true']")) {
+        if (node.parentElement?.closest("a")) {
           return NodeFilter.FILTER_REJECT;
         }
 
@@ -2034,6 +2056,204 @@ const linkifyScriptureReferences = ({ jumpToCaretReference = false } = {}) => {
   }
 };
 
+const unwrapAutoUrlLinks = () => {
+  noteEditor.querySelectorAll("a[data-auto-url-link='true']").forEach((link) => {
+    link.replaceWith(document.createTextNode(link.textContent));
+  });
+
+  noteEditor.normalize();
+};
+
+const validateDomainWithDoh = async (domain) => {
+  domainValidationCache.set(domain, "pending");
+
+  try {
+    const response = await fetch(
+      `https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(domain)}&type=A`,
+      { headers: { Accept: "application/dns-json" }, signal: AbortSignal.timeout(5000) }
+    );
+    const data = await response.json();
+    const isValid = data.Status === 0 && Array.isArray(data.Answer) && data.Answer.length > 0;
+    domainValidationCache.set(domain, isValid);
+
+    if (isValid) {
+      linkifyUrls();
+    }
+  } catch {
+    domainValidationCache.set(domain, false);
+  }
+};
+
+const linkifyUrls = ({ suppressAtCaret = false } = {}) => {
+  const tldGroup = [...knownTlds].sort((a, b) => b.length - a.length).join("|");
+  const urlPatterns = [
+    {
+      regex: /\b(https?|ftp|spotify):\/\/[^\s<>"'\)\]]+/gi,
+      type: "explicit"
+    },
+    {
+      regex: /\bgopher:\/\/([^\s<>"'\)\]]+)/gi,
+      type: "gopher"
+    },
+    {
+      regex: /\bwww\.[a-zA-Z0-9][a-zA-Z0-9\-]*(?:\.[a-zA-Z0-9][a-zA-Z0-9\-]*)+(?:\/[^\s<>"'\)\]]*)?/gi,
+      type: "www"
+    },
+    {
+      regex: /\b[a-zA-Z0-9_%+\-]+(?:\.[a-zA-Z0-9_%+\-]+)*@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/gi,
+      type: "email"
+    },
+    {
+      regex: new RegExp(
+        `\\b(?!www\\.)([a-zA-Z][a-zA-Z0-9\\-]*(?:\\.[a-zA-Z0-9][a-zA-Z0-9\\-]*)*\\.(?:${tldGroup}))(?:\\/[^\\s<>"'\\)\\]]*)?`,
+        "gi"
+      ),
+      type: "bare"
+    }
+  ];
+
+  const caretOffset = getCaretTextOffset(noteEditor);
+  unwrapAutoUrlLinks();
+
+  const globalOffsets = new Map();
+
+  if (suppressAtCaret && caretOffset !== null) {
+    const allTextWalker = document.createTreeWalker(noteEditor, NodeFilter.SHOW_TEXT);
+    let offset = 0;
+    let n;
+
+    while ((n = allTextWalker.nextNode())) {
+      globalOffsets.set(n, offset);
+      offset += n.nodeValue.length;
+    }
+  }
+
+  const walker = document.createTreeWalker(
+    noteEditor,
+    NodeFilter.SHOW_TEXT,
+    {
+      acceptNode(node) {
+        if (!node.nodeValue.trim()) {
+          return NodeFilter.FILTER_REJECT;
+        }
+
+        if (node.parentElement?.closest("a")) {
+          return NodeFilter.FILTER_REJECT;
+        }
+
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    }
+  );
+
+  const textNodes = [];
+  let currentNode;
+
+  while ((currentNode = walker.nextNode())) {
+    textNodes.push(currentNode);
+  }
+
+  textNodes.forEach((textNode) => {
+    const sourceText = textNode.nodeValue;
+    const nodeGlobalStart = globalOffsets.get(textNode) ?? 0;
+
+    const allMatches = [];
+
+    for (const { regex, type } of urlPatterns) {
+      regex.lastIndex = 0;
+
+      for (const match of sourceText.matchAll(regex)) {
+        allMatches.push({ match, type });
+      }
+    }
+
+    if (!allMatches.length) {
+      return;
+    }
+
+    allMatches.sort((a, b) => a.match.index - b.match.index);
+
+    const deduped = [];
+    let lastEnd = 0;
+
+    for (const item of allMatches) {
+      if (item.match.index >= lastEnd) {
+        deduped.push(item);
+        lastEnd = item.match.index + item.match[0].length;
+      }
+    }
+
+    const fragment = document.createDocumentFragment();
+    let lastIndex = 0;
+    let anyLinksAdded = false;
+
+    for (const { match, type } of deduped) {
+      const matchedText = match[0];
+      let href;
+
+      if (type === "bare") {
+        const domain = matchedText.split("/")[0].split("?")[0].split("#")[0];
+        const cacheEntry = domainValidationCache.get(domain);
+
+        if (!cacheEntry) {
+          validateDomainWithDoh(domain);
+          continue;
+        }
+
+        if (cacheEntry !== true) {
+          continue;
+        }
+
+        href = `https://${matchedText}`;
+      } else if (type === "explicit") {
+        const spotifyWebMatch = matchedText.match(/^https?:\/\/open\.spotify\.com\/([a-zA-Z]+)\/([a-zA-Z0-9]+)/);
+        href = spotifyWebMatch ? `spotify:${spotifyWebMatch[1]}:${spotifyWebMatch[2]}` : matchedText;
+      } else if (type === "gopher") {
+        href = `https://gopherproxy.meulie.net/${match[1]}`;
+      } else if (type === "www") {
+        href = `https://${matchedText}`;
+      } else if (type === "email") {
+        href = `mailto:${matchedText}`;
+      }
+
+      if (suppressAtCaret && caretOffset !== null && caretOffset === nodeGlobalStart + match.index + match[0].length) {
+        continue;
+      }
+
+      if (match.index > lastIndex) {
+        fragment.append(document.createTextNode(sourceText.slice(lastIndex, match.index)));
+      }
+
+      const link = document.createElement("a");
+      link.href = href;
+      link.className = "url-link";
+      link.dataset.autoUrlLink = "true";
+      link.textContent = matchedText;
+
+      if (type !== "email") {
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+      }
+
+      fragment.append(link);
+      lastIndex = match.index + matchedText.length;
+      anyLinksAdded = true;
+    }
+
+    if (!anyLinksAdded) {
+      return;
+    }
+
+    if (lastIndex < sourceText.length) {
+      fragment.append(document.createTextNode(sourceText.slice(lastIndex)));
+    }
+
+    textNode.parentNode.replaceChild(fragment, textNode);
+  });
+
+  restoreCaretTextOffset(noteEditor, caretOffset);
+};
+
 const getPreviousNodeFromCaret = (root, node) => {
   let current = node;
 
@@ -2082,7 +2302,7 @@ const findAutoLinkBeforeCaret = () => {
     candidate = candidate.parentElement;
   }
 
-  return candidate?.matches?.("a[data-auto-scripture-link='true']") ? candidate : null;
+  return candidate?.matches?.("a[data-auto-scripture-link='true'], a[data-auto-url-link='true']") ? candidate : null;
 };
 
 const findAutoLinkAtCaret = () => {
@@ -2095,7 +2315,7 @@ const findAutoLinkAtCaret = () => {
   const range = selection.getRangeAt(0);
 
   if (range.startContainer.nodeType === Node.TEXT_NODE) {
-    const parentLink = range.startContainer.parentElement?.closest("a[data-auto-scripture-link='true']");
+    const parentLink = range.startContainer.parentElement?.closest("a[data-auto-scripture-link='true'], a[data-auto-url-link='true']");
 
     if (parentLink && range.startOffset === range.startContainer.nodeValue.length) {
       return parentLink;
@@ -2105,10 +2325,10 @@ const findAutoLinkAtCaret = () => {
   if (range.startContainer.nodeType === Node.ELEMENT_NODE && range.startOffset > 0) {
     const previousNode = range.startContainer.childNodes[range.startOffset - 1];
     const previousLink = previousNode?.nodeType === Node.ELEMENT_NODE
-      ? previousNode.closest?.("a[data-auto-scripture-link='true']") ?? previousNode
-      : previousNode?.parentElement?.closest("a[data-auto-scripture-link='true']");
+      ? previousNode.closest?.("a[data-auto-scripture-link='true'], a[data-auto-url-link='true']") ?? previousNode
+      : previousNode?.parentElement?.closest("a[data-auto-scripture-link='true'], a[data-auto-url-link='true']");
 
-    if (previousLink?.matches?.("a[data-auto-scripture-link='true']")) {
+    if (previousLink?.matches?.("a[data-auto-scripture-link='true'], a[data-auto-url-link='true']")) {
       return previousLink;
     }
   }
@@ -2295,6 +2515,7 @@ const renderActiveNote = () => {
   renderNoteMetadataFields();
   noteEditor.innerHTML = activeNote.content;
   linkifyScriptureReferences();
+  linkifyUrls();
   renderNoteList();
 };
 
@@ -3232,6 +3453,7 @@ noteEditor.addEventListener("input", (event) => {
   }
 
   linkifyScriptureReferences({ jumpToCaretReference: true });
+  linkifyUrls({ suppressAtCaret: event.inputType !== "insertFromPaste" });
   saveActiveNote();
 });
 
@@ -3261,6 +3483,24 @@ noteEditor.addEventListener("keydown", (event) => {
 });
 
 noteEditor.addEventListener("click", (event) => {
+  const urlLink = event.target.closest("a[data-auto-url-link='true']");
+
+  if (urlLink) {
+    event.preventDefault();
+
+    const osHandledSchemes = ["mailto:", "ftp:", "spotify:"];
+
+    if (osHandledSchemes.some((scheme) => urlLink.href.startsWith(scheme))) {
+      const tempLink = document.createElement("a");
+      tempLink.href = urlLink.href;
+      tempLink.click();
+    } else {
+      window.open(urlLink.href, "_blank", "noopener,noreferrer");
+    }
+
+    return;
+  }
+
   const link = event.target.closest("a[data-auto-scripture-link='true']");
 
   if (!link) {
