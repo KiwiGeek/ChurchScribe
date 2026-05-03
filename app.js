@@ -189,6 +189,10 @@ const settingsTabs = [
   {
     id: "cloud-sync",
     label: "Auxiliary Storage"
+  },
+  {
+    id: "about",
+    label: "About"
   }
 ];
 
