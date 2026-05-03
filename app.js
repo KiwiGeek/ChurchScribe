@@ -620,7 +620,25 @@ const persistWorkspace = () => {
 };
 
 const updateSaveStatus = (message) => {
-  saveStatus.textContent = message;
+  saveStatus.replaceChildren();
+
+  if (typeof message === "string") {
+    saveStatus.textContent = message;
+    return;
+  }
+
+  const { localLabel, syncLabel } = message;
+
+  const localText = document.createTextNode(`${localLabel} • `);
+  const syncButton = document.createElement("button");
+  syncButton.type = "button";
+  syncButton.className = "save-status-sync";
+  syncButton.textContent = syncLabel;
+  syncButton.addEventListener("click", async () => {
+    await syncWorkspaceToCloud({ reason: "manual" });
+  });
+
+  saveStatus.append(localText, syncButton);
 };
 
 const persistCloudSyncSettings = () => {
@@ -705,7 +723,7 @@ const buildSaveStatusText = (savedAt = new Date(), syncedAt = cloudSyncSettings.
       ? `Synced ${new Date(syncedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}`
       : "Not synced yet";
 
-  return `${localLabel} • ${syncLabel}`;
+  return { localLabel, syncLabel };
 };
 
 const refreshSaveStatus = () => {
