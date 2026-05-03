@@ -367,6 +367,126 @@ const colorThemes = [
     name: "Sunset Revival",
     supports: "both",
     swatches: ["#fff8f6", "#e91e63", "#fce4da", "#1a0508"]
+  },
+  {
+    id: "morning-mist",
+    name: "Morning Mist",
+    supports: "light",
+    swatches: ["#f8fbff", "#6b8fa8", "#dce8f4", "#1a2630"]
+  },
+  {
+    id: "spring-meadow",
+    name: "Spring Meadow",
+    supports: "light",
+    swatches: ["#fafff2", "#7aad3a", "#dff2c0", "#1a2a0a"]
+  },
+  {
+    id: "ivory-grace",
+    name: "Ivory Grace",
+    supports: "light",
+    swatches: ["#fffcf5", "#a07850", "#f0e8d8", "#2a1e0a"]
+  },
+  {
+    id: "coastal-breeze",
+    name: "Coastal Breeze",
+    supports: "light",
+    swatches: ["#f0fcff", "#0097a7", "#b2ebf2", "#002030"]
+  },
+  {
+    id: "peach-blossom",
+    name: "Peach Blossom",
+    supports: "light",
+    swatches: ["#fffaf5", "#e07030", "#fde0cc", "#2a1200"]
+  },
+  {
+    id: "northern-lights",
+    name: "Northern Lights",
+    supports: "dark",
+    swatches: ["#04080e", "#00dca0", "#081825", "#d0f8f0"]
+  },
+  {
+    id: "ember-glow",
+    name: "Ember Glow",
+    supports: "dark",
+    swatches: ["#120804", "#f09020", "#221008", "#fff0e0"]
+  },
+  {
+    id: "twilight-prayer",
+    name: "Twilight Prayer",
+    supports: "dark",
+    swatches: ["#080616", "#7090d8", "#100e28", "#e0e8ff"]
+  },
+  {
+    id: "neon-sermon",
+    name: "Neon Sermon",
+    supports: "dark",
+    swatches: ["#0a0010", "#e040fb", "#160024", "#ffd6ff"]
+  },
+  {
+    id: "void-scripture",
+    name: "Void Scripture",
+    supports: "dark",
+    swatches: ["#060606", "#c8b89a", "#141414", "#e8e0d4"]
+  },
+  {
+    id: "azure-sky",
+    name: "Azure Sky",
+    supports: "both",
+    swatches: ["#f0f7ff", "#1e88e5", "#bbdefb", "#0a1e30"]
+  },
+  {
+    id: "amber-warmth",
+    name: "Amber Warmth",
+    supports: "both",
+    swatches: ["#fffbf0", "#f09000", "#ffe0b2", "#1a0e00"]
+  },
+  {
+    id: "rose-garden",
+    name: "Rose Garden",
+    supports: "both",
+    swatches: ["#fff4f6", "#e8608a", "#fce4ec", "#1a0810"]
+  },
+  {
+    id: "mint-fresh",
+    name: "Mint Fresh",
+    supports: "both",
+    swatches: ["#f0fff8", "#00b09b", "#b2f5e8", "#001e18"]
+  },
+  {
+    id: "sand-dune",
+    name: "Sand Dune",
+    supports: "both",
+    swatches: ["#fffbf4", "#c4945a", "#eedcc4", "#1a1000"]
+  },
+  {
+    id: "storm-grey",
+    name: "Storm Grey",
+    supports: "both",
+    swatches: ["#f4f6f8", "#607d8b", "#e0e6ea", "#1a2228"]
+  },
+  {
+    id: "olive-grove",
+    name: "Olive Grove",
+    supports: "both",
+    swatches: ["#f8f8f0", "#7b8c4a", "#e4e8c8", "#1a1c08"]
+  },
+  {
+    id: "plum-twilight",
+    name: "Plum Twilight",
+    supports: "both",
+    swatches: ["#f8f2fc", "#8e44ad", "#e8d4f4", "#160820"]
+  },
+  {
+    id: "copper-craft",
+    name: "Copper Craft",
+    supports: "both",
+    swatches: ["#fff8f2", "#b87333", "#f0dcc8", "#1e0c00"]
+  },
+  {
+    id: "pine-grove",
+    name: "Pine Grove",
+    supports: "both",
+    swatches: ["#f2f8f4", "#2e6c3e", "#c4deca", "#0a1c10"]
   }
 ];
 
