@@ -1042,9 +1042,8 @@ const pullFromCloud = async () => {
     let resolution;
 
     if (!lastSyncAt) {
-      const hasData = hasLocalCloudData();
-      console.log(`[CloudSync] First sync — local has data: ${hasData}. ${hasData ? "Showing first-sync dialog." : "Auto-applying remote."}`);
-      resolution = hasData ? await showSyncConflictDialog(remotePayload, "first-sync") : "remote";
+      console.log("[CloudSync] First sync — showing first-sync dialog.");
+      resolution = await showSyncConflictDialog(remotePayload, "first-sync");
     } else if (localHasChanges) {
       console.log("[CloudSync] Both sides changed since last sync — showing conflict dialog.");
       resolution = await showSyncConflictDialog(remotePayload);
