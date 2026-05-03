@@ -3567,6 +3567,13 @@ const closeColorPicker = () => {
   colorPickerTrigger.setAttribute("aria-expanded", "false");
 };
 
+const closeOverflowMenu = () => {
+  overflowMenu.removeAttribute("open");
+  overflowMenu.querySelectorAll("details[open]").forEach((menu) => {
+    menu.removeAttribute("open");
+  });
+};
+
 colorPickerTrigger.addEventListener("click", (e) => {
   e.stopPropagation();
   if (colorPickerDropdown.hidden) {
@@ -3582,7 +3589,7 @@ document.addEventListener("click", (e) => {
   }
 
   if (!overflowMenu.contains(e.target)) {
-    overflowMenu.removeAttribute("open");
+    closeOverflowMenu();
   }
 });
 
@@ -3601,12 +3608,11 @@ newNoteActions.addEventListener("click", (event) => {
   }
 
   createNote(trigger.dataset.newNoteType);
-  trigger.closest(".inline-action-menu")?.removeAttribute("open");
-  overflowMenu.removeAttribute("open");
+  closeOverflowMenu();
 });
 deleteNoteButton.addEventListener("click", () => {
   deleteNoteById(workspace.activeNoteId);
-  overflowMenu.removeAttribute("open");
+  closeOverflowMenu();
 });
 noteDetailsButton.addEventListener("click", () => {
   renderNoteMetadataFields();
@@ -3619,7 +3625,7 @@ manageNotesButton.addEventListener("click", () => {
 
 settingsButton.addEventListener("click", () => {
   renderSettings();
-  overflowMenu.removeAttribute("open");
+  closeOverflowMenu();
   openDialog(settingsDialog);
 });
 
