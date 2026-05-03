@@ -52,19 +52,21 @@
                   <select id="note-type-select" name="note-type"></select>
                 </label>
                 <button class="ghost-button overflow-action" id="duplicate-note-button" type="button">Duplicate note</button>
-                <button class="ghost-button overflow-action" id="manage-notes-button" type="button">Manage notes</button>
+                <button class="ghost-button overflow-action" id="manage-notes-button" type="button">Browse notes</button>
                 <button class="ghost-button overflow-action" id="delete-note-button" type="button">Delete note</button>
               </div>
             </details>
           </div>
         </div>
 
-        <section class="note-switcher" aria-labelledby="note-list-title">
-          <div class="note-switcher-header">
-            <h3 id="note-list-title">Saved Notes</h3>
+        <div class="active-note-bar">
+          <div class="active-note-summary">
+            <p class="active-note-label">Current note</p>
+            <h3 class="active-note-title" id="active-note-title"></h3>
+            <p class="active-note-meta" id="active-note-meta"></p>
           </div>
-          <div class="note-list" id="note-list" role="listbox" aria-label="Saved notes"></div>
-        </section>
+          <button class="ghost-button subtle-button" id="browse-notes-button" type="button">Browse notes</button>
+        </div>
 
         <div class="note-meta-bar">
           <div class="metadata-summary" id="metadata-summary"></div>
@@ -146,13 +148,31 @@
     <form class="dialog-shell" method="dialog">
       <div class="dialog-header">
         <div>
-          <p class="panel-kicker">Manage Notes</p>
+          <p class="panel-kicker">Notes Browser</p>
           <h2>Notes Library</h2>
         </div>
         <button class="ghost-button" id="close-note-manager-button" type="submit">Close</button>
       </div>
 
       <div class="dialog-body">
+        <div class="note-browser-toolbar">
+          <label class="field compact-field note-browser-search">
+            <span>Filter</span>
+            <input id="note-browser-filter" type="search" placeholder="Search title, details, or note text">
+          </label>
+          <label class="field compact-field note-browser-type">
+            <span>Type</span>
+            <select id="note-browser-type-filter" name="note-browser-type-filter"></select>
+          </label>
+          <label class="field compact-field note-browser-sort">
+            <span>Sort</span>
+            <select id="note-browser-sort" name="note-browser-sort">
+              <option value="updated-desc">Recently updated</option>
+              <option value="created-desc">Recently created</option>
+              <option value="title-asc">Title</option>
+            </select>
+          </label>
+        </div>
         <div class="note-manager-list" id="note-manager-list"></div>
       </div>
     </form>
