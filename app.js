@@ -83,9 +83,9 @@ const themeStorageKey = "service-notes-theme";
 const paneOrderStorageKey = "service-notes-pane-order";
 const translationStorageKey = "service-notes-translation";
 const cloudSyncStorageKey = "service-notes-cloud-sync";
-const defaultGoogleClientId = "711830335817-2enpiqrmso0sqgq2fnh8o4ef4r60ede0.apps.googleusercontent.com";
-const driveWorkspaceFileName = "churchscribe-workspace.json";
 const autoCloudSyncDelayMs = 10000;
+
+const activeProvider = window.GoogleDriveProvider;
 
 const bookAliasMap = new Map();
 let explicitScriptureReferencePattern;
@@ -96,21 +96,10 @@ let currentTranslationCode = "KJV";
 let activeTypeEditorId = null;
 let activeSettingsTabId = "note-types";
 let dbPromise;
-let googleTokenClient = null;
-let googleAccessToken = null;
 let pendingAutoSyncTimer = null;
 let syncInFlightPromise = null;
-let silentReconnectAttempted = false;
 let isPullInFlight = false;
 let cloudPollTimer = null;
-
-const googleDriveScopes = [
-  "openid",
-  "email",
-  "profile",
-  "https://www.googleapis.com/auth/drive.appdata",
-  "https://www.googleapis.com/auth/drive.file"
-].join(" ");
 
 const workspace = {
   noteTypes: [],
@@ -470,7 +459,7 @@ const persistCloudSyncSettings = () => {
 };
 
 const resetTransientCloudSessionState = () => {
-  if (googleAccessToken) {
+  if (activeProvider.hasActiveSession()) {
     return;
   }
 
@@ -491,12 +480,9 @@ const restoreCloudSyncSettings = async () => {
   persistCloudSyncSettings();
 };
 
-const isGoogleIdentityAvailable = () =>
-  Boolean(window.google?.accounts?.oauth2?.initTokenClient);
-
 const buildCloudStatusText = () => {
-  if (!isGoogleIdentityAvailable()) {
-    return "Google Identity Services not loaded";
+  if (!activeProvider.isAvailable()) {
+    return "Cloud provider not loaded";
   }
 
   if (
@@ -535,8 +521,6 @@ const refreshSaveStatus = () => {
   updateSaveStatus(buildSaveStatusText(savedAt));
 };
 
-const hasActiveGoogleDriveSession = () => Boolean(googleAccessToken);
-
 const buildCloudSyncPayload = () => ({
   version: 1,
   updatedAt: new Date().toISOString(),
@@ -556,206 +540,6 @@ const buildCloudSyncPayload = () => ({
 
 const getCloudTargetLabel = () =>
   cloudSyncSettings.useVisibleDriveFolder ? "visible Drive folder" : "hidden app storage";
-
-const googleApiFetch = async (url, options = {}) => {
-  if (!googleAccessToken) {
-    throw new Error("Google Drive is not connected in this browser session.");
-  }
-
-  const headers = new Headers(options.headers ?? {});
-  headers.set("Authorization", `Bearer ${googleAccessToken}`);
-
-  const response = await fetch(url, {
-    ...options,
-    headers
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText || `Google Drive request failed with ${response.status}.`);
-  }
-
-  return response;
-};
-
-const extractGoogleErrorMessage = (error) => {
-  const fallback = "Unknown Google Drive error.";
-
-  if (!(error instanceof Error)) {
-    return fallback;
-  }
-
-  const message = error.message?.trim() || fallback;
-
-  try {
-    const parsed = JSON.parse(message);
-    return parsed.error?.message || parsed.error_description || message;
-  } catch {
-    return message;
-  }
-};
-
-const getDriveWorkspaceLocation = () => (
-  cloudSyncSettings.useVisibleDriveFolder
-    ? {
-        spaces: "drive",
-        parents: async () => [await ensureVisibleDriveFolderId()],
-        query: async () =>
-          `name='${driveWorkspaceFileName}' and '${await ensureVisibleDriveFolderId()}' in parents and trashed=false`
-      }
-    : {
-        spaces: "appDataFolder",
-        parents: async () => ["appDataFolder"],
-        query: async () => `name='${driveWorkspaceFileName}' and 'appDataFolder' in parents and trashed=false`
-      }
-);
-
-const ensureVisibleDriveFolderId = async () => {
-  if (cloudSyncSettings.remoteWorkspaceParentId) {
-    return cloudSyncSettings.remoteWorkspaceParentId;
-  }
-
-  const query = encodeURIComponent("name='ChurchScribe' and mimeType='application/vnd.google-apps.folder' and trashed=false");
-  const response = await googleApiFetch(
-    `https://www.googleapis.com/drive/v3/files?q=${query}&spaces=drive&fields=files(id,name)`
-  );
-  const payload = await response.json();
-  const existingFolderId = payload.files?.[0]?.id ?? "";
-
-  if (existingFolderId) {
-    cloudSyncSettings.remoteWorkspaceParentId = existingFolderId;
-    persistCloudSyncSettings();
-    return existingFolderId;
-  }
-
-  const createResponse = await googleApiFetch(
-    "https://www.googleapis.com/drive/v3/files?fields=id",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        name: "ChurchScribe",
-        mimeType: "application/vnd.google-apps.folder"
-      })
-    }
-  );
-  const createdFolder = await createResponse.json();
-  const folderId = createdFolder.id ?? "";
-
-  if (folderId) {
-    cloudSyncSettings.remoteWorkspaceParentId = folderId;
-    persistCloudSyncSettings();
-  }
-
-  return folderId;
-};
-
-const findDriveWorkspaceFileId = async () => {
-  if (cloudSyncSettings.remoteWorkspaceFileId) {
-    return cloudSyncSettings.remoteWorkspaceFileId;
-  }
-
-  const location = getDriveWorkspaceLocation();
-  const query = encodeURIComponent(await location.query());
-  const response = await googleApiFetch(
-    `https://www.googleapis.com/drive/v3/files?q=${query}&spaces=${location.spaces}&fields=files(id,name)`
-  );
-  const payload = await response.json();
-  const fileId = payload.files?.[0]?.id ?? "";
-
-  if (fileId) {
-    cloudSyncSettings.remoteWorkspaceFileId = fileId;
-    persistCloudSyncSettings();
-  }
-
-  return fileId;
-};
-
-const buildMultipartJsonBody = (metadata, payload) => {
-  const boundary = `churchscribe-${crypto.randomUUID()}`;
-  const body = [
-    `--${boundary}`,
-    "Content-Type: application/json; charset=UTF-8",
-    "",
-    JSON.stringify(metadata),
-    `--${boundary}`,
-    "Content-Type: application/json; charset=UTF-8",
-    "",
-    JSON.stringify(payload),
-    `--${boundary}--`
-  ].join("\r\n");
-
-  return {
-    body,
-    contentType: `multipart/related; boundary=${boundary}`
-  };
-};
-
-const uploadWorkspaceToGoogleDrive = async () => {
-  const payload = buildCloudSyncPayload();
-  const existingFileId = await findDriveWorkspaceFileId();
-  const location = getDriveWorkspaceLocation();
-
-  if (existingFileId) {
-    const multipart = buildMultipartJsonBody({ mimeType: "application/json" }, payload);
-    await googleApiFetch(
-      `https://www.googleapis.com/upload/drive/v3/files/${existingFileId}?uploadType=multipart&fields=id`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": multipart.contentType
-        },
-        body: multipart.body
-      }
-    );
-
-    return existingFileId;
-  }
-
-  const multipart = buildMultipartJsonBody(
-    {
-      name: driveWorkspaceFileName,
-      parents: await location.parents(),
-      mimeType: "application/json"
-    },
-    payload
-  );
-  const response = await googleApiFetch(
-    "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": multipart.contentType
-      },
-      body: multipart.body
-    }
-  );
-  const responsePayload = await response.json();
-  const fileId = responsePayload.id ?? "";
-
-  if (fileId) {
-    cloudSyncSettings.remoteWorkspaceFileId = fileId;
-    persistCloudSyncSettings();
-  }
-
-  return fileId;
-};
-
-const downloadWorkspaceFromGoogleDrive = async () => {
-  const fileId = await findDriveWorkspaceFileId();
-
-  if (!fileId) {
-    return null;
-  }
-
-  const response = await googleApiFetch(
-    `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`
-  );
-
-  return response.json();
-};
 
 const applyCloudPayload = (payload) => {
   if (payload.workspace) {
@@ -845,8 +629,8 @@ const showSyncConflictDialog = (remotePayload) => new Promise((resolve) => {
 });
 
 const pullFromCloud = async () => {
-  if (!hasActiveGoogleDriveSession()) {
-    console.log("[CloudSync] Pull skipped: no active Google Drive session.");
+  if (!activeProvider.hasActiveSession()) {
+    console.log("[CloudSync] Pull skipped: no active cloud session.");
     return;
   }
 
@@ -864,10 +648,23 @@ const pullFromCloud = async () => {
   console.log("[CloudSync] Starting pull from cloud...");
 
   try {
-    const remotePayload = await downloadWorkspaceFromGoogleDrive();
+    const result = await activeProvider.download({
+      useVisibleDriveFolder: cloudSyncSettings.useVisibleDriveFolder,
+      remoteWorkspaceFileId: cloudSyncSettings.remoteWorkspaceFileId,
+      remoteWorkspaceParentId: cloudSyncSettings.remoteWorkspaceParentId
+    });
+
+    if (result.remoteWorkspaceFileId !== cloudSyncSettings.remoteWorkspaceFileId ||
+        result.remoteWorkspaceParentId !== cloudSyncSettings.remoteWorkspaceParentId) {
+      cloudSyncSettings.remoteWorkspaceFileId = result.remoteWorkspaceFileId;
+      cloudSyncSettings.remoteWorkspaceParentId = result.remoteWorkspaceParentId;
+      persistCloudSyncSettings();
+    }
+
+    const remotePayload = result.data;
 
     if (!remotePayload) {
-      console.log("[CloudSync] No remote file found on Google Drive.");
+      console.log("[CloudSync] No remote file found.");
 
       if (hasLocalNoteData()) {
         console.log("[CloudSync] Local data exists with no cloud copy; triggering initial upload.");
@@ -945,8 +742,8 @@ const stopCloudPolling = () => {
 const startCloudPolling = () => {
   stopCloudPolling();
 
-  if (!cloudSyncSettings.autoSync || !hasActiveGoogleDriveSession()) {
-    console.log(`[CloudSync] Background polling not started (autoSync=${cloudSyncSettings.autoSync}, connected=${hasActiveGoogleDriveSession()}).`);
+  if (!cloudSyncSettings.autoSync || !activeProvider.hasActiveSession()) {
+    console.log(`[CloudSync] Background polling not started (autoSync=${cloudSyncSettings.autoSync}, connected=${activeProvider.hasActiveSession()}).`);
     return;
   }
 
@@ -959,8 +756,8 @@ const startCloudPolling = () => {
 };
 
 const syncWorkspaceToCloud = async ({ reason = "manual" } = {}) => {
-  if (!hasActiveGoogleDriveSession()) {
-    cloudSyncSettings.status = "Connect Google Drive first.";
+  if (!activeProvider.hasActiveSession()) {
+    cloudSyncSettings.status = "Connect to cloud storage first.";
     persistCloudSyncSettings();
     renderSettings();
     refreshSaveStatus();
@@ -976,14 +773,21 @@ const syncWorkspaceToCloud = async ({ reason = "manual" } = {}) => {
 
   syncInFlightPromise = (async () => {
     try {
-      cloudSyncSettings.status = reason === "idle" ? "Syncing changes to Google Drive..." : "Syncing to Google Drive...";
       cloudSyncSettings.status = reason === "idle"
         ? `Syncing changes to Google Drive (${getCloudTargetLabel()})...`
         : `Syncing to Google Drive (${getCloudTargetLabel()})...`;
       cloudSyncSettings.lastError = "";
       persistCloudSyncSettings();
       renderSettings();
-      await uploadWorkspaceToGoogleDrive();
+
+      const result = await activeProvider.upload(buildCloudSyncPayload(), {
+        useVisibleDriveFolder: cloudSyncSettings.useVisibleDriveFolder,
+        remoteWorkspaceFileId: cloudSyncSettings.remoteWorkspaceFileId,
+        remoteWorkspaceParentId: cloudSyncSettings.remoteWorkspaceParentId
+      });
+
+      cloudSyncSettings.remoteWorkspaceFileId = result.remoteWorkspaceFileId;
+      cloudSyncSettings.remoteWorkspaceParentId = result.remoteWorkspaceParentId;
       cloudSyncSettings.lastSyncAt = new Date().toISOString();
       cloudSyncSettings.status = `Connected to Google Drive (${getCloudTargetLabel()})`;
       cloudSyncSettings.lastError = "";
@@ -994,7 +798,7 @@ const syncWorkspaceToCloud = async ({ reason = "manual" } = {}) => {
       return true;
     } catch (error) {
       console.error("[CloudSync] Upload failed:", error);
-      const errorMessage = extractGoogleErrorMessage(error);
+      const errorMessage = error.message || "Unknown cloud sync error.";
       cloudSyncSettings.status = `Google Drive sync failed: ${errorMessage}`;
       cloudSyncSettings.lastError = errorMessage;
       persistCloudSyncSettings();
@@ -1010,7 +814,7 @@ const syncWorkspaceToCloud = async ({ reason = "manual" } = {}) => {
 };
 
 const scheduleAutoCloudSync = () => {
-  if (!cloudSyncSettings.autoSync || !hasActiveGoogleDriveSession()) {
+  if (!cloudSyncSettings.autoSync || !activeProvider.hasActiveSession()) {
     return;
   }
 
@@ -1026,141 +830,39 @@ const scheduleAutoCloudSync = () => {
   }, autoCloudSyncDelayMs);
 };
 
-const initializeGoogleTokenClient = () => {
-  if (!isGoogleIdentityAvailable() || googleTokenClient) {
-    return;
-  }
-
-  googleTokenClient = window.google.accounts.oauth2.initTokenClient({
-    client_id: defaultGoogleClientId,
-    scope: googleDriveScopes,
-    callback: () => {}
-  });
-};
-
-const finalizeGoogleDriveConnection = async (accessToken, { triggerInitialSync = false } = {}) => {
-  googleAccessToken = accessToken;
-  let connectedEmail = "";
-
-  try {
-    const userInfo = await fetchGoogleUserInfo(googleAccessToken);
-    connectedEmail = userInfo.email ?? "";
-  } catch (error) {
-    console.warn("Google user info lookup failed; continuing with Drive connection.", error);
-  }
-
-  cloudSyncSettings.connectedEmail = connectedEmail;
-  cloudSyncSettings.status = `Connected to Google Drive (${getCloudTargetLabel()})`;
-  cloudSyncSettings.lastError = "";
-  persistCloudSyncSettings();
-  renderSettings();
-  console.log(`[CloudSync] Google Drive connected as ${connectedEmail || "(unknown)"}. triggerInitialSync=${triggerInitialSync}`);
-  startCloudPolling();
-
-  if (triggerInitialSync) {
-    void pullFromCloud();
-  }
-};
-
-const fetchGoogleUserInfo = async (accessToken) => {
-  const response = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
-    headers: {
-      Authorization: `Bearer ${accessToken}`
-    }
-  });
-
-  if (!response.ok) {
-    throw new Error("Unable to load Google account information.");
-  }
-
-  return response.json();
-};
-
-const connectGoogleDrive = async () => {
-  if (!isGoogleIdentityAvailable()) {
-    cloudSyncSettings.status = "Google Identity Services is still loading.";
+const connectCloud = async () => {
+  if (!activeProvider.isAvailable()) {
+    cloudSyncSettings.status = "Cloud provider is still loading.";
     persistCloudSyncSettings();
     renderSettings();
     return;
   }
 
-  initializeGoogleTokenClient();
-
-  cloudSyncSettings.status = "Waiting for Google sign-in...";
+  activeProvider.ensureTokenClient();
+  cloudSyncSettings.status = "Waiting for sign-in...";
   persistCloudSyncSettings();
   renderSettings();
 
-  await new Promise((resolve, reject) => {
-    googleTokenClient.callback = async (tokenResponse) => {
-      if (tokenResponse.error) {
-        cloudSyncSettings.status = `Google sign-in failed: ${tokenResponse.error}`;
-        persistCloudSyncSettings();
-        renderSettings();
-        reject(new Error(tokenResponse.error));
-        return;
-      }
-
-      try {
-        await finalizeGoogleDriveConnection(tokenResponse.access_token, { triggerInitialSync: true });
-        resolve();
-      } catch (error) {
-        cloudSyncSettings.status = "Signed in, but failed to finish Google Drive connection.";
-        persistCloudSyncSettings();
-        renderSettings();
-        reject(error);
-      }
-    };
-
-    googleTokenClient.requestAccessToken({ prompt: "consent" });
-  });
-};
-
-const attemptSilentGoogleReconnect = async () => {
-  if (silentReconnectAttempted || hasActiveGoogleDriveSession() || !isGoogleIdentityAvailable()) {
-    return;
-  }
-
-  silentReconnectAttempted = true;
-  cloudSyncSettings.status = "Verifying Google Drive connection...";
-  cloudSyncSettings.lastError = "";
-  persistCloudSyncSettings();
-
   try {
-    initializeGoogleTokenClient();
-
-    await new Promise((resolve, reject) => {
-      googleTokenClient.callback = async (tokenResponse) => {
-        if (tokenResponse.error) {
-          reject(new Error(tokenResponse.error));
-          return;
-        }
-
-        try {
-          await finalizeGoogleDriveConnection(tokenResponse.access_token);
-          resolve();
-        } catch (error) {
-          reject(error);
-        }
-      };
-
-      googleTokenClient.requestAccessToken({ prompt: "none" });
-    });
-  } catch (error) {
-    googleAccessToken = null;
-    resetTransientCloudSessionState();
+    const { email } = await activeProvider.connect();
+    cloudSyncSettings.connectedEmail = email;
+    cloudSyncSettings.status = `Connected to Google Drive (${getCloudTargetLabel()})`;
+    cloudSyncSettings.lastError = "";
     persistCloudSyncSettings();
-    if (settingsDialog.open) {
-      renderSettings();
-    }
+    renderSettings();
+    console.log(`[CloudSync] Connected as ${email || "(unknown)"}.`);
+    startCloudPolling();
+    void pullFromCloud();
+  } catch (error) {
+    cloudSyncSettings.status = `Sign-in failed: ${error.message}`;
+    persistCloudSyncSettings();
+    renderSettings();
+    throw error;
   }
 };
 
-const disconnectGoogleDrive = () => {
-  if (googleAccessToken && window.google?.accounts?.oauth2?.revoke) {
-    window.google.accounts.oauth2.revoke(googleAccessToken, () => {});
-  }
-
-  googleAccessToken = null;
+const disconnectCloud = () => {
+  activeProvider.disconnect();
   stopCloudPolling();
 
   if (pendingAutoSyncTimer) {
@@ -1173,19 +875,32 @@ const disconnectGoogleDrive = () => {
   renderSettings();
 };
 
-const waitForGoogleIdentity = () => {
-  if (isGoogleIdentityAvailable()) {
-    initializeGoogleTokenClient();
-    void attemptSilentGoogleReconnect();
-
-    if (settingsDialog.open) {
-      renderSettings();
-    }
-
+const reconnectCloud = async () => {
+  if (activeProvider.hasActiveSession()) {
     return;
   }
 
-  window.setTimeout(waitForGoogleIdentity, 500);
+  cloudSyncSettings.status = "Verifying connection...";
+  cloudSyncSettings.lastError = "";
+  persistCloudSyncSettings();
+
+  try {
+    activeProvider.ensureTokenClient();
+    const { email } = await activeProvider.attemptSilentReconnect();
+    cloudSyncSettings.connectedEmail = email;
+    cloudSyncSettings.status = `Connected to Google Drive (${getCloudTargetLabel()})`;
+    cloudSyncSettings.lastError = "";
+    persistCloudSyncSettings();
+    renderSettings();
+    console.log(`[CloudSync] Silently reconnected as ${email || "(unknown)"}.`);
+    startCloudPolling();
+  } catch {
+    resetTransientCloudSessionState();
+    persistCloudSyncSettings();
+    if (settingsDialog.open) {
+      renderSettings();
+    }
+  }
 };
 
 const migrateLegacyNotes = (savedNotes, legacyNotes) => {
@@ -2248,11 +1963,11 @@ const renderSettings = () => {
   cloudVisibleFolderInput.checked = cloudSyncSettings.useVisibleDriveFolder;
   cloudStatusInput.value = buildCloudStatusText();
   cloudLastSyncInput.value = formatSyncTimestamp(cloudSyncSettings.lastSyncAt);
-  const hasConnectedDriveSession = hasActiveGoogleDriveSession();
+  const hasConnectedDriveSession = activeProvider.hasActiveSession();
   googleConnectButton.classList.toggle("is-hidden", hasConnectedDriveSession);
   googleDisconnectButton.classList.toggle("is-hidden", !hasConnectedDriveSession);
   googleSyncNowButton.classList.toggle("is-hidden", !hasConnectedDriveSession);
-  googleConnectButton.disabled = !isGoogleIdentityAvailable() || hasConnectedDriveSession;
+  googleConnectButton.disabled = !activeProvider.isAvailable() || hasConnectedDriveSession;
   googleDisconnectButton.disabled = !hasConnectedDriveSession;
   googleSyncNowButton.disabled = !hasConnectedDriveSession;
 
@@ -2950,7 +2665,7 @@ const handleVisibleFolderToggle = () => {
   cloudSyncSettings.remoteWorkspaceFileId = "";
   cloudSyncSettings.remoteWorkspaceParentId = "";
   cloudSyncSettings.lastError = "";
-  if (hasActiveGoogleDriveSession()) {
+  if (activeProvider.hasActiveSession()) {
     cloudSyncSettings.status = `Connected to Google Drive (${getCloudTargetLabel()})`;
   }
   persistCloudSyncSettings();
@@ -2965,14 +2680,14 @@ cloudVisibleFolderInput.addEventListener("change", handleVisibleFolderToggle);
 
 googleConnectButton.addEventListener("click", async () => {
   try {
-    await connectGoogleDrive();
+    await connectCloud();
   } catch (error) {
     console.error(error);
   }
 });
 
 googleDisconnectButton.addEventListener("click", () => {
-  disconnectGoogleDrive();
+  disconnectCloud();
 });
 
 googleSyncNowButton.addEventListener("click", async () => {
@@ -3014,8 +2729,13 @@ const bootstrap = async () => {
   applyPaneOrder(await getPreferredPaneOrder());
   applyTranslation(await getPreferredTranslation());
   await restoreCloudSyncSettings();
-  initializeGoogleTokenClient();
-  waitForGoogleIdentity();
+  activeProvider.waitForReady(() => {
+    void reconnectCloud();
+
+    if (settingsDialog.open) {
+      renderSettings();
+    }
+  });
   await restoreWorkspace();
 };
 
