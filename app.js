@@ -3020,6 +3020,146 @@ toolbarButtons.forEach((button) => {
   });
 });
 
+// ── Color picker ───────────────────────────────────────────────────────
+const colorPickerWrapper = document.querySelector("#color-picker-wrapper");
+const colorPickerTrigger = document.querySelector("#color-picker-trigger");
+const colorPickerDropdown = document.querySelector("#color-picker-dropdown");
+const colorButtonSwatch = document.querySelector("#color-button-swatch");
+
+const colorPalette = [
+  { label: "Black",       hex: "#000000" },
+  { label: "Dark Gray",   hex: "#404040" },
+  { label: "Gray",        hex: "#808080" },
+  { label: "Silver",      hex: "#c0c0c0" },
+  { label: "White",       hex: "#ffffff" },
+  { label: "Dark Red",    hex: "#c00000" },
+  { label: "Red",         hex: "#ff0000" },
+  { label: "Orange",      hex: "#ff6600" },
+  { label: "Yellow",      hex: "#ffff00" },
+  { label: "Light Green", hex: "#92d050" },
+  { label: "Green",       hex: "#00b050" },
+  { label: "Light Blue",  hex: "#00b0f0" },
+  { label: "Blue",        hex: "#0070c0" },
+  { label: "Dark Blue",   hex: "#002060" },
+  { label: "Purple",      hex: "#7030a0" },
+  { label: "Pink",        hex: "#ff00ff" },
+];
+
+let activeTextColor = null;
+
+const buildColorPickerDropdown = () => {
+  colorPickerDropdown.innerHTML = "";
+
+  const automaticBtn = document.createElement("button");
+  automaticBtn.type = "button";
+  automaticBtn.className = "color-automatic-btn";
+  const icon = document.createElement("span");
+  icon.className = "color-automatic-icon";
+  const label = document.createElement("span");
+  label.textContent = "Automatic";
+  automaticBtn.append(icon, label);
+  automaticBtn.addEventListener("click", () => {
+    applyTextColor(null);
+    closeColorPicker();
+  });
+  colorPickerDropdown.append(automaticBtn);
+
+  const sectionLabel = document.createElement("p");
+  sectionLabel.className = "color-section-label";
+  sectionLabel.textContent = "Standard Colors";
+  colorPickerDropdown.append(sectionLabel);
+
+  const grid = document.createElement("div");
+  grid.className = "color-swatch-grid";
+
+  colorPalette.forEach(({ label: colorLabel, hex }) => {
+    const swatch = document.createElement("button");
+    swatch.type = "button";
+    swatch.className = "color-swatch";
+    if (activeTextColor === hex) {
+      swatch.classList.add("is-selected");
+    }
+    swatch.style.background = hex;
+    swatch.setAttribute("aria-label", colorLabel);
+    swatch.setAttribute("title", colorLabel);
+    swatch.addEventListener("click", () => {
+      applyTextColor(hex);
+      closeColorPicker();
+    });
+    grid.append(swatch);
+  });
+
+  colorPickerDropdown.append(grid);
+};
+
+const applyTextColor = (color) => {
+  noteEditor.focus();
+  if (color === null) {
+    const selection = window.getSelection();
+    if (selection && selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
+      // Strip inline color from every element in the editor that overlaps the selection.
+      // We never call execCommand("foreColor", "inherit") because browsers resolve
+      // "inherit" as a literal color value (often red) rather than removing the color.
+      noteEditor.querySelectorAll("[style]").forEach((el) => {
+        if (el.style.color && range.intersectsNode(el)) {
+          el.style.removeProperty("color");
+          if (!el.getAttribute("style")) {
+            el.removeAttribute("style");
+          }
+        }
+      });
+      noteEditor.querySelectorAll("font[color]").forEach((el) => {
+        if (range.intersectsNode(el)) {
+          el.removeAttribute("color");
+          if (el.attributes.length === 0) {
+            el.replaceWith(...el.childNodes);
+          }
+        }
+      });
+    }
+    activeTextColor = null;
+  } else {
+    document.execCommand("styleWithCSS", false, true);
+    document.execCommand("foreColor", false, color);
+    activeTextColor = color;
+  }
+  colorButtonSwatch.style.background = color ? color : "var(--text)";
+};
+
+const openColorPicker = () => {
+  buildColorPickerDropdown();
+  colorPickerDropdown.hidden = false;
+  colorPickerTrigger.setAttribute("aria-expanded", "true");
+};
+
+const closeColorPicker = () => {
+  colorPickerDropdown.hidden = true;
+  colorPickerTrigger.setAttribute("aria-expanded", "false");
+};
+
+colorPickerTrigger.addEventListener("click", (e) => {
+  e.stopPropagation();
+  if (colorPickerDropdown.hidden) {
+    openColorPicker();
+  } else {
+    closeColorPicker();
+  }
+});
+
+document.addEventListener("click", (e) => {
+  if (!colorPickerWrapper.contains(e.target)) {
+    closeColorPicker();
+  }
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && !colorPickerDropdown.hidden) {
+    closeColorPicker();
+    colorPickerTrigger.focus();
+  }
+});
+
 newNoteDirectButton.addEventListener("click", createNote);
 newNoteButton.addEventListener("click", () => {
   createNote();
@@ -3400,6 +3540,56 @@ const bootstrap = async () => {
 void bootstrap();
 
 const paneDivider = document.querySelector("#pane-divider");
+
+chapterText.addEventListener("copy", (event) => {
+  const selection = window.getSelection();
+
+  if (!selection || selection.rangeCount === 0 || selection.isCollapsed) {
+    return;
+  }
+
+  const fragment = selection.getRangeAt(0).cloneContents();
+  const wrapper = document.createElement("div");
+  wrapper.appendChild(fragment);
+
+  wrapper.querySelectorAll("*").forEach((el) => {
+    el.classList.remove("is-highlighted");
+    el.style.removeProperty("background");
+    el.style.removeProperty("background-color");
+  });
+
+  // Convert .verse-red-letter CSS-class color to an inline style so the notes
+  // editor's "Automatic" button (which walks el.style.color) can clear it.
+  const liveRedLetterEl = chapterText.querySelector(".verse-red-letter");
+  const redLetterColor = liveRedLetterEl ? getComputedStyle(liveRedLetterEl).color : "";
+  wrapper.querySelectorAll(".verse-red-letter").forEach((el) => {
+    if (redLetterColor) {
+      el.style.color = redLetterColor;
+    }
+    el.classList.remove("verse-red-letter");
+  });
+
+  // Convert .verse-added-words CSS-class italic to a plain <em> element so the
+  // notes editor's italic button can toggle it off.
+  // Note: this runs after the red-letter loop so el.style.color may already be
+  // set on combined red-letter+added-words spans — carry it over to the <em>.
+  wrapper.querySelectorAll(".verse-added-words").forEach((el) => {
+    const em = document.createElement("em");
+    if (el.style.color) {
+      em.style.color = el.style.color;
+    }
+    em.append(...el.childNodes);
+    el.replaceWith(em);
+  });
+
+  wrapper.querySelectorAll(".chapter-verse-number").forEach((numEl) => {
+    numEl.replaceWith(`[${numEl.textContent.trim()}] `);
+  });
+
+  event.clipboardData.setData("text/html", wrapper.innerHTML);
+  event.clipboardData.setData("text/plain", selection.toString());
+  event.preventDefault();
+});
 
 paneDivider.addEventListener("mousedown", (startEvent) => {
   startEvent.preventDefault();
