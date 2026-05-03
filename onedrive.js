@@ -4,6 +4,8 @@
  * Exposes window.OneDriveProvider, which implements the StorageProvider interface.
  * Uses MSAL.js (loaded from CDN) for OAuth 2.0 authentication with Microsoft
  * identity platform, and the Microsoft Graph API for all file operations.
+ * Files are stored in OneDrive's per-app special folder (analogous to Google
+ * Drive's appdata folder) using the Files.ReadWrite.AppFolder scope.
  *
  * See gdrive.js for the full StorageProvider interface documentation.
  *
@@ -30,7 +32,7 @@
  *
  *  9. Under "API permissions" → "Add a permission" → "Microsoft Graph"
  *     → "Delegated permissions", add:
- *       • Files.ReadWrite
+ *       • Files.ReadWrite.AppFolder
  *       • User.Read
  *     (Both are low-privilege delegated scopes — no admin consent required for
  *      personal Microsoft accounts.)
@@ -40,7 +42,11 @@
 (() => {
   const clientId = "YOUR_AZURE_APP_CLIENT_ID";
   const authority = "https://login.microsoftonline.com/common";
-  const scopes = ["Files.ReadWrite", "User.Read"];
+  const scopes = ["Files.ReadWrite.AppFolder", "User.Read"];
+
+  const GRAPH_BASE = "https://graph.microsoft.com/v1.0";
+  const MSAL_POLL_INTERVAL_MS = 100;
+  const MSAL_LOAD_TIMEOUT_MS = 10000;
 
   const settingsFileName = "churchscribe-settings.json";
   const noteFilePrefix = "churchscribe-note-";
@@ -50,44 +56,65 @@
   let accessToken = null;
   let silentReconnectAttempted = false;
 
-  const isAvailable = () => Boolean(window.msal?.PublicClientApplication);
+  // The provider is always "available" — MSAL is a lazy CDN dependency that we
+  // wait for inside getMsalInstance().  Returning true here keeps the connect
+  // button enabled immediately and avoids a confusing "Storage provider not
+  // available" message caused by the async CDN load race.
+  const isAvailable = () => true;
 
   const hasActiveSession = () => Boolean(accessToken);
 
+  // Waits (up to 10 s) for the MSAL CDN script to finish loading, then creates
+  // and initialises a single PublicClientApplication instance.
   const getMsalInstance = () => {
     if (!msalInstancePromise) {
-      const instance = new window.msal.PublicClientApplication({
-        auth: {
-          clientId,
-          authority,
-          redirectUri: window.location.origin + window.location.pathname
-        },
-        cache: {
-          cacheLocation: "localStorage",
-          storeAuthStateInCookie: false
-        }
-      });
+      msalInstancePromise = new Promise((resolve, reject) => {
+        let elapsed = 0;
 
-      msalInstancePromise = instance.initialize().then(() => instance);
+        const tryCreate = () => {
+          if (window.msal?.PublicClientApplication) {
+            const instance = new window.msal.PublicClientApplication({
+              auth: {
+                clientId,
+                authority,
+                redirectUri: window.location.origin + window.location.pathname
+              },
+              cache: {
+                cacheLocation: "localStorage",
+                storeAuthStateInCookie: false
+              }
+            });
+
+            instance.initialize().then(() => resolve(instance)).catch(reject);
+            return;
+          }
+
+          elapsed += MSAL_POLL_INTERVAL_MS;
+
+          if (elapsed >= MSAL_LOAD_TIMEOUT_MS) {
+            reject(new Error(
+              "MSAL library did not load. Check your internet connection and ensure " +
+              "the msal-browser CDN script tag is present in index.html."
+            ));
+            return;
+          }
+
+          window.setTimeout(tryCreate, MSAL_POLL_INTERVAL_MS);
+        };
+
+        tryCreate();
+      });
     }
 
     return msalInstancePromise;
   };
 
   const ensureTokenClient = () => {
-    if (isAvailable()) {
-      void getMsalInstance();
-    }
+    void getMsalInstance();
   };
 
   const waitForReady = (onReady) => {
-    if (isAvailable()) {
-      ensureTokenClient();
-      onReady();
-      return;
-    }
-
-    window.setTimeout(() => waitForReady(onReady), 500);
+    onReady();
   };
 
   const apiFetch = async (url, options = {}) => {
@@ -129,7 +156,7 @@
 
   const fetchUserEmail = async () => {
     const response = await apiFetch(
-      "https://graph.microsoft.com/v1.0/me?$select=mail,userPrincipalName"
+      `${GRAPH_BASE}/me?$select=mail,userPrincipalName`
     );
     const data = await response.json();
     return data.mail || data.userPrincipalName || "";
@@ -208,21 +235,6 @@
     }
   };
 
-  const getFolderPath = (settings) => {
-    const raw = settings?.folderPath;
-    return typeof raw === "string" && raw.trim() ? raw.trim() : "ChurchScribe";
-  };
-
-  const encodePath = (folderPath, fileName = "") => {
-    const parts = folderPath.split("/").filter(Boolean).map(encodeURIComponent);
-
-    if (fileName) {
-      parts.push(encodeURIComponent(fileName));
-    }
-
-    return parts.join("/");
-  };
-
   const getNoteFileName = (noteId) => `${noteFilePrefix}${noteId}${noteFileSuffix}`;
 
   const getNoteIdFromFileName = (fileName) =>
@@ -230,11 +242,10 @@
       ? fileName.slice(noteFilePrefix.length, -noteFileSuffix.length)
       : "";
 
-  // PUT file content by path — Graph creates the file (and any missing parent
-  // folder segments) automatically when using the root: path-based endpoint.
-  const upsertJsonFile = async (folderPath, fileName, payload) => {
-    const encoded = encodePath(folderPath, fileName);
-    const url = `https://graph.microsoft.com/v1.0/me/drive/root:/${encoded}:/content`;
+  // PUT a JSON file into the app's special OneDrive folder (approot).
+  // Graph creates the approot automatically on first access.
+  const upsertJsonFile = async (fileName, payload) => {
+    const url = `${GRAPH_BASE}/me/drive/special/approot:/${encodeURIComponent(fileName)}:/content`;
 
     const response = await apiFetch(url, {
       method: "PUT",
@@ -248,19 +259,20 @@
 
   const readJsonFile = async (fileId) => {
     const response = await apiFetch(
-      `https://graph.microsoft.com/v1.0/me/drive/items/${fileId}/content`
+      `${GRAPH_BASE}/me/drive/items/${fileId}/content`
     );
     return response.json();
   };
 
-  const listFolderItems = async (folderPath) => {
-    // Note: fetches at most 1000 items per request (1 settings file + up to ~999
-    // note files). For workspaces approaching that limit, implement Graph API
-    // pagination via @odata.nextLink.
+  // Note: fetches at most 1000 items per request (1 settings file + up to ~999
+  // note files). If this limit is exceeded, older note files will be silently
+  // omitted from the listing, which could cause those notes to be deleted on
+  // the next upload. Implement Graph API pagination via @odata.nextLink before
+  // approaching this limit.
+  const listAppRootItems = async () => {
     try {
-      const encoded = encodePath(folderPath);
       const response = await apiFetch(
-        `https://graph.microsoft.com/v1.0/me/drive/root:/${encoded}:/children?$select=id,name&$top=1000`
+        `${GRAPH_BASE}/me/drive/special/approot/children?$select=id,name&$top=1000`
       );
       const data = await response.json();
       return data.value ?? [];
@@ -274,22 +286,16 @@
   };
 
   const deleteFile = async (fileId) => {
-    await apiFetch(`https://graph.microsoft.com/v1.0/me/drive/items/${fileId}`, {
+    await apiFetch(`${GRAPH_BASE}/me/drive/items/${fileId}`, {
       method: "DELETE"
     });
   };
 
-  const upload = async (payload, settings) => {
+  const upload = async (payload) => {
     try {
-      const folderPath = getFolderPath(settings);
+      const nextSettingsFileId = await upsertJsonFile(settingsFileName, payload.settings);
 
-      const nextSettingsFileId = await upsertJsonFile(
-        folderPath,
-        settingsFileName,
-        payload.settings
-      );
-
-      const existingItems = await listFolderItems(folderPath);
+      const existingItems = await listAppRootItems();
       const existingNoteByName = new Map(
         existingItems
           .filter((item) =>
@@ -304,7 +310,7 @@
       for (const note of payload.notes.notes) {
         const fileName = getNoteFileName(note.id);
         desiredNoteFileNames.add(fileName);
-        const fileId = await upsertJsonFile(folderPath, fileName, {
+        const fileId = await upsertJsonFile(fileName, {
           version: 2,
           updatedAt: payload.updatedAt,
           note
@@ -326,17 +332,16 @@
         remoteSettingsFileId: nextSettingsFileId,
         remoteNoteFileIds: nextNoteFileIds,
         remoteWorkspaceFileId: "",
-        remoteWorkspaceParentId: folderPath
+        remoteWorkspaceParentId: ""
       };
     } catch (error) {
       throw new Error(parseErrorMessage(error));
     }
   };
 
-  const download = async (settings) => {
+  const download = async () => {
     try {
-      const folderPath = getFolderPath(settings);
-      const existingItems = await listFolderItems(folderPath);
+      const existingItems = await listAppRootItems();
 
       const settingsItem = existingItems.find((item) => item.name === settingsFileName);
       const noteItems = existingItems.filter(
@@ -350,7 +355,7 @@
           remoteSettingsFileId: "",
           remoteNoteFileIds: {},
           remoteWorkspaceFileId: "",
-          remoteWorkspaceParentId: folderPath
+          remoteWorkspaceParentId: ""
         };
       }
 
@@ -385,6 +390,9 @@
       }
 
       for (const { item, payload } of notePayloads) {
+        // The note ID is extracted from the filename first (current format).
+        // Falling back to payload.note?.id or payload.id handles files written
+        // by older versions of the provider that may not have used this naming scheme.
         const noteId = getNoteIdFromFileName(item.name) || payload.note?.id || payload.id;
         const note = payload.note ?? payload;
 
@@ -410,35 +418,20 @@
         remoteSettingsFileId: settingsFileId,
         remoteNoteFileIds: nextNoteFileIds,
         remoteWorkspaceFileId: "",
-        remoteWorkspaceParentId: folderPath
+        remoteWorkspaceParentId: ""
       };
     } catch (error) {
       throw new Error(parseErrorMessage(error));
     }
   };
 
-  const getSettingsFields = () => [
-    {
-      key: "folderPath",
-      label: "OneDrive Folder",
-      type: "text",
-      helpText: "Folder path within your OneDrive where ChurchScribe stores its files (e.g., ChurchScribe or Documents/ChurchScribe). The folder will be created automatically on first sync."
-    }
-  ];
+  const getSettingsFields = () => [];
 
-  const getSettingsValues = () => ({
-    folderPath: "ChurchScribe"
-  });
+  const getSettingsValues = () => ({});
 
-  const applySettingChange = (key) => {
-    if (key === "folderPath") {
-      return { clearRemoteState: true };
-    }
+  const applySettingChange = () => ({});
 
-    return {};
-  };
-
-  const getLocationLabel = (settings) => getFolderPath(settings);
+  const getLocationLabel = () => "";
 
   window.OneDriveProvider = {
     id: "onedrive",
