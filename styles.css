@@ -35,6 +35,7 @@
   --note-chip-surface: rgba(255, 255, 255, 0.72);
   --note-chip-active: #e8d4b7;
   --note-chip-border: rgba(82, 58, 33, 0.1);
+  --red-letter: #a14b3c;
   --radius-xl: 28px;
   --radius-lg: 20px;
   --radius-md: 14px;
@@ -75,6 +76,7 @@
   --note-chip-surface: rgba(28, 35, 45, 0.82);
   --note-chip-active: #304154;
   --note-chip-border: rgba(192, 175, 151, 0.1);
+  --red-letter: #f19a7d;
 }
 
 * {
@@ -741,6 +743,10 @@ h1 {
   scroll-margin-top: 24px;
 }
 
+.chapter-verse-text {
+  white-space: normal;
+}
+
 .chapter-verse.is-highlighted {
   padding: 0.35rem 0.5rem;
   margin-left: -0.5rem;
@@ -757,6 +763,14 @@ h1 {
   font-weight: 800;
   font-size: 0.85rem;
   vertical-align: top;
+}
+
+.verse-added-words {
+  font-style: italic;
+}
+
+.verse-red-letter {
+  color: var(--red-letter);
 }
 
 .verse-translation {

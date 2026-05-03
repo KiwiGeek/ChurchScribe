@@ -1443,7 +1443,13 @@ const renderChapter = () => {
     number.textContent = verse.verse;
 
     const text = document.createElement("span");
-    text.textContent = verse.text;
+    text.className = "chapter-verse-text";
+
+    if (currentTranslationCode === "KJV" && typeof verse.html === "string") {
+      text.innerHTML = verse.html;
+    } else {
+      text.textContent = verse.text;
+    }
 
     line.append(number, text);
     chapterText.append(line);
