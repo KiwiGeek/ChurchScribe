@@ -3470,6 +3470,17 @@ const deleteSelectedType = () => {
 
 const openDialog = (dialog) => {
   if (typeof dialog.showModal === "function") {
+    const handleBackdropClick = (e) => {
+      if (e.target === dialog) {
+        dialog.close();
+      }
+    };
+    const handleClose = () => {
+      dialog.removeEventListener("click", handleBackdropClick);
+      dialog.removeEventListener("close", handleClose);
+    };
+    dialog.addEventListener("click", handleBackdropClick);
+    dialog.addEventListener("close", handleClose);
     dialog.showModal();
   }
 };
