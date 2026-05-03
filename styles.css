@@ -885,6 +885,12 @@ h1 {
   max-height: calc(100vh - 64px);
 }
 
+#note-manager-dialog .dialog-shell {
+  height: min(760px, calc(100vh - 64px));
+  min-height: min(760px, calc(100vh - 64px));
+  max-height: calc(100vh - 64px);
+}
+
 #settings-dialog .dialog-shell {
   height: min(820px, calc(100vh - 64px));
   min-height: min(820px, calc(100vh - 64px));
@@ -909,6 +915,10 @@ h1 {
   min-height: 0;
   padding: 18px 20px 20px;
   overflow: auto;
+}
+
+#note-manager-dialog .dialog-body {
+  overflow: hidden;
 }
 
 #settings-dialog .dialog-body {
@@ -1102,6 +1112,7 @@ h1 {
   display: grid;
   grid-template-columns: minmax(280px, 0.9fr) minmax(320px, 1.1fr);
   gap: 18px;
+  height: 100%;
   min-height: 0;
 }
 
@@ -1124,6 +1135,7 @@ h1 {
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   background: var(--surface-strong);
+  overflow: auto;
 }
 
 .note-browser-toolbar {
