@@ -12,18 +12,13 @@ const translationLibrary = {
 const noteEditor = document.querySelector("#note-editor");
 const saveStatus = document.querySelector("#save-status");
 const toolbarButtons = document.querySelectorAll(".tool-button");
-const newNoteDirectButton = document.querySelector("#new-note-direct-button");
-const newNoteButton = document.querySelector("#new-note-button");
-const duplicateNoteButton = document.querySelector("#duplicate-note-button");
+const newNoteActions = document.querySelector("#new-note-actions");
 const deleteNoteButton = document.querySelector("#delete-note-button");
 const manageNotesButton = document.querySelector("#manage-notes-button");
 const settingsButton = document.querySelector("#settings-button");
 const noteDetailsButton = document.querySelector("#note-details-button");
-const noteList = document.querySelector("#note-list");
-const noteTypeSelect = document.querySelector("#note-type-select");
-const newNoteTypeSelect = document.querySelector("#new-note-type-select");
-const newNoteTypeField = document.querySelector("#new-note-type-field");
-const activeNoteTypeField = document.querySelector("#active-note-type-field");
+const activeNoteTitle = document.querySelector("#active-note-title");
+const activeNoteMeta = document.querySelector("#active-note-meta");
 const metadataSummary = document.querySelector("#metadata-summary");
 const noteMetaFields = document.querySelector("#note-meta-fields");
 const translationSelect = document.querySelector("#translation-select");
@@ -35,6 +30,10 @@ const verseTranslation = document.querySelector("#verse-translation");
 const paneGrid = document.querySelector(".pane-grid");
 const noteManagerDialog = document.querySelector("#note-manager-dialog");
 const noteManagerList = document.querySelector("#note-manager-list");
+const noteBrowserDetails = document.querySelector("#note-browser-details");
+const noteBrowserFilterInput = document.querySelector("#note-browser-filter");
+const noteBrowserTypeFilterSelect = document.querySelector("#note-browser-type-filter");
+const noteBrowserSortSelect = document.querySelector("#note-browser-sort");
 const noteDetailsDialog = document.querySelector("#note-details-dialog");
 const settingsDialog = document.querySelector("#settings-dialog");
 const settingsTabNav = document.querySelector("#settings-tab-nav");
@@ -59,7 +58,6 @@ const googleSyncNowButton = document.querySelector("#google-sync-now-button");
 const addTypeButton = document.querySelector("#add-type-button");
 const addMetadataFieldButton = document.querySelector("#add-metadata-field-button");
 const deleteTypeButton = document.querySelector("#delete-type-button");
-const newNoteMenu = document.querySelector("#new-note-menu");
 const overflowMenu = document.querySelector(".overflow-menu");
 const syncConflictDialog = document.querySelector("#sync-conflict-dialog");
 const conflictLocalTime = document.querySelector("#conflict-local-time");
@@ -157,6 +155,10 @@ let activeSettingsTabId = "ui-settings";
 let currentColorThemeId = "default";
 let currentThemeMode = "system";
 let currentPaneSplit = 0.6;
+let noteBrowserFilter = "";
+let noteBrowserTypeFilter = "all";
+let noteBrowserSort = "updated-desc";
+let noteBrowserSelectedNoteId = null;
 let dbPromise;
 let pendingAutoSyncTimer = null;
 let syncInFlightPromise = null;
@@ -2372,30 +2374,111 @@ const getNoteDisplayMeta = (note) => {
   return secondaryValue || "";
 };
 
+const getNoteSearchableText = (note) => {
+  const metadataText = Object.values(note.metadata)
+    .filter((value) => typeof value === "string" && value.trim())
+    .join(" ");
+  const contentText = note.content.replace(/<[^>]+>/g, " ");
+  return [getNoteDisplayTitle(note), getNoteDisplayMeta(note), metadataText, contentText].join(" ").toLowerCase();
+};
+
+const sortNotes = (notes) => {
+  const sortedNotes = notes.slice();
+
+  if (noteBrowserSort === "created-desc") {
+    return sortedNotes.sort((left, right) => new Date(right.createdAt) - new Date(left.createdAt));
+  }
+
+  if (noteBrowserSort === "title-asc") {
+    return sortedNotes.sort((left, right) => getNoteDisplayTitle(left).localeCompare(getNoteDisplayTitle(right)));
+  }
+
+  return sortedNotes.sort((left, right) => new Date(right.updatedAt) - new Date(left.updatedAt));
+};
+
+const getFilteredNotes = () => {
+  const query = noteBrowserFilter.trim().toLowerCase();
+  const activeTypeFilter = workspace.noteTypes.some((type) => type.id === noteBrowserTypeFilter)
+    ? noteBrowserTypeFilter
+    : "all";
+
+  return sortNotes(
+    workspace.notes.filter((note) => {
+      if (activeTypeFilter !== "all" && note.typeId !== activeTypeFilter) {
+        return false;
+      }
+
+      if (!query) {
+        return true;
+      }
+
+      return getNoteSearchableText(note).includes(query);
+    })
+  );
+};
+
+const getSelectedBrowserNote = (filteredNotes) => {
+  const selected = filteredNotes.find((note) => note.id === noteBrowserSelectedNoteId);
+
+  if (selected) {
+    return selected;
+  }
+
+  const active = filteredNotes.find((note) => note.id === workspace.activeNoteId);
+
+  if (active) {
+    noteBrowserSelectedNoteId = active.id;
+    return active;
+  }
+
+  noteBrowserSelectedNoteId = filteredNotes[0]?.id ?? null;
+  return filteredNotes[0] ?? null;
+};
+
+const getNotePreviewText = (note) => note.content
+  .replace(/<[^>]+>/g, " ")
+  .replace(/\s+/g, " ")
+  .trim();
+
 const renderNoteTypeOptions = () => {
-  const activeNote = getActiveNote();
   const showTypeChoices = workspace.noteTypes.length > 1;
-  noteTypeSelect.innerHTML = "";
-  newNoteTypeSelect.innerHTML = "";
+  newNoteActions.innerHTML = "";
+
+  if (!workspace.noteTypes.length) {
+    return;
+  }
+
+  if (!showTypeChoices) {
+    const singleTypeButton = document.createElement("button");
+    singleTypeButton.type = "button";
+    singleTypeButton.className = "ghost-button overflow-action";
+    singleTypeButton.dataset.newNoteType = workspace.noteTypes[0].id;
+    singleTypeButton.textContent = "New note";
+    newNoteActions.append(singleTypeButton);
+    return;
+  }
+
+  const menu = document.createElement("details");
+  menu.className = "inline-action-menu";
+
+  const summary = document.createElement("summary");
+  summary.className = "ghost-button overflow-action";
+  summary.textContent = "New note ▾";
+
+  const panel = document.createElement("div");
+  panel.className = "overflow-menu-panel inline-action-panel";
 
   workspace.noteTypes.forEach((type) => {
-    const activeOption = document.createElement("option");
-    activeOption.value = type.id;
-    activeOption.textContent = type.name;
-    noteTypeSelect.append(activeOption);
-
-    const newNoteOption = document.createElement("option");
-    newNoteOption.value = type.id;
-    newNoteOption.textContent = type.name;
-    newNoteTypeSelect.append(newNoteOption);
+    const typeButton = document.createElement("button");
+    typeButton.type = "button";
+    typeButton.className = "ghost-button overflow-action";
+    typeButton.dataset.newNoteType = type.id;
+    typeButton.textContent = type.name;
+    panel.append(typeButton);
   });
 
-  noteTypeSelect.value = activeNote.typeId;
-  newNoteTypeSelect.value = workspace.selectedNewNoteTypeId;
-  newNoteDirectButton.classList.toggle("is-hidden", showTypeChoices);
-  newNoteMenu.classList.toggle("is-hidden", !showTypeChoices);
-  newNoteTypeField.classList.toggle("is-hidden", !showTypeChoices);
-  activeNoteTypeField.classList.toggle("is-hidden", !showTypeChoices);
+  menu.append(summary, panel);
+  newNoteActions.append(menu);
 };
 
 const renderMetadataSummary = () => {
@@ -2440,6 +2523,29 @@ const renderNoteMetadataFields = () => {
   const type = getNoteTypeById(activeNote.typeId);
   noteMetaFields.innerHTML = "";
 
+  if (workspace.noteTypes.length > 1) {
+    const typeField = document.createElement("label");
+    typeField.className = "field note-meta-primary-field";
+
+    const typeLabel = document.createElement("span");
+    typeLabel.textContent = "Note type";
+
+    const typeSelect = document.createElement("select");
+    typeSelect.name = "active-note-type";
+    typeSelect.dataset.noteTypeChange = activeNote.id;
+
+    workspace.noteTypes.forEach((noteType) => {
+      const option = document.createElement("option");
+      option.value = noteType.id;
+      option.textContent = noteType.name;
+      typeSelect.append(option);
+    });
+
+    typeSelect.value = activeNote.typeId;
+    typeField.append(typeLabel, typeSelect);
+    noteMetaFields.append(typeField);
+  }
+
   type.fields.forEach((field) => {
     const label = document.createElement("label");
     label.className = "field";
@@ -2459,59 +2565,19 @@ const renderNoteMetadataFields = () => {
   });
 };
 
-const renderNoteList = () => {
-  noteList.innerHTML = "";
+const renderActiveNoteSummary = () => {
+  const activeNote = getActiveNote();
+  const type = getNoteTypeById(activeNote.typeId);
+  const metaBits = [type.name];
+  const secondaryMeta = getNoteDisplayMeta(activeNote);
 
-  workspace.noteTypes.forEach((type) => {
-    const notesForType = workspace.notes.filter((note) => note.typeId === type.id);
+  if (secondaryMeta) {
+    metaBits.push(secondaryMeta);
+  }
 
-    if (!notesForType.length) {
-      return;
-    }
-
-    const group = document.createElement("section");
-    group.className = "note-group";
-
-    const heading = document.createElement("h3");
-    heading.className = "note-group-heading";
-    heading.textContent = type.name;
-
-    group.append(heading);
-
-    notesForType
-      .sort((left, right) => new Date(right.updatedAt) - new Date(left.updatedAt))
-      .forEach((note) => {
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = `note-card${note.id === workspace.activeNoteId ? " is-active" : ""}`;
-        button.setAttribute("role", "option");
-        button.setAttribute("aria-selected", String(note.id === workspace.activeNoteId));
-        button.dataset.noteId = note.id;
-
-        const title = document.createElement("span");
-        title.className = "note-card-title";
-        title.textContent = getNoteDisplayTitle(note);
-
-        const meta = document.createElement("span");
-        meta.className = "note-card-meta";
-        meta.textContent = getNoteDisplayMeta(note);
-
-        const updated = document.createElement("span");
-        updated.className = "note-card-date";
-        updated.textContent = formatNoteDate(note.updatedAt);
-
-        button.append(title);
-
-        if (meta.textContent) {
-          button.append(meta);
-        }
-
-        button.append(updated);
-        group.append(button);
-      });
-
-    noteList.append(group);
-  });
+  metaBits.push(`Updated ${formatNoteDate(activeNote.updatedAt)}`);
+  activeNoteTitle.textContent = getNoteDisplayTitle(activeNote);
+  activeNoteMeta.textContent = metaBits.join(" • ");
 };
 
 const renderActiveNote = () => {
@@ -2523,84 +2589,196 @@ const renderActiveNote = () => {
 
   workspace.activeNoteId = activeNote.id;
   renderNoteTypeOptions();
+  renderActiveNoteSummary();
   renderMetadataSummary();
   renderNoteMetadataFields();
   noteEditor.innerHTML = activeNote.content;
   linkifyScriptureReferences();
   linkifyUrls();
-  renderNoteList();
 };
 
 const renderNoteManager = () => {
+  const filteredNotes = getFilteredNotes();
   noteManagerList.innerHTML = "";
+  noteBrowserDetails.innerHTML = "";
 
-  workspace.notes
-    .slice()
-    .sort((left, right) => new Date(right.updatedAt) - new Date(left.updatedAt))
-    .forEach((note) => {
-      const row = document.createElement("div");
-      row.className = "note-manager-row";
-      row.dataset.noteId = note.id;
+  noteBrowserTypeFilterSelect.innerHTML = "";
+  const allOption = document.createElement("option");
+  allOption.value = "all";
+  allOption.textContent = "All note types";
+  noteBrowserTypeFilterSelect.append(allOption);
+  workspace.noteTypes.forEach((type) => {
+    const option = document.createElement("option");
+    option.value = type.id;
+    option.textContent = type.name;
+    noteBrowserTypeFilterSelect.append(option);
+  });
+  noteBrowserFilterInput.value = noteBrowserFilter;
+  noteBrowserTypeFilterSelect.value = workspace.noteTypes.some((type) => type.id === noteBrowserTypeFilter)
+    ? noteBrowserTypeFilter
+    : "all";
+  noteBrowserSortSelect.value = noteBrowserSort;
 
-      const summary = document.createElement("div");
-      summary.className = "note-manager-summary";
+  if (!filteredNotes.length) {
+    const emptyState = document.createElement("p");
+    emptyState.className = "note-browser-empty";
+    emptyState.textContent = noteBrowserFilter || noteBrowserTypeFilter !== "all"
+      ? "No notes match the current filter."
+      : "No notes available.";
+    noteManagerList.append(emptyState);
+    noteBrowserSelectedNoteId = null;
+    return;
+  }
 
-      const title = document.createElement("span");
-      title.className = "note-manager-title";
-      title.textContent = getNoteDisplayTitle(note);
+  const selectedNote = getSelectedBrowserNote(filteredNotes);
 
-      const meta = document.createElement("span");
-      meta.className = "note-manager-meta";
-      const cardMeta = getNoteDisplayMeta(note);
-      meta.textContent = cardMeta
-        ? `${getNoteTypeById(note.typeId).name} • ${cardMeta} • Updated ${formatNoteDate(note.updatedAt)}`
-        : `${getNoteTypeById(note.typeId).name} • Updated ${formatNoteDate(note.updatedAt)}`;
+  workspace.noteTypes
+    .map((type) => ({
+      type,
+      notes: filteredNotes.filter((note) => note.typeId === type.id)
+    }))
+    .filter((entry) => entry.notes.length)
+    .forEach(({ type, notes }) => {
+      const group = document.createElement("section");
+      group.className = "note-browser-group";
 
-      summary.append(title, meta);
+      const groupHeader = document.createElement("div");
+      groupHeader.className = "note-browser-group-header";
 
-      const typePicker = document.createElement("label");
-      typePicker.className = "field";
+      const heading = document.createElement("h3");
+      heading.className = "note-browser-group-title";
+      heading.textContent = type.name;
 
-      const typePickerLabel = document.createElement("span");
-      typePickerLabel.textContent = "Type";
+      const count = document.createElement("span");
+      count.className = "note-browser-group-count";
+      count.textContent = `${notes.length} note${notes.length === 1 ? "" : "s"}`;
 
-      const select = document.createElement("select");
-      select.dataset.noteMove = note.id;
+      groupHeader.append(heading, count);
+      group.append(groupHeader);
 
-      workspace.noteTypes.forEach((type) => {
-        const option = document.createElement("option");
-        option.value = type.id;
-        option.textContent = type.name;
-        select.append(option);
+      notes.forEach((note) => {
+        const row = document.createElement("button");
+        row.type = "button";
+        row.className = `note-browser-list-item${note.id === noteBrowserSelectedNoteId ? " is-selected" : ""}`;
+        row.dataset.noteSelect = note.id;
+
+        const title = document.createElement("span");
+        title.className = "note-browser-list-title";
+        title.textContent = getNoteDisplayTitle(note);
+
+        const meta = document.createElement("span");
+        meta.className = "note-browser-list-meta";
+        const cardMeta = getNoteDisplayMeta(note);
+        meta.textContent = cardMeta
+          ? `${cardMeta} • ${formatNoteDate(note.updatedAt)}`
+          : formatNoteDate(note.updatedAt);
+
+        row.append(title, meta);
+        group.append(row);
       });
 
-      select.value = note.typeId;
-      typePicker.append(typePickerLabel, select);
-
-      const openButton = document.createElement("button");
-      openButton.type = "button";
-      openButton.className = "ghost-button";
-      openButton.dataset.noteAction = "open";
-      openButton.dataset.noteId = note.id;
-      openButton.textContent = "Open";
-
-      const duplicateButton = document.createElement("button");
-      duplicateButton.type = "button";
-      duplicateButton.className = "ghost-button";
-      duplicateButton.dataset.noteAction = "duplicate";
-      duplicateButton.dataset.noteId = note.id;
-      duplicateButton.textContent = "Copy";
-
-      const deleteButton = document.createElement("button");
-      deleteButton.type = "button";
-      deleteButton.className = "ghost-button";
-      deleteButton.dataset.noteAction = "delete";
-      deleteButton.dataset.noteId = note.id;
-      deleteButton.textContent = "Delete";
-
-      row.append(summary, typePicker, openButton, duplicateButton, deleteButton);
-      noteManagerList.append(row);
+      noteManagerList.append(group);
     });
+
+  const detailType = getNoteTypeById(selectedNote.typeId);
+  const previewText = getNotePreviewText(selectedNote);
+  const detailHeader = document.createElement("div");
+  detailHeader.className = "note-browser-detail-header";
+
+  const detailLabel = document.createElement("p");
+  detailLabel.className = "active-note-label";
+  detailLabel.textContent = detailType.name;
+
+  const detailTitle = document.createElement("h3");
+  detailTitle.className = "note-browser-detail-title";
+  detailTitle.textContent = getNoteDisplayTitle(selectedNote);
+
+  const detailMeta = document.createElement("p");
+  detailMeta.className = "note-browser-detail-meta";
+  detailMeta.textContent = `Created ${formatNoteDate(selectedNote.createdAt)} • Updated ${formatNoteDate(selectedNote.updatedAt)}`;
+
+  detailHeader.append(detailLabel, detailTitle, detailMeta);
+
+  const actions = document.createElement("div");
+  actions.className = "note-browser-detail-actions";
+
+        const openButton = document.createElement("button");
+        openButton.type = "button";
+        openButton.className = "ghost-button primary-button";
+        openButton.dataset.noteAction = "open";
+        openButton.dataset.noteId = selectedNote.id;
+        openButton.textContent = "Open note";
+
+  const duplicateButton = document.createElement("button");
+  duplicateButton.type = "button";
+  duplicateButton.className = "ghost-button";
+  duplicateButton.dataset.noteAction = "duplicate";
+  duplicateButton.dataset.noteId = selectedNote.id;
+  duplicateButton.textContent = "Copy";
+
+  const deleteButton = document.createElement("button");
+  deleteButton.type = "button";
+  deleteButton.className = "ghost-button";
+  deleteButton.dataset.noteAction = "delete";
+  deleteButton.dataset.noteId = selectedNote.id;
+  deleteButton.textContent = "Delete";
+
+  actions.append(openButton, duplicateButton, deleteButton);
+
+  const metadataBlock = document.createElement("div");
+  metadataBlock.className = "note-browser-detail-block";
+
+  const metadataTitle = document.createElement("p");
+  metadataTitle.className = "note-browser-detail-block-title";
+  metadataTitle.textContent = "Details";
+  metadataBlock.append(metadataTitle);
+
+  const populatedFields = detailType.fields
+    .map((field) => ({
+      label: field.label,
+      value: (selectedNote.metadata[field.id] ?? "").trim()
+    }))
+    .filter((field) => field.value);
+
+  if (populatedFields.length) {
+    const metadataList = document.createElement("div");
+    metadataList.className = "note-browser-detail-metadata";
+    populatedFields.forEach((field) => {
+      const chip = document.createElement("div");
+      chip.className = "metadata-chip";
+
+      const label = document.createElement("span");
+      label.className = "metadata-chip-label";
+      label.textContent = field.label;
+
+      const value = document.createElement("span");
+      value.className = "metadata-chip-value";
+      value.textContent = field.value;
+
+      chip.append(label, value);
+      metadataList.append(chip);
+    });
+    metadataBlock.append(metadataList);
+  } else {
+    const emptyMetadata = document.createElement("p");
+    emptyMetadata.className = "note-browser-empty";
+    emptyMetadata.textContent = "No note details added yet.";
+    metadataBlock.append(emptyMetadata);
+  }
+
+  const previewBlock = document.createElement("div");
+  previewBlock.className = "note-browser-detail-block";
+
+  const previewTitle = document.createElement("p");
+  previewTitle.className = "note-browser-detail-block-title";
+  previewTitle.textContent = "Preview";
+
+  const preview = document.createElement("p");
+  preview.className = "note-browser-detail-preview";
+  preview.textContent = previewText || "This note is still empty.";
+
+  previewBlock.append(previewTitle, preview);
+  noteBrowserDetails.append(detailHeader, actions, metadataBlock, previewBlock);
 };
 
 const renderProviderSettings = () => {
@@ -2957,13 +3135,22 @@ const touchNote = (note) => {
 };
 
 const refreshNoteSurfaces = () => {
-  renderNoteList();
+  renderActiveNoteSummary();
   renderNoteTypeOptions();
   renderMetadataSummary();
 
   if (noteManagerDialog.open) {
     renderNoteManager();
   }
+};
+
+const openNotesBrowser = () => {
+  noteBrowserSelectedNoteId = workspace.activeNoteId;
+  renderNoteManager();
+  overflowMenu.removeAttribute("open");
+  openDialog(noteManagerDialog);
+  noteBrowserFilterInput.focus();
+  noteBrowserFilterInput.select();
 };
 
 const saveActiveNote = () => {
@@ -2983,13 +3170,14 @@ const saveActiveNote = () => {
   refreshSaveStatus();
 };
 
-const setSelectedNewNoteType = (typeId) => {
-  workspace.selectedNewNoteTypeId = typeId;
-  persistWorkspace();
-};
+const createNote = (typeId = workspace.selectedNewNoteTypeId) => {
+  const type = getNoteTypeById(typeId) ?? workspace.noteTypes[0];
 
-const createNote = () => {
-  const type = getNoteTypeById(workspace.selectedNewNoteTypeId);
+  if (!type) {
+    return;
+  }
+
+  workspace.selectedNewNoteTypeId = type.id;
   const note = createEmptyNote(type.id, buildMetadataForType(type));
   workspace.notes.unshift(note);
   workspace.activeNoteId = note.id;
@@ -3379,6 +3567,13 @@ const closeColorPicker = () => {
   colorPickerTrigger.setAttribute("aria-expanded", "false");
 };
 
+const closeOverflowMenu = () => {
+  overflowMenu.removeAttribute("open");
+  overflowMenu.querySelectorAll("details[open]").forEach((menu) => {
+    menu.removeAttribute("open");
+  });
+};
+
 colorPickerTrigger.addEventListener("click", (e) => {
   e.stopPropagation();
   if (colorPickerDropdown.hidden) {
@@ -3392,6 +3587,10 @@ document.addEventListener("click", (e) => {
   if (!colorPickerWrapper.contains(e.target)) {
     closeColorPicker();
   }
+
+  if (!overflowMenu.contains(e.target)) {
+    closeOverflowMenu();
+  }
 });
 
 document.addEventListener("keydown", (e) => {
@@ -3401,18 +3600,19 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
-newNoteDirectButton.addEventListener("click", createNote);
-newNoteButton.addEventListener("click", () => {
-  createNote();
-  newNoteMenu.removeAttribute("open");
-});
-duplicateNoteButton.addEventListener("click", () => {
-  duplicateNote();
-  overflowMenu.removeAttribute("open");
+newNoteActions.addEventListener("click", (event) => {
+  const trigger = event.target.closest("[data-new-note-type]");
+
+  if (!trigger) {
+    return;
+  }
+
+  createNote(trigger.dataset.newNoteType);
+  closeOverflowMenu();
 });
 deleteNoteButton.addEventListener("click", () => {
   deleteNoteById(workspace.activeNoteId);
-  overflowMenu.removeAttribute("open");
+  closeOverflowMenu();
 });
 noteDetailsButton.addEventListener("click", () => {
   renderNoteMetadataFields();
@@ -3420,34 +3620,31 @@ noteDetailsButton.addEventListener("click", () => {
 });
 
 manageNotesButton.addEventListener("click", () => {
-  renderNoteManager();
-  overflowMenu.removeAttribute("open");
-  openDialog(noteManagerDialog);
+  openNotesBrowser();
 });
 
 settingsButton.addEventListener("click", () => {
   renderSettings();
-  overflowMenu.removeAttribute("open");
+  closeOverflowMenu();
   openDialog(settingsDialog);
-});
-
-noteTypeSelect.addEventListener("change", () => {
-  changeNoteType(workspace.activeNoteId, noteTypeSelect.value);
-});
-
-newNoteTypeSelect.addEventListener("change", () => {
-  setSelectedNewNoteType(newNoteTypeSelect.value);
 });
 
 cardTitleFieldSelect.addEventListener("change", updateSelectedTypeCardFields);
 cardSubtitleFieldSelect.addEventListener("change", updateSelectedTypeCardFields);
 
-noteList.addEventListener("click", (event) => {
-  const noteButton = event.target.closest("[data-note-id]");
+noteBrowserFilterInput.addEventListener("input", () => {
+  noteBrowserFilter = noteBrowserFilterInput.value;
+  renderNoteManager();
+});
 
-  if (noteButton) {
-    switchNote(noteButton.dataset.noteId);
-  }
+noteBrowserTypeFilterSelect.addEventListener("change", () => {
+  noteBrowserTypeFilter = noteBrowserTypeFilterSelect.value;
+  renderNoteManager();
+});
+
+noteBrowserSortSelect.addEventListener("change", () => {
+  noteBrowserSort = noteBrowserSortSelect.value;
+  renderNoteManager();
 });
 
 noteMetaFields.addEventListener("input", () => {
@@ -3464,6 +3661,16 @@ noteMetaFields.addEventListener("input", () => {
   persistWorkspace();
   refreshNoteSurfaces();
   refreshSaveStatus();
+});
+
+noteMetaFields.addEventListener("change", (event) => {
+  const typeSelect = event.target.closest("[data-note-type-change]");
+
+  if (!typeSelect) {
+    return;
+  }
+
+  changeNoteType(typeSelect.dataset.noteTypeChange, typeSelect.value);
 });
 
 noteEditor.addEventListener("input", (event) => {
@@ -3560,6 +3767,21 @@ chapterSelect.addEventListener("change", () => {
 });
 
 noteManagerList.addEventListener("click", (event) => {
+  const selectionButton = event.target.closest("[data-note-select]");
+
+  if (selectionButton) {
+    if (event.detail > 1) {
+      switchNote(selectionButton.dataset.noteSelect);
+      noteManagerDialog.close();
+      return;
+    }
+
+    noteBrowserSelectedNoteId = selectionButton.dataset.noteSelect;
+    renderNoteManager();
+  }
+});
+
+noteBrowserDetails.addEventListener("click", (event) => {
   const actionButton = event.target.closest("[data-note-action]");
 
   if (!actionButton) {
@@ -3576,22 +3798,13 @@ noteManagerList.addEventListener("click", (event) => {
 
   if (noteAction === "duplicate") {
     duplicateNote(noteId);
+    noteBrowserSelectedNoteId = workspace.activeNoteId;
     return;
   }
 
   if (noteAction === "delete") {
     deleteNoteById(noteId);
   }
-});
-
-noteManagerList.addEventListener("change", (event) => {
-  const moveSelect = event.target.closest("[data-note-move]");
-
-  if (!moveSelect) {
-    return;
-  }
-
-  changeNoteType(moveSelect.dataset.noteMove, moveSelect.value);
 });
 
 typeSelect.addEventListener("change", () => {

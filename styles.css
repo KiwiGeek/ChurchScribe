@@ -340,6 +340,13 @@ h1 {
   justify-content: flex-start;
 }
 
+.inline-action-menu > summary.overflow-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
 .inline-action-panel {
   min-width: 220px;
 }
@@ -399,6 +406,20 @@ h1 {
   cursor: pointer;
   font-size: 0.9rem;
   transition: transform 180ms ease, background 180ms ease;
+}
+
+.primary-button {
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
+  color: #fff;
+  font-weight: 700;
+}
+
+.primary-button:hover,
+.primary-button:focus-visible {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
 }
 
 .note-switcher {
@@ -487,6 +508,43 @@ h1 {
   text-transform: uppercase;
 }
 
+.active-note-bar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  padding: 0 20px 14px;
+}
+
+.active-note-summary {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.active-note-label,
+.active-note-meta {
+  margin: 0;
+  color: var(--muted);
+}
+
+.active-note-label {
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.active-note-title {
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.2;
+}
+
+.active-note-meta {
+  font-size: 0.88rem;
+}
+
 .note-meta-bar {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -541,6 +599,10 @@ h1 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
   padding: 0 20px 12px;
+}
+
+.note-meta-primary-field {
+  grid-column: 1 / -1;
 }
 
 .toolbar {
@@ -834,6 +896,12 @@ h1 {
   max-height: calc(100vh - 64px);
 }
 
+#note-manager-dialog .dialog-shell {
+  height: min(760px, calc(100vh - 64px));
+  min-height: min(760px, calc(100vh - 64px));
+  max-height: calc(100vh - 64px);
+}
+
 #settings-dialog .dialog-shell {
   height: min(820px, calc(100vh - 64px));
   min-height: min(820px, calc(100vh - 64px));
@@ -858,6 +926,12 @@ h1 {
   min-height: 0;
   padding: 18px 20px 20px;
   overflow: auto;
+}
+
+#note-manager-dialog .dialog-body {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 #settings-dialog .dialog-body {
@@ -1047,6 +1121,46 @@ h1 {
   gap: 12px;
 }
 
+.note-browser-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.9fr) minmax(320px, 1.1fr);
+  flex: 1;
+  gap: 18px;
+  min-height: 0;
+  padding-bottom: 8px;
+}
+
+.note-manager-list,
+.note-browser-details {
+  min-height: 0;
+}
+
+.note-manager-list {
+  align-content: start;
+  overflow: auto;
+  padding-right: 4px;
+  padding-bottom: 16px;
+}
+
+.note-browser-details {
+  display: grid;
+  align-content: start;
+  gap: 16px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface-strong);
+  overflow: auto;
+  padding-bottom: 24px;
+}
+
+.note-browser-toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(180px, 0.8fr) minmax(180px, 0.8fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
 .display-field-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1101,29 +1215,141 @@ h1 {
   justify-content: flex-end;
 }
 
-.note-manager-row {
-  grid-template-columns: minmax(0, 1.4fr) minmax(180px, 0.8fr) auto auto auto;
-  align-items: center;
-  padding: 14px 16px;
+.note-browser-group {
+  display: grid;
+  gap: 10px;
 }
 
-.note-manager-summary {
+.note-browser-group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 0 2px;
+}
+
+.note-browser-group-title,
+.note-browser-group-count {
+  margin: 0;
+}
+
+.note-browser-group-title {
+  font-size: 0.86rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.note-browser-group-count {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.note-browser-empty {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+  padding: 8px 2px;
+}
+
+.note-browser-list-item {
   display: grid;
   gap: 4px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-strong);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
 }
 
-.note-manager-title,
-.note-manager-meta {
+.note-browser-list-item:hover,
+.note-browser-list-item:focus-visible {
+  transform: translateY(-1px);
+  border-color: var(--tool-hover-border);
+  outline: none;
+}
+
+.note-browser-list-item.is-selected {
+  border-color: var(--tool-hover-border);
+  background: var(--note-chip-active);
+}
+
+.note-browser-list-title,
+.note-browser-list-meta {
   display: block;
 }
 
-.note-manager-title {
+.note-browser-list-title {
   font-weight: 700;
 }
 
-.note-manager-meta {
+.note-browser-list-meta {
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.note-browser-detail-header,
+.note-browser-detail-block {
+  display: grid;
+  gap: 8px;
+}
+
+.note-browser-detail-title,
+.note-browser-detail-meta,
+.note-browser-detail-block-title,
+.note-browser-detail-preview {
+  margin: 0;
+}
+
+.note-browser-detail-title {
+  font-size: 1.1rem;
+  line-height: 1.25;
+}
+
+.note-browser-detail-meta {
   color: var(--muted);
   font-size: 0.88rem;
+}
+
+.note-browser-detail-controls {
+  display: grid;
+  gap: 14px;
+}
+
+.note-browser-detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.note-browser-detail-block {
+  padding-top: 4px;
+}
+
+.note-browser-detail-block-title {
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.note-browser-detail-metadata {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.note-browser-detail-preview {
+  color: var(--text);
+  line-height: 1.55;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .conflict-versions {
@@ -1200,7 +1426,8 @@ body.is-pane-dragging {
 
   .type-manager-layout,
   .settings-layout,
-  .note-manager-row,
+  .note-browser-layout,
+  .note-browser-toolbar,
   .metadata-field-row,
   .display-field-grid,
   .alias-row {
@@ -1218,11 +1445,18 @@ body.is-pane-dragging {
 
   .panel-header,
   .toolbar,
-  .note-switcher,
+  .active-note-bar,
+  .note-meta-bar,
   .note-meta,
   .verse-picker {
     padding-left: 18px;
     padding-right: 18px;
+  }
+
+  .active-note-bar,
+  .note-meta-bar {
+    grid-template-columns: 1fr;
+    align-items: start;
   }
 
   .note-meta {

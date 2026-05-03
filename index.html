@@ -18,8 +18,8 @@
       </div>
       <div class="header-actions">
         <div class="header-controls">
-          <button class="theme-toggle" id="settings-button" type="button">
-            <span class="theme-toggle-label">Settings</span>
+            <button class="theme-toggle" id="settings-button" type="button">
+              <span class="theme-toggle-label">Settings…</span>
           </button>
         </div>
       </div>
@@ -33,42 +33,28 @@
             <h2 id="note-panel-title">Service Notes</h2>
           </div>
           <div class="note-actions">
-            <button class="ghost-button" id="new-note-direct-button" type="button">New note</button>
-            <details class="inline-action-menu" id="new-note-menu">
-              <summary class="ghost-button">New note</summary>
-              <div class="overflow-menu-panel inline-action-panel">
-                <label class="field compact-field" id="new-note-type-field">
-                  <span>Type</span>
-                  <select id="new-note-type-select" name="new-note-type"></select>
-                </label>
-                <button class="ghost-button overflow-action" id="new-note-button" type="button">Create note</button>
-              </div>
-            </details>
             <details class="overflow-menu">
-              <summary class="ghost-button">More</summary>
+              <summary class="ghost-button">Actions ▾</summary>
               <div class="overflow-menu-panel">
-                <label class="field compact-field" id="active-note-type-field">
-                  <span>Note type</span>
-                  <select id="note-type-select" name="note-type"></select>
-                </label>
-                <button class="ghost-button overflow-action" id="duplicate-note-button" type="button">Duplicate note</button>
-                <button class="ghost-button overflow-action" id="manage-notes-button" type="button">Manage notes</button>
+                <div id="new-note-actions"></div>
+                <button class="ghost-button overflow-action" id="manage-notes-button" type="button">Browse notes</button>
                 <button class="ghost-button overflow-action" id="delete-note-button" type="button">Delete note</button>
               </div>
             </details>
           </div>
         </div>
 
-        <section class="note-switcher" aria-labelledby="note-list-title">
-          <div class="note-switcher-header">
-            <h3 id="note-list-title">Saved Notes</h3>
+        <div class="active-note-bar">
+          <div class="active-note-summary">
+            <p class="active-note-label">Current note</p>
+            <h3 class="active-note-title" id="active-note-title"></h3>
+            <p class="active-note-meta" id="active-note-meta"></p>
           </div>
-          <div class="note-list" id="note-list" role="listbox" aria-label="Saved notes"></div>
-        </section>
+        </div>
 
         <div class="note-meta-bar">
           <div class="metadata-summary" id="metadata-summary"></div>
-          <button class="ghost-button" id="note-details-button" type="button">Note details</button>
+          <button class="ghost-button" id="note-details-button" type="button">Note options…</button>
         </div>
 
         <div class="toolbar" role="toolbar" aria-label="Rich text controls">
@@ -146,14 +132,35 @@
     <form class="dialog-shell" method="dialog">
       <div class="dialog-header">
         <div>
-          <p class="panel-kicker">Manage Notes</p>
+          <p class="panel-kicker">Notes Browser</p>
           <h2>Notes Library</h2>
         </div>
         <button class="ghost-button" id="close-note-manager-button" type="submit">Close</button>
       </div>
 
       <div class="dialog-body">
-        <div class="note-manager-list" id="note-manager-list"></div>
+        <div class="note-browser-toolbar">
+          <label class="field compact-field note-browser-search">
+            <span>Filter</span>
+            <input id="note-browser-filter" type="search" placeholder="Search title, details, or note text">
+          </label>
+          <label class="field compact-field note-browser-type">
+            <span>Type</span>
+            <select id="note-browser-type-filter" name="note-browser-type-filter"></select>
+          </label>
+          <label class="field compact-field note-browser-sort">
+            <span>Sort</span>
+            <select id="note-browser-sort" name="note-browser-sort">
+              <option value="updated-desc">Recently updated</option>
+              <option value="created-desc">Recently created</option>
+              <option value="title-asc">Title</option>
+            </select>
+          </label>
+        </div>
+        <div class="note-browser-layout">
+          <div class="note-manager-list" id="note-manager-list"></div>
+          <aside class="note-browser-details" id="note-browser-details"></aside>
+        </div>
       </div>
     </form>
   </dialog>
@@ -162,8 +169,8 @@
     <form class="dialog-shell compact-shell" method="dialog">
       <div class="dialog-header">
         <div>
-          <p class="panel-kicker">Note Details</p>
-          <h2>Metadata</h2>
+          <p class="panel-kicker">Note Options</p>
+          <h2>Edit Note Details</h2>
         </div>
         <button class="ghost-button" type="submit">Close</button>
       </div>
