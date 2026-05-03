@@ -52,18 +52,35 @@ const cardTitleFieldSelect = document.querySelector("#card-title-field-select");
 const cardSubtitleFieldSelect = document.querySelector("#card-subtitle-field-select");
 const metadataFieldList = document.querySelector("#metadata-field-list");
 const aliasList = document.querySelector("#alias-list");
+const cloudProviderSelect = document.querySelector("#cloud-provider-select");
+const cloudPollIntervalSelect = document.querySelector("#cloud-poll-interval-select");
+const cloudAutoSyncInput = document.querySelector("#cloud-auto-sync-input");
+const cloudSyncTranslationsInput = document.querySelector("#cloud-sync-translations-input");
+const cloudVisibleFolderInput = document.querySelector("#cloud-visible-folder-input");
+const cloudStatusInput = document.querySelector("#cloud-status-input");
+const cloudLastSyncInput = document.querySelector("#cloud-last-sync-input");
+const googleConnectButton = document.querySelector("#google-connect-button");
+const googleDisconnectButton = document.querySelector("#google-disconnect-button");
+const googleSyncNowButton = document.querySelector("#google-sync-now-button");
 const addTypeButton = document.querySelector("#add-type-button");
 const addMetadataFieldButton = document.querySelector("#add-metadata-field-button");
 const deleteTypeButton = document.querySelector("#delete-type-button");
 const newNoteMenu = document.querySelector("#new-note-menu");
 const overflowMenu = document.querySelector(".overflow-menu");
 
+const dbName = "churchscribe-db";
+const dbVersion = 1;
+const dbStoreName = "kv";
 const workspaceStorageKey = "service-notes-workspace";
 const notesStorageKey = "service-notes";
 const legacyNotesStorageKey = "service-notes-content";
 const themeStorageKey = "service-notes-theme";
 const paneOrderStorageKey = "service-notes-pane-order";
 const translationStorageKey = "service-notes-translation";
+const cloudSyncStorageKey = "service-notes-cloud-sync";
+const defaultGoogleClientId = "711830335817-2enpiqrmso0sqgq2fnh8o4ef4r60ede0.apps.googleusercontent.com";
+const driveWorkspaceFileName = "churchscribe-workspace.json";
+const autoCloudSyncDelayMs = 10000;
 
 const bookAliasMap = new Map();
 let explicitScriptureReferencePattern;
@@ -73,6 +90,20 @@ let activeScriptureFocus = null;
 let currentTranslationCode = "KJV";
 let activeTypeEditorId = null;
 let activeSettingsTabId = "note-types";
+let dbPromise;
+let googleTokenClient = null;
+let googleAccessToken = null;
+let pendingAutoSyncTimer = null;
+let syncInFlightPromise = null;
+let silentReconnectAttempted = false;
+
+const googleDriveScopes = [
+  "openid",
+  "email",
+  "profile",
+  "https://www.googleapis.com/auth/drive.appdata",
+  "https://www.googleapis.com/auth/drive.file"
+].join(" ");
 
 const workspace = {
   noteTypes: [],
@@ -90,13 +121,129 @@ const settingsTabs = [
   {
     id: "scripture-aliases",
     label: "Scripture Abbreviations"
+  },
+  {
+    id: "cloud-sync",
+    label: "Cloud Sync"
   }
 ];
+
+const cloudSyncSettings = {
+  provider: "google-drive",
+  autoSync: true,
+  pollIntervalSeconds: 60,
+  syncTranslations: false,
+  useVisibleDriveFolder: false,
+  status: "Not connected",
+  lastSyncAt: null,
+  connectedEmail: "",
+  remoteWorkspaceFileId: "",
+  remoteWorkspaceParentId: "",
+  lastError: ""
+};
+
+const normalizeCloudSyncSettings = (value = {}) => ({
+  provider: typeof value.provider === "string" ? value.provider : "google-drive",
+  autoSync: typeof value.autoSync === "boolean" ? value.autoSync : true,
+  pollIntervalSeconds: Number(value.pollIntervalSeconds) || 60,
+  syncTranslations: typeof value.syncTranslations === "boolean" ? value.syncTranslations : false,
+  useVisibleDriveFolder: typeof value.useVisibleDriveFolder === "boolean" ? value.useVisibleDriveFolder : false,
+  status: typeof value.status === "string" && value.status ? value.status : "Not connected",
+  lastSyncAt: typeof value.lastSyncAt === "string" ? value.lastSyncAt : null,
+  connectedEmail: typeof value.connectedEmail === "string" ? value.connectedEmail : "",
+  remoteWorkspaceFileId: typeof value.remoteWorkspaceFileId === "string" ? value.remoteWorkspaceFileId : "",
+  remoteWorkspaceParentId: typeof value.remoteWorkspaceParentId === "string" ? value.remoteWorkspaceParentId : "",
+  lastError: typeof value.lastError === "string" ? value.lastError : ""
+});
 
 const getCurrentTranslation = () => translationLibrary[currentTranslationCode];
 const getCurrentScriptureLibrary = () => getCurrentTranslation().books;
 const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const createId = (prefix) => `${prefix}-${crypto.randomUUID()}`;
+const formatSyncTimestamp = (value) => value ? new Date(value).toLocaleString() : "Not synced yet";
+
+const openDatabase = () => {
+  if (!("indexedDB" in window)) {
+    return Promise.reject(new Error("IndexedDB is not available in this browser."));
+  }
+
+  if (!dbPromise) {
+    dbPromise = new Promise((resolve, reject) => {
+      const request = window.indexedDB.open(dbName, dbVersion);
+
+      request.onupgradeneeded = () => {
+        const db = request.result;
+
+        if (!db.objectStoreNames.contains(dbStoreName)) {
+          db.createObjectStore(dbStoreName, { keyPath: "key" });
+        }
+      };
+
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  return dbPromise;
+};
+
+const readStoredValue = async (key) => {
+  const db = await openDatabase();
+
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(dbStoreName, "readonly");
+    const store = transaction.objectStore(dbStoreName);
+    const request = store.get(key);
+
+    request.onsuccess = () => resolve(request.result?.value);
+    request.onerror = () => reject(request.error);
+  });
+};
+
+const writeStoredValue = async (key, value) => {
+  const db = await openDatabase();
+
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(dbStoreName, "readwrite");
+    const store = transaction.objectStore(dbStoreName);
+    const request = store.put({ key, value });
+
+    request.onsuccess = () => resolve();
+    request.onerror = () => reject(request.error);
+  });
+};
+
+const deleteStoredValue = async (key) => {
+  const db = await openDatabase();
+
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(dbStoreName, "readwrite");
+    const store = transaction.objectStore(dbStoreName);
+    const request = store.delete(key);
+
+    request.onsuccess = () => resolve();
+    request.onerror = () => reject(request.error);
+  });
+};
+
+const migrateLegacyPreference = async (key, parser = (value) => value) => {
+  const existingValue = await readStoredValue(key);
+
+  if (typeof existingValue !== "undefined") {
+    return existingValue;
+  }
+
+  const legacyValue = window.localStorage.getItem(key);
+
+  if (legacyValue === null) {
+    return undefined;
+  }
+
+  const parsedValue = parser(legacyValue);
+  await writeStoredValue(key, parsedValue);
+  window.localStorage.removeItem(key);
+  return parsedValue;
+};
 
 const normalizeBookName = (value) =>
   value.toLowerCase().replace(/\./g, "").replace(/\s+/g, " ").trim();
@@ -143,9 +290,6 @@ const formatNoteDate = (isoDate) =>
     day: "numeric",
     year: "numeric"
   });
-
-const getCurrentTimestampLabel = () =>
-  new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
 
 const getNoteTypeById = (typeId) => workspace.noteTypes.find((type) => type.id === typeId) ?? workspace.noteTypes[0];
 const getActiveNote = () => workspace.notes.find((note) => note.id === workspace.activeNoteId) ?? workspace.notes[0];
@@ -306,11 +450,509 @@ const ensureWorkspaceConsistency = () => {
 
 const persistWorkspace = () => {
   ensureWorkspaceConsistency();
-  localStorage.setItem(workspaceStorageKey, JSON.stringify(workspace));
+  void writeStoredValue(workspaceStorageKey, structuredClone(workspace));
+  scheduleAutoCloudSync();
 };
 
 const updateSaveStatus = (message) => {
   saveStatus.textContent = message;
+};
+
+const persistCloudSyncSettings = () => {
+  void writeStoredValue(cloudSyncStorageKey, structuredClone(cloudSyncSettings));
+};
+
+const resetTransientCloudSessionState = () => {
+  if (googleAccessToken) {
+    return;
+  }
+
+  cloudSyncSettings.connectedEmail = "";
+
+  if (
+    cloudSyncSettings.status.startsWith("Connected to Google Drive") ||
+    cloudSyncSettings.status.startsWith("Syncing")
+  ) {
+    cloudSyncSettings.status = "Not connected";
+  }
+};
+
+const restoreCloudSyncSettings = async () => {
+  const savedSettings = await readStoredValue(cloudSyncStorageKey);
+  Object.assign(cloudSyncSettings, normalizeCloudSyncSettings(savedSettings));
+  resetTransientCloudSessionState();
+  persistCloudSyncSettings();
+};
+
+const isGoogleIdentityAvailable = () =>
+  Boolean(window.google?.accounts?.oauth2?.initTokenClient);
+
+const buildCloudStatusText = () => {
+  if (!isGoogleIdentityAvailable()) {
+    return "Google Identity Services not loaded";
+  }
+
+  if (
+    cloudSyncSettings.status &&
+    cloudSyncSettings.status !== "Connected to Google Drive" &&
+    cloudSyncSettings.status !== "Not connected"
+  ) {
+    return cloudSyncSettings.status;
+  }
+
+  if (cloudSyncSettings.connectedEmail) {
+    return `Connected as ${cloudSyncSettings.connectedEmail}`;
+  }
+
+  if (cloudSyncSettings.status === "Connected to Google Drive") {
+    return "Connected to Google Drive";
+  }
+
+  return cloudSyncSettings.status;
+};
+
+const buildSaveStatusText = (savedAt = new Date(), syncedAt = cloudSyncSettings.lastSyncAt) => {
+  const localLabel = `Saved locally ${new Date(savedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}`;
+  const cloudLabel = cloudSyncSettings.lastError
+    ? `Cloud sync failed: ${cloudSyncSettings.lastError}`
+    : syncedAt
+      ? `Synced to cloud ${new Date(syncedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}`
+      : "Not synced to cloud yet";
+
+  return `${localLabel} • ${cloudLabel}`;
+};
+
+const refreshSaveStatus = () => {
+  const activeNote = getActiveNote();
+  const savedAt = activeNote?.updatedAt ?? new Date();
+  updateSaveStatus(buildSaveStatusText(savedAt));
+};
+
+const hasActiveGoogleDriveSession = () => Boolean(googleAccessToken);
+
+const buildCloudSyncPayload = () => ({
+  version: 1,
+  updatedAt: new Date().toISOString(),
+  workspace: structuredClone(workspace),
+  preferences: {
+    theme: document.documentElement.dataset.theme === "dark" ? "dark" : "light",
+    paneOrder: paneGrid.dataset.order === "scripture-first" ? "scripture-first" : "notes-first",
+    translation: currentTranslationCode
+  },
+  syncSettings: {
+    provider: cloudSyncSettings.provider,
+    autoSync: cloudSyncSettings.autoSync,
+    pollIntervalSeconds: cloudSyncSettings.pollIntervalSeconds,
+    syncTranslations: cloudSyncSettings.syncTranslations
+  }
+});
+
+const getCloudTargetLabel = () =>
+  cloudSyncSettings.useVisibleDriveFolder ? "visible Drive folder" : "hidden app storage";
+
+const googleApiFetch = async (url, options = {}) => {
+  if (!googleAccessToken) {
+    throw new Error("Google Drive is not connected in this browser session.");
+  }
+
+  const headers = new Headers(options.headers ?? {});
+  headers.set("Authorization", `Bearer ${googleAccessToken}`);
+
+  const response = await fetch(url, {
+    ...options,
+    headers
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(errorText || `Google Drive request failed with ${response.status}.`);
+  }
+
+  return response;
+};
+
+const extractGoogleErrorMessage = (error) => {
+  const fallback = "Unknown Google Drive error.";
+
+  if (!(error instanceof Error)) {
+    return fallback;
+  }
+
+  const message = error.message?.trim() || fallback;
+
+  try {
+    const parsed = JSON.parse(message);
+    return parsed.error?.message || parsed.error_description || message;
+  } catch {
+    return message;
+  }
+};
+
+const getDriveWorkspaceLocation = () => (
+  cloudSyncSettings.useVisibleDriveFolder
+    ? {
+        spaces: "drive",
+        parents: async () => [await ensureVisibleDriveFolderId()],
+        query: async () =>
+          `name='${driveWorkspaceFileName}' and '${await ensureVisibleDriveFolderId()}' in parents and trashed=false`
+      }
+    : {
+        spaces: "appDataFolder",
+        parents: async () => ["appDataFolder"],
+        query: async () => `name='${driveWorkspaceFileName}' and 'appDataFolder' in parents and trashed=false`
+      }
+);
+
+const ensureVisibleDriveFolderId = async () => {
+  if (cloudSyncSettings.remoteWorkspaceParentId) {
+    return cloudSyncSettings.remoteWorkspaceParentId;
+  }
+
+  const query = encodeURIComponent("name='ChurchScribe' and mimeType='application/vnd.google-apps.folder' and trashed=false");
+  const response = await googleApiFetch(
+    `https://www.googleapis.com/drive/v3/files?q=${query}&spaces=drive&fields=files(id,name)`
+  );
+  const payload = await response.json();
+  const existingFolderId = payload.files?.[0]?.id ?? "";
+
+  if (existingFolderId) {
+    cloudSyncSettings.remoteWorkspaceParentId = existingFolderId;
+    persistCloudSyncSettings();
+    return existingFolderId;
+  }
+
+  const createResponse = await googleApiFetch(
+    "https://www.googleapis.com/drive/v3/files?fields=id",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        name: "ChurchScribe",
+        mimeType: "application/vnd.google-apps.folder"
+      })
+    }
+  );
+  const createdFolder = await createResponse.json();
+  const folderId = createdFolder.id ?? "";
+
+  if (folderId) {
+    cloudSyncSettings.remoteWorkspaceParentId = folderId;
+    persistCloudSyncSettings();
+  }
+
+  return folderId;
+};
+
+const findDriveWorkspaceFileId = async () => {
+  if (cloudSyncSettings.remoteWorkspaceFileId) {
+    return cloudSyncSettings.remoteWorkspaceFileId;
+  }
+
+  const location = getDriveWorkspaceLocation();
+  const query = encodeURIComponent(await location.query());
+  const response = await googleApiFetch(
+    `https://www.googleapis.com/drive/v3/files?q=${query}&spaces=${location.spaces}&fields=files(id,name)`
+  );
+  const payload = await response.json();
+  const fileId = payload.files?.[0]?.id ?? "";
+
+  if (fileId) {
+    cloudSyncSettings.remoteWorkspaceFileId = fileId;
+    persistCloudSyncSettings();
+  }
+
+  return fileId;
+};
+
+const buildMultipartJsonBody = (metadata, payload) => {
+  const boundary = `churchscribe-${crypto.randomUUID()}`;
+  const body = [
+    `--${boundary}`,
+    "Content-Type: application/json; charset=UTF-8",
+    "",
+    JSON.stringify(metadata),
+    `--${boundary}`,
+    "Content-Type: application/json; charset=UTF-8",
+    "",
+    JSON.stringify(payload),
+    `--${boundary}--`
+  ].join("\r\n");
+
+  return {
+    body,
+    contentType: `multipart/related; boundary=${boundary}`
+  };
+};
+
+const uploadWorkspaceToGoogleDrive = async () => {
+  const payload = buildCloudSyncPayload();
+  const existingFileId = await findDriveWorkspaceFileId();
+  const location = getDriveWorkspaceLocation();
+
+  if (existingFileId) {
+    const multipart = buildMultipartJsonBody({ mimeType: "application/json" }, payload);
+    await googleApiFetch(
+      `https://www.googleapis.com/upload/drive/v3/files/${existingFileId}?uploadType=multipart&fields=id`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": multipart.contentType
+        },
+        body: multipart.body
+      }
+    );
+
+    return existingFileId;
+  }
+
+  const multipart = buildMultipartJsonBody(
+    {
+      name: driveWorkspaceFileName,
+      parents: await location.parents(),
+      mimeType: "application/json"
+    },
+    payload
+  );
+  const response = await googleApiFetch(
+    "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": multipart.contentType
+      },
+      body: multipart.body
+    }
+  );
+  const responsePayload = await response.json();
+  const fileId = responsePayload.id ?? "";
+
+  if (fileId) {
+    cloudSyncSettings.remoteWorkspaceFileId = fileId;
+    persistCloudSyncSettings();
+  }
+
+  return fileId;
+};
+
+const syncWorkspaceToCloud = async ({ reason = "manual" } = {}) => {
+  if (!hasActiveGoogleDriveSession()) {
+    cloudSyncSettings.status = "Connect Google Drive first.";
+    persistCloudSyncSettings();
+    renderSettings();
+    refreshSaveStatus();
+    return false;
+  }
+
+  if (syncInFlightPromise) {
+    return syncInFlightPromise;
+  }
+
+  syncInFlightPromise = (async () => {
+    try {
+      cloudSyncSettings.status = reason === "idle" ? "Syncing changes to Google Drive..." : "Syncing to Google Drive...";
+      cloudSyncSettings.status = reason === "idle"
+        ? `Syncing changes to Google Drive (${getCloudTargetLabel()})...`
+        : `Syncing to Google Drive (${getCloudTargetLabel()})...`;
+      cloudSyncSettings.lastError = "";
+      persistCloudSyncSettings();
+      renderSettings();
+      await uploadWorkspaceToGoogleDrive();
+      cloudSyncSettings.lastSyncAt = new Date().toISOString();
+      cloudSyncSettings.status = `Connected to Google Drive (${getCloudTargetLabel()})`;
+      cloudSyncSettings.lastError = "";
+      persistCloudSyncSettings();
+      renderSettings();
+      refreshSaveStatus();
+      return true;
+    } catch (error) {
+      console.error(error);
+      const errorMessage = extractGoogleErrorMessage(error);
+      cloudSyncSettings.status = `Google Drive sync failed: ${errorMessage}`;
+      cloudSyncSettings.lastError = errorMessage;
+      persistCloudSyncSettings();
+      renderSettings();
+      refreshSaveStatus();
+      return false;
+    } finally {
+      syncInFlightPromise = null;
+    }
+  })();
+
+  return syncInFlightPromise;
+};
+
+const scheduleAutoCloudSync = () => {
+  if (!cloudSyncSettings.autoSync || !hasActiveGoogleDriveSession()) {
+    return;
+  }
+
+  if (pendingAutoSyncTimer) {
+    window.clearTimeout(pendingAutoSyncTimer);
+  }
+
+  pendingAutoSyncTimer = window.setTimeout(() => {
+    pendingAutoSyncTimer = null;
+    void syncWorkspaceToCloud({ reason: "idle" });
+  }, autoCloudSyncDelayMs);
+};
+
+const initializeGoogleTokenClient = () => {
+  if (!isGoogleIdentityAvailable() || googleTokenClient) {
+    return;
+  }
+
+  googleTokenClient = window.google.accounts.oauth2.initTokenClient({
+    client_id: defaultGoogleClientId,
+    scope: googleDriveScopes,
+    callback: () => {}
+  });
+};
+
+const finalizeGoogleDriveConnection = async (accessToken, { triggerInitialSync = false } = {}) => {
+  googleAccessToken = accessToken;
+  let connectedEmail = "";
+
+  try {
+    const userInfo = await fetchGoogleUserInfo(googleAccessToken);
+    connectedEmail = userInfo.email ?? "";
+  } catch (error) {
+    console.warn("Google user info lookup failed; continuing with Drive connection.", error);
+  }
+
+  cloudSyncSettings.connectedEmail = connectedEmail;
+  cloudSyncSettings.status = `Connected to Google Drive (${getCloudTargetLabel()})`;
+  cloudSyncSettings.lastError = "";
+  persistCloudSyncSettings();
+  renderSettings();
+
+  if (triggerInitialSync) {
+    void syncWorkspaceToCloud({ reason: "connect" });
+  }
+};
+
+const fetchGoogleUserInfo = async (accessToken) => {
+  const response = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error("Unable to load Google account information.");
+  }
+
+  return response.json();
+};
+
+const connectGoogleDrive = async () => {
+  if (!isGoogleIdentityAvailable()) {
+    cloudSyncSettings.status = "Google Identity Services is still loading.";
+    persistCloudSyncSettings();
+    renderSettings();
+    return;
+  }
+
+  initializeGoogleTokenClient();
+
+  cloudSyncSettings.status = "Waiting for Google sign-in...";
+  persistCloudSyncSettings();
+  renderSettings();
+
+  await new Promise((resolve, reject) => {
+    googleTokenClient.callback = async (tokenResponse) => {
+      if (tokenResponse.error) {
+        cloudSyncSettings.status = `Google sign-in failed: ${tokenResponse.error}`;
+        persistCloudSyncSettings();
+        renderSettings();
+        reject(new Error(tokenResponse.error));
+        return;
+      }
+
+      try {
+        await finalizeGoogleDriveConnection(tokenResponse.access_token, { triggerInitialSync: true });
+        resolve();
+      } catch (error) {
+        cloudSyncSettings.status = "Signed in, but failed to finish Google Drive connection.";
+        persistCloudSyncSettings();
+        renderSettings();
+        reject(error);
+      }
+    };
+
+    googleTokenClient.requestAccessToken({ prompt: "consent" });
+  });
+};
+
+const attemptSilentGoogleReconnect = async () => {
+  if (silentReconnectAttempted || hasActiveGoogleDriveSession() || !isGoogleIdentityAvailable()) {
+    return;
+  }
+
+  silentReconnectAttempted = true;
+  cloudSyncSettings.status = "Verifying Google Drive connection...";
+  cloudSyncSettings.lastError = "";
+  persistCloudSyncSettings();
+
+  try {
+    initializeGoogleTokenClient();
+
+    await new Promise((resolve, reject) => {
+      googleTokenClient.callback = async (tokenResponse) => {
+        if (tokenResponse.error) {
+          reject(new Error(tokenResponse.error));
+          return;
+        }
+
+        try {
+          await finalizeGoogleDriveConnection(tokenResponse.access_token);
+          resolve();
+        } catch (error) {
+          reject(error);
+        }
+      };
+
+      googleTokenClient.requestAccessToken({ prompt: "none" });
+    });
+  } catch (error) {
+    googleAccessToken = null;
+    resetTransientCloudSessionState();
+    persistCloudSyncSettings();
+    if (settingsDialog.open) {
+      renderSettings();
+    }
+  }
+};
+
+const disconnectGoogleDrive = () => {
+  if (googleAccessToken && window.google?.accounts?.oauth2?.revoke) {
+    window.google.accounts.oauth2.revoke(googleAccessToken, () => {});
+  }
+
+  googleAccessToken = null;
+  if (pendingAutoSyncTimer) {
+    window.clearTimeout(pendingAutoSyncTimer);
+    pendingAutoSyncTimer = null;
+  }
+  resetTransientCloudSessionState();
+  persistCloudSyncSettings();
+  renderSettings();
+};
+
+const waitForGoogleIdentity = () => {
+  if (isGoogleIdentityAvailable()) {
+    initializeGoogleTokenClient();
+    void attemptSilentGoogleReconnect();
+
+    if (settingsDialog.open) {
+      renderSettings();
+    }
+
+    return;
+  }
+
+  window.setTimeout(waitForGoogleIdentity, 500);
 };
 
 const migrateLegacyNotes = (savedNotes, legacyNotes) => {
@@ -350,23 +992,21 @@ const migrateLegacyNotes = (savedNotes, legacyNotes) => {
   workspace.selectedNewNoteTypeId = defaultType.id;
   ensureWorkspaceConsistency();
   persistWorkspace();
-  localStorage.removeItem(notesStorageKey);
-  localStorage.removeItem(legacyNotesStorageKey);
 };
 
-const restoreWorkspace = () => {
-  const savedWorkspace = localStorage.getItem(workspaceStorageKey);
-  const savedNotes = localStorage.getItem(notesStorageKey);
-  const legacyNotes = localStorage.getItem(legacyNotesStorageKey);
+const restoreWorkspace = async () => {
+  const savedWorkspace = await readStoredValue(workspaceStorageKey);
+  const savedNotes = await migrateLegacyPreference(notesStorageKey, JSON.parse);
+  const legacyNotes = await migrateLegacyPreference(legacyNotesStorageKey);
 
   if (savedWorkspace) {
-    const parsed = JSON.parse(savedWorkspace);
-    workspace.noteTypes = parsed.noteTypes;
-    workspace.notes = parsed.notes;
-    workspace.activeNoteId = parsed.activeNoteId;
-    workspace.selectedNewNoteTypeId = parsed.selectedNewNoteTypeId;
+    workspace.noteTypes = savedWorkspace.noteTypes;
+    workspace.notes = savedWorkspace.notes;
+    workspace.activeNoteId = savedWorkspace.activeNoteId;
+    workspace.selectedNewNoteTypeId = savedWorkspace.selectedNewNoteTypeId;
+    workspace.customBookAliases = savedWorkspace.customBookAliases ?? {};
   } else if (savedNotes || legacyNotes) {
-    migrateLegacyNotes(savedNotes ? JSON.parse(savedNotes) : null, legacyNotes);
+    migrateLegacyNotes(savedNotes ?? null, legacyNotes);
     updateSaveStatus("Converted your existing notes into typed notes.");
   } else {
     const defaultType = createDefaultNoteType();
@@ -381,12 +1021,12 @@ const restoreWorkspace = () => {
   renderWorkspace();
 
   if (!savedWorkspace && !savedNotes && !legacyNotes) {
-    updateSaveStatus("Notes save automatically in this browser.");
+    refreshSaveStatus();
   }
 };
 
-const getPreferredTheme = () => {
-  const savedTheme = localStorage.getItem(themeStorageKey);
+const getPreferredTheme = async () => {
+  const savedTheme = await migrateLegacyPreference(themeStorageKey);
 
   if (savedTheme === "light" || savedTheme === "dark") {
     return savedTheme;
@@ -395,13 +1035,13 @@ const getPreferredTheme = () => {
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 };
 
-const getPreferredPaneOrder = () => {
-  const savedOrder = localStorage.getItem(paneOrderStorageKey);
+const getPreferredPaneOrder = async () => {
+  const savedOrder = await migrateLegacyPreference(paneOrderStorageKey);
   return savedOrder === "scripture-first" ? "scripture-first" : "notes-first";
 };
 
-const getPreferredTranslation = () => {
-  const savedTranslation = localStorage.getItem(translationStorageKey);
+const getPreferredTranslation = async () => {
+  const savedTranslation = await migrateLegacyPreference(translationStorageKey);
   return translationLibrary[savedTranslation] ? savedTranslation : "KJV";
 };
 
@@ -420,8 +1060,9 @@ const applyTheme = (theme) => {
 const toggleTheme = () => {
   const currentTheme = document.documentElement.dataset.theme === "dark" ? "dark" : "light";
   const nextTheme = currentTheme === "dark" ? "light" : "dark";
-  localStorage.setItem(themeStorageKey, nextTheme);
+  void writeStoredValue(themeStorageKey, nextTheme);
   applyTheme(nextTheme);
+  scheduleAutoCloudSync();
 };
 
 const syncPaneOrderToggle = (order) => {
@@ -438,8 +1079,9 @@ const applyPaneOrder = (order) => {
 const togglePaneOrder = () => {
   const currentOrder = paneGrid.dataset.order === "scripture-first" ? "scripture-first" : "notes-first";
   const nextOrder = currentOrder === "scripture-first" ? "notes-first" : "scripture-first";
-  localStorage.setItem(paneOrderStorageKey, nextOrder);
+  void writeStoredValue(paneOrderStorageKey, nextOrder);
   applyPaneOrder(nextOrder);
+  scheduleAutoCloudSync();
 };
 
 const populateBookOptions = () => {
@@ -1366,6 +2008,21 @@ const renderSettings = () => {
     panel.classList.toggle("is-active", panel.dataset.settingsPanel === activeSettingsTabId);
   });
 
+  cloudProviderSelect.value = cloudSyncSettings.provider;
+  cloudPollIntervalSelect.value = String(cloudSyncSettings.pollIntervalSeconds);
+  cloudAutoSyncInput.checked = cloudSyncSettings.autoSync;
+  cloudSyncTranslationsInput.checked = cloudSyncSettings.syncTranslations;
+  cloudVisibleFolderInput.checked = cloudSyncSettings.useVisibleDriveFolder;
+  cloudStatusInput.value = buildCloudStatusText();
+  cloudLastSyncInput.value = formatSyncTimestamp(cloudSyncSettings.lastSyncAt);
+  const hasConnectedDriveSession = hasActiveGoogleDriveSession();
+  googleConnectButton.classList.toggle("is-hidden", hasConnectedDriveSession);
+  googleDisconnectButton.classList.toggle("is-hidden", !hasConnectedDriveSession);
+  googleSyncNowButton.classList.toggle("is-hidden", !hasConnectedDriveSession);
+  googleConnectButton.disabled = !isGoogleIdentityAvailable() || hasConnectedDriveSession;
+  googleDisconnectButton.disabled = !hasConnectedDriveSession;
+  googleSyncNowButton.disabled = !hasConnectedDriveSession;
+
   const selectedType = getSelectedTypeForManager();
 
   if (!selectedType) {
@@ -1521,7 +2178,7 @@ const saveActiveNote = () => {
   touchNote(activeNote);
   persistWorkspace();
   refreshNoteSurfaces();
-  updateSaveStatus(`Saved ${getCurrentTimestampLabel()}`);
+  refreshSaveStatus();
 };
 
 const setSelectedNewNoteType = (typeId) => {
@@ -1536,7 +2193,7 @@ const createNote = () => {
   workspace.activeNoteId = note.id;
   persistWorkspace();
   renderWorkspace();
-  updateSaveStatus(`New ${type.name} note created.`);
+  refreshSaveStatus();
   const firstInput = noteMetaFields.querySelector("input");
   (firstInput ?? noteEditor).focus();
 };
@@ -1557,7 +2214,7 @@ const duplicateNote = (noteId = workspace.activeNoteId) => {
   workspace.activeNoteId = duplicate.id;
   persistWorkspace();
   renderWorkspace();
-  updateSaveStatus("Note copied.");
+  refreshSaveStatus();
 };
 
 const switchNote = (noteId) => {
@@ -1569,7 +2226,7 @@ const switchNote = (noteId) => {
   workspace.activeNoteId = noteId;
   persistWorkspace();
   renderWorkspace();
-  updateSaveStatus("Switched notes.");
+  refreshSaveStatus();
 };
 
 const deleteNoteById = (noteId) => {
@@ -1598,7 +2255,7 @@ const deleteNoteById = (noteId) => {
 
   persistWorkspace();
   renderWorkspace();
-  updateSaveStatus("Note deleted.");
+  refreshSaveStatus();
 };
 
 const changeNoteType = (noteId, nextTypeId) => {
@@ -1620,7 +2277,7 @@ const changeNoteType = (noteId, nextTypeId) => {
 
   persistWorkspace();
   renderWorkspace();
-  updateSaveStatus(`Moved note to ${nextType.name}.`);
+  refreshSaveStatus();
 };
 
 const addNoteType = () => {
@@ -1635,7 +2292,7 @@ const addNoteType = () => {
   workspace.selectedNewNoteTypeId = type.id;
   persistWorkspace();
   renderWorkspace();
-  updateSaveStatus("New note type added.");
+  refreshSaveStatus();
 };
 
 const syncNotesForType = (type) => {
@@ -1682,7 +2339,7 @@ const addMetadataFieldToSelectedType = () => {
   syncNotesForType(type);
   persistWorkspace();
   renderWorkspace();
-  updateSaveStatus("Metadata field added.");
+  refreshSaveStatus();
 };
 
 const updateMetadataField = (fieldId, prop, value) => {
@@ -1734,7 +2391,7 @@ const removeMetadataField = (fieldId) => {
   syncNotesForType(type);
   persistWorkspace();
   renderWorkspace();
-  updateSaveStatus("Metadata field removed.");
+  refreshSaveStatus();
 };
 
 const updateCustomAliases = (book, inputValue) => {
@@ -1747,7 +2404,7 @@ const updateCustomAliases = (book, inputValue) => {
   workspace.customBookAliases[book] = aliases;
   persistWorkspace();
   buildBookAliasMap();
-  updateSaveStatus("Scripture abbreviations updated.");
+  refreshSaveStatus();
 };
 
 const deleteSelectedType = () => {
@@ -1778,7 +2435,7 @@ const deleteSelectedType = () => {
   workspace.selectedNewNoteTypeId = replacementType.id;
   persistWorkspace();
   renderWorkspace();
-  updateSaveStatus("Note type deleted.");
+  refreshSaveStatus();
 };
 
 const openDialog = (dialog) => {
@@ -1867,7 +2524,7 @@ noteMetaFields.addEventListener("input", () => {
   touchNote(activeNote);
   persistWorkspace();
   refreshNoteSurfaces();
-  updateSaveStatus(`Saved ${getCurrentTimestampLabel()}`);
+  refreshSaveStatus();
 });
 
 noteEditor.addEventListener("input", (event) => {
@@ -1918,8 +2575,9 @@ noteEditor.addEventListener("click", (event) => {
 
 translationSelect.addEventListener("change", () => {
   activeScriptureFocus = null;
-  localStorage.setItem(translationStorageKey, translationSelect.value);
+  void writeStoredValue(translationStorageKey, translationSelect.value);
   applyTranslation(translationSelect.value);
+  scheduleAutoCloudSync();
 });
 
 bookSelect.addEventListener("change", () => {
@@ -2019,6 +2677,68 @@ aliasList.addEventListener("change", (event) => {
   updateCustomAliases(input.dataset.aliasBook, input.value);
 });
 
+cloudProviderSelect.addEventListener("change", () => {
+  cloudSyncSettings.provider = cloudProviderSelect.value;
+  persistCloudSyncSettings();
+  scheduleAutoCloudSync();
+});
+
+cloudPollIntervalSelect.addEventListener("change", () => {
+  cloudSyncSettings.pollIntervalSeconds = Number(cloudPollIntervalSelect.value);
+  persistCloudSyncSettings();
+  scheduleAutoCloudSync();
+});
+
+cloudAutoSyncInput.addEventListener("change", () => {
+  cloudSyncSettings.autoSync = cloudAutoSyncInput.checked;
+  persistCloudSyncSettings();
+
+  if (!cloudSyncSettings.autoSync && pendingAutoSyncTimer) {
+    window.clearTimeout(pendingAutoSyncTimer);
+    pendingAutoSyncTimer = null;
+  }
+});
+
+cloudSyncTranslationsInput.addEventListener("change", () => {
+  cloudSyncSettings.syncTranslations = cloudSyncTranslationsInput.checked;
+  persistCloudSyncSettings();
+  scheduleAutoCloudSync();
+});
+
+const handleVisibleFolderToggle = () => {
+  cloudSyncSettings.useVisibleDriveFolder = cloudVisibleFolderInput.checked;
+  cloudSyncSettings.remoteWorkspaceFileId = "";
+  cloudSyncSettings.remoteWorkspaceParentId = "";
+  cloudSyncSettings.lastError = "";
+  if (hasActiveGoogleDriveSession()) {
+    cloudSyncSettings.status = `Connected to Google Drive (${getCloudTargetLabel()})`;
+  }
+  persistCloudSyncSettings();
+  cloudStatusInput.value = buildCloudStatusText();
+  cloudLastSyncInput.value = formatSyncTimestamp(cloudSyncSettings.lastSyncAt);
+  scheduleAutoCloudSync();
+  refreshSaveStatus();
+};
+
+cloudVisibleFolderInput.addEventListener("input", handleVisibleFolderToggle);
+cloudVisibleFolderInput.addEventListener("change", handleVisibleFolderToggle);
+
+googleConnectButton.addEventListener("click", async () => {
+  try {
+    await connectGoogleDrive();
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+googleDisconnectButton.addEventListener("click", () => {
+  disconnectGoogleDrive();
+});
+
+googleSyncNowButton.addEventListener("click", async () => {
+  await syncWorkspaceToCloud({ reason: "manual" });
+});
+
 addTypeButton.addEventListener("click", addNoteType);
 addMetadataFieldButton.addEventListener("click", addMetadataFieldToSelectedType);
 deleteTypeButton.addEventListener("click", deleteSelectedType);
@@ -2047,8 +2767,15 @@ const buildBookAliasMap = () => {
   contextualScriptureReferencePattern = /\b(v(?:erse)?\.?\s*\d+(?:-\d+)?)\b/gi;
 };
 
-buildBookAliasMap();
-applyTheme(getPreferredTheme());
-applyPaneOrder(getPreferredPaneOrder());
-applyTranslation(getPreferredTranslation());
-restoreWorkspace();
+const bootstrap = async () => {
+  buildBookAliasMap();
+  applyTheme(await getPreferredTheme());
+  applyPaneOrder(await getPreferredPaneOrder());
+  applyTranslation(await getPreferredTranslation());
+  await restoreCloudSyncSettings();
+  initializeGoogleTokenClient();
+  waitForGoogleIdentity();
+  await restoreWorkspace();
+};
+
+void bootstrap();

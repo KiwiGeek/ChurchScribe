@@ -101,7 +101,7 @@
         ></div>
 
         <div class="panel-footer">
-          <p id="save-status">Notes save automatically in this browser.</p>
+          <p id="save-status">Saved locally just now • Not synced to cloud yet</p>
         </div>
       </section>
 
@@ -245,12 +245,83 @@
           <p class="settings-copy">Add comma-separated aliases like `Jn, Jon` for each book. These are used when linking references in notes.</p>
           <div class="alias-list" id="alias-list"></div>
         </section>
+
+        <section class="type-editor-panel settings-cloud-panel" data-settings-panel="cloud-sync" aria-labelledby="cloud-sync-title">
+          <div class="note-switcher-header">
+            <h3 id="cloud-sync-title">Cloud Sync</h3>
+          </div>
+          <p class="settings-copy">Google Drive sync is configured here. Notes and settings will be eligible for sync; imported translations remain opt-in later.</p>
+
+          <div class="type-editor-form">
+            <div class="display-field-grid">
+              <label class="field">
+                <span>Provider</span>
+                <select id="cloud-provider-select" name="cloud-provider">
+                  <option value="google-drive">Google Drive</option>
+                  <option value="onedrive" disabled>OneDrive (Later)</option>
+                  <option value="dropbox" disabled>Dropbox (Later)</option>
+                  <option value="github" disabled>GitHub (Later)</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span>Check Interval</span>
+                <select id="cloud-poll-interval-select" name="cloud-poll-interval">
+                  <option value="30">30 seconds</option>
+                  <option value="60">1 minute</option>
+                  <option value="120">2 minutes</option>
+                  <option value="300">5 minutes</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="display-field-grid">
+              <label class="field checkbox-field">
+                <span>Auto Sync</span>
+                <input id="cloud-auto-sync-input" name="cloud-auto-sync" type="checkbox">
+              </label>
+
+              <label class="field checkbox-field">
+                <span>Sync Imported Translations</span>
+                <input id="cloud-sync-translations-input" name="cloud-sync-translations" type="checkbox">
+              </label>
+            </div>
+
+            <div class="display-field-grid">
+              <label class="field checkbox-field">
+                <span>Visible Drive Folder (Testing)</span>
+                <input id="cloud-visible-folder-input" name="cloud-visible-folder" type="checkbox">
+              </label>
+            </div>
+
+            <div class="display-field-grid">
+              <label class="field">
+                <span>Connection Status</span>
+                <input id="cloud-status-input" name="cloud-status" type="text" readonly>
+              </label>
+
+              <label class="field">
+                <span>Last Sync</span>
+                <input id="cloud-last-sync-input" name="cloud-last-sync" type="text" readonly>
+              </label>
+            </div>
+
+            <div class="dialog-actions cloud-actions">
+              <button class="ghost-button" id="google-connect-button" type="button">Connect Google Drive</button>
+              <button class="ghost-button" id="google-disconnect-button" type="button">Disconnect</button>
+              <button class="ghost-button" id="google-sync-now-button" type="button">Sync Now</button>
+            </div>
+
+            <p class="settings-copy" id="cloud-help-text">In Google Cloud Console, authorize `https://joshua.penman.dev` for production and `http://localhost:8000` for local development. Turn on `Visible Drive Folder (Testing)` if you want uploads to appear in normal Google Drive while debugging.</p>
+          </div>
+        </section>
       </div>
     </form>
   </dialog>
 
   <script src="kjv.js"></script>
   <script src="asv.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="app.js"></script>
 </body>
 </html>
