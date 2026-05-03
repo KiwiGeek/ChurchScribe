@@ -121,11 +121,13 @@ let currentTranslationCode = "KJV";
 let activeTypeEditorId = null;
 let activeSettingsTabId = "ui-settings";
 let currentColorThemeId = "default";
+let currentThemeMode = "system";
 let dbPromise;
 let pendingAutoSyncTimer = null;
 let syncInFlightPromise = null;
 let isPullInFlight = false;
 let cloudPollTimer = null;
+const systemThemeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
 const workspace = {
   noteTypes: [],
@@ -335,6 +337,8 @@ const getCurrentScriptureLibrary = () => getCurrentTranslation().books;
 const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const createId = (prefix) => `${prefix}-${crypto.randomUUID()}`;
 const formatSyncTimestamp = (value) => value ? new Date(value).toLocaleString() : "Not synced yet";
+const normalizeThemeMode = (value) => ["light", "dark", "system"].includes(value) ? value : "system";
+const getSystemTheme = () => systemThemeMediaQuery.matches ? "dark" : "light";
 
 const openDatabase = () => {
   if (!("indexedDB" in window)) {
@@ -778,7 +782,7 @@ const buildCloudSettingsPayload = (updatedAt = new Date().toISOString()) => ({
     updatedAt: workspace.updatedAt ?? updatedAt
   },
   preferences: {
-    theme: document.documentElement.dataset.theme === "dark" ? "dark" : "light",
+    theme: currentThemeMode,
     paneOrder: paneGrid.dataset.order === "scripture-first" ? "scripture-first" : "notes-first",
     translation: currentTranslationCode,
     colorTheme: currentColorThemeId
@@ -820,8 +824,8 @@ const applyCloudPayload = (payload) => {
 
   if (payload.preferences) {
     if (payload.preferences.theme) {
-      applyTheme(payload.preferences.theme);
-      void writeStoredValue(themeStorageKey, payload.preferences.theme);
+      applyThemeMode(payload.preferences.theme, { rerender: false });
+      void writeStoredValue(themeStorageKey, normalizeThemeMode(payload.preferences.theme));
     }
 
     if (payload.preferences.paneOrder) {
@@ -1263,11 +1267,7 @@ const restoreWorkspace = async () => {
 const getPreferredTheme = async () => {
   const savedTheme = await migrateLegacyPreference(themeStorageKey);
 
-  if (savedTheme === "light" || savedTheme === "dark") {
-    return savedTheme;
-  }
-
-  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  return normalizeThemeMode(savedTheme);
 };
 
 const getPreferredPaneOrder = async () => {
@@ -1280,32 +1280,51 @@ const getPreferredTranslation = async () => {
   return translationLibrary[savedTranslation] ? savedTranslation : "KJV";
 };
 
-const syncThemeToggle = (theme) => {
-  const darkModeEnabled = theme === "dark";
-  const btn = document.querySelector("#ui-dark-mode-toggle");
+const getResolvedThemeForMode = (mode = currentThemeMode, themeId = currentColorThemeId) => {
+  const normalizedMode = normalizeThemeMode(mode);
+  const requestedTheme = normalizedMode === "system" ? getSystemTheme() : normalizedMode;
+  const themeDef = colorThemes.find((theme) => theme.id === themeId);
 
-  if (btn) {
-    btn.setAttribute("aria-pressed", String(darkModeEnabled));
-    const state = btn.querySelector(".ui-toggle-state");
+  if (themeDef?.supports === "light") {
+    return "light";
+  }
 
-    if (state) {
-      state.textContent = darkModeEnabled ? "On" : "Off";
-    }
+  if (themeDef?.supports === "dark") {
+    return "dark";
+  }
+
+  return requestedTheme;
+};
+
+const syncThemeModeControl = (mode = currentThemeMode) => {
+  const select = document.querySelector("#ui-theme-mode-select");
+
+  if (select) {
+    select.value = normalizeThemeMode(mode);
   }
 };
 
-const applyTheme = (theme) => {
-  document.documentElement.dataset.theme = theme;
-  syncThemeToggle(theme);
-};
+const applyThemeMode = (mode, { persist = false, markChange = false, rerender = true } = {}) => {
+  currentThemeMode = normalizeThemeMode(mode);
+  document.documentElement.dataset.theme = getResolvedThemeForMode(currentThemeMode);
+  syncThemeModeControl(currentThemeMode);
 
-const toggleTheme = () => {
-  const currentTheme = document.documentElement.dataset.theme === "dark" ? "dark" : "light";
-  const nextTheme = currentTheme === "dark" ? "light" : "dark";
-  void writeStoredValue(themeStorageKey, nextTheme);
-  applyTheme(nextTheme);
-  markLocalSettingsUpdated();
-  scheduleAutoCloudSync();
+  if (persist) {
+    void writeStoredValue(themeStorageKey, currentThemeMode);
+  }
+
+  if (markChange) {
+    markLocalSettingsUpdated();
+    scheduleAutoCloudSync();
+  }
+
+  if (rerender) {
+    const uiContent = document.querySelector("#ui-settings-content");
+
+    if (uiContent) {
+      renderUiSettings(uiContent);
+    }
+  }
 };
 
 const syncPaneOrderToggle = (order) => {
@@ -1354,14 +1373,12 @@ const applyColorTheme = (themeId) => {
   const themeDef = colorThemes.find((t) => t.id === themeId);
 
   if (themeDef) {
-    const currentDark = document.documentElement.dataset.theme === "dark";
-
-    if (themeDef.supports === "light" && currentDark) {
-      applyTheme("light");
-      void writeStoredValue(themeStorageKey, "light");
-    } else if (themeDef.supports === "dark" && !currentDark) {
-      applyTheme("dark");
-      void writeStoredValue(themeStorageKey, "dark");
+    if (themeDef.supports === "light" && currentThemeMode === "dark") {
+      applyThemeMode("light", { persist: true, rerender: false });
+    } else if (themeDef.supports === "dark" && currentThemeMode === "light") {
+      applyThemeMode("dark", { persist: true, rerender: false });
+    } else {
+      document.documentElement.dataset.theme = getResolvedThemeForMode(currentThemeMode, themeId);
     }
   }
 
@@ -2347,17 +2364,30 @@ const renderUiSettings = (container) => {
   const toggleRow = document.createElement("div");
   toggleRow.className = "ui-toggle-row";
 
-  const currentTheme = document.documentElement.dataset.theme === "dark" ? "dark" : "light";
-  const darkBtn = document.createElement("button");
-  darkBtn.type = "button";
-  darkBtn.id = "ui-dark-mode-toggle";
-  darkBtn.className = "ui-toggle-button";
-  darkBtn.setAttribute("aria-pressed", String(currentTheme === "dark"));
-  darkBtn.innerHTML = `<span>Dark mode</span><span class="ui-toggle-state">${currentTheme === "dark" ? "On" : "Off"}</span>`;
-  darkBtn.addEventListener("click", () => {
-    toggleTheme();
+  const themeModeField = document.createElement("label");
+  themeModeField.className = "field compact-field ui-theme-mode-field";
+
+  const themeModeLabel = document.createElement("span");
+  themeModeLabel.textContent = "Theme mode";
+
+  const themeModeSelect = document.createElement("select");
+  themeModeSelect.id = "ui-theme-mode-select";
+  [
+    { value: "system", label: "System" },
+    { value: "light", label: "Light" },
+    { value: "dark", label: "Dark" }
+  ].forEach((option) => {
+    const opt = document.createElement("option");
+    opt.value = option.value;
+    opt.textContent = option.label;
+    themeModeSelect.append(opt);
   });
-  toggleRow.append(darkBtn);
+  themeModeSelect.value = currentThemeMode;
+  themeModeSelect.addEventListener("change", () => {
+    applyThemeMode(themeModeSelect.value, { persist: true, markChange: true });
+  });
+  themeModeField.append(themeModeLabel, themeModeSelect);
+  toggleRow.append(themeModeField);
 
   const currentOrder = paneGrid.dataset.order === "scripture-first" ? "scripture-first" : "notes-first";
   const paneBtn = document.createElement("button");
@@ -3030,6 +3060,12 @@ translationSelect.addEventListener("change", () => {
   scheduleAutoCloudSync();
 });
 
+systemThemeMediaQuery.addEventListener("change", () => {
+  if (currentThemeMode === "system") {
+    applyThemeMode("system", { rerender: true });
+  }
+});
+
 bookSelect.addEventListener("change", () => {
   activeScriptureFocus = null;
   populateChapterOptions(bookSelect.value);
@@ -3263,7 +3299,7 @@ const buildBookAliasMap = () => {
 
 const bootstrap = async () => {
   buildBookAliasMap();
-  applyTheme(await getPreferredTheme());
+  applyThemeMode(await getPreferredTheme(), { rerender: false });
   applyPaneOrder(await getPreferredPaneOrder());
   applyTranslation(await getPreferredTranslation());
   applyColorTheme(await getPreferredColorTheme());
