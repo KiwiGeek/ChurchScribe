@@ -78,6 +78,8 @@ const firstSyncCancelButton = document.querySelector("#first-sync-cancel-button"
 const aboutVersionInfo = document.querySelector("#about-version-info");
 const mobileWarning = document.querySelector("#mobile-warning");
 const mobileWarningDismissButton = document.querySelector("#mobile-warning-dismiss");
+const insertImageButton = document.querySelector("#insert-image-button");
+const insertImageFile = document.querySelector("#insert-image-file");
 
 const dbName = "churchscribe-db";
 const dbVersion = 1;
@@ -147,6 +149,7 @@ const bookAliasMap = new Map();
 const domainValidationCache = new Map();
 const MIN_EMBED_WIDTH = 240;
 const EDITOR_HORIZONTAL_PADDING = 40;
+const DEFAULT_IMAGE_EMBED_WIDTH = 400;
 const BLOCK_LEVEL_ELEMENTS = "p, h2, h3, h4, h5, h6, li, blockquote";
 const knownTlds = [
   "ac","ad","ae","af","ag","ai","al","am","ao","ar","as","at","au","aw","az",
@@ -2261,6 +2264,102 @@ const createYouTubeEmbed = (videoId, width = 560) => {
   return outerDiv;
 };
 
+const createImageEmbed = (src, width = DEFAULT_IMAGE_EMBED_WIDTH) => {
+  const outerDiv = document.createElement("div");
+  outerDiv.className = "image-embed";
+  outerDiv.dataset.imageEmbed = "true";
+  outerDiv.contentEditable = "false";
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "image-embed-wrapper";
+  wrapper.style.width = `${width}px`;
+
+  const img = document.createElement("img");
+  img.className = "image-embed-img";
+  img.src = src;
+  img.alt = "Embedded image";
+
+  const deleteBtn = document.createElement("button");
+  deleteBtn.className = "image-embed-delete";
+  deleteBtn.type = "button";
+  deleteBtn.setAttribute("aria-label", "Remove image");
+  deleteBtn.textContent = "✕";
+
+  const resizeHandle = document.createElement("div");
+  resizeHandle.className = "image-embed-resize-handle";
+  resizeHandle.setAttribute("aria-hidden", "true");
+
+  wrapper.appendChild(img);
+  wrapper.appendChild(deleteBtn);
+  wrapper.appendChild(resizeHandle);
+  outerDiv.appendChild(wrapper);
+
+  return outerDiv;
+};
+
+const insertImageAtCaret = (src, width = DEFAULT_IMAGE_EMBED_WIDTH) => {
+  noteEditor.focus();
+  const embed = createImageEmbed(src, width);
+  const emptyParagraph = document.createElement("p");
+  emptyParagraph.innerHTML = "<br>";
+
+  const selection = window.getSelection();
+
+  if (selection && selection.rangeCount > 0) {
+    const range = selection.getRangeAt(0);
+
+    if (noteEditor.contains(range.commonAncestorContainer)) {
+      let block = range.startContainer;
+
+      while (block && block.parentNode !== noteEditor) {
+        block = block.parentNode;
+      }
+
+      if (block && block !== noteEditor) {
+        const blockText = block.textContent.trim();
+        const blockHtml = block.innerHTML?.trim() ?? "";
+
+        if (!blockText && (!blockHtml || blockHtml === "<br>")) {
+          block.replaceWith(embed, emptyParagraph);
+        } else {
+          block.after(embed, emptyParagraph);
+        }
+      } else {
+        noteEditor.append(embed, emptyParagraph);
+      }
+    } else {
+      noteEditor.append(embed, emptyParagraph);
+    }
+  } else {
+    noteEditor.append(embed, emptyParagraph);
+  }
+
+  const newRange = document.createRange();
+  newRange.setStart(emptyParagraph, 0);
+  newRange.collapse(true);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(newRange);
+
+  saveActiveNote();
+};
+
+const processImageFiles = (files) => {
+  [...files].forEach((file) => {
+    if (!file.type.startsWith("image/")) {
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      insertImageAtCaret(e.target.result);
+    };
+
+    reader.readAsDataURL(file);
+  });
+};
+
 const processYouTubeEmbeds = () => {
   noteEditor.querySelectorAll("a[data-auto-url-link='true']").forEach((link) => {
     const videoId = extractYouTubeVideoId(link.href);
@@ -2368,6 +2467,10 @@ const linkifyUrls = ({ suppressAtCaret = false } = {}) => {
         }
 
         if (node.parentElement?.closest("[data-youtube-embed]")) {
+          return NodeFilter.FILTER_REJECT;
+        }
+
+        if (node.parentElement?.closest("[data-image-embed]")) {
           return NodeFilter.FILTER_REJECT;
         }
 
@@ -4136,7 +4239,86 @@ noteEditor.addEventListener("keydown", (event) => {
   saveActiveNote();
 });
 
+noteEditor.addEventListener("paste", (event) => {
+  const imageItems = [...event.clipboardData.items].filter((item) => item.type.startsWith("image/"));
+
+  if (!imageItems.length) {
+    return;
+  }
+
+  event.preventDefault();
+
+  imageItems.forEach((item) => {
+    const file = item.getAsFile();
+
+    if (!file) {
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      insertImageAtCaret(e.target.result);
+    };
+
+    reader.readAsDataURL(file);
+  });
+});
+
+noteEditor.addEventListener("dragover", (event) => {
+  if ([...event.dataTransfer.types].includes("Files")) {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "copy";
+  }
+});
+
+noteEditor.addEventListener("drop", (event) => {
+  const imageFiles = [...event.dataTransfer.files].filter((file) => file.type.startsWith("image/"));
+
+  if (!imageFiles.length) {
+    return;
+  }
+
+  event.preventDefault();
+
+  let dropRange = null;
+
+  if (document.caretRangeFromPoint) {
+    dropRange = document.caretRangeFromPoint(event.clientX, event.clientY);
+  } else if (document.caretPositionFromPoint) {
+    const pos = document.caretPositionFromPoint(event.clientX, event.clientY);
+
+    if (pos) {
+      dropRange = document.createRange();
+      dropRange.setStart(pos.offsetNode, pos.offset);
+      dropRange.collapse(true);
+    }
+  }
+
+  if (dropRange && noteEditor.contains(dropRange.commonAncestorContainer)) {
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(dropRange);
+  }
+
+  processImageFiles(imageFiles);
+});
+
 noteEditor.addEventListener("click", (event) => {
+  const imageDeleteBtn = event.target.closest(".image-embed-delete");
+
+  if (imageDeleteBtn) {
+    event.preventDefault();
+    const embed = imageDeleteBtn.closest("[data-image-embed]");
+
+    if (embed) {
+      embed.remove();
+      saveActiveNote();
+    }
+
+    return;
+  }
+
   const deleteBtn = event.target.closest(".youtube-embed-delete");
 
   if (deleteBtn) {
@@ -4203,6 +4385,40 @@ noteEditor.addEventListener("mousedown", (event) => {
 
   const onMouseUp = () => {
     iframe.style.pointerEvents = "";
+    document.body.style.cursor = "";
+    document.removeEventListener("mousemove", onMouseMove);
+    document.removeEventListener("mouseup", onMouseUp);
+    saveActiveNote();
+  };
+
+  document.addEventListener("mousemove", onMouseMove);
+  document.addEventListener("mouseup", onMouseUp);
+});
+
+noteEditor.addEventListener("mousedown", (event) => {
+  const handle = event.target.closest(".image-embed-resize-handle");
+
+  if (!handle) {
+    return;
+  }
+
+  event.preventDefault();
+  const wrapper = handle.closest(".image-embed").querySelector(".image-embed-wrapper");
+  const img = wrapper.querySelector(".image-embed-img");
+  const startX = event.clientX;
+  const startWidth = wrapper.offsetWidth;
+  const maxWidth = noteEditor.clientWidth - EDITOR_HORIZONTAL_PADDING;
+
+  img.style.pointerEvents = "none";
+  document.body.style.cursor = "ew-resize";
+
+  const onMouseMove = (e) => {
+    const newWidth = Math.min(maxWidth, Math.max(MIN_EMBED_WIDTH, startWidth + (e.clientX - startX)));
+    wrapper.style.width = `${newWidth}px`;
+  };
+
+  const onMouseUp = () => {
+    img.style.pointerEvents = "";
     document.body.style.cursor = "";
     document.removeEventListener("mousemove", onMouseMove);
     document.removeEventListener("mouseup", onMouseUp);
@@ -4469,6 +4685,44 @@ clearAllButton.addEventListener("click", () => {
 addTypeButton.addEventListener("click", addNoteType);
 addMetadataFieldButton.addEventListener("click", addMetadataFieldToSelectedType);
 deleteTypeButton.addEventListener("click", deleteSelectedType);
+
+let savedSelectionForImageInsert = null;
+
+insertImageButton.addEventListener("click", () => {
+  const selection = window.getSelection();
+
+  if (
+    selection &&
+    selection.rangeCount > 0 &&
+    noteEditor.contains(selection.getRangeAt(0).commonAncestorContainer)
+  ) {
+    savedSelectionForImageInsert = selection.getRangeAt(0).cloneRange();
+  } else {
+    savedSelectionForImageInsert = null;
+  }
+
+  insertImageFile.value = "";
+  insertImageFile.click();
+});
+
+insertImageFile.addEventListener("change", () => {
+  const files = [...insertImageFile.files];
+
+  if (!files.length) {
+    return;
+  }
+
+  noteEditor.focus();
+
+  if (savedSelectionForImageInsert) {
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(savedSelectionForImageInsert);
+    savedSelectionForImageInsert = null;
+  }
+
+  processImageFiles(files);
+});
 
 const buildBookAliasMap = () => {
   bookAliasMap.clear();
