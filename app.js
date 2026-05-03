@@ -121,6 +121,7 @@ if (!Object.keys(providerRegistry).length) {
 let activeProvider = noOpProvider;
 
 const bookAliasMap = new Map();
+const domainValidationCache = new Map();
 let explicitScriptureReferencePattern;
 let fullExplicitScriptureReferencePattern;
 let contextualScriptureReferencePattern;
@@ -2042,8 +2043,50 @@ const unwrapAutoUrlLinks = () => {
   noteEditor.normalize();
 };
 
+const validateDomainWithDoh = async (domain) => {
+  domainValidationCache.set(domain, "pending");
+
+  try {
+    const response = await fetch(
+      `https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(domain)}&type=A`,
+      { headers: { Accept: "application/dns-json" } }
+    );
+    const data = await response.json();
+    const isValid = data.Status === 0 && Array.isArray(data.Answer) && data.Answer.length > 0;
+    domainValidationCache.set(domain, isValid);
+
+    if (isValid) {
+      linkifyUrls();
+    }
+  } catch {
+    domainValidationCache.set(domain, false);
+  }
+};
+
 const linkifyUrls = () => {
-  const urlPattern = /\bhttps?:\/\/[^\s<>"'\)\]]+/gi;
+  const urlPatterns = [
+    {
+      regex: /\b(https?|ftp|spotify):\/\/[^\s<>"'\)\]]+/gi,
+      type: "explicit"
+    },
+    {
+      regex: /\bgopher:\/\/([^\s<>"'\)\]]+)/gi,
+      type: "gopher"
+    },
+    {
+      regex: /\bwww\.[a-zA-Z0-9][a-zA-Z0-9\-]*(?:\.[a-zA-Z0-9][a-zA-Z0-9\-]*)+(?:\/[^\s<>"'\)\]]*)?/gi,
+      type: "www"
+    },
+    {
+      regex: /\b[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/gi,
+      type: "email"
+    },
+    {
+      regex: /\b(?!www\.)([a-zA-Z][a-zA-Z0-9\-]*(?:\.[a-zA-Z0-9][a-zA-Z0-9\-]*)*\.(?:ac|ad|ae|af|ag|ai|al|am|ao|ar|as|at|au|aw|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cu|cv|cw|cx|cy|cz|de|dj|dk|dm|do|dz|ec|ee|eg|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sk|sl|sm|sn|so|sr|ss|st|sv|sx|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tr|tt|tv|tz|ua|ug|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|za|zm|zw|app|biz|dev|edu|gov|info|int|mil|mobi|net|org|pro|aero|asia|cat|coop|museum|travel|ai|app|bible|blog|church|cloud|dev|digital|faith|global|health|io|live|media|ministry|name|news|online|pro|shop|site|store|tech|tv|wiki))(?:\/[^\s<>"'\)\]]*)?/gi,
+      type: "bare"
+    }
+  ];
+
   const caretOffset = getCaretTextOffset(noteEditor);
   unwrapAutoUrlLinks();
   const walker = document.createTreeWalker(
@@ -2073,33 +2116,88 @@ const linkifyUrls = () => {
 
   textNodes.forEach((textNode) => {
     const sourceText = textNode.nodeValue;
-    const matches = [...sourceText.matchAll(urlPattern)];
 
-    if (!matches.length) {
+    const allMatches = [];
+
+    for (const { regex, type } of urlPatterns) {
+      regex.lastIndex = 0;
+
+      for (const match of sourceText.matchAll(regex)) {
+        allMatches.push({ match, type });
+      }
+    }
+
+    if (!allMatches.length) {
       return;
+    }
+
+    allMatches.sort((a, b) => a.match.index - b.match.index);
+
+    const deduped = [];
+    let lastEnd = 0;
+
+    for (const item of allMatches) {
+      if (item.match.index >= lastEnd) {
+        deduped.push(item);
+        lastEnd = item.match.index + item.match[0].length;
+      }
     }
 
     const fragment = document.createDocumentFragment();
     let lastIndex = 0;
+    let anyLinksAdded = false;
 
-    matches.forEach((match) => {
-      const matchedUrl = match[0];
+    for (const { match, type } of deduped) {
+      const matchedText = match[0];
+      let href;
+
+      if (type === "bare") {
+        const domain = matchedText.split("/")[0].split("?")[0].split("#")[0];
+        const cacheEntry = domainValidationCache.get(domain);
+
+        if (!cacheEntry) {
+          validateDomainWithDoh(domain);
+          continue;
+        }
+
+        if (cacheEntry !== true) {
+          continue;
+        }
+
+        href = `https://${matchedText}`;
+      } else if (type === "explicit") {
+        href = matchedText;
+      } else if (type === "gopher") {
+        href = `https://gopherproxy.meulie.net/${match[1]}`;
+      } else if (type === "www") {
+        href = `https://${matchedText}`;
+      } else if (type === "email") {
+        href = `mailto:${matchedText}`;
+      }
 
       if (match.index > lastIndex) {
         fragment.append(document.createTextNode(sourceText.slice(lastIndex, match.index)));
       }
 
       const link = document.createElement("a");
-      link.href = matchedUrl;
+      link.href = href;
       link.className = "url-link";
       link.dataset.autoUrlLink = "true";
-      link.textContent = matchedUrl;
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-      fragment.append(link);
+      link.textContent = matchedText;
 
-      lastIndex = match.index + matchedUrl.length;
-    });
+      if (type !== "email") {
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+      }
+
+      fragment.append(link);
+      lastIndex = match.index + matchedText.length;
+      anyLinksAdded = true;
+    }
+
+    if (!anyLinksAdded) {
+      return;
+    }
 
     if (lastIndex < sourceText.length) {
       fragment.append(document.createTextNode(sourceText.slice(lastIndex)));
@@ -3344,7 +3442,13 @@ noteEditor.addEventListener("click", (event) => {
 
   if (urlLink) {
     event.preventDefault();
-    window.open(urlLink.href, "_blank", "noopener,noreferrer");
+
+    if (urlLink.href.startsWith("mailto:")) {
+      window.location.href = urlLink.href;
+    } else {
+      window.open(urlLink.href, "_blank", "noopener,noreferrer");
+    }
+
     return;
   }
 
