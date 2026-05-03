@@ -918,6 +918,8 @@ h1 {
 }
 
 #note-manager-dialog .dialog-body {
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
 }
 
@@ -1111,8 +1113,8 @@ h1 {
 .note-browser-layout {
   display: grid;
   grid-template-columns: minmax(280px, 0.9fr) minmax(320px, 1.1fr);
+  flex: 1;
   gap: 18px;
-  height: 100%;
   min-height: 0;
   padding-bottom: 8px;
 }
