@@ -717,11 +717,13 @@ const buildCloudStatusText = () => {
 
 const buildSaveStatusText = (savedAt = new Date(), syncedAt = cloudSyncSettings.lastSyncAt) => {
   const localLabel = `Saved locally ${new Date(savedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}`;
-  const syncLabel = cloudSyncSettings.lastError
-    ? `Sync failed: ${cloudSyncSettings.lastError}`
-    : syncedAt
-      ? `Synced ${new Date(syncedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}`
-      : "Not synced yet";
+  const syncLabel = cloudSyncSettings.status.startsWith("Syncing")
+    ? "Syncing ..."
+    : cloudSyncSettings.lastError
+      ? `Sync failed: ${cloudSyncSettings.lastError}`
+      : syncedAt
+        ? `Synced ${new Date(syncedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}`
+        : "Not synced yet";
 
   return { localLabel, syncLabel };
 };
@@ -1001,6 +1003,7 @@ const syncWorkspaceToCloud = async ({ reason = "manual" } = {}) => {
       cloudSyncSettings.lastError = "";
       persistCloudSyncSettings();
       renderSettings();
+      refreshSaveStatus();
 
       const result = await activeProvider.upload(buildCloudSyncPayload(), getActiveProviderSettings());
 
