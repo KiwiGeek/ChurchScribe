@@ -3401,6 +3401,28 @@ void bootstrap();
 
 const paneDivider = document.querySelector("#pane-divider");
 
+chapterText.addEventListener("copy", (event) => {
+  const selection = window.getSelection();
+
+  if (!selection || selection.rangeCount === 0 || selection.isCollapsed) {
+    return;
+  }
+
+  const fragment = selection.getRangeAt(0).cloneContents();
+  const wrapper = document.createElement("div");
+  wrapper.appendChild(fragment);
+
+  wrapper.querySelectorAll("*").forEach((el) => {
+    el.classList.remove("is-highlighted");
+    el.style.removeProperty("background");
+    el.style.removeProperty("background-color");
+  });
+
+  event.clipboardData.setData("text/html", wrapper.innerHTML);
+  event.clipboardData.setData("text/plain", selection.toString());
+  event.preventDefault();
+});
+
 paneDivider.addEventListener("mousedown", (startEvent) => {
   startEvent.preventDefault();
   document.body.classList.add("is-pane-dragging");
