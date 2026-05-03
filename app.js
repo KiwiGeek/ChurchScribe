@@ -55,6 +55,10 @@ const providerSettingsContainer = document.querySelector("#provider-settings-con
 const googleConnectButton = document.querySelector("#google-connect-button");
 const googleDisconnectButton = document.querySelector("#google-disconnect-button");
 const googleSyncNowButton = document.querySelector("#google-sync-now-button");
+const downloadBackupButton = document.querySelector("#download-backup-button");
+const restoreBackupButton = document.querySelector("#restore-backup-button");
+const restoreBackupFile = document.querySelector("#restore-backup-file");
+const clearDataButton = document.querySelector("#clear-data-button");
 const addTypeButton = document.querySelector("#add-type-button");
 const addMetadataFieldButton = document.querySelector("#add-metadata-field-button");
 const deleteTypeButton = document.querySelector("#delete-type-button");
@@ -208,6 +212,10 @@ const settingsTabs = [
   {
     id: "cloud-sync",
     label: "Auxiliary Storage"
+  },
+  {
+    id: "data",
+    label: "Data Management"
   },
   {
     id: "about",
@@ -3153,6 +3161,86 @@ const renderUiSettings = (container) => {
   container.append(themeSection);
 };
 
+const downloadWorkspaceBackup = () => {
+  const updatedAt = new Date().toISOString();
+  const backup = {
+    type: "churchscribe-backup",
+    version: 1,
+    exportedAt: updatedAt,
+    ...buildCloudSettingsPayload(updatedAt),
+    notes: structuredClone(workspace.notes)
+  };
+  const json = JSON.stringify(backup, null, 2);
+  const blob = new Blob([json], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `churchscribe-backup-${updatedAt.slice(0, 10)}.json`;
+  document.body.append(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+};
+
+const restoreWorkspaceFromBackup = async (file) => {
+  try {
+    const text = await file.text();
+    const payload = JSON.parse(text);
+
+    if (!payload || typeof payload !== "object") {
+      throw new Error("Invalid backup file: not a valid JSON object.");
+    }
+
+    if (!payload.workspace && !Array.isArray(payload.notes)) {
+      throw new Error("The selected file does not appear to be a ChurchScribe backup.");
+    }
+
+    // eslint-disable-next-line no-alert
+    if (!window.confirm("This will replace your current workspace with the backup. Your existing data will be overwritten. Continue?")) {
+      return;
+    }
+
+    applyCloudPayload(payload);
+    markLocalSettingsUpdated();
+    scheduleAutoCloudSync();
+    updateSaveStatus("Workspace restored from backup.");
+  } catch (error) {
+    console.error("[Backup] Restore failed:", error);
+    // eslint-disable-next-line no-alert
+    window.alert(`Failed to restore backup: ${error.message}`);
+  }
+};
+
+const clearAllLocalData = async () => {
+  // eslint-disable-next-line no-alert
+  if (!window.confirm("This will permanently delete ALL local notes and workspace settings. Your sync connection will also be removed. This cannot be undone.")) {
+    return;
+  }
+
+  stopCloudPolling();
+
+  if (pendingAutoSyncTimer) {
+    window.clearTimeout(pendingAutoSyncTimer);
+    pendingAutoSyncTimer = null;
+  }
+
+  activeProvider.disconnect();
+
+  await Promise.all([
+    deleteStoredValue(workspaceStorageKey),
+    deleteStoredValue(cloudSyncStorageKey),
+    deleteStoredValue(themeStorageKey),
+    deleteStoredValue(paneOrderStorageKey),
+    deleteStoredValue(paneSplitStorageKey),
+    deleteStoredValue(translationStorageKey),
+    deleteStoredValue(colorThemeStorageKey),
+    deleteStoredValue(lastBookChapterStorageKey),
+    deleteStoredValue(notesStorageKey)
+  ]);
+
+  window.location.reload();
+};
+
 const renderSettings = () => {
   settingsTabNav.innerHTML = "";
   settingsTabs.forEach((tab) => {
@@ -4228,6 +4316,25 @@ googleDisconnectButton.addEventListener("click", () => {
 googleSyncNowButton.addEventListener("click", async () => {
   await pullFromCloud();
   await syncWorkspaceToCloud({ reason: "manual" });
+});
+
+downloadBackupButton.addEventListener("click", downloadWorkspaceBackup);
+
+restoreBackupButton.addEventListener("click", () => {
+  restoreBackupFile.value = "";
+  restoreBackupFile.click();
+});
+
+restoreBackupFile.addEventListener("change", () => {
+  const file = restoreBackupFile.files?.[0];
+
+  if (file) {
+    void restoreWorkspaceFromBackup(file);
+  }
+});
+
+clearDataButton.addEventListener("click", () => {
+  void clearAllLocalData();
 });
 
 addTypeButton.addEventListener("click", addNoteType);
