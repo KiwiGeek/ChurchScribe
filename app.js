@@ -138,7 +138,7 @@ const knownTlds = [
   "sr","ss","st","sv","sx","sy","sz","tc","td","tf","tg","th","tj","tk","tl","tm","tn","to","tr","tt","tv","tz",
   "ua","ug","us","uy","uz","va","vc","ve","vg","vi","vn","vu","wf","ws",
   "ye","yt","za","zm","zw",
-  "aero","app","asia","bible","biz","blog","cat","church","cloud","coop","dev",
+  "com","aero","app","asia","bible","biz","blog","cat","church","cloud","coop","dev",
   "digital","edu","faith","global","gov","health","info","int","io","live",
   "media","mil","ministry","mobi","museum","name","net","news","online","org",
   "pro","shop","site","store","tech","travel","tv","wiki"
@@ -3468,8 +3468,12 @@ noteEditor.addEventListener("click", (event) => {
   if (urlLink) {
     event.preventDefault();
 
-    if (urlLink.href.startsWith("mailto:")) {
-      window.location.href = urlLink.href;
+    const osHandledSchemes = ["mailto:", "ftp:", "spotify:"];
+
+    if (osHandledSchemes.some((scheme) => urlLink.href.startsWith(scheme))) {
+      const tempLink = document.createElement("a");
+      tempLink.href = urlLink.href;
+      tempLink.click();
     } else {
       window.open(urlLink.href, "_blank", "noopener,noreferrer");
     }
