@@ -69,6 +69,7 @@ const conflictUseCloudButton = document.querySelector("#conflict-use-cloud-butto
 const firstSyncKeepLocalButton = document.querySelector("#first-sync-keep-local-button");
 const firstSyncUseCloudButton = document.querySelector("#first-sync-use-cloud-button");
 const firstSyncCancelButton = document.querySelector("#first-sync-cancel-button");
+const aboutVersionInfo = document.querySelector("#about-version-info");
 
 const dbName = "churchscribe-db";
 const dbVersion = 1;
@@ -123,6 +124,12 @@ if (window.OneDriveProvider) {
 
 if (!Object.keys(providerRegistry).length) {
   console.error("No storage providers registered. Ensure provider scripts (e.g. gdrive.js, localdrive.js, onedrive.js) are loaded before app.js.");
+}
+
+if (aboutVersionInfo) {
+  const commit = window.APP_COMMIT ?? "dev";
+  const buildDate = window.APP_BUILD_DATE ?? "dev";
+  aboutVersionInfo.textContent = `Commit ${commit} · Built ${buildDate}`;
 }
 
 let activeProvider = noOpProvider;
