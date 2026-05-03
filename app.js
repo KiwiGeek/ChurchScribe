@@ -111,7 +111,7 @@ if (window.LocalDriveProvider) {
 if (window.GoogleDriveProvider) {
   providerRegistry[window.GoogleDriveProvider.id] = window.GoogleDriveProvider;
 } else {
-  console.error("No cloud storage provider registered. Ensure a provider script (e.g. gdrive.js) is loaded before app.js.");
+  console.error("No storage providers registered. Ensure provider scripts (e.g. gdrive.js, localdrive.js) are loaded before app.js.");
 }
 
 let activeProvider = noOpProvider;
