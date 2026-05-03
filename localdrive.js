@@ -188,7 +188,7 @@
 
   const applySettingChange = () => ({});
 
-  const getLocationLabel = () => directoryHandle ? directoryHandle.name : "";
+  const getLocationLabel = () => directoryHandle !== null ? directoryHandle.name : "";
 
   window.LocalDriveProvider = {
     id: "local-drive",
