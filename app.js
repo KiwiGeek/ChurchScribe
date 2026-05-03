@@ -1579,6 +1579,10 @@ const applyShowWhitespace = (enabled, { persist = false, markChange = false } = 
   }
 };
 
+const wsCharPattern = /[ \t]/;
+
+const wsMarkerOriginalChar = (marker) => (marker.classList.contains("ws-space") ? " " : "\t");
+
 const addWhitespaceMarkersToEditor = () => {
   removeWhitespaceMarkersFromEditor();
 
@@ -1587,7 +1591,7 @@ const addWhitespaceMarkersToEditor = () => {
     NodeFilter.SHOW_TEXT,
     {
       acceptNode(node) {
-        return /[ \t]/.test(node.textContent) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
+        return wsCharPattern.test(node.textContent) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
       }
     }
   );
@@ -1601,6 +1605,7 @@ const addWhitespaceMarkersToEditor = () => {
 
   textNodes.forEach((textNode) => {
     const text = textNode.textContent;
+    // split with a capturing group includes the delimiters in the result array
     const parts = text.split(/([ \t])/);
 
     if (parts.length <= 1) {
@@ -1610,7 +1615,7 @@ const addWhitespaceMarkersToEditor = () => {
     const fragment = document.createDocumentFragment();
 
     parts.forEach((part) => {
-      if (part === " " || part === "\t") {
+      if (wsCharPattern.test(part)) {
         const span = document.createElement("span");
         span.className = part === " " ? "ws-marker ws-space" : "ws-marker ws-tab";
         span.textContent = part === " " ? "·" : "→";
@@ -1626,7 +1631,7 @@ const addWhitespaceMarkersToEditor = () => {
 
 const removeWhitespaceMarkersFromEditor = () => {
   noteEditor.querySelectorAll(".ws-marker").forEach((marker) => {
-    marker.replaceWith(document.createTextNode(marker.classList.contains("ws-space") ? " " : "\t"));
+    marker.replaceWith(document.createTextNode(wsMarkerOriginalChar(marker)));
   });
   noteEditor.normalize();
 };
@@ -1639,7 +1644,7 @@ const getEditorContent = () => {
   const clone = noteEditor.cloneNode(true);
 
   clone.querySelectorAll(".ws-marker").forEach((marker) => {
-    marker.replaceWith(document.createTextNode(marker.classList.contains("ws-space") ? " " : "\t"));
+    marker.replaceWith(document.createTextNode(wsMarkerOriginalChar(marker)));
   });
   clone.normalize();
 
