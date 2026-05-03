@@ -2191,7 +2191,8 @@ const linkifyUrls = () => {
 
         href = `https://${matchedText}`;
       } else if (type === "explicit") {
-        href = matchedText;
+        const spotifyWebMatch = matchedText.match(/^https?:\/\/open\.spotify\.com\/([a-zA-Z]+)\/([a-zA-Z0-9]+)/);
+        href = spotifyWebMatch ? `spotify:${spotifyWebMatch[1]}:${spotifyWebMatch[2]}` : matchedText;
       } else if (type === "gopher") {
         href = `https://gopherproxy.meulie.net/${match[1]}`;
       } else if (type === "www") {
