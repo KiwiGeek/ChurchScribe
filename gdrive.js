@@ -27,7 +27,8 @@
  *
  *   connect(): Promise<{ email: string }>
  *     Runs the full authentication/consent flow and resolves with the signed-in
- *     user's email address. Throws on failure.
+ *     user's email address, retrieved via the Drive About API (no extra scopes
+ *     needed beyond drive.appdata). Throws on failure.
  *
  *   disconnect(): void
  *     Signs out and clears all in-memory session state.
@@ -87,12 +88,7 @@
 (() => {
   const clientId = "711830335817-2enpiqrmso0sqgq2fnh8o4ef4r60ede0.apps.googleusercontent.com";
   const workspaceFileName = "churchscribe-workspace.json";
-  const scopes = [
-    "openid",
-    "email",
-    "profile",
-    "https://www.googleapis.com/auth/drive.appdata"
-  ].join(" ");
+  const scopes = "https://www.googleapis.com/auth/drive.appdata";
 
   let tokenClient = null;
   let accessToken = null;
@@ -184,16 +180,11 @@
   };
 
   const fetchUserEmail = async () => {
-    const response = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
-      headers: { Authorization: `Bearer ${accessToken}` }
-    });
-
-    if (!response.ok) {
-      throw new Error("Unable to load Google account information.");
-    }
-
+    const response = await apiFetch(
+      "https://www.googleapis.com/drive/v3/about?fields=user"
+    );
     const data = await response.json();
-    return data.email ?? "";
+    return data.user?.emailAddress ?? "";
   };
 
   const ensureTokenClient = () => {
