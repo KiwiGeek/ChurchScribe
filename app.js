@@ -3096,19 +3096,24 @@ const applyTextColor = (color) => {
   noteEditor.focus();
   if (color === null) {
     const selection = window.getSelection();
-    if (selection && selection.rangeCount > 0 && !selection.isCollapsed) {
+    if (selection && selection.rangeCount > 0) {
       const range = selection.getRangeAt(0);
-      // Use styleWithCSS off so execCommand generates font tags we can clear
-      document.execCommand("styleWithCSS", false, false);
-      document.execCommand("foreColor", false, "inherit");
-      // Also strip any inline color styles from affected nodes via a mutation approach
-      const start = range.startContainer.parentElement;
-      const end = range.endContainer.parentElement;
-      [start, end].forEach((node) => {
-        if (node && node !== noteEditor) {
-          node.style.removeProperty("color");
-          if (node.tagName === "FONT") {
-            node.removeAttribute("color");
+      // Strip inline color from every element in the editor that overlaps the selection.
+      // We never call execCommand("foreColor", "inherit") because browsers resolve
+      // "inherit" as a literal color value (often red) rather than removing the color.
+      noteEditor.querySelectorAll("[style]").forEach((el) => {
+        if (el.style.color && range.intersectsNode(el)) {
+          el.style.removeProperty("color");
+          if (!el.getAttribute("style")) {
+            el.removeAttribute("style");
+          }
+        }
+      });
+      noteEditor.querySelectorAll("font[color]").forEach((el) => {
+        if (range.intersectsNode(el)) {
+          el.removeAttribute("color");
+          if (el.attributes.length === 0) {
+            el.replaceWith(...el.childNodes);
           }
         }
       });
