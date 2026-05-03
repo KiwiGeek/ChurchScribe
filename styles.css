@@ -1,5 +1,7 @@
 :root {
   color-scheme: light;
+  --font-heading: "Fraunces", serif;
+  --font-body: "Manrope", sans-serif;
   --surface: rgba(255, 252, 247, 0.92);
   --surface-strong: #fffaf1;
   --surface-accent: #f0e4ce;
@@ -87,7 +89,7 @@ body {
   margin: 0;
   height: 100vh;
   overflow: hidden;
-  font-family: "Manrope", sans-serif;
+  font-family: var(--font-body);
   color: var(--text);
   background:
     radial-gradient(circle at top left, var(--hero-glow-left), transparent 28%),
@@ -160,7 +162,7 @@ body::before {
 h1,
 h2,
 h3 {
-  font-family: "Fraunces", serif;
+  font-family: var(--font-heading);
   font-weight: 700;
   line-height: 1.02;
   margin: 0;
