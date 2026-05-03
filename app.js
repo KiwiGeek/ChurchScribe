@@ -2757,6 +2757,10 @@ cloudProviderSelect.addEventListener("change", () => {
   cloudSyncSettings.provider = newProviderId;
   activeProvider = providerRegistry[newProviderId] ?? noOpProvider;
 
+  // Remote file/folder IDs are provider-specific and must not carry over between providers.
+  cloudSyncSettings.remoteWorkspaceFileId = "";
+  cloudSyncSettings.remoteWorkspaceParentId = "";
+
   const defaults = activeProvider.getSettingsValues();
 
   if (!cloudSyncSettings.providerSettings[newProviderId]) {

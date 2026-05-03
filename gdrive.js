@@ -118,7 +118,9 @@
 
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(errorText || `Google Drive request failed with ${response.status}.`);
+      const err = new Error(errorText || `Google Drive request failed with ${response.status}.`);
+      err.status = response.status;
+      throw err;
     }
 
     return response;
@@ -284,17 +286,26 @@
       let fileId = await findWorkspaceFileId(remoteWorkspaceFileId, location);
 
       if (fileId) {
-        const multipart = buildMultipartJsonBody({ mimeType: "application/json" }, payload);
-        await apiFetch(
-          `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=multipart&fields=id`,
-          {
-            method: "PATCH",
-            headers: { "Content-Type": multipart.contentType },
-            body: multipart.body
-          }
-        );
+        try {
+          const multipart = buildMultipartJsonBody({ mimeType: "application/json" }, payload);
+          await apiFetch(
+            `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=multipart&fields=id`,
+            {
+              method: "PATCH",
+              headers: { "Content-Type": multipart.contentType },
+              body: multipart.body
+            }
+          );
 
-        return { remoteWorkspaceFileId: fileId, remoteWorkspaceParentId: updatedParentId };
+          return { remoteWorkspaceFileId: fileId, remoteWorkspaceParentId: updatedParentId };
+        } catch (patchError) {
+          if (patchError.status !== 404) {
+            throw patchError;
+          }
+
+          // The cached file ID no longer exists — fall through to create a new one.
+          fileId = "";
+        }
       }
 
       const multipart = buildMultipartJsonBody(
@@ -332,12 +343,21 @@
         return { data: null, remoteWorkspaceFileId: "", remoteWorkspaceParentId: updatedParentId };
       }
 
-      const response = await apiFetch(
-        `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`
-      );
-      const data = await response.json();
+      try {
+        const response = await apiFetch(
+          `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`
+        );
+        const data = await response.json();
 
-      return { data, remoteWorkspaceFileId: fileId, remoteWorkspaceParentId: updatedParentId };
+        return { data, remoteWorkspaceFileId: fileId, remoteWorkspaceParentId: updatedParentId };
+      } catch (getError) {
+        if (getError.status !== 404) {
+          throw getError;
+        }
+
+        // The cached file ID no longer exists — treat as no file present.
+        return { data: null, remoteWorkspaceFileId: "", remoteWorkspaceParentId: updatedParentId };
+      }
     } catch (error) {
       throw new Error(parseErrorMessage(error));
     }
