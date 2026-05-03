@@ -3377,3 +3377,22 @@ body.is-pane-dragging {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
+
+/* ===================== WHITESPACE INDICATORS ===================== */
+
+/* Paragraph-end pilcrow mark (¶) */
+.show-whitespace .note-editor p::after {
+  content: "¶";
+  color: var(--muted);
+  opacity: 0.4;
+  font-weight: 400;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Empty paragraphs (blank lines) — keep them taller so the ¶ is visible */
+.show-whitespace .note-editor p:empty {
+  min-height: 1.75em;
+}
+
+/* ===================== END WHITESPACE INDICATORS ===================== */

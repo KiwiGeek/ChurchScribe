@@ -84,6 +84,7 @@ const translationStorageKey = "service-notes-translation";
 const cloudSyncStorageKey = "service-notes-cloud-sync";
 const colorThemeStorageKey = "service-notes-color-theme";
 const lastBookChapterStorageKey = "service-notes-last-book-chapter";
+const showWhitespaceStorageKey = "service-notes-show-whitespace";
 const autoCloudSyncDelayMs = 10000;
 
 const noOpProvider = {
@@ -167,6 +168,7 @@ let activeSettingsTabId = "ui-settings";
 let currentColorThemeId = "default";
 let currentThemeMode = "system";
 let currentPaneSplit = 0.6;
+let showWhitespace = false;
 let noteBrowserFilter = "";
 let noteBrowserTypeFilter = "all";
 let noteBrowserSort = "updated-desc";
@@ -843,7 +845,8 @@ const buildCloudSettingsPayload = (updatedAt = new Date().toISOString()) => ({
     paneOrder: paneGrid.dataset.order === "scripture-first" ? "scripture-first" : "notes-first",
     paneSplit: currentPaneSplit,
     translation: currentTranslationCode,
-    colorTheme: currentColorThemeId
+    colorTheme: currentColorThemeId,
+    showWhitespace
   },
   syncSettings: {
     provider: cloudSyncSettings.provider,
@@ -904,6 +907,11 @@ const applyCloudPayload = (payload) => {
     if (payload.preferences.colorTheme) {
       applyColorTheme(payload.preferences.colorTheme);
       void writeStoredValue(colorThemeStorageKey, payload.preferences.colorTheme);
+    }
+
+    if (typeof payload.preferences.showWhitespace === "boolean") {
+      applyShowWhitespace(payload.preferences.showWhitespace);
+      void writeStoredValue(showWhitespaceStorageKey, payload.preferences.showWhitespace);
     }
   }
 
@@ -1527,6 +1535,39 @@ const applyColorTheme = (themeId) => {
 
   if (uiContent) {
     renderUiSettings(uiContent);
+  }
+};
+
+const getPreferredShowWhitespace = async () => {
+  const saved = await readStoredValue(showWhitespaceStorageKey);
+  return saved === true;
+};
+
+const syncShowWhitespaceToggle = (enabled) => {
+  const btn = document.querySelector("#ui-show-whitespace-toggle");
+
+  if (btn) {
+    btn.setAttribute("aria-pressed", String(enabled));
+    const state = btn.querySelector(".ui-toggle-state");
+
+    if (state) {
+      state.textContent = enabled ? "On" : "Off";
+    }
+  }
+};
+
+const applyShowWhitespace = (enabled, { persist = false, markChange = false } = {}) => {
+  showWhitespace = enabled;
+  document.documentElement.classList.toggle("show-whitespace", enabled);
+  syncShowWhitespaceToggle(enabled);
+
+  if (persist) {
+    void writeStoredValue(showWhitespaceStorageKey, enabled);
+  }
+
+  if (markChange) {
+    markLocalSettingsUpdated();
+    scheduleAutoCloudSync();
   }
 };
 
@@ -2933,6 +2974,30 @@ const renderUiSettings = (container) => {
   toggleSection.append(toggleRow);
   container.append(toggleSection);
 
+  const editorSection = document.createElement("div");
+  editorSection.className = "ui-settings-section";
+
+  const editorTitle = document.createElement("p");
+  editorTitle.className = "ui-settings-section-title";
+  editorTitle.textContent = "Editor";
+  editorSection.append(editorTitle);
+
+  const editorToggleRow = document.createElement("div");
+  editorToggleRow.className = "ui-toggle-row";
+
+  const whitespaceBtn = document.createElement("button");
+  whitespaceBtn.type = "button";
+  whitespaceBtn.id = "ui-show-whitespace-toggle";
+  whitespaceBtn.className = "ui-toggle-button";
+  whitespaceBtn.setAttribute("aria-pressed", String(showWhitespace));
+  whitespaceBtn.innerHTML = `<span>Show whitespace</span><span class="ui-toggle-state">${showWhitespace ? "On" : "Off"}</span>`;
+  whitespaceBtn.addEventListener("click", () => {
+    applyShowWhitespace(!showWhitespace, { persist: true, markChange: true });
+  });
+  editorToggleRow.append(whitespaceBtn);
+  editorSection.append(editorToggleRow);
+  container.append(editorSection);
+
   const themeSection = document.createElement("div");
   themeSection.className = "ui-settings-section";
 
@@ -4051,6 +4116,7 @@ const bootstrap = async () => {
   applyTranslation(await getPreferredTranslation());
   await restoreLastBookChapter();
   applyColorTheme(await getPreferredColorTheme());
+  applyShowWhitespace(await getPreferredShowWhitespace());
   await restoreCloudSyncSettings();
   activeProvider.waitForReady(() => {
     void reconnectCloud();
