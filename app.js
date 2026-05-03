@@ -124,6 +124,7 @@ const bookAliasMap = new Map();
 let explicitScriptureReferencePattern;
 let fullExplicitScriptureReferencePattern;
 let contextualScriptureReferencePattern;
+const autoUrlPattern = /\bhttps?:\/\/[^\s<>"')\]]+/gi;
 let activeScriptureFocus = null;
 let currentTranslationCode = "KJV";
 let activeTypeEditorId = null;
@@ -1938,7 +1939,7 @@ const linkifyScriptureReferences = ({ jumpToCaretReference = false } = {}) => {
           return NodeFilter.FILTER_REJECT;
         }
 
-        if (node.parentElement?.closest("a[data-auto-scripture-link='true']")) {
+        if (node.parentElement?.closest("a")) {
           return NodeFilter.FILTER_REJECT;
         }
 
@@ -2034,6 +2035,83 @@ const linkifyScriptureReferences = ({ jumpToCaretReference = false } = {}) => {
   }
 };
 
+const unwrapAutoUrlLinks = () => {
+  noteEditor.querySelectorAll("a[data-auto-url-link='true']").forEach((link) => {
+    link.replaceWith(document.createTextNode(link.textContent));
+  });
+
+  noteEditor.normalize();
+};
+
+const linkifyUrls = () => {
+  const caretOffset = getCaretTextOffset(noteEditor);
+  unwrapAutoUrlLinks();
+  const walker = document.createTreeWalker(
+    noteEditor,
+    NodeFilter.SHOW_TEXT,
+    {
+      acceptNode(node) {
+        if (!node.nodeValue.trim()) {
+          return NodeFilter.FILTER_REJECT;
+        }
+
+        if (node.parentElement?.closest("a")) {
+          return NodeFilter.FILTER_REJECT;
+        }
+
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    }
+  );
+
+  const textNodes = [];
+  let currentNode;
+
+  while ((currentNode = walker.nextNode())) {
+    textNodes.push(currentNode);
+  }
+
+  textNodes.forEach((textNode) => {
+    const sourceText = textNode.nodeValue;
+    autoUrlPattern.lastIndex = 0;
+    const matches = [...sourceText.matchAll(autoUrlPattern)];
+
+    if (!matches.length) {
+      return;
+    }
+
+    const fragment = document.createDocumentFragment();
+    let lastIndex = 0;
+
+    matches.forEach((match) => {
+      const matchedUrl = match[0];
+
+      if (match.index > lastIndex) {
+        fragment.append(document.createTextNode(sourceText.slice(lastIndex, match.index)));
+      }
+
+      const link = document.createElement("a");
+      link.href = matchedUrl;
+      link.className = "url-link";
+      link.dataset.autoUrlLink = "true";
+      link.textContent = matchedUrl;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      fragment.append(link);
+
+      lastIndex = match.index + matchedUrl.length;
+    });
+
+    if (lastIndex < sourceText.length) {
+      fragment.append(document.createTextNode(sourceText.slice(lastIndex)));
+    }
+
+    textNode.parentNode.replaceChild(fragment, textNode);
+  });
+
+  restoreCaretTextOffset(noteEditor, caretOffset);
+};
+
 const getPreviousNodeFromCaret = (root, node) => {
   let current = node;
 
@@ -2082,7 +2160,7 @@ const findAutoLinkBeforeCaret = () => {
     candidate = candidate.parentElement;
   }
 
-  return candidate?.matches?.("a[data-auto-scripture-link='true']") ? candidate : null;
+  return candidate?.matches?.("a[data-auto-scripture-link='true'], a[data-auto-url-link='true']") ? candidate : null;
 };
 
 const findAutoLinkAtCaret = () => {
@@ -2095,7 +2173,7 @@ const findAutoLinkAtCaret = () => {
   const range = selection.getRangeAt(0);
 
   if (range.startContainer.nodeType === Node.TEXT_NODE) {
-    const parentLink = range.startContainer.parentElement?.closest("a[data-auto-scripture-link='true']");
+    const parentLink = range.startContainer.parentElement?.closest("a[data-auto-scripture-link='true'], a[data-auto-url-link='true']");
 
     if (parentLink && range.startOffset === range.startContainer.nodeValue.length) {
       return parentLink;
@@ -2105,10 +2183,10 @@ const findAutoLinkAtCaret = () => {
   if (range.startContainer.nodeType === Node.ELEMENT_NODE && range.startOffset > 0) {
     const previousNode = range.startContainer.childNodes[range.startOffset - 1];
     const previousLink = previousNode?.nodeType === Node.ELEMENT_NODE
-      ? previousNode.closest?.("a[data-auto-scripture-link='true']") ?? previousNode
-      : previousNode?.parentElement?.closest("a[data-auto-scripture-link='true']");
+      ? previousNode.closest?.("a[data-auto-scripture-link='true'], a[data-auto-url-link='true']") ?? previousNode
+      : previousNode?.parentElement?.closest("a[data-auto-scripture-link='true'], a[data-auto-url-link='true']");
 
-    if (previousLink?.matches?.("a[data-auto-scripture-link='true']")) {
+    if (previousLink?.matches?.("a[data-auto-scripture-link='true'], a[data-auto-url-link='true']")) {
       return previousLink;
     }
   }
@@ -2295,6 +2373,7 @@ const renderActiveNote = () => {
   renderNoteMetadataFields();
   noteEditor.innerHTML = activeNote.content;
   linkifyScriptureReferences();
+  linkifyUrls();
   renderNoteList();
 };
 
@@ -3232,6 +3311,7 @@ noteEditor.addEventListener("input", (event) => {
   }
 
   linkifyScriptureReferences({ jumpToCaretReference: true });
+  linkifyUrls();
   saveActiveNote();
 });
 
@@ -3261,6 +3341,14 @@ noteEditor.addEventListener("keydown", (event) => {
 });
 
 noteEditor.addEventListener("click", (event) => {
+  const urlLink = event.target.closest("a[data-auto-url-link='true']");
+
+  if (urlLink) {
+    event.preventDefault();
+    window.open(urlLink.href, "_blank", "noopener,noreferrer");
+    return;
+  }
+
   const link = event.target.closest("a[data-auto-scripture-link='true']");
 
   if (!link) {
