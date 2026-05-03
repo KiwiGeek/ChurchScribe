@@ -55,6 +55,12 @@ const providerSettingsContainer = document.querySelector("#provider-settings-con
 const googleConnectButton = document.querySelector("#google-connect-button");
 const googleDisconnectButton = document.querySelector("#google-disconnect-button");
 const googleSyncNowButton = document.querySelector("#google-sync-now-button");
+const downloadBackupButton = document.querySelector("#download-backup-button");
+const restoreBackupButton = document.querySelector("#restore-backup-button");
+const restoreBackupFile = document.querySelector("#restore-backup-file");
+const clearLocalButton = document.querySelector("#clear-local-button");
+const clearRemoteButton = document.querySelector("#clear-remote-button");
+const clearAllButton = document.querySelector("#clear-all-button");
 const addTypeButton = document.querySelector("#add-type-button");
 const addMetadataFieldButton = document.querySelector("#add-metadata-field-button");
 const deleteTypeButton = document.querySelector("#delete-type-button");
@@ -103,7 +109,8 @@ const noOpProvider = {
   applySettingChange: () => ({}),
   getLocationLabel: () => "",
   upload: () => Promise.reject(new Error("No storage provider configured.")),
-  download: () => Promise.reject(new Error("No storage provider configured."))
+  download: () => Promise.reject(new Error("No storage provider configured.")),
+  clearRemote: () => Promise.resolve()
 };
 
 const providerRegistry = {};
@@ -208,6 +215,10 @@ const settingsTabs = [
   {
     id: "cloud-sync",
     label: "Auxiliary Storage"
+  },
+  {
+    id: "data",
+    label: "Data Management"
   },
   {
     id: "about",
@@ -3153,6 +3164,204 @@ const renderUiSettings = (container) => {
   container.append(themeSection);
 };
 
+const downloadWorkspaceBackup = () => {
+  const exportedAt = new Date().toISOString();
+  const backup = {
+    type: "churchscribe-backup",
+    version: 1,
+    exportedAt,
+    workspace: {
+      noteTypes: structuredClone(workspace.noteTypes),
+      customBookAliases: structuredClone(workspace.customBookAliases),
+      activeNoteId: workspace.activeNoteId,
+      selectedNewNoteTypeId: workspace.selectedNewNoteTypeId
+    },
+    notes: structuredClone(workspace.notes),
+    preferences: {
+      theme: currentThemeMode,
+      paneOrder: paneGrid.dataset.order === "scripture-first" ? "scripture-first" : "notes-first",
+      paneSplit: currentPaneSplit,
+      translation: currentTranslationCode,
+      colorTheme: currentColorThemeId
+    }
+  };
+  const json = JSON.stringify(backup, null, 2);
+  const blob = new Blob([json], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `churchscribe-backup-${exportedAt.split("T")[0]}.json`;
+  document.body.append(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+};
+
+const restoreWorkspaceFromBackup = async (file) => {
+  try {
+    const text = await file.text();
+    const backup = JSON.parse(text);
+
+    if (!backup || typeof backup !== "object") {
+      throw new Error("Invalid backup file: not a valid JSON object.");
+    }
+
+    if (!backup.workspace || !Array.isArray(backup.notes)) {
+      throw new Error("The selected file does not appear to be a ChurchScribe backup.");
+    }
+
+    // eslint-disable-next-line no-alert
+    if (!window.confirm("This will replace your current workspace with the backup. Your existing data will be overwritten. Continue?")) {
+      return;
+    }
+
+    workspace.noteTypes = backup.workspace.noteTypes ?? workspace.noteTypes;
+    workspace.customBookAliases = backup.workspace.customBookAliases ?? {};
+    workspace.activeNoteId = backup.workspace.activeNoteId ?? workspace.activeNoteId;
+    workspace.selectedNewNoteTypeId = backup.workspace.selectedNewNoteTypeId ?? workspace.selectedNewNoteTypeId;
+    workspace.notes = backup.notes;
+
+    if (backup.preferences) {
+      const { preferences } = backup;
+
+      if (preferences.theme) {
+        applyThemeMode(preferences.theme, { rerender: false });
+        void writeStoredValue(themeStorageKey, normalizeThemeMode(preferences.theme));
+      }
+
+      if (preferences.paneOrder) {
+        applyPaneOrder(preferences.paneOrder);
+        void writeStoredValue(paneOrderStorageKey, preferences.paneOrder);
+      }
+
+      if (typeof preferences.paneSplit === "number") {
+        applySplit(preferences.paneSplit);
+        void writeStoredValue(paneSplitStorageKey, currentPaneSplit);
+      }
+
+      if (preferences.translation) {
+        applyTranslation(preferences.translation);
+        void writeStoredValue(translationStorageKey, preferences.translation);
+      }
+
+      if (preferences.colorTheme) {
+        applyColorTheme(preferences.colorTheme);
+        void writeStoredValue(colorThemeStorageKey, preferences.colorTheme);
+      }
+    }
+
+    buildBookAliasMap();
+    renderWorkspace();
+    persistWorkspace();
+    updateSaveStatus("Workspace restored from backup.");
+  } catch (error) {
+    console.error("[Backup] Restore failed:", error);
+    // eslint-disable-next-line no-alert
+    window.alert(`Failed to restore backup: ${error.message}`);
+  }
+};
+
+const clearLocalWorkspace = async () => {
+  // eslint-disable-next-line no-alert
+  if (!window.confirm("This will permanently delete all local notes, note types, and settings. The app will reset to its default state. This cannot be undone.")) {
+    return;
+  }
+
+  stopCloudPolling();
+
+  if (pendingAutoSyncTimer) {
+    window.clearTimeout(pendingAutoSyncTimer);
+    pendingAutoSyncTimer = null;
+  }
+
+  activeProvider.disconnect();
+
+  await Promise.all([
+    deleteStoredValue(workspaceStorageKey),
+    deleteStoredValue(cloudSyncStorageKey),
+    deleteStoredValue(themeStorageKey),
+    deleteStoredValue(paneOrderStorageKey),
+    deleteStoredValue(paneSplitStorageKey),
+    deleteStoredValue(translationStorageKey),
+    deleteStoredValue(colorThemeStorageKey),
+    deleteStoredValue(lastBookChapterStorageKey),
+    deleteStoredValue(notesStorageKey)
+  ]);
+
+  window.location.reload();
+};
+
+const clearRemoteWorkspace = async () => {
+  if (!activeProvider.hasActiveSession()) {
+    // eslint-disable-next-line no-alert
+    window.alert("No storage provider is connected. Connect a provider in Auxiliary Storage settings first.");
+    return;
+  }
+
+  // eslint-disable-next-line no-alert
+  if (!window.confirm(`This will permanently delete all workspace data stored on ${activeProvider.displayName}. Your local workspace will not be affected. This cannot be undone.`)) {
+    return;
+  }
+
+  try {
+    await activeProvider.clearRemote();
+
+    cloudSyncSettings.remoteSettingsFileId = "";
+    cloudSyncSettings.remoteNoteFileIds = {};
+    cloudSyncSettings.remoteWorkspaceFileId = "";
+    cloudSyncSettings.remoteWorkspaceParentId = "";
+    cloudSyncSettings.lastSyncAt = null;
+    persistCloudSyncSettings();
+    renderSettings();
+    refreshSaveStatus();
+  } catch (error) {
+    console.error("[Data] Clear remote failed:", error);
+    // eslint-disable-next-line no-alert
+    window.alert(`Failed to clear remote workspace: ${error.message}`);
+  }
+};
+
+const clearAllData = async () => {
+  const hasSession = activeProvider.hasActiveSession();
+  const remoteLabel = hasSession ? ` and all data stored on ${activeProvider.displayName}` : "";
+
+  // eslint-disable-next-line no-alert
+  if (!window.confirm(`This will permanently delete all your local notes and settings${remoteLabel}. This cannot be undone.`)) {
+    return;
+  }
+
+  if (hasSession) {
+    try {
+      await activeProvider.clearRemote();
+    } catch (error) {
+      console.error("[Data] Clear remote failed during clear-all:", error);
+    }
+  }
+
+  stopCloudPolling();
+
+  if (pendingAutoSyncTimer) {
+    window.clearTimeout(pendingAutoSyncTimer);
+    pendingAutoSyncTimer = null;
+  }
+
+  activeProvider.disconnect();
+
+  await Promise.all([
+    deleteStoredValue(workspaceStorageKey),
+    deleteStoredValue(cloudSyncStorageKey),
+    deleteStoredValue(themeStorageKey),
+    deleteStoredValue(paneOrderStorageKey),
+    deleteStoredValue(paneSplitStorageKey),
+    deleteStoredValue(translationStorageKey),
+    deleteStoredValue(colorThemeStorageKey),
+    deleteStoredValue(lastBookChapterStorageKey),
+    deleteStoredValue(notesStorageKey)
+  ]);
+
+  window.location.reload();
+};
+
 const renderSettings = () => {
   settingsTabNav.innerHTML = "";
   settingsTabs.forEach((tab) => {
@@ -4228,6 +4437,33 @@ googleDisconnectButton.addEventListener("click", () => {
 googleSyncNowButton.addEventListener("click", async () => {
   await pullFromCloud();
   await syncWorkspaceToCloud({ reason: "manual" });
+});
+
+downloadBackupButton.addEventListener("click", downloadWorkspaceBackup);
+
+restoreBackupButton.addEventListener("click", () => {
+  restoreBackupFile.value = "";
+  restoreBackupFile.click();
+});
+
+restoreBackupFile.addEventListener("change", () => {
+  const file = restoreBackupFile.files?.[0];
+
+  if (file) {
+    void restoreWorkspaceFromBackup(file);
+  }
+});
+
+clearLocalButton.addEventListener("click", () => {
+  void clearLocalWorkspace();
+});
+
+clearRemoteButton.addEventListener("click", () => {
+  void clearRemoteWorkspace();
+});
+
+clearAllButton.addEventListener("click", () => {
+  void clearAllData();
 });
 
 addTypeButton.addEventListener("click", addNoteType);

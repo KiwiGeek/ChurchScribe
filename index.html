@@ -319,6 +319,33 @@
           </div>
         </section>
 
+        <section class="type-editor-panel settings-data-panel" data-settings-panel="data" aria-labelledby="data-title">
+          <div class="note-switcher-header">
+            <h3 id="data-title">Data Management</h3>
+          </div>
+          <p class="settings-copy">Back up your workspace to a file, restore from a previous backup, or reset the app to its default state.</p>
+
+          <div class="data-management-section">
+            <h4 class="data-section-title">Backup &amp; Restore</h4>
+            <p class="settings-copy">Download a snapshot of your notes, note types, and preferences as a JSON file. You can restore it at any time.</p>
+            <div class="dialog-actions data-actions">
+              <button class="ghost-button" id="download-backup-button" type="button">Download Backup</button>
+              <button class="ghost-button" id="restore-backup-button" type="button">Restore from Backup…</button>
+              <input id="restore-backup-file" type="file" accept=".json" hidden aria-hidden="true">
+            </div>
+          </div>
+
+          <div class="data-management-section data-management-section--danger">
+            <h4 class="data-section-title">Reset</h4>
+            <p class="settings-copy">Permanently erase workspace data. Choose what to reset: data stored in this browser, data stored on your connected auxiliary storage provider, or both. These actions cannot be undone.</p>
+            <div class="dialog-actions data-actions">
+              <button class="ghost-button ghost-button--danger" id="clear-local-button" type="button">Clear Local Workspace…</button>
+              <button class="ghost-button ghost-button--danger" id="clear-remote-button" type="button">Clear Remote Workspace…</button>
+              <button class="ghost-button ghost-button--danger" id="clear-all-button" type="button">Clear All Data…</button>
+            </div>
+          </div>
+        </section>
+
         <section class="type-editor-panel settings-about-panel" data-settings-panel="about" aria-labelledby="about-title">
           <div class="note-switcher-header">
             <h3 id="about-title">About ChurchScribe</h3>

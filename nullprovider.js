@@ -26,6 +26,7 @@
     applySettingChange: () => ({}),
     getLocationLabel: () => "",
     upload: () => Promise.reject(new Error("No auxiliary provider configured.")),
-    download: () => Promise.reject(new Error("No auxiliary provider configured."))
+    download: () => Promise.reject(new Error("No auxiliary provider configured.")),
+    clearRemote: () => Promise.resolve()
   };
 })();

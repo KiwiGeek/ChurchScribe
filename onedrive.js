@@ -426,6 +426,31 @@
 
   const getLocationLabel = () => "";
 
+  const clearRemote = async () => {
+    if (!accessToken) {
+      throw new Error("Not connected to OneDrive.");
+    }
+
+    try {
+      const items = await listAppRootItems();
+
+      await Promise.all(
+        items
+          .filter((item) =>
+            (item.name === settingsFileName ||
+            (item.name.startsWith(noteFilePrefix) && item.name.endsWith(noteFileSuffix)))
+          )
+          .map((item) =>
+            deleteFile(item.id).catch((error) => {
+              console.warn(`[OneDrive] Failed to delete file "${item.name}" during clearRemote: ${parseErrorMessage(error)}`);
+            })
+          )
+      );
+    } catch (error) {
+      throw new Error(parseErrorMessage(error));
+    }
+  };
+
   window.OneDriveProvider = {
     id: "onedrive",
     displayName: "OneDrive",
@@ -441,6 +466,7 @@
     applySettingChange,
     getLocationLabel,
     upload,
-    download
+    download,
+    clearRemote
   };
 })();
