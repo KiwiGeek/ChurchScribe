@@ -401,6 +401,20 @@ h1 {
   transition: transform 180ms ease, background 180ms ease;
 }
 
+.primary-button {
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
+  color: #fff;
+  font-weight: 700;
+}
+
+.primary-button:hover,
+.primary-button:focus-visible {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
 .note-switcher {
   padding: 0 20px 12px;
 }
@@ -522,15 +536,6 @@ h1 {
 
 .active-note-meta {
   font-size: 0.88rem;
-}
-
-.subtle-button {
-  color: var(--muted);
-}
-
-.subtle-button:hover,
-.subtle-button:focus-visible {
-  color: var(--text);
 }
 
 .note-meta-bar {
@@ -1424,10 +1429,6 @@ body.is-pane-dragging {
   .note-meta-bar {
     grid-template-columns: 1fr;
     align-items: start;
-  }
-
-  .subtle-button {
-    justify-self: start;
   }
 
   .note-meta {

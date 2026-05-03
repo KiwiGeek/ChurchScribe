@@ -33,25 +33,18 @@
             <h2 id="note-panel-title">Service Notes</h2>
           </div>
           <div class="note-actions">
-            <button class="ghost-button" id="new-note-direct-button" type="button">New note</button>
-            <details class="inline-action-menu" id="new-note-menu">
-              <summary class="ghost-button">New note</summary>
-              <div class="overflow-menu-panel inline-action-panel">
+            <details class="overflow-menu">
+              <summary class="ghost-button">Actions</summary>
+              <div class="overflow-menu-panel">
                 <label class="field compact-field" id="new-note-type-field">
                   <span>Type</span>
                   <select id="new-note-type-select" name="new-note-type"></select>
                 </label>
-                <button class="ghost-button overflow-action" id="new-note-button" type="button">Create note</button>
-              </div>
-            </details>
-            <details class="overflow-menu">
-              <summary class="ghost-button">More</summary>
-              <div class="overflow-menu-panel">
+                <button class="ghost-button overflow-action" id="new-note-button" type="button">New note</button>
                 <label class="field compact-field" id="active-note-type-field">
                   <span>Note type</span>
                   <select id="note-type-select" name="note-type"></select>
                 </label>
-                <button class="ghost-button overflow-action" id="duplicate-note-button" type="button">Duplicate note</button>
                 <button class="ghost-button overflow-action" id="manage-notes-button" type="button">Browse notes</button>
                 <button class="ghost-button overflow-action" id="delete-note-button" type="button">Delete note</button>
               </div>
@@ -65,7 +58,6 @@
             <h3 class="active-note-title" id="active-note-title"></h3>
             <p class="active-note-meta" id="active-note-meta"></p>
           </div>
-          <button class="ghost-button subtle-button" id="browse-notes-button" type="button">Browse notes</button>
         </div>
 
         <div class="note-meta-bar">

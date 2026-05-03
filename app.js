@@ -12,12 +12,9 @@ const translationLibrary = {
 const noteEditor = document.querySelector("#note-editor");
 const saveStatus = document.querySelector("#save-status");
 const toolbarButtons = document.querySelectorAll(".tool-button");
-const newNoteDirectButton = document.querySelector("#new-note-direct-button");
 const newNoteButton = document.querySelector("#new-note-button");
-const duplicateNoteButton = document.querySelector("#duplicate-note-button");
 const deleteNoteButton = document.querySelector("#delete-note-button");
 const manageNotesButton = document.querySelector("#manage-notes-button");
-const browseNotesButton = document.querySelector("#browse-notes-button");
 const settingsButton = document.querySelector("#settings-button");
 const noteDetailsButton = document.querySelector("#note-details-button");
 const activeNoteTitle = document.querySelector("#active-note-title");
@@ -65,7 +62,6 @@ const googleSyncNowButton = document.querySelector("#google-sync-now-button");
 const addTypeButton = document.querySelector("#add-type-button");
 const addMetadataFieldButton = document.querySelector("#add-metadata-field-button");
 const deleteTypeButton = document.querySelector("#delete-type-button");
-const newNoteMenu = document.querySelector("#new-note-menu");
 const overflowMenu = document.querySelector(".overflow-menu");
 const syncConflictDialog = document.querySelector("#sync-conflict-dialog");
 const conflictLocalTime = document.querySelector("#conflict-local-time");
@@ -2468,8 +2464,6 @@ const renderNoteTypeOptions = () => {
 
   noteTypeSelect.value = activeNote.typeId;
   newNoteTypeSelect.value = workspace.selectedNewNoteTypeId;
-  newNoteDirectButton.classList.toggle("is-hidden", showTypeChoices);
-  newNoteMenu.classList.toggle("is-hidden", !showTypeChoices);
   newNoteTypeField.classList.toggle("is-hidden", !showTypeChoices);
   activeNoteTypeField.classList.toggle("is-hidden", !showTypeChoices);
 };
@@ -2694,12 +2688,12 @@ const renderNoteManager = () => {
   const actions = document.createElement("div");
   actions.className = "note-browser-detail-actions";
 
-  const openButton = document.createElement("button");
-  openButton.type = "button";
-  openButton.className = "ghost-button";
-  openButton.dataset.noteAction = "open";
-  openButton.dataset.noteId = selectedNote.id;
-  openButton.textContent = "Open note";
+        const openButton = document.createElement("button");
+        openButton.type = "button";
+        openButton.className = "ghost-button primary-button";
+        openButton.dataset.noteAction = "open";
+        openButton.dataset.noteId = selectedNote.id;
+        openButton.textContent = "Open note";
 
   const duplicateButton = document.createElement("button");
   duplicateButton.type = "button";
@@ -3581,13 +3575,8 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
-newNoteDirectButton.addEventListener("click", createNote);
 newNoteButton.addEventListener("click", () => {
   createNote();
-  newNoteMenu.removeAttribute("open");
-});
-duplicateNoteButton.addEventListener("click", () => {
-  duplicateNote();
   overflowMenu.removeAttribute("open");
 });
 deleteNoteButton.addEventListener("click", () => {
@@ -3602,8 +3591,6 @@ noteDetailsButton.addEventListener("click", () => {
 manageNotesButton.addEventListener("click", () => {
   openNotesBrowser();
 });
-
-browseNotesButton.addEventListener("click", openNotesBrowser);
 
 settingsButton.addEventListener("click", () => {
   renderSettings();
@@ -3753,6 +3740,17 @@ noteManagerList.addEventListener("click", (event) => {
     noteBrowserSelectedNoteId = selectionButton.dataset.noteSelect;
     renderNoteManager();
   }
+});
+
+noteManagerList.addEventListener("dblclick", (event) => {
+  const selectionButton = event.target.closest("[data-note-select]");
+
+  if (!selectionButton) {
+    return;
+  }
+
+  switchNote(selectionButton.dataset.noteSelect);
+  noteManagerDialog.close();
 });
 
 noteBrowserDetails.addEventListener("click", (event) => {
