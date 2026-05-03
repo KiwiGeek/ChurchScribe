@@ -3737,20 +3737,15 @@ noteManagerList.addEventListener("click", (event) => {
   const selectionButton = event.target.closest("[data-note-select]");
 
   if (selectionButton) {
+    if (event.detail > 1) {
+      switchNote(selectionButton.dataset.noteSelect);
+      noteManagerDialog.close();
+      return;
+    }
+
     noteBrowserSelectedNoteId = selectionButton.dataset.noteSelect;
     renderNoteManager();
   }
-});
-
-noteManagerList.addEventListener("dblclick", (event) => {
-  const selectionButton = event.target.closest("[data-note-select]");
-
-  if (!selectionButton) {
-    return;
-  }
-
-  switchNote(selectionButton.dataset.noteSelect);
-  noteManagerDialog.close();
 });
 
 noteBrowserDetails.addEventListener("click", (event) => {

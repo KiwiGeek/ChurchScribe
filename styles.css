@@ -1114,6 +1114,7 @@ h1 {
   gap: 18px;
   height: 100%;
   min-height: 0;
+  padding-bottom: 8px;
 }
 
 .note-manager-list,
@@ -1125,6 +1126,7 @@ h1 {
   align-content: start;
   overflow: auto;
   padding-right: 4px;
+  padding-bottom: 16px;
 }
 
 .note-browser-details {
@@ -1136,6 +1138,7 @@ h1 {
   border-radius: var(--radius-lg);
   background: var(--surface-strong);
   overflow: auto;
+  padding-bottom: 24px;
 }
 
 .note-browser-toolbar {
