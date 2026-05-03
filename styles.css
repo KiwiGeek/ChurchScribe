@@ -660,6 +660,88 @@ h1 {
   outline: none;
 }
 
+.youtube-embed {
+  display: block;
+  margin: 0.75em 0;
+  line-height: 0;
+  user-select: none;
+}
+
+.youtube-embed-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 560px;
+  max-width: 100%;
+  background: #000;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  padding-bottom: 18px;
+}
+
+.youtube-embed-frame {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: none;
+}
+
+.youtube-embed-delete {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.15s ease, background 0.15s ease;
+  z-index: 10;
+  padding: 0;
+}
+
+.youtube-embed-wrapper:hover .youtube-embed-delete,
+.youtube-embed-wrapper:focus-within .youtube-embed-delete {
+  opacity: 1;
+}
+
+.youtube-embed-delete:hover {
+  background: rgba(200, 30, 30, 0.85);
+}
+
+.youtube-embed-resize-handle {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 18px;
+  cursor: ew-resize;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 8px;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.youtube-embed-wrapper:hover .youtube-embed-resize-handle {
+  opacity: 1;
+}
+
+.youtube-embed-resize-handle::after {
+  content: "⟺";
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1;
+}
+
 .note-editor {
   flex: 1;
   margin: 0 20px 16px;
