@@ -102,6 +102,10 @@ const noOpProvider = {
 
 const providerRegistry = {};
 
+if (window.NullProvider) {
+  providerRegistry[window.NullProvider.id] = window.NullProvider;
+}
+
 if (window.LocalDriveProvider) {
   providerRegistry[window.LocalDriveProvider.id] = window.LocalDriveProvider;
 }
@@ -330,7 +334,7 @@ const colorThemes = [
 ];
 
 const cloudSyncSettings = {
-  provider: "google-drive",
+  provider: "none",
   pollIntervalSeconds: 60,
   status: "Not connected",
   lastSyncAt: null,
@@ -345,7 +349,7 @@ const cloudSyncSettings = {
 };
 
 const normalizeCloudSyncSettings = (value = {}) => ({
-  provider: typeof value.provider === "string" ? value.provider : "google-drive",
+  provider: typeof value.provider === "string" ? value.provider : "none",
   pollIntervalSeconds: Number(value.pollIntervalSeconds) || 60,
   status: typeof value.status === "string" && value.status ? value.status : "Not connected",
   lastSyncAt: typeof value.lastSyncAt === "string" ? value.lastSyncAt : null,
@@ -735,6 +739,10 @@ const restoreCloudSyncSettings = async () => {
 };
 
 const buildCloudStatusText = () => {
+  if (activeProvider.id === "none") {
+    return "No auxiliary provider configured";
+  }
+
   const isLocalDrive = activeProvider.id === "local-drive";
 
   if (!activeProvider.isAvailable()) {
@@ -1203,7 +1211,7 @@ const disconnectCloud = () => {
 };
 
 const reconnectCloud = async () => {
-  if (activeProvider.hasActiveSession()) {
+  if (activeProvider.id === "none" || activeProvider.hasActiveSession()) {
     return;
   }
 
@@ -2781,13 +2789,21 @@ const renderSettings = () => {
   cloudProviderSelect.value = cloudSyncSettings.provider;
   cloudPollIntervalSelect.value = String(cloudSyncSettings.pollIntervalSeconds);
   renderProviderSettings();
+  const isNullProvider = activeProvider.id === "none";
   const isLocalDrive = activeProvider.id === "local-drive";
   cloudStatusLabel.textContent = isLocalDrive ? "Folder" : "Connection Status";
   cloudStatusInput.value = buildCloudStatusText();
   cloudLastSyncInput.value = formatSyncTimestamp(cloudSyncSettings.lastSyncAt);
   const hasActiveStorageSession = activeProvider.hasActiveSession();
 
-  if (isLocalDrive) {
+  if (isNullProvider) {
+    googleConnectButton.classList.add("is-hidden");
+    googleConnectButton.disabled = true;
+    googleDisconnectButton.classList.add("is-hidden");
+    googleDisconnectButton.disabled = true;
+    googleSyncNowButton.classList.add("is-hidden");
+    googleSyncNowButton.disabled = true;
+  } else if (isLocalDrive) {
     googleConnectButton.textContent = hasActiveStorageSession ? "Change Folder" : "Choose Folder";
     googleConnectButton.classList.remove("is-hidden");
     googleConnectButton.disabled = !activeProvider.isAvailable();
