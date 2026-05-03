@@ -1561,6 +1561,14 @@ const applyShowWhitespace = (enabled, { persist = false, markChange = false } = 
   document.documentElement.classList.toggle("show-whitespace", enabled);
   syncShowWhitespaceToggle(enabled);
 
+  if (enabled) {
+    if (document.activeElement !== noteEditor) {
+      addWhitespaceMarkersToEditor();
+    }
+  } else {
+    removeWhitespaceMarkersFromEditor();
+  }
+
   if (persist) {
     void writeStoredValue(showWhitespaceStorageKey, enabled);
   }
@@ -1569,6 +1577,73 @@ const applyShowWhitespace = (enabled, { persist = false, markChange = false } = 
     markLocalSettingsUpdated();
     scheduleAutoCloudSync();
   }
+};
+
+const addWhitespaceMarkersToEditor = () => {
+  removeWhitespaceMarkersFromEditor();
+
+  const walker = document.createTreeWalker(
+    noteEditor,
+    NodeFilter.SHOW_TEXT,
+    {
+      acceptNode(node) {
+        return /[ \t]/.test(node.textContent) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
+      }
+    }
+  );
+
+  const textNodes = [];
+  let node;
+
+  while ((node = walker.nextNode())) {
+    textNodes.push(node);
+  }
+
+  textNodes.forEach((textNode) => {
+    const text = textNode.textContent;
+    const parts = text.split(/([ \t])/);
+
+    if (parts.length <= 1) {
+      return;
+    }
+
+    const fragment = document.createDocumentFragment();
+
+    parts.forEach((part) => {
+      if (part === " " || part === "\t") {
+        const span = document.createElement("span");
+        span.className = part === " " ? "ws-marker ws-space" : "ws-marker ws-tab";
+        span.textContent = part === " " ? "·" : "→";
+        fragment.append(span);
+      } else if (part) {
+        fragment.append(document.createTextNode(part));
+      }
+    });
+
+    textNode.parentNode.replaceChild(fragment, textNode);
+  });
+};
+
+const removeWhitespaceMarkersFromEditor = () => {
+  noteEditor.querySelectorAll(".ws-marker").forEach((marker) => {
+    marker.replaceWith(document.createTextNode(marker.classList.contains("ws-space") ? " " : "\t"));
+  });
+  noteEditor.normalize();
+};
+
+const getEditorContent = () => {
+  if (!showWhitespace) {
+    return noteEditor.innerHTML;
+  }
+
+  const clone = noteEditor.cloneNode(true);
+
+  clone.querySelectorAll(".ws-marker").forEach((marker) => {
+    marker.replaceWith(document.createTextNode(marker.classList.contains("ws-space") ? " " : "\t"));
+  });
+  clone.normalize();
+
+  return clone.innerHTML;
 };
 
 const populateBookOptions = () => {
@@ -2676,6 +2751,10 @@ const renderActiveNote = () => {
   noteEditor.innerHTML = activeNote.content;
   linkifyScriptureReferences();
   linkifyUrls();
+
+  if (showWhitespace && document.activeElement !== noteEditor) {
+    addWhitespaceMarkersToEditor();
+  }
 };
 
 const renderNoteManager = () => {
@@ -3265,7 +3344,7 @@ const saveActiveNote = () => {
     return;
   }
 
-  activeNote.content = noteEditor.innerHTML;
+  activeNote.content = getEditorContent();
   noteMetaFields.querySelectorAll("[data-field-id]").forEach((input) => {
     activeNote.metadata[input.dataset.fieldId] = input.value;
   });
@@ -3787,6 +3866,18 @@ noteMetaFields.addEventListener("change", (event) => {
   }
 
   changeNoteType(typeSelect.dataset.noteTypeChange, typeSelect.value);
+});
+
+noteEditor.addEventListener("focus", () => {
+  if (showWhitespace) {
+    removeWhitespaceMarkersFromEditor();
+  }
+});
+
+noteEditor.addEventListener("blur", () => {
+  if (showWhitespace) {
+    addWhitespaceMarkersToEditor();
+  }
 });
 
 noteEditor.addEventListener("input", (event) => {

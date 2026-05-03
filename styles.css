@@ -3395,4 +3395,23 @@ body.is-pane-dragging {
   min-height: 1.75em;
 }
 
+/* Line-break marker (↵) — appears inline before the forced break */
+.show-whitespace .note-editor br::before {
+  content: "↵";
+  color: var(--muted);
+  opacity: 0.4;
+  font-weight: 400;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Space (·) and tab (→) markers — injected as <span class="ws-marker"> by JS */
+.note-editor .ws-marker {
+  color: var(--muted);
+  opacity: 0.4;
+  font-weight: 400;
+  pointer-events: none;
+  user-select: none;
+}
+
 /* ===================== END WHITESPACE INDICATORS ===================== */
