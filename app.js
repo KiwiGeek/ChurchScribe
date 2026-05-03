@@ -132,7 +132,8 @@ const workspace = {
   notes: [],
   activeNoteId: null,
   selectedNewNoteTypeId: null,
-  customBookAliases: {}
+  customBookAliases: {},
+  updatedAt: null
 };
 
 const settingsTabs = [
@@ -300,7 +301,10 @@ const cloudSyncSettings = {
   pollIntervalSeconds: 60,
   status: "Not connected",
   lastSyncAt: null,
+  localSettingsUpdatedAt: null,
   connectedEmail: "",
+  remoteSettingsFileId: "",
+  remoteNoteFileIds: {},
   remoteWorkspaceFileId: "",
   remoteWorkspaceParentId: "",
   lastError: "",
@@ -312,7 +316,12 @@ const normalizeCloudSyncSettings = (value = {}) => ({
   pollIntervalSeconds: Number(value.pollIntervalSeconds) || 60,
   status: typeof value.status === "string" && value.status ? value.status : "Not connected",
   lastSyncAt: typeof value.lastSyncAt === "string" ? value.lastSyncAt : null,
+  localSettingsUpdatedAt: typeof value.localSettingsUpdatedAt === "string" ? value.localSettingsUpdatedAt : null,
   connectedEmail: typeof value.connectedEmail === "string" ? value.connectedEmail : "",
+  remoteSettingsFileId: typeof value.remoteSettingsFileId === "string" ? value.remoteSettingsFileId : "",
+  remoteNoteFileIds: value.remoteNoteFileIds && typeof value.remoteNoteFileIds === "object" && !Array.isArray(value.remoteNoteFileIds)
+    ? value.remoteNoteFileIds
+    : {},
   remoteWorkspaceFileId: typeof value.remoteWorkspaceFileId === "string" ? value.remoteWorkspaceFileId : "",
   remoteWorkspaceParentId: typeof value.remoteWorkspaceParentId === "string" ? value.remoteWorkspaceParentId : "",
   lastError: typeof value.lastError === "string" ? value.lastError : "",
@@ -611,10 +620,13 @@ const ensureWorkspaceConsistency = () => {
         ])
       )
     : {};
+
+  workspace.updatedAt = typeof workspace.updatedAt === "string" ? workspace.updatedAt : null;
 };
 
 const persistWorkspace = () => {
   ensureWorkspaceConsistency();
+  workspace.updatedAt = new Date().toISOString();
   void writeStoredValue(workspaceStorageKey, structuredClone(workspace));
   scheduleAutoCloudSync();
 };
@@ -643,6 +655,11 @@ const updateSaveStatus = (message) => {
 
 const persistCloudSyncSettings = () => {
   void writeStoredValue(cloudSyncStorageKey, structuredClone(cloudSyncSettings));
+};
+
+const markLocalSettingsUpdated = () => {
+  cloudSyncSettings.localSettingsUpdatedAt = new Date().toISOString();
+  persistCloudSyncSettings();
 };
 
 const resetTransientCloudSessionState = () => {
@@ -734,24 +751,10 @@ const refreshSaveStatus = () => {
   updateSaveStatus(buildSaveStatusText(savedAt));
 };
 
-const buildCloudSyncPayload = () => ({
-  version: 1,
-  updatedAt: new Date().toISOString(),
-  workspace: structuredClone(workspace),
-  preferences: {
-    theme: document.documentElement.dataset.theme === "dark" ? "dark" : "light",
-    paneOrder: paneGrid.dataset.order === "scripture-first" ? "scripture-first" : "notes-first",
-    translation: currentTranslationCode,
-    colorTheme: currentColorThemeId
-  },
-  syncSettings: {
-    provider: cloudSyncSettings.provider,
-    pollIntervalSeconds: cloudSyncSettings.pollIntervalSeconds
-  }
-});
-
 const getActiveProviderSettings = () => ({
   ...cloudSyncSettings.providerSettings[activeProvider.id],
+  remoteSettingsFileId: cloudSyncSettings.remoteSettingsFileId,
+  remoteNoteFileIds: structuredClone(cloudSyncSettings.remoteNoteFileIds),
   remoteWorkspaceFileId: cloudSyncSettings.remoteWorkspaceFileId,
   remoteWorkspaceParentId: cloudSyncSettings.remoteWorkspaceParentId
 });
@@ -764,9 +767,55 @@ const buildProviderStatusLabel = () => {
   return suffix ? `${activeProvider.displayName} (${suffix})` : activeProvider.displayName;
 };
 
+const buildCloudSettingsPayload = (updatedAt = new Date().toISOString()) => ({
+  version: 2,
+  updatedAt,
+  workspace: {
+    noteTypes: structuredClone(workspace.noteTypes),
+    activeNoteId: workspace.activeNoteId,
+    selectedNewNoteTypeId: workspace.selectedNewNoteTypeId,
+    customBookAliases: structuredClone(workspace.customBookAliases),
+    updatedAt: workspace.updatedAt ?? updatedAt
+  },
+  preferences: {
+    theme: document.documentElement.dataset.theme === "dark" ? "dark" : "light",
+    paneOrder: paneGrid.dataset.order === "scripture-first" ? "scripture-first" : "notes-first",
+    translation: currentTranslationCode,
+    colorTheme: currentColorThemeId
+  },
+  syncSettings: {
+    provider: cloudSyncSettings.provider,
+    pollIntervalSeconds: cloudSyncSettings.pollIntervalSeconds
+  }
+});
+
+const buildCloudNotesPayload = (updatedAt = new Date().toISOString()) => ({
+  version: 2,
+  updatedAt,
+  notes: structuredClone(workspace.notes)
+});
+
+const buildCloudSyncPayload = () => {
+  const updatedAt = new Date().toISOString();
+
+  return {
+    updatedAt,
+    settings: buildCloudSettingsPayload(updatedAt),
+    notes: buildCloudNotesPayload(updatedAt)
+  };
+};
+
 const applyCloudPayload = (payload) => {
   if (payload.workspace) {
-    Object.assign(workspace, payload.workspace);
+    workspace.noteTypes = payload.workspace.noteTypes;
+    workspace.activeNoteId = payload.workspace.activeNoteId;
+    workspace.selectedNewNoteTypeId = payload.workspace.selectedNewNoteTypeId;
+    workspace.customBookAliases = payload.workspace.customBookAliases ?? {};
+    workspace.updatedAt = payload.workspace.updatedAt ?? payload.updatedAt ?? new Date().toISOString();
+  }
+
+  if (Array.isArray(payload.notes)) {
+    workspace.notes = payload.notes;
   }
 
   if (payload.preferences) {
@@ -800,14 +849,21 @@ const applyCloudPayload = (payload) => {
 const hasLocalNoteData = () =>
   workspace.notes.some((note) => note.content || Object.values(note.metadata).some(Boolean));
 
+const hasLocalCloudData = () =>
+  Boolean(cloudSyncSettings.localSettingsUpdatedAt || workspace.updatedAt || hasLocalNoteData());
+
 const hasLocalChangesSinceLastSync = () => {
   if (!cloudSyncSettings.lastSyncAt) {
-    return hasLocalNoteData();
+    return hasLocalCloudData();
   }
 
   const lastSync = new Date(cloudSyncSettings.lastSyncAt);
 
-  return workspace.notes.some((note) => new Date(note.updatedAt) > lastSync);
+  return Boolean(
+    (cloudSyncSettings.localSettingsUpdatedAt && new Date(cloudSyncSettings.localSettingsUpdatedAt) > lastSync) ||
+    (workspace.updatedAt && new Date(workspace.updatedAt) > lastSync) ||
+    workspace.notes.some((note) => new Date(note.updatedAt) > lastSync)
+  );
 };
 
 const showSyncConflictDialog = (remotePayload) => new Promise((resolve) => {
@@ -878,8 +934,12 @@ const pullFromCloud = async () => {
   try {
     const result = await activeProvider.download(getActiveProviderSettings());
 
-    if (result.remoteWorkspaceFileId !== cloudSyncSettings.remoteWorkspaceFileId ||
+    if (result.remoteSettingsFileId !== cloudSyncSettings.remoteSettingsFileId ||
+        JSON.stringify(result.remoteNoteFileIds ?? {}) !== JSON.stringify(cloudSyncSettings.remoteNoteFileIds) ||
+        result.remoteWorkspaceFileId !== cloudSyncSettings.remoteWorkspaceFileId ||
         result.remoteWorkspaceParentId !== cloudSyncSettings.remoteWorkspaceParentId) {
+      cloudSyncSettings.remoteSettingsFileId = result.remoteSettingsFileId;
+      cloudSyncSettings.remoteNoteFileIds = result.remoteNoteFileIds ?? {};
       cloudSyncSettings.remoteWorkspaceFileId = result.remoteWorkspaceFileId;
       cloudSyncSettings.remoteWorkspaceParentId = result.remoteWorkspaceParentId;
       persistCloudSyncSettings();
@@ -890,7 +950,7 @@ const pullFromCloud = async () => {
     if (!remotePayload) {
       console.log("[CloudSync] No remote file found.");
 
-      if (hasLocalNoteData()) {
+      if (hasLocalCloudData()) {
         console.log("[CloudSync] Local data exists with no cloud copy; triggering initial upload.");
         void syncWorkspaceToCloud({ reason: "initial" });
       } else {
@@ -917,7 +977,7 @@ const pullFromCloud = async () => {
     let resolution;
 
     if (!lastSyncAt) {
-      const hasData = hasLocalNoteData();
+      const hasData = hasLocalCloudData();
       console.log(`[CloudSync] First sync — local has data: ${hasData}. ${hasData ? "Showing conflict dialog." : "Auto-applying remote."}`);
       resolution = hasData ? await showSyncConflictDialog(remotePayload) : "remote";
     } else if (localHasChanges) {
@@ -935,8 +995,10 @@ const pullFromCloud = async () => {
 
       if (remotePayload.updatedAt) {
         cloudSyncSettings.lastSyncAt = remotePayload.updatedAt;
+        cloudSyncSettings.localSettingsUpdatedAt = remotePayload.updatedAt;
       } else {
         console.warn("[CloudSync] Remote payload is missing updatedAt timestamp; unable to update last sync time. Sync state may be inconsistent.");
+        cloudSyncSettings.localSettingsUpdatedAt = new Date().toISOString();
       }
 
       cloudSyncSettings.lastError = "";
@@ -1007,9 +1069,12 @@ const syncWorkspaceToCloud = async ({ reason = "manual" } = {}) => {
 
       const result = await activeProvider.upload(buildCloudSyncPayload(), getActiveProviderSettings());
 
+      cloudSyncSettings.remoteSettingsFileId = result.remoteSettingsFileId;
+      cloudSyncSettings.remoteNoteFileIds = result.remoteNoteFileIds ?? {};
       cloudSyncSettings.remoteWorkspaceFileId = result.remoteWorkspaceFileId;
       cloudSyncSettings.remoteWorkspaceParentId = result.remoteWorkspaceParentId;
       cloudSyncSettings.lastSyncAt = new Date().toISOString();
+      cloudSyncSettings.localSettingsUpdatedAt = cloudSyncSettings.lastSyncAt;
       cloudSyncSettings.status = `Connected to ${buildProviderStatusLabel()}`;
       cloudSyncSettings.lastError = "";
       persistCloudSyncSettings();
@@ -1174,6 +1239,7 @@ const restoreWorkspace = async () => {
     workspace.activeNoteId = savedWorkspace.activeNoteId;
     workspace.selectedNewNoteTypeId = savedWorkspace.selectedNewNoteTypeId;
     workspace.customBookAliases = savedWorkspace.customBookAliases ?? {};
+    workspace.updatedAt = savedWorkspace.updatedAt ?? null;
   } else if (savedNotes || legacyNotes) {
     migrateLegacyNotes(savedNotes ?? null, legacyNotes);
     updateSaveStatus("Converted your existing notes into typed notes.");
@@ -1238,6 +1304,7 @@ const toggleTheme = () => {
   const nextTheme = currentTheme === "dark" ? "light" : "dark";
   void writeStoredValue(themeStorageKey, nextTheme);
   applyTheme(nextTheme);
+  markLocalSettingsUpdated();
   scheduleAutoCloudSync();
 };
 
@@ -1265,6 +1332,7 @@ const togglePaneOrder = () => {
   const nextOrder = currentOrder === "scripture-first" ? "notes-first" : "scripture-first";
   void writeStoredValue(paneOrderStorageKey, nextOrder);
   applyPaneOrder(nextOrder);
+  markLocalSettingsUpdated();
   scheduleAutoCloudSync();
 };
 
@@ -2349,6 +2417,7 @@ const renderUiSettings = (container) => {
     card.addEventListener("click", () => {
       void writeStoredValue(colorThemeStorageKey, theme.id);
       applyColorTheme(theme.id);
+      markLocalSettingsUpdated();
       scheduleAutoCloudSync();
     });
     themeGrid.append(card);
@@ -2957,6 +3026,7 @@ translationSelect.addEventListener("change", () => {
   activeScriptureFocus = null;
   void writeStoredValue(translationStorageKey, translationSelect.value);
   applyTranslation(translationSelect.value);
+  markLocalSettingsUpdated();
   scheduleAutoCloudSync();
 });
 
@@ -3074,6 +3144,8 @@ cloudProviderSelect.addEventListener("change", () => {
   activeProvider = providerRegistry[newProviderId] ?? noOpProvider;
 
   // Remote file/folder IDs are provider-specific and must not carry over between providers.
+  cloudSyncSettings.remoteSettingsFileId = "";
+  cloudSyncSettings.remoteNoteFileIds = {};
   cloudSyncSettings.remoteWorkspaceFileId = "";
   cloudSyncSettings.remoteWorkspaceParentId = "";
 
@@ -3099,6 +3171,7 @@ cloudProviderSelect.addEventListener("change", () => {
 cloudPollIntervalSelect.addEventListener("change", () => {
   cloudSyncSettings.pollIntervalSeconds = Number(cloudPollIntervalSelect.value);
   persistCloudSyncSettings();
+  markLocalSettingsUpdated();
   scheduleAutoCloudSync();
   startCloudPolling();
 });
@@ -3111,6 +3184,8 @@ const handleProviderSettingChange = (key, value) => {
   const result = activeProvider.applySettingChange(key, value);
 
   if (result?.clearRemoteState) {
+    cloudSyncSettings.remoteSettingsFileId = "";
+    cloudSyncSettings.remoteNoteFileIds = {};
     cloudSyncSettings.remoteWorkspaceFileId = "";
     cloudSyncSettings.remoteWorkspaceParentId = "";
     cloudSyncSettings.lastError = "";
