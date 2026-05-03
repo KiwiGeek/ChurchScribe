@@ -622,16 +622,16 @@ h1 {
   border: 0;
   padding: 0;
   background: none;
-  color: var(--accent);
+  color: var(--muted);
   font: inherit;
   cursor: pointer;
-  text-decoration: underline;
-  text-underline-offset: 0.14em;
+  text-decoration: none;
 }
 
 .save-status-sync:hover,
 .save-status-sync:focus-visible {
-  color: var(--accent-strong);
+  color: var(--muted);
+  opacity: 0.82;
   outline: none;
 }
 
