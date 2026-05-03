@@ -111,12 +111,12 @@ body::before {
 }
 
 .app-shell {
-  width: min(1360px, calc(100% - 32px));
-  margin: 0 auto;
+  width: 100%;
+  margin: 0;
   height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 18px 0 16px;
+  padding: 18px 16px 16px;
   overflow: hidden;
 }
 
@@ -1082,9 +1082,10 @@ h1 {
 
 @media (max-width: 640px) {
   .app-shell {
-    width: min(100% - 20px, 1360px);
     padding-top: 20px;
     padding-bottom: 16px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
 
   .panel-header,
