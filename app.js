@@ -56,9 +56,9 @@ const cloudProviderSelect = document.querySelector("#cloud-provider-select");
 const cloudPollIntervalSelect = document.querySelector("#cloud-poll-interval-select");
 const cloudAutoSyncInput = document.querySelector("#cloud-auto-sync-input");
 const cloudSyncTranslationsInput = document.querySelector("#cloud-sync-translations-input");
-const cloudVisibleFolderInput = document.querySelector("#cloud-visible-folder-input");
 const cloudStatusInput = document.querySelector("#cloud-status-input");
 const cloudLastSyncInput = document.querySelector("#cloud-last-sync-input");
+const providerSettingsContainer = document.querySelector("#provider-settings-container");
 const googleConnectButton = document.querySelector("#google-connect-button");
 const googleDisconnectButton = document.querySelector("#google-disconnect-button");
 const googleSyncNowButton = document.querySelector("#google-sync-now-button");
@@ -95,6 +95,10 @@ const activeProvider = window.GoogleDriveProvider ?? {
   connect: () => Promise.reject(new Error("No storage provider configured.")),
   disconnect: () => {},
   attemptSilentReconnect: () => Promise.reject(new Error("No storage provider configured.")),
+  getSettingsFields: () => [],
+  getSettingsValues: () => ({}),
+  applySettingChange: () => ({}),
+  getLocationLabel: () => "",
   upload: () => Promise.reject(new Error("No storage provider configured.")),
   download: () => Promise.reject(new Error("No storage provider configured."))
 };
@@ -145,13 +149,13 @@ const cloudSyncSettings = {
   autoSync: true,
   pollIntervalSeconds: 60,
   syncTranslations: false,
-  useVisibleDriveFolder: false,
   status: "Not connected",
   lastSyncAt: null,
   connectedEmail: "",
   remoteWorkspaceFileId: "",
   remoteWorkspaceParentId: "",
-  lastError: ""
+  lastError: "",
+  providerSettings: {}
 };
 
 const normalizeCloudSyncSettings = (value = {}) => ({
@@ -159,13 +163,15 @@ const normalizeCloudSyncSettings = (value = {}) => ({
   autoSync: typeof value.autoSync === "boolean" ? value.autoSync : true,
   pollIntervalSeconds: Number(value.pollIntervalSeconds) || 60,
   syncTranslations: typeof value.syncTranslations === "boolean" ? value.syncTranslations : false,
-  useVisibleDriveFolder: typeof value.useVisibleDriveFolder === "boolean" ? value.useVisibleDriveFolder : false,
   status: typeof value.status === "string" && value.status ? value.status : "Not connected",
   lastSyncAt: typeof value.lastSyncAt === "string" ? value.lastSyncAt : null,
   connectedEmail: typeof value.connectedEmail === "string" ? value.connectedEmail : "",
   remoteWorkspaceFileId: typeof value.remoteWorkspaceFileId === "string" ? value.remoteWorkspaceFileId : "",
   remoteWorkspaceParentId: typeof value.remoteWorkspaceParentId === "string" ? value.remoteWorkspaceParentId : "",
-  lastError: typeof value.lastError === "string" ? value.lastError : ""
+  lastError: typeof value.lastError === "string" ? value.lastError : "",
+  providerSettings: value.providerSettings && typeof value.providerSettings === "object" && !Array.isArray(value.providerSettings)
+    ? value.providerSettings
+    : {}
 });
 
 const getCurrentTranslation = () => translationLibrary[currentTranslationCode];
@@ -492,6 +498,27 @@ const resetTransientCloudSessionState = () => {
 const restoreCloudSyncSettings = async () => {
   const savedSettings = await readStoredValue(cloudSyncStorageKey);
   Object.assign(cloudSyncSettings, normalizeCloudSyncSettings(savedSettings));
+
+  const providerId = activeProvider.id;
+  const defaults = activeProvider.getSettingsValues();
+
+  if (!cloudSyncSettings.providerSettings[providerId]) {
+    cloudSyncSettings.providerSettings[providerId] = { ...defaults };
+  } else {
+    cloudSyncSettings.providerSettings[providerId] = {
+      ...defaults,
+      ...cloudSyncSettings.providerSettings[providerId]
+    };
+  }
+
+  if (
+    typeof savedSettings?.useVisibleDriveFolder === "boolean" &&
+    !("useVisibleDriveFolder" in cloudSyncSettings.providerSettings[providerId])
+  ) {
+    cloudSyncSettings.providerSettings[providerId].useVisibleDriveFolder =
+      savedSettings.useVisibleDriveFolder;
+  }
+
   resetTransientCloudSessionState();
   persistCloudSyncSettings();
 };
@@ -550,8 +577,19 @@ const buildCloudSyncPayload = () => ({
   }
 });
 
+const getActiveProviderSettings = () => ({
+  ...cloudSyncSettings.providerSettings[activeProvider.id],
+  remoteWorkspaceFileId: cloudSyncSettings.remoteWorkspaceFileId,
+  remoteWorkspaceParentId: cloudSyncSettings.remoteWorkspaceParentId
+});
+
 const getCloudTargetLabel = () =>
-  cloudSyncSettings.useVisibleDriveFolder ? "visible Drive folder" : "hidden app storage";
+  activeProvider.getLocationLabel(cloudSyncSettings.providerSettings[activeProvider.id] ?? {});
+
+const buildProviderStatusLabel = () => {
+  const suffix = getCloudTargetLabel();
+  return suffix ? `${activeProvider.displayName} (${suffix})` : activeProvider.displayName;
+};
 
 const applyCloudPayload = (payload) => {
   if (payload.workspace) {
@@ -660,11 +698,7 @@ const pullFromCloud = async () => {
   console.log("[CloudSync] Starting pull from cloud...");
 
   try {
-    const result = await activeProvider.download({
-      useVisibleDriveFolder: cloudSyncSettings.useVisibleDriveFolder,
-      remoteWorkspaceFileId: cloudSyncSettings.remoteWorkspaceFileId,
-      remoteWorkspaceParentId: cloudSyncSettings.remoteWorkspaceParentId
-    });
+    const result = await activeProvider.download(getActiveProviderSettings());
 
     if (result.remoteWorkspaceFileId !== cloudSyncSettings.remoteWorkspaceFileId ||
         result.remoteWorkspaceParentId !== cloudSyncSettings.remoteWorkspaceParentId) {
@@ -786,22 +820,18 @@ const syncWorkspaceToCloud = async ({ reason = "manual" } = {}) => {
   syncInFlightPromise = (async () => {
     try {
       cloudSyncSettings.status = reason === "idle"
-        ? `Syncing changes to ${activeProvider.displayName} (${getCloudTargetLabel()})...`
-        : `Syncing to ${activeProvider.displayName} (${getCloudTargetLabel()})...`;
+        ? `Syncing changes to ${buildProviderStatusLabel()}...`
+        : `Syncing to ${buildProviderStatusLabel()}...`;
       cloudSyncSettings.lastError = "";
       persistCloudSyncSettings();
       renderSettings();
 
-      const result = await activeProvider.upload(buildCloudSyncPayload(), {
-        useVisibleDriveFolder: cloudSyncSettings.useVisibleDriveFolder,
-        remoteWorkspaceFileId: cloudSyncSettings.remoteWorkspaceFileId,
-        remoteWorkspaceParentId: cloudSyncSettings.remoteWorkspaceParentId
-      });
+      const result = await activeProvider.upload(buildCloudSyncPayload(), getActiveProviderSettings());
 
       cloudSyncSettings.remoteWorkspaceFileId = result.remoteWorkspaceFileId;
       cloudSyncSettings.remoteWorkspaceParentId = result.remoteWorkspaceParentId;
       cloudSyncSettings.lastSyncAt = new Date().toISOString();
-      cloudSyncSettings.status = `Connected to ${activeProvider.displayName} (${getCloudTargetLabel()})`;
+      cloudSyncSettings.status = `Connected to ${buildProviderStatusLabel()}`;
       cloudSyncSettings.lastError = "";
       persistCloudSyncSettings();
       renderSettings();
@@ -858,7 +888,7 @@ const connectCloud = async () => {
   try {
     const { email } = await activeProvider.connect();
     cloudSyncSettings.connectedEmail = email;
-    cloudSyncSettings.status = `Connected to ${activeProvider.displayName} (${getCloudTargetLabel()})`;
+    cloudSyncSettings.status = `Connected to ${buildProviderStatusLabel()}`;
     cloudSyncSettings.lastError = "";
     persistCloudSyncSettings();
     renderSettings();
@@ -900,7 +930,7 @@ const reconnectCloud = async () => {
     activeProvider.ensureTokenClient();
     const { email } = await activeProvider.attemptSilentReconnect();
     cloudSyncSettings.connectedEmail = email;
-    cloudSyncSettings.status = `Connected to ${activeProvider.displayName} (${getCloudTargetLabel()})`;
+    cloudSyncSettings.status = `Connected to ${buildProviderStatusLabel()}`;
     cloudSyncSettings.lastError = "";
     persistCloudSyncSettings();
     renderSettings();
@@ -1953,6 +1983,58 @@ const renderNoteManager = () => {
     });
 };
 
+const renderProviderSettings = () => {
+  providerSettingsContainer.innerHTML = "";
+  const fields = activeProvider.getSettingsFields();
+
+  if (!fields.length) {
+    return;
+  }
+
+  const currentValues = cloudSyncSettings.providerSettings[activeProvider.id] ?? {};
+  const grid = document.createElement("div");
+  grid.className = "display-field-grid";
+
+  fields.forEach((field) => {
+    const label = document.createElement("label");
+
+    const span = document.createElement("span");
+    span.textContent = field.label;
+
+    if (field.type === "checkbox") {
+      label.className = "field checkbox-field";
+      const input = document.createElement("input");
+      input.type = "checkbox";
+      input.dataset.providerSettingKey = field.key;
+      input.checked = Boolean(currentValues[field.key] ?? false);
+      label.append(span, input);
+    } else if (field.type === "select") {
+      label.className = "field";
+      const select = document.createElement("select");
+      select.dataset.providerSettingKey = field.key;
+      (field.options ?? []).forEach((option) => {
+        const opt = document.createElement("option");
+        opt.value = option.value;
+        opt.textContent = option.label;
+        select.append(opt);
+      });
+      select.value = String(currentValues[field.key] ?? "");
+      label.append(span, select);
+    } else {
+      label.className = "field";
+      const input = document.createElement("input");
+      input.type = "text";
+      input.dataset.providerSettingKey = field.key;
+      input.value = String(currentValues[field.key] ?? "");
+      label.append(span, input);
+    }
+
+    grid.append(label);
+  });
+
+  providerSettingsContainer.append(grid);
+};
+
 const renderSettings = () => {
   settingsTabNav.innerHTML = "";
   settingsTabs.forEach((tab) => {
@@ -1972,7 +2054,7 @@ const renderSettings = () => {
   cloudPollIntervalSelect.value = String(cloudSyncSettings.pollIntervalSeconds);
   cloudAutoSyncInput.checked = cloudSyncSettings.autoSync;
   cloudSyncTranslationsInput.checked = cloudSyncSettings.syncTranslations;
-  cloudVisibleFolderInput.checked = cloudSyncSettings.useVisibleDriveFolder;
+  renderProviderSettings();
   cloudStatusInput.value = buildCloudStatusText();
   cloudLastSyncInput.value = formatSyncTimestamp(cloudSyncSettings.lastSyncAt);
   const hasConnectedDriveSession = activeProvider.hasActiveSession();
@@ -2672,14 +2754,22 @@ cloudSyncTranslationsInput.addEventListener("change", () => {
   scheduleAutoCloudSync();
 });
 
-const handleVisibleFolderToggle = () => {
-  cloudSyncSettings.useVisibleDriveFolder = cloudVisibleFolderInput.checked;
-  cloudSyncSettings.remoteWorkspaceFileId = "";
-  cloudSyncSettings.remoteWorkspaceParentId = "";
-  cloudSyncSettings.lastError = "";
-  if (activeProvider.hasActiveSession()) {
-    cloudSyncSettings.status = `Connected to ${activeProvider.displayName} (${getCloudTargetLabel()})`;
+const handleProviderSettingChange = (key, value) => {
+  const currentSettings = cloudSyncSettings.providerSettings[activeProvider.id] ?? {};
+  currentSettings[key] = value;
+  cloudSyncSettings.providerSettings[activeProvider.id] = currentSettings;
+
+  const result = activeProvider.applySettingChange(key, value);
+
+  if (result?.clearRemoteState) {
+    cloudSyncSettings.remoteWorkspaceFileId = "";
+    cloudSyncSettings.remoteWorkspaceParentId = "";
+    cloudSyncSettings.lastError = "";
+    if (activeProvider.hasActiveSession()) {
+      cloudSyncSettings.status = `Connected to ${buildProviderStatusLabel()}`;
+    }
   }
+
   persistCloudSyncSettings();
   cloudStatusInput.value = buildCloudStatusText();
   cloudLastSyncInput.value = formatSyncTimestamp(cloudSyncSettings.lastSyncAt);
@@ -2687,8 +2777,20 @@ const handleVisibleFolderToggle = () => {
   refreshSaveStatus();
 };
 
-cloudVisibleFolderInput.addEventListener("input", handleVisibleFolderToggle);
-cloudVisibleFolderInput.addEventListener("change", handleVisibleFolderToggle);
+const handleProviderSettingInputEvent = (event) => {
+  const input = event.target.closest("[data-provider-setting-key]");
+
+  if (!input) {
+    return;
+  }
+
+  const key = input.dataset.providerSettingKey;
+  const value = input.type === "checkbox" ? input.checked : input.value;
+  handleProviderSettingChange(key, value);
+};
+
+providerSettingsContainer.addEventListener("input", handleProviderSettingInputEvent);
+providerSettingsContainer.addEventListener("change", handleProviderSettingInputEvent);
 
 googleConnectButton.addEventListener("click", async () => {
   try {

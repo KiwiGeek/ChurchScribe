@@ -37,6 +37,36 @@
  *     Resolves with { email } on success. Throws if the user is not already signed in
  *     or if a silent reconnect has already been attempted this session.
  *
+ *   getSettingsFields(): SettingsField[]
+ *     Returns the list of user-configurable settings fields for this provider.
+ *     The settings window uses these descriptors to build its UI dynamically.
+ *     SettingsField: {
+ *       key: string          — unique identifier scoped to this provider
+ *       label: string        — human-readable label shown in the UI
+ *       type: "checkbox" | "text" | "select"
+ *       options?: Array<{ value: string, label: string }>   — for type "select" only
+ *       helpText?: string    — optional description rendered below the field
+ *     }
+ *
+ *   getSettingsValues(): Record<string, unknown>
+ *     Returns the default (or current) values for every field returned by
+ *     getSettingsFields(). app.js calls this to seed the providerSettings store
+ *     on first run and to fill in any missing keys after an upgrade.
+ *
+ *   applySettingChange(key: string, value: unknown): ProviderSettingChangeResult
+ *     Called by app.js whenever the user changes a provider-specific setting.
+ *     The provider may update internal state here. The return value tells app.js
+ *     what side effects to apply.
+ *     ProviderSettingChangeResult: {
+ *       clearRemoteState?: boolean  — if true, app.js clears the cached remote
+ *                                     file/folder IDs and the lastError string
+ *     }
+ *
+ *   getLocationLabel(settings: Record<string, unknown>): string
+ *     Returns a short human-readable description of where the workspace file is
+ *     stored for the given provider settings (e.g. "visible Drive folder").
+ *     Returns an empty string when no extra label is needed.
+ *
  *   upload(payload: object, settings: ProviderSettings): Promise<ProviderResult>
  *     Saves payload to the remote workspace file.
  *     Returns the (possibly updated) file/folder identifiers.
@@ -46,9 +76,9 @@
  *     Returns the parsed data (null if no file exists yet) and the identifiers.
  *
  * ProviderSettings:
- *   useVisibleDriveFolder: boolean   — store in the user-visible "ChurchScribe" folder
- *   remoteWorkspaceFileId: string    — cached file ID (empty string if unknown)
- *   remoteWorkspaceParentId: string  — cached parent folder ID (empty string if unknown)
+ *   [providerKey: string]: unknown  — provider-specific settings (from getSettingsValues)
+ *   remoteWorkspaceFileId: string   — cached file ID (empty string if unknown)
+ *   remoteWorkspaceParentId: string — cached parent folder ID (empty string if unknown)
  *
  * ProviderResult:
  *   remoteWorkspaceFileId: string
@@ -359,6 +389,30 @@
     }
   };
 
+  const getSettingsFields = () => [
+    {
+      key: "useVisibleDriveFolder",
+      label: "Visible Drive Folder",
+      type: "checkbox",
+      helpText: "Store files in a user-visible \"ChurchScribe\" folder in Google Drive instead of hidden app storage. Useful for debugging."
+    }
+  ];
+
+  const getSettingsValues = () => ({
+    useVisibleDriveFolder: false
+  });
+
+  const applySettingChange = (key) => {
+    if (key === "useVisibleDriveFolder") {
+      return { clearRemoteState: true };
+    }
+
+    return {};
+  };
+
+  const getLocationLabel = (settings) =>
+    settings.useVisibleDriveFolder ? "visible Drive folder" : "hidden app storage";
+
   window.GoogleDriveProvider = {
     id: "google-drive",
     displayName: "Google Drive",
@@ -369,6 +423,10 @@
     connect,
     disconnect,
     attemptSilentReconnect,
+    getSettingsFields,
+    getSettingsValues,
+    applySettingChange,
+    getLocationLabel,
     upload,
     download
   };
