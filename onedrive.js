@@ -253,18 +253,20 @@
     return response.json();
   };
 
-  // Note: fetches at most 1000 items per request (1 settings file + up to ~999
-  // note files). If this limit is exceeded, older note files will be silently
-  // omitted from the listing, which could cause those notes to be deleted on
-  // the next upload. Implement Graph API pagination via @odata.nextLink before
-  // approaching this limit.
+  // Lists every item in the app's special OneDrive folder (approot) by
+  // following @odata.nextLink pages until all results have been collected.
   const listAppRootItems = async () => {
+    const items = [];
+
     try {
-      const response = await apiFetch(
-        `${GRAPH_BASE}/me/drive/special/approot/children?$select=id,name&$top=1000`
-      );
-      const data = await response.json();
-      return data.value ?? [];
+      let url = `${GRAPH_BASE}/me/drive/special/approot/children?$select=id,name&$top=1000`;
+
+      while (url) {
+        const response = await apiFetch(url);
+        const data = await response.json();
+        items.push(...(data.value ?? []));
+        url = data["@odata.nextLink"] ?? null;
+      }
     } catch (error) {
       if (error.status === 404) {
         return [];
@@ -272,6 +274,8 @@
 
       throw error;
     }
+
+    return items;
   };
 
   const deleteFile = async (fileId) => {
