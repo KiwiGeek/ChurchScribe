@@ -85,7 +85,23 @@ const translationStorageKey = "service-notes-translation";
 const cloudSyncStorageKey = "service-notes-cloud-sync";
 const autoCloudSyncDelayMs = 10000;
 
-const activeProvider = window.GoogleDriveProvider;
+const activeProvider = window.GoogleDriveProvider ?? {
+  id: "none",
+  displayName: "Cloud Storage",
+  isAvailable: () => false,
+  hasActiveSession: () => false,
+  ensureTokenClient: () => {},
+  waitForReady: () => {},
+  connect: () => Promise.reject(new Error("No storage provider configured.")),
+  disconnect: () => {},
+  attemptSilentReconnect: () => Promise.reject(new Error("No storage provider configured.")),
+  upload: () => Promise.reject(new Error("No storage provider configured.")),
+  download: () => Promise.reject(new Error("No storage provider configured."))
+};
+
+if (!window.GoogleDriveProvider) {
+  console.error("No storage provider registered. Ensure a provider script (e.g. gdrive.js) is loaded before app.js.");
+}
 
 const bookAliasMap = new Map();
 let explicitScriptureReferencePattern;
@@ -466,7 +482,7 @@ const resetTransientCloudSessionState = () => {
   cloudSyncSettings.connectedEmail = "";
 
   if (
-    cloudSyncSettings.status.startsWith("Connected to Google Drive") ||
+    cloudSyncSettings.status.startsWith("Connected to") ||
     cloudSyncSettings.status.startsWith("Syncing")
   ) {
     cloudSyncSettings.status = "Not connected";
@@ -487,7 +503,7 @@ const buildCloudStatusText = () => {
 
   if (
     cloudSyncSettings.status &&
-    cloudSyncSettings.status !== "Connected to Google Drive" &&
+    !cloudSyncSettings.status.startsWith("Connected to") &&
     cloudSyncSettings.status !== "Not connected"
   ) {
     return cloudSyncSettings.status;
@@ -495,10 +511,6 @@ const buildCloudStatusText = () => {
 
   if (cloudSyncSettings.connectedEmail) {
     return `Connected as ${cloudSyncSettings.connectedEmail}`;
-  }
-
-  if (cloudSyncSettings.status === "Connected to Google Drive") {
-    return "Connected to Google Drive";
   }
 
   return cloudSyncSettings.status;
@@ -774,8 +786,8 @@ const syncWorkspaceToCloud = async ({ reason = "manual" } = {}) => {
   syncInFlightPromise = (async () => {
     try {
       cloudSyncSettings.status = reason === "idle"
-        ? `Syncing changes to Google Drive (${getCloudTargetLabel()})...`
-        : `Syncing to Google Drive (${getCloudTargetLabel()})...`;
+        ? `Syncing changes to ${activeProvider.displayName} (${getCloudTargetLabel()})...`
+        : `Syncing to ${activeProvider.displayName} (${getCloudTargetLabel()})...`;
       cloudSyncSettings.lastError = "";
       persistCloudSyncSettings();
       renderSettings();
@@ -789,7 +801,7 @@ const syncWorkspaceToCloud = async ({ reason = "manual" } = {}) => {
       cloudSyncSettings.remoteWorkspaceFileId = result.remoteWorkspaceFileId;
       cloudSyncSettings.remoteWorkspaceParentId = result.remoteWorkspaceParentId;
       cloudSyncSettings.lastSyncAt = new Date().toISOString();
-      cloudSyncSettings.status = `Connected to Google Drive (${getCloudTargetLabel()})`;
+      cloudSyncSettings.status = `Connected to ${activeProvider.displayName} (${getCloudTargetLabel()})`;
       cloudSyncSettings.lastError = "";
       persistCloudSyncSettings();
       renderSettings();
@@ -799,7 +811,7 @@ const syncWorkspaceToCloud = async ({ reason = "manual" } = {}) => {
     } catch (error) {
       console.error("[CloudSync] Upload failed:", error);
       const errorMessage = error.message || "Unknown cloud sync error.";
-      cloudSyncSettings.status = `Google Drive sync failed: ${errorMessage}`;
+      cloudSyncSettings.status = `${activeProvider.displayName} sync failed: ${errorMessage}`;
       cloudSyncSettings.lastError = errorMessage;
       persistCloudSyncSettings();
       renderSettings();
@@ -846,7 +858,7 @@ const connectCloud = async () => {
   try {
     const { email } = await activeProvider.connect();
     cloudSyncSettings.connectedEmail = email;
-    cloudSyncSettings.status = `Connected to Google Drive (${getCloudTargetLabel()})`;
+    cloudSyncSettings.status = `Connected to ${activeProvider.displayName} (${getCloudTargetLabel()})`;
     cloudSyncSettings.lastError = "";
     persistCloudSyncSettings();
     renderSettings();
@@ -888,7 +900,7 @@ const reconnectCloud = async () => {
     activeProvider.ensureTokenClient();
     const { email } = await activeProvider.attemptSilentReconnect();
     cloudSyncSettings.connectedEmail = email;
-    cloudSyncSettings.status = `Connected to Google Drive (${getCloudTargetLabel()})`;
+    cloudSyncSettings.status = `Connected to ${activeProvider.displayName} (${getCloudTargetLabel()})`;
     cloudSyncSettings.lastError = "";
     persistCloudSyncSettings();
     renderSettings();
@@ -2666,7 +2678,7 @@ const handleVisibleFolderToggle = () => {
   cloudSyncSettings.remoteWorkspaceParentId = "";
   cloudSyncSettings.lastError = "";
   if (activeProvider.hasActiveSession()) {
-    cloudSyncSettings.status = `Connected to Google Drive (${getCloudTargetLabel()})`;
+    cloudSyncSettings.status = `Connected to ${activeProvider.displayName} (${getCloudTargetLabel()})`;
   }
   persistCloudSyncSettings();
   cloudStatusInput.value = buildCloudStatusText();

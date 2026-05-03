@@ -10,6 +10,9 @@
  *   id: string
  *     A unique identifier for this provider (e.g. "google-drive").
  *
+ *   displayName: string
+ *     A human-readable name for the provider shown in status messages (e.g. "Google Drive").
+ *
  *   isAvailable(): boolean
  *     Returns true when the provider SDK has finished loading and is ready to use.
  *
@@ -358,6 +361,7 @@
 
   window.GoogleDriveProvider = {
     id: "google-drive",
+    displayName: "Google Drive",
     isAvailable,
     hasActiveSession,
     ensureTokenClient,
