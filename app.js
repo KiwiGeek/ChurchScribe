@@ -60,10 +60,15 @@ const addMetadataFieldButton = document.querySelector("#add-metadata-field-butto
 const deleteTypeButton = document.querySelector("#delete-type-button");
 const overflowMenu = document.querySelector(".overflow-menu");
 const syncConflictDialog = document.querySelector("#sync-conflict-dialog");
+const conflictDialogTitle = document.querySelector("#conflict-dialog-title");
+const conflictDialogDescription = document.querySelector("#conflict-dialog-description");
 const conflictLocalTime = document.querySelector("#conflict-local-time");
 const conflictRemoteTime = document.querySelector("#conflict-remote-time");
 const conflictKeepLocalButton = document.querySelector("#conflict-keep-local-button");
 const conflictUseCloudButton = document.querySelector("#conflict-use-cloud-button");
+const firstSyncKeepLocalButton = document.querySelector("#first-sync-keep-local-button");
+const firstSyncUseCloudButton = document.querySelector("#first-sync-use-cloud-button");
+const firstSyncCancelButton = document.querySelector("#first-sync-cancel-button");
 
 const dbName = "churchscribe-db";
 const dbVersion = 1;
@@ -921,7 +926,7 @@ const hasLocalChangesSinceLastSync = () => {
   );
 };
 
-const showSyncConflictDialog = (remotePayload) => new Promise((resolve) => {
+const showSyncConflictDialog = (remotePayload, mode = "conflict") => new Promise((resolve) => {
   const mostRecentNote = workspace.notes.reduce(
     (latest, note) => (!latest || new Date(note.updatedAt) > new Date(latest.updatedAt) ? note : latest),
     null
@@ -934,6 +939,18 @@ const showSyncConflictDialog = (remotePayload) => new Promise((resolve) => {
     : "Timestamp unavailable";
 
   console.log(`[CloudSync] Showing conflict dialog — local: ${localTime}, cloud: ${remoteTime}`);
+
+  const isFirstSync = mode === "first-sync";
+
+  if (isFirstSync) {
+    conflictDialogTitle.textContent = "Existing Cloud Data Found";
+    conflictDialogDescription.textContent = "This provider already contains a workspace. Choose how you want to proceed.";
+    syncConflictDialog.classList.add("is-first-sync");
+  } else {
+    conflictDialogTitle.textContent = "Sync Conflict Detected";
+    conflictDialogDescription.textContent = "Your local data and the cloud copy have both been changed since the last sync. Choose which version to keep.";
+    syncConflictDialog.classList.remove("is-first-sync");
+  }
 
   conflictLocalTime.textContent = localTime;
   conflictRemoteTime.textContent = remoteTime;
@@ -951,18 +968,39 @@ const showSyncConflictDialog = (remotePayload) => new Promise((resolve) => {
   };
 
   const handleCancel = (event) => {
-    event.preventDefault();
+    if (isFirstSync) {
+      console.log("[CloudSync] User cancelled first-sync dialog.");
+      cleanup();
+      resolve("cancel");
+    } else {
+      event.preventDefault();
+    }
+  };
+
+  const handleFirstSyncCancel = () => {
+    console.log("[CloudSync] User chose: not now.");
+    cleanup();
+    resolve("cancel");
   };
 
   const cleanup = () => {
     conflictKeepLocalButton.removeEventListener("click", handleKeepLocal);
     conflictUseCloudButton.removeEventListener("click", handleUseCloud);
+    firstSyncKeepLocalButton.removeEventListener("click", handleKeepLocal);
+    firstSyncUseCloudButton.removeEventListener("click", handleUseCloud);
+    firstSyncCancelButton.removeEventListener("click", handleFirstSyncCancel);
     syncConflictDialog.removeEventListener("cancel", handleCancel);
     syncConflictDialog.close();
   };
 
-  conflictKeepLocalButton.addEventListener("click", handleKeepLocal);
-  conflictUseCloudButton.addEventListener("click", handleUseCloud);
+  if (isFirstSync) {
+    firstSyncKeepLocalButton.addEventListener("click", handleKeepLocal);
+    firstSyncUseCloudButton.addEventListener("click", handleUseCloud);
+    firstSyncCancelButton.addEventListener("click", handleFirstSyncCancel);
+  } else {
+    conflictKeepLocalButton.addEventListener("click", handleKeepLocal);
+    conflictUseCloudButton.addEventListener("click", handleUseCloud);
+  }
   syncConflictDialog.addEventListener("cancel", handleCancel);
   syncConflictDialog.showModal();
 });
@@ -1003,15 +1041,8 @@ const pullFromCloud = async () => {
     const remotePayload = result.data;
 
     if (!remotePayload) {
-      console.log("[CloudSync] No remote file found.");
-
-      if (hasLocalCloudData()) {
-        console.log("[CloudSync] Local data exists with no cloud copy; triggering initial upload.");
-        void syncWorkspaceToCloud({ reason: "initial" });
-      } else {
-        console.log("[CloudSync] No local data to upload; nothing to do.");
-      }
-
+      console.log("[CloudSync] No remote file found; uploading local workspace.");
+      void syncWorkspaceToCloud({ reason: "initial" });
       return;
     }
 
@@ -1032,9 +1063,8 @@ const pullFromCloud = async () => {
     let resolution;
 
     if (!lastSyncAt) {
-      const hasData = hasLocalCloudData();
-      console.log(`[CloudSync] First sync — local has data: ${hasData}. ${hasData ? "Showing conflict dialog." : "Auto-applying remote."}`);
-      resolution = hasData ? await showSyncConflictDialog(remotePayload) : "remote";
+      console.log("[CloudSync] First sync — showing first-sync dialog.");
+      resolution = await showSyncConflictDialog(remotePayload, "first-sync");
     } else if (localHasChanges) {
       console.log("[CloudSync] Both sides changed since last sync — showing conflict dialog.");
       resolution = await showSyncConflictDialog(remotePayload);
@@ -1061,6 +1091,9 @@ const pullFromCloud = async () => {
       renderSettings();
       refreshSaveStatus();
       console.log("[CloudSync] Remote data applied successfully.");
+    } else if (resolution === "cancel") {
+      console.log("[CloudSync] User deferred first-sync decision; disconnecting provider.");
+      disconnectCloud();
     } else {
       console.log("[CloudSync] Keeping local data; scheduling upload to overwrite cloud.");
       void syncWorkspaceToCloud({ reason: "conflict-keep-local" });
@@ -3873,11 +3906,12 @@ cloudProviderSelect.addEventListener("change", () => {
   cloudSyncSettings.provider = newProviderId;
   activeProvider = providerRegistry[newProviderId] ?? noOpProvider;
 
-  // Remote file/folder IDs are provider-specific and must not carry over between providers.
+  // Remote file/folder IDs and sync timestamps are provider-specific and must not carry over.
   cloudSyncSettings.remoteSettingsFileId = "";
   cloudSyncSettings.remoteNoteFileIds = {};
   cloudSyncSettings.remoteWorkspaceFileId = "";
   cloudSyncSettings.remoteWorkspaceParentId = "";
+  cloudSyncSettings.lastSyncAt = null;
 
   const defaults = activeProvider.getSettingsValues();
 
