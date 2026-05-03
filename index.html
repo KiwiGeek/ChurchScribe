@@ -362,6 +362,20 @@
           <button class="ghost-button" id="conflict-keep-local-button" type="button">Keep local data</button>
           <button class="ghost-button" id="conflict-use-cloud-button" type="button">Use cloud data</button>
         </div>
+        <div class="first-sync-actions" id="first-sync-actions">
+          <button class="first-sync-option" id="first-sync-keep-local-button" type="button">
+            <strong class="first-sync-option-title">Upload My Workspace</strong>
+            <span class="first-sync-option-desc">Replace the cloud workspace with your local data. The existing cloud workspace will be permanently overwritten.</span>
+          </button>
+          <button class="first-sync-option" id="first-sync-use-cloud-button" type="button">
+            <strong class="first-sync-option-title">Download Cloud Workspace</strong>
+            <span class="first-sync-option-desc">Replace your local workspace with the data stored in the cloud. Your local workspace will be permanently overwritten.</span>
+          </button>
+          <button class="first-sync-option first-sync-option--cancel" id="first-sync-cancel-button" type="button">
+            <strong class="first-sync-option-title">Not Now</strong>
+            <span class="first-sync-option-desc">Keep both workspaces unchanged. You can decide how to sync them later from Settings.</span>
+          </button>
+        </div>
       </div>
     </div>
   </dialog>
