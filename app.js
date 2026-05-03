@@ -124,7 +124,6 @@ const bookAliasMap = new Map();
 let explicitScriptureReferencePattern;
 let fullExplicitScriptureReferencePattern;
 let contextualScriptureReferencePattern;
-const autoUrlPattern = /\bhttps?:\/\/[^\s<>"')\]]+/gi;
 let activeScriptureFocus = null;
 let currentTranslationCode = "KJV";
 let activeTypeEditorId = null;
@@ -2044,6 +2043,7 @@ const unwrapAutoUrlLinks = () => {
 };
 
 const linkifyUrls = () => {
+  const urlPattern = /\bhttps?:\/\/[^\s<>"'\)\]]+/gi;
   const caretOffset = getCaretTextOffset(noteEditor);
   unwrapAutoUrlLinks();
   const walker = document.createTreeWalker(
@@ -2073,8 +2073,7 @@ const linkifyUrls = () => {
 
   textNodes.forEach((textNode) => {
     const sourceText = textNode.nodeValue;
-    autoUrlPattern.lastIndex = 0;
-    const matches = [...sourceText.matchAll(autoUrlPattern)];
+    const matches = [...sourceText.matchAll(urlPattern)];
 
     if (!matches.length) {
       return;
