@@ -76,6 +76,10 @@
  *     Fetches the remote settings file and all remote note files.
  *     Returns the parsed data (null if no file exists yet) and the identifiers.
  *
+ *   clearRemote(): Promise<void>
+ *     Deletes all ChurchScribe files from the remote storage location.
+ *     Throws if no active session exists or if the deletion fails.
+ *
  * ProviderSettings:
  *   [providerKey: string]: unknown  — provider-specific settings (from getSettingsValues)
  *   remoteSettingsFileId: string    — cached settings file ID (empty string if unknown)
@@ -485,6 +489,33 @@
 
   const getLocationLabel = () => "";
 
+  const clearRemote = async () => {
+    if (!accessToken) {
+      throw new Error("Not connected to Google Drive.");
+    }
+
+    try {
+      const location = resolveLocation();
+      const settingsQuery = `name='${settingsFileName}' and 'appDataFolder' in parents and trashed=false`;
+      const [settingsFileId, noteFiles] = await Promise.all([
+        findFileId("", location, settingsQuery),
+        listNoteFiles(location)
+      ]);
+      const allFileIds = [
+        ...(settingsFileId ? [settingsFileId] : []),
+        ...noteFiles.map((f) => f.id)
+      ];
+
+      await Promise.all(
+        allFileIds.map((id) =>
+          apiFetch(`https://www.googleapis.com/drive/v3/files/${id}`, { method: "DELETE" })
+        )
+      );
+    } catch (error) {
+      throw new Error(parseErrorMessage(error));
+    }
+  };
+
   window.GoogleDriveProvider = {
     id: "google-drive",
     displayName: "Google Drive",
@@ -500,6 +531,7 @@
     applySettingChange,
     getLocationLabel,
     upload,
-    download
+    download,
+    clearRemote
   };
 })();

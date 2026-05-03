@@ -294,6 +294,23 @@
 
   const getLocationLabel = () => directoryHandle !== null ? directoryHandle.name : "";
 
+  const clearRemote = async () => {
+    if (!directoryHandle) {
+      throw new Error("No local folder selected.");
+    }
+
+    const noteFiles = await listNoteFiles();
+
+    await Promise.all([
+      ...noteFiles.map((fileName) => directoryHandle.removeEntry(fileName)),
+      directoryHandle.removeEntry(SETTINGS_FILENAME).catch((error) => {
+        if (error.name !== "NotFoundError") {
+          throw error;
+        }
+      })
+    ]);
+  };
+
   window.LocalDriveProvider = {
     id: "local-drive",
     displayName: "Local Drive",
@@ -309,6 +326,7 @@
     applySettingChange,
     getLocationLabel,
     upload,
-    download
+    download,
+    clearRemote
   };
 })();
