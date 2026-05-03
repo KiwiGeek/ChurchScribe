@@ -2365,7 +2365,7 @@ const renderUiSettings = (container) => {
   toggleRow.className = "ui-toggle-row";
 
   const themeModeField = document.createElement("label");
-  themeModeField.className = "field compact-field ui-theme-mode-field";
+  themeModeField.className = "ui-inline-select";
 
   const themeModeLabel = document.createElement("span");
   themeModeLabel.textContent = "Theme mode";
