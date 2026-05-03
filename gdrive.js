@@ -26,15 +26,15 @@
  *     Polls until isAvailable() is true, then calls onReady().
  *
  *   connect(): Promise<{ email: string }>
- *     Runs the full authentication/consent flow and resolves with the signed-in
- *     user's email address. Throws on failure.
+ *     Runs the full authentication/consent flow and resolves with an empty email
+ *     string (email/profile scopes are not requested). Throws on failure.
  *
  *   disconnect(): void
  *     Signs out and clears all in-memory session state.
  *
  *   attemptSilentReconnect(): Promise<{ email: string }>
  *     Tries to re-authenticate without showing a consent prompt (e.g. on page load).
- *     Resolves with { email } on success. Throws if the user is not already signed in
+ *     Resolves with { email: "" } on success. Throws if the user is not already signed in
  *     or if a silent reconnect has already been attempted this session.
  *
  *   getSettingsFields(): SettingsField[]
@@ -87,12 +87,7 @@
 (() => {
   const clientId = "711830335817-2enpiqrmso0sqgq2fnh8o4ef4r60ede0.apps.googleusercontent.com";
   const workspaceFileName = "churchscribe-workspace.json";
-  const scopes = [
-    "openid",
-    "email",
-    "profile",
-    "https://www.googleapis.com/auth/drive.appdata"
-  ].join(" ");
+  const scopes = "https://www.googleapis.com/auth/drive.appdata";
 
   let tokenClient = null;
   let accessToken = null;
@@ -183,19 +178,6 @@
     return payload.files?.[0]?.id ?? "";
   };
 
-  const fetchUserEmail = async () => {
-    const response = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
-      headers: { Authorization: `Bearer ${accessToken}` }
-    });
-
-    if (!response.ok) {
-      throw new Error("Unable to load Google account information.");
-    }
-
-    const data = await response.json();
-    return data.email ?? "";
-  };
-
   const ensureTokenClient = () => {
     if (!isAvailable() || tokenClient) {
       return;
@@ -221,20 +203,14 @@
   const connect = () => new Promise((resolve, reject) => {
     ensureTokenClient();
 
-    tokenClient.callback = async (tokenResponse) => {
+    tokenClient.callback = (tokenResponse) => {
       if (tokenResponse.error) {
         reject(new Error(tokenResponse.error));
         return;
       }
 
-      try {
-        accessToken = tokenResponse.access_token;
-        const email = await fetchUserEmail().catch(() => "");
-        resolve({ email });
-      } catch (error) {
-        accessToken = null;
-        reject(error);
-      }
+      accessToken = tokenResponse.access_token;
+      resolve({ email: "" });
     };
 
     tokenClient.requestAccessToken({ prompt: "consent" });
@@ -259,20 +235,14 @@
     return new Promise((resolve, reject) => {
       ensureTokenClient();
 
-      tokenClient.callback = async (tokenResponse) => {
+      tokenClient.callback = (tokenResponse) => {
         if (tokenResponse.error) {
           reject(new Error(tokenResponse.error));
           return;
         }
 
-        try {
-          accessToken = tokenResponse.access_token;
-          const email = await fetchUserEmail().catch(() => "");
-          resolve({ email });
-        } catch (error) {
-          accessToken = null;
-          reject(error);
-        }
+        accessToken = tokenResponse.access_token;
+        resolve({ email: "" });
       };
 
       tokenClient.requestAccessToken({ prompt: "none" });
