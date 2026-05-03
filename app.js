@@ -139,6 +139,8 @@ let activeProvider = noOpProvider;
 const bookAliasMap = new Map();
 const domainValidationCache = new Map();
 const MIN_EMBED_WIDTH = 240;
+const EDITOR_HORIZONTAL_PADDING = 40;
+const BLOCK_LEVEL_ELEMENTS = "p, h2, h3, h4, h5, h6, li, blockquote";
 const knownTlds = [
   "ac","ad","ae","af","ag","ai","al","am","ao","ar","as","at","au","aw","az",
   "ba","bb","bd","be","bf","bg","bh","bi","bj","bm","bn","bo","br","bs","bt","bw","by","bz",
@@ -2194,7 +2196,7 @@ const processYouTubeEmbeds = () => {
       return;
     }
 
-    const block = link.closest("p, h2, h3, h4, h5, h6, li, blockquote");
+    const block = link.closest(BLOCK_LEVEL_ELEMENTS);
 
     if (!block) {
       return;
@@ -3918,7 +3920,7 @@ noteEditor.addEventListener("mousedown", (event) => {
   const iframe = wrapper.querySelector(".youtube-embed-frame");
   const startX = event.clientX;
   const startWidth = wrapper.offsetWidth;
-  const maxWidth = noteEditor.clientWidth - 40;
+  const maxWidth = noteEditor.clientWidth - EDITOR_HORIZONTAL_PADDING;
 
   iframe.style.pointerEvents = "none";
   document.body.style.cursor = "ew-resize";
