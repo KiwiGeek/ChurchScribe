@@ -69,25 +69,31 @@
  *     Returns an empty string when no extra label is needed.
  *
  *   upload(payload: object, settings: ProviderSettings): Promise<ProviderResult>
- *     Saves payload to the remote workspace file.
+ *     Saves payload to one remote settings file plus one remote file per note.
  *     Returns the (possibly updated) file/folder identifiers.
  *
  *   download(settings: ProviderSettings): Promise<{ data: object | null } & ProviderResult>
- *     Fetches the remote workspace file.
+ *     Fetches the remote settings file and all remote note files.
  *     Returns the parsed data (null if no file exists yet) and the identifiers.
  *
  * ProviderSettings:
  *   [providerKey: string]: unknown  — provider-specific settings (from getSettingsValues)
- *   remoteWorkspaceFileId: string   — cached file ID (empty string if unknown)
+ *   remoteSettingsFileId: string    — cached settings file ID (empty string if unknown)
+ *   remoteNoteFileIds: Record<string, string> — cached note file IDs by note ID
+ *   remoteWorkspaceFileId: string   — unused legacy field
  *   remoteWorkspaceParentId: string — cached parent folder ID (empty string if unknown)
  *
  * ProviderResult:
+ *   remoteSettingsFileId: string
+ *   remoteNoteFileIds: Record<string, string>
  *   remoteWorkspaceFileId: string
  *   remoteWorkspaceParentId: string
  */
 (() => {
   const clientId = "711830335817-2enpiqrmso0sqgq2fnh8o4ef4r60ede0.apps.googleusercontent.com";
-  const workspaceFileName = "churchscribe-workspace.json";
+  const settingsFileName = "churchscribe-settings.json";
+  const noteFilePrefix = "churchscribe-note-";
+  const noteFileSuffix = ".json";
   const scopes = "https://www.googleapis.com/auth/drive.appdata";
 
   let tokenClient = null;
@@ -162,22 +168,43 @@
   const resolveLocation = () => ({
     spaces: "appDataFolder",
     parents: ["appDataFolder"],
-    query: `name='${workspaceFileName}' and 'appDataFolder' in parents and trashed=false`,
     remoteWorkspaceParentId: ""
   });
 
-  const findWorkspaceFileId = async (cachedFileId, location) => {
+  const getNoteFileName = (noteId) => `${noteFilePrefix}${noteId}${noteFileSuffix}`;
+
+  const getNoteIdFromFileName = (fileName) =>
+    fileName.startsWith(noteFilePrefix) && fileName.endsWith(noteFileSuffix)
+      ? fileName.slice(noteFilePrefix.length, -noteFileSuffix.length)
+      : "";
+
+  const findFileId = async (cachedFileId, location, query) => {
     if (cachedFileId) {
       return cachedFileId;
     }
 
-    const query = encodeURIComponent(location.query);
+    const encodedQuery = encodeURIComponent(query);
     const response = await apiFetch(
-      `https://www.googleapis.com/drive/v3/files?q=${query}&spaces=${location.spaces}&fields=files(id,name)`
+      `https://www.googleapis.com/drive/v3/files?q=${encodedQuery}&spaces=${location.spaces}&fields=files(id,name)`
     );
     const payload = await response.json();
     return payload.files?.[0]?.id ?? "";
   };
+
+  const listFiles = async (location, query) => {
+    const encodedQuery = encodeURIComponent(query);
+    const response = await apiFetch(
+      `https://www.googleapis.com/drive/v3/files?q=${encodedQuery}&spaces=${location.spaces}&fields=files(id,name)`
+    );
+    const payload = await response.json();
+    return payload.files ?? [];
+  };
+
+  const listNoteFiles = async (location) =>
+    listFiles(
+      location,
+      `name contains '${noteFilePrefix}' and 'appDataFolder' in parents and trashed=false`
+    );
 
   const fetchUserEmail = async () => {
     const response = await apiFetch(
@@ -270,85 +297,181 @@
     });
   };
 
-  const upload = async (payload, { remoteWorkspaceFileId, remoteWorkspaceParentId }) => {
+  const upsertJsonFile = async ({ fileId, name, parents }, payload) => {
+    if (fileId) {
+      try {
+        const multipart = buildMultipartJsonBody({ mimeType: "application/json" }, payload);
+        await apiFetch(
+          `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=multipart&fields=id`,
+          {
+            method: "PATCH",
+            headers: { "Content-Type": multipart.contentType },
+            body: multipart.body
+          }
+        );
+        return fileId;
+      } catch (error) {
+        if (error.status !== 404) {
+          throw error;
+        }
+      }
+    }
+
+    const multipart = buildMultipartJsonBody(
+      {
+        name,
+        parents,
+        mimeType: "application/json"
+      },
+      payload
+    );
+    const createResponse = await apiFetch(
+      "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id",
+      {
+        method: "POST",
+        headers: { "Content-Type": multipart.contentType },
+        body: multipart.body
+      }
+    );
+    const responsePayload = await createResponse.json();
+    return responsePayload.id ?? "";
+  };
+
+  const readJsonFile = async (fileId) => {
+    const response = await apiFetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`);
+    return response.json();
+  };
+
+  const upload = async (payload, { remoteSettingsFileId, remoteNoteFileIds = {} }) => {
     try {
       const location = resolveLocation();
       const updatedParentId = location.remoteWorkspaceParentId;
-      let fileId = await findWorkspaceFileId(remoteWorkspaceFileId, location);
+      const settingsQuery = `name='${settingsFileName}' and 'appDataFolder' in parents and trashed=false`;
+      const existingSettingsFileId = await findFileId(remoteSettingsFileId, location, settingsQuery);
+      const nextSettingsFileId = await upsertJsonFile(
+        {
+          fileId: existingSettingsFileId,
+          name: settingsFileName,
+          parents: location.parents
+        },
+        payload.settings
+      );
 
-      if (fileId) {
-        try {
-          const multipart = buildMultipartJsonBody({ mimeType: "application/json" }, payload);
-          await apiFetch(
-            `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=multipart&fields=id`,
-            {
-              method: "PATCH",
-              headers: { "Content-Type": multipart.contentType },
-              body: multipart.body
-            }
-          );
+      const existingNoteFiles = await listNoteFiles(location);
+      const existingNoteFileByName = new Map(existingNoteFiles.map((file) => [file.name, file.id]));
+      const desiredNoteFileNames = new Set();
+      const nextNoteFileIds = {};
 
-          return { remoteWorkspaceFileId: fileId, remoteWorkspaceParentId: updatedParentId };
-        } catch (patchError) {
-          if (patchError.status !== 404) {
-            throw patchError;
+      for (const note of payload.notes.notes) {
+        const fileName = getNoteFileName(note.id);
+        desiredNoteFileNames.add(fileName);
+        const fileId = await upsertJsonFile(
+          {
+            fileId: remoteNoteFileIds[note.id] || existingNoteFileByName.get(fileName) || "",
+            name: fileName,
+            parents: location.parents
+          },
+          {
+            version: 2,
+            updatedAt: payload.updatedAt,
+            note
           }
-
-          // The cached file ID no longer exists — fall through to create a new one.
-          fileId = "";
-        }
+        );
+        nextNoteFileIds[note.id] = fileId;
       }
 
-      const multipart = buildMultipartJsonBody(
-        {
-          name: workspaceFileName,
-          parents: location.parents,
-          mimeType: "application/json"
-        },
-        payload
+      await Promise.all(
+        existingNoteFiles
+          .filter((file) => !desiredNoteFileNames.has(file.name))
+          .map((file) => apiFetch(`https://www.googleapis.com/drive/v3/files/${file.id}`, { method: "DELETE" }))
       );
-      const createResponse = await apiFetch(
-        "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id",
-        {
-          method: "POST",
-          headers: { "Content-Type": multipart.contentType },
-          body: multipart.body
-        }
-      );
-      const responsePayload = await createResponse.json();
-      fileId = responsePayload.id ?? "";
 
-      return { remoteWorkspaceFileId: fileId, remoteWorkspaceParentId: updatedParentId };
+      return {
+        remoteSettingsFileId: nextSettingsFileId,
+        remoteNoteFileIds: nextNoteFileIds,
+        remoteWorkspaceFileId: "",
+        remoteWorkspaceParentId: updatedParentId
+      };
     } catch (error) {
       throw new Error(parseErrorMessage(error));
     }
   };
 
-  const download = async ({ remoteWorkspaceFileId }) => {
+  const download = async ({ remoteSettingsFileId }) => {
     try {
       const location = resolveLocation();
       const updatedParentId = location.remoteWorkspaceParentId;
-      const fileId = await findWorkspaceFileId(remoteWorkspaceFileId, location);
+      const settingsQuery = `name='${settingsFileName}' and 'appDataFolder' in parents and trashed=false`;
+      let settingsFileId = await findFileId(remoteSettingsFileId, location, settingsQuery);
+      const noteFiles = await listNoteFiles(location);
 
-      if (!fileId) {
-        return { data: null, remoteWorkspaceFileId: "", remoteWorkspaceParentId: updatedParentId };
+      if (!settingsFileId && !noteFiles.length) {
+        return {
+          data: null,
+          remoteSettingsFileId: "",
+          remoteNoteFileIds: {},
+          remoteWorkspaceFileId: "",
+          remoteWorkspaceParentId: updatedParentId
+        };
       }
 
-      try {
-        const response = await apiFetch(
-          `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`
-        );
-        const data = await response.json();
+      let settingsPayload = {};
 
-        return { data, remoteWorkspaceFileId: fileId, remoteWorkspaceParentId: updatedParentId };
-      } catch (getError) {
-        if (getError.status !== 404) {
-          throw getError;
+      if (settingsFileId) {
+        try {
+          settingsPayload = await readJsonFile(settingsFileId);
+        } catch (error) {
+          if (error.status !== 404) {
+            throw error;
+          }
+
+          settingsFileId = "";
+        }
+      }
+
+      const notePayloads = await Promise.all(
+        noteFiles.map(async (file) => {
+          const payload = await readJsonFile(file.id);
+          return { file, payload };
+        })
+      );
+
+      const notes = [];
+      const nextNoteFileIds = {};
+      const timestamps = [];
+
+      if (settingsPayload.updatedAt) {
+        timestamps.push(settingsPayload.updatedAt);
+      }
+
+      for (const { file, payload } of notePayloads) {
+        const noteId = getNoteIdFromFileName(file.name) || payload.note?.id || payload.id;
+        const note = payload.note ?? payload;
+
+        if (!noteId || !note) {
+          continue;
         }
 
-        // The cached file ID no longer exists — treat as no file present.
-        return { data: null, remoteWorkspaceFileId: "", remoteWorkspaceParentId: updatedParentId };
+        nextNoteFileIds[noteId] = file.id;
+        notes.push(note);
+        timestamps.push(payload.updatedAt ?? note.updatedAt);
       }
+
+      const latestUpdatedAt = timestamps
+        .filter(Boolean)
+        .sort((left, right) => new Date(right) - new Date(left))[0] ?? null;
+
+      return {
+        data: {
+          ...settingsPayload,
+          updatedAt: latestUpdatedAt,
+          notes
+        },
+        remoteSettingsFileId: settingsFileId,
+        remoteNoteFileIds: nextNoteFileIds,
+        remoteWorkspaceFileId: "",
+        remoteWorkspaceParentId: updatedParentId
+      };
     } catch (error) {
       throw new Error(parseErrorMessage(error));
     }
