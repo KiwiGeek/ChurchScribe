@@ -149,6 +149,7 @@ const bookAliasMap = new Map();
 const domainValidationCache = new Map();
 const MIN_EMBED_WIDTH = 240;
 const EDITOR_HORIZONTAL_PADDING = 40;
+const DEFAULT_IMAGE_EMBED_WIDTH = 400;
 const BLOCK_LEVEL_ELEMENTS = "p, h2, h3, h4, h5, h6, li, blockquote";
 const knownTlds = [
   "ac","ad","ae","af","ag","ai","al","am","ao","ar","as","at","au","aw","az",
@@ -2263,7 +2264,7 @@ const createYouTubeEmbed = (videoId, width = 560) => {
   return outerDiv;
 };
 
-const createImageEmbed = (src, width = 400) => {
+const createImageEmbed = (src, width = DEFAULT_IMAGE_EMBED_WIDTH) => {
   const outerDiv = document.createElement("div");
   outerDiv.className = "image-embed";
   outerDiv.dataset.imageEmbed = "true";
@@ -2296,7 +2297,7 @@ const createImageEmbed = (src, width = 400) => {
   return outerDiv;
 };
 
-const insertImageAtCaret = (src, width = 400) => {
+const insertImageAtCaret = (src, width = DEFAULT_IMAGE_EMBED_WIDTH) => {
   noteEditor.focus();
   const embed = createImageEmbed(src, width);
   const emptyParagraph = document.createElement("p");
