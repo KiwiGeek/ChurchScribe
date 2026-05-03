@@ -67,6 +67,11 @@ const addMetadataFieldButton = document.querySelector("#add-metadata-field-butto
 const deleteTypeButton = document.querySelector("#delete-type-button");
 const newNoteMenu = document.querySelector("#new-note-menu");
 const overflowMenu = document.querySelector(".overflow-menu");
+const syncConflictDialog = document.querySelector("#sync-conflict-dialog");
+const conflictLocalTime = document.querySelector("#conflict-local-time");
+const conflictRemoteTime = document.querySelector("#conflict-remote-time");
+const conflictKeepLocalButton = document.querySelector("#conflict-keep-local-button");
+const conflictUseCloudButton = document.querySelector("#conflict-use-cloud-button");
 
 const dbName = "churchscribe-db";
 const dbVersion = 1;
@@ -96,6 +101,8 @@ let googleAccessToken = null;
 let pendingAutoSyncTimer = null;
 let syncInFlightPromise = null;
 let silentReconnectAttempted = false;
+let isPullInFlight = false;
+let cloudPollTimer = null;
 
 const googleDriveScopes = [
   "openid",
@@ -736,6 +743,177 @@ const uploadWorkspaceToGoogleDrive = async () => {
   return fileId;
 };
 
+const downloadWorkspaceFromGoogleDrive = async () => {
+  const fileId = await findDriveWorkspaceFileId();
+
+  if (!fileId) {
+    return null;
+  }
+
+  const response = await googleApiFetch(
+    `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`
+  );
+
+  return response.json();
+};
+
+const applyCloudPayload = (payload) => {
+  if (payload.workspace) {
+    Object.assign(workspace, payload.workspace);
+  }
+
+  if (payload.preferences) {
+    if (payload.preferences.theme) {
+      applyTheme(payload.preferences.theme);
+      void writeStoredValue(themeStorageKey, payload.preferences.theme);
+    }
+
+    if (payload.preferences.paneOrder) {
+      applyPaneOrder(payload.preferences.paneOrder);
+      void writeStoredValue(paneOrderStorageKey, payload.preferences.paneOrder);
+    }
+
+    if (payload.preferences.translation) {
+      applyTranslation(payload.preferences.translation);
+      void writeStoredValue(translationStorageKey, payload.preferences.translation);
+    }
+  }
+
+  ensureWorkspaceConsistency();
+  buildBookAliasMap();
+  renderWorkspace();
+  void writeStoredValue(workspaceStorageKey, structuredClone(workspace));
+};
+
+const hasLocalNoteData = () =>
+  workspace.notes.some((note) => note.content || Object.values(note.metadata).some(Boolean));
+
+const hasLocalChangesSinceLastSync = () => {
+  if (!cloudSyncSettings.lastSyncAt) {
+    return hasLocalNoteData();
+  }
+
+  const lastSync = new Date(cloudSyncSettings.lastSyncAt);
+
+  return workspace.notes.some((note) => new Date(note.updatedAt) > lastSync);
+};
+
+const showSyncConflictDialog = (remotePayload) => new Promise((resolve) => {
+  const mostRecentNote = workspace.notes.reduce(
+    (latest, note) => (!latest || new Date(note.updatedAt) > new Date(latest.updatedAt) ? note : latest),
+    null
+  );
+  const localTime = mostRecentNote
+    ? `Last modified ${new Date(mostRecentNote.updatedAt).toLocaleString()}`
+    : "No local notes";
+  const remoteTime = remotePayload.updatedAt
+    ? new Date(remotePayload.updatedAt).toLocaleString()
+    : "Timestamp unavailable";
+
+  conflictLocalTime.textContent = localTime;
+  conflictRemoteTime.textContent = remoteTime;
+
+  const handleKeepLocal = () => {
+    cleanup();
+    resolve("local");
+  };
+
+  const handleUseCloud = () => {
+    cleanup();
+    resolve("remote");
+  };
+
+  const handleCancel = (event) => {
+    event.preventDefault();
+  };
+
+  const cleanup = () => {
+    conflictKeepLocalButton.removeEventListener("click", handleKeepLocal);
+    conflictUseCloudButton.removeEventListener("click", handleUseCloud);
+    syncConflictDialog.removeEventListener("cancel", handleCancel);
+    syncConflictDialog.close();
+  };
+
+  conflictKeepLocalButton.addEventListener("click", handleKeepLocal);
+  conflictUseCloudButton.addEventListener("click", handleUseCloud);
+  syncConflictDialog.addEventListener("cancel", handleCancel);
+  syncConflictDialog.showModal();
+});
+
+const pullFromCloud = async () => {
+  if (!hasActiveGoogleDriveSession() || syncInFlightPromise || isPullInFlight) {
+    return;
+  }
+
+  isPullInFlight = true;
+
+  try {
+    const remotePayload = await downloadWorkspaceFromGoogleDrive();
+
+    if (!remotePayload) {
+      return;
+    }
+
+    const remoteUpdatedAt = remotePayload.updatedAt ? new Date(remotePayload.updatedAt) : null;
+    const lastSyncAt = cloudSyncSettings.lastSyncAt ? new Date(cloudSyncSettings.lastSyncAt) : null;
+
+    if (lastSyncAt && remoteUpdatedAt && remoteUpdatedAt <= lastSyncAt) {
+      return;
+    }
+
+    const localHasChanges = hasLocalChangesSinceLastSync();
+    let resolution;
+
+    if (!lastSyncAt) {
+      resolution = hasLocalNoteData() ? await showSyncConflictDialog(remotePayload) : "remote";
+    } else if (localHasChanges) {
+      resolution = await showSyncConflictDialog(remotePayload);
+    } else {
+      resolution = "remote";
+    }
+
+    if (resolution === "remote") {
+      applyCloudPayload(remotePayload);
+
+      if (remotePayload.updatedAt) {
+        cloudSyncSettings.lastSyncAt = remotePayload.updatedAt;
+      } else {
+        console.warn("Remote payload is missing updatedAt timestamp; unable to update last sync time. Sync state may be inconsistent.");
+      }
+
+      cloudSyncSettings.lastError = "";
+      persistCloudSyncSettings();
+      renderSettings();
+      refreshSaveStatus();
+    } else {
+      void syncWorkspaceToCloud({ reason: "conflict-keep-local" });
+    }
+  } catch (error) {
+    console.error("Cloud pull failed:", error);
+  } finally {
+    isPullInFlight = false;
+  }
+};
+
+const stopCloudPolling = () => {
+  if (cloudPollTimer) {
+    window.clearInterval(cloudPollTimer);
+    cloudPollTimer = null;
+  }
+};
+
+const startCloudPolling = () => {
+  stopCloudPolling();
+
+  if (!cloudSyncSettings.autoSync || !hasActiveGoogleDriveSession()) {
+    return;
+  }
+
+  cloudPollTimer = window.setInterval(() => {
+    void pullFromCloud();
+  }, cloudSyncSettings.pollIntervalSeconds * 1000);
+};
+
 const syncWorkspaceToCloud = async ({ reason = "manual" } = {}) => {
   if (!hasActiveGoogleDriveSession()) {
     cloudSyncSettings.status = "Connect Google Drive first.";
@@ -826,9 +1004,10 @@ const finalizeGoogleDriveConnection = async (accessToken, { triggerInitialSync =
   cloudSyncSettings.lastError = "";
   persistCloudSyncSettings();
   renderSettings();
+  startCloudPolling();
 
   if (triggerInitialSync) {
-    void syncWorkspaceToCloud({ reason: "connect" });
+    void pullFromCloud();
   }
 };
 
@@ -931,10 +1110,13 @@ const disconnectGoogleDrive = () => {
   }
 
   googleAccessToken = null;
+  stopCloudPolling();
+
   if (pendingAutoSyncTimer) {
     window.clearTimeout(pendingAutoSyncTimer);
     pendingAutoSyncTimer = null;
   }
+
   resetTransientCloudSessionState();
   persistCloudSyncSettings();
   renderSettings();
@@ -2687,15 +2869,22 @@ cloudPollIntervalSelect.addEventListener("change", () => {
   cloudSyncSettings.pollIntervalSeconds = Number(cloudPollIntervalSelect.value);
   persistCloudSyncSettings();
   scheduleAutoCloudSync();
+  startCloudPolling();
 });
 
 cloudAutoSyncInput.addEventListener("change", () => {
   cloudSyncSettings.autoSync = cloudAutoSyncInput.checked;
   persistCloudSyncSettings();
 
-  if (!cloudSyncSettings.autoSync && pendingAutoSyncTimer) {
-    window.clearTimeout(pendingAutoSyncTimer);
-    pendingAutoSyncTimer = null;
+  if (cloudSyncSettings.autoSync) {
+    startCloudPolling();
+  } else {
+    stopCloudPolling();
+
+    if (pendingAutoSyncTimer) {
+      window.clearTimeout(pendingAutoSyncTimer);
+      pendingAutoSyncTimer = null;
+    }
   }
 });
 
@@ -2736,6 +2925,7 @@ googleDisconnectButton.addEventListener("click", () => {
 });
 
 googleSyncNowButton.addEventListener("click", async () => {
+  await pullFromCloud();
   await syncWorkspaceToCloud({ reason: "manual" });
 });
 
