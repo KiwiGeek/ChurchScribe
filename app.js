@@ -1018,9 +1018,11 @@ const scheduleAutoCloudSync = () => {
     window.clearTimeout(pendingAutoSyncTimer);
   }
 
-  pendingAutoSyncTimer = window.setTimeout(() => {
+  pendingAutoSyncTimer = window.setTimeout(async () => {
     pendingAutoSyncTimer = null;
-    void syncWorkspaceToCloud({ reason: "idle" });
+    console.log("[CloudSync] Idle auto-sync fired; checking for remote changes before uploading...");
+    await pullFromCloud();
+    await syncWorkspaceToCloud({ reason: "idle" });
   }, autoCloudSyncDelayMs);
 };
 
