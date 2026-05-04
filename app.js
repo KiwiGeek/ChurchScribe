@@ -1877,8 +1877,32 @@ const applyTranslation = (translationCode) => {
 
 const MAX_SCRIPTURE_SEARCH_RESULTS = 100;
 
-const buildHighlightedTextContent = (text, terms) => {
-  const pattern = new RegExp(`(${terms.map(escapeRegExp).join("|")})`, "gi");
+// Parse a search query into bare-word terms and quoted phrases.
+// e.g. `"Lord God" grace` → { terms: ["grace"], phrases: ["lord god"] }
+const parseSearchQuery = (query) => {
+  const terms = [];
+  const phrases = [];
+  const lower = query.trim().toLowerCase();
+  const regex = /"([^"]+)"|(\S+)/g;
+
+  for (const match of lower.matchAll(regex)) {
+    if (match[1]) {
+      phrases.push(match[1].trim());
+    } else if (match[2]) {
+      terms.push(match[2]);
+    }
+  }
+
+  return { terms, phrases };
+};
+
+const buildHighlightedTextContent = (text, patterns) => {
+  if (!patterns.length) {
+    return document.createTextNode(text);
+  }
+
+  // Phrases before bare words so the longer match wins in regex alternation.
+  const pattern = new RegExp(`(${patterns.map(escapeRegExp).join("|")})`, "gi");
   const fragment = document.createDocumentFragment();
   let lastIndex = 0;
 
