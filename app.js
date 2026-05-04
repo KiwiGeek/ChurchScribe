@@ -3,6 +3,10 @@ const translationLibrary = {
     label: "King James Version",
     books: window.KJV_BIBLE
   },
+  NKJV: {
+    label: "New King James Version",
+    books: window.NKJV_BIBLE
+  },
   ASV: {
     label: "American Standard Version",
     books: window.ASV_BIBLE
@@ -1771,7 +1775,42 @@ const renderChapter = () => {
   verseReference.textContent = `${selectedBook} ${chapter.chapter}`;
   chapterText.innerHTML = "";
 
+  if (chapter.heading) {
+    const headingEl = document.createElement("h3");
+    headingEl.className = "chapter-section-heading";
+    headingEl.textContent = chapter.heading;
+    chapterText.append(headingEl);
+  }
+
+  if (chapter.subheading) {
+    const subEl = document.createElement("h4");
+    subEl.className = "chapter-subheading";
+    subEl.textContent = chapter.subheading;
+    chapterText.append(subEl);
+  }
+
+  if (chapter.superscription) {
+    const supEl = document.createElement("p");
+    supEl.className = "chapter-superscription";
+    supEl.textContent = chapter.superscription;
+    chapterText.append(supEl);
+  }
+
   chapter.verses.forEach((verse) => {
+    if (verse.heading) {
+      const headingEl = document.createElement("h3");
+      headingEl.className = "chapter-section-heading";
+      headingEl.textContent = verse.heading;
+      chapterText.append(headingEl);
+    }
+
+    if (verse.subheading) {
+      const subEl = document.createElement("h4");
+      subEl.className = "chapter-subheading";
+      subEl.textContent = verse.subheading;
+      chapterText.append(subEl);
+    }
+
     const line = document.createElement("p");
     line.className = "chapter-verse";
     line.dataset.verse = String(verse.verse);
@@ -1787,7 +1826,7 @@ const renderChapter = () => {
     const text = document.createElement("span");
     text.className = "chapter-verse-text";
 
-    if (currentTranslationCode === "KJV" && typeof verse.html === "string") {
+    if (typeof verse.html === "string") {
       text.innerHTML = verse.html;
     } else {
       text.textContent = verse.text;
