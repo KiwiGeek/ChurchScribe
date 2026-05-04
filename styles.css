@@ -1547,10 +1547,63 @@ h1 {
   color: var(--text);
 }
 
+button.about-link--block {
+  width: 100%;
+  text-align: left;
+}
+
 .about-link-icon {
   width: 1em;
   height: 1em;
   flex-shrink: 0;
+}
+
+.onboarding-dialog {
+  width: min(760px, calc(100% - 24px));
+}
+
+.onboarding-layout {
+  display: grid;
+  gap: 16px;
+}
+
+.onboarding-copy {
+  margin-bottom: 0;
+  font-size: 1rem;
+}
+
+.onboarding-points {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: grid;
+  gap: 10px;
+  color: var(--text);
+}
+
+.onboarding-points li {
+  line-height: 1.5;
+}
+
+.onboarding-callout {
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--note-chip-border);
+  border-radius: var(--radius-md);
+  background: var(--note-chip-surface);
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.onboarding-actions {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.onboarding-progress {
+  color: var(--muted);
+  font-size: 0.92rem;
+  text-align: center;
 }
 
 .metadata-field-list,
