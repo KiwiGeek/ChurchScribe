@@ -5208,6 +5208,7 @@ noteEditor.addEventListener("contextmenu", (event) => {
   }
 
   event.preventDefault();
+  event.stopPropagation();
   focusTableCell(cell);
   openTableContextMenu(cell, event.clientX, event.clientY);
   refreshTableUi();
