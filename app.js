@@ -2852,6 +2852,28 @@ const unwrapAutoUrlLinks = () => {
   noteEditor.normalize();
 };
 
+const EMBED_SELECTOR = "[data-youtube-embed], [data-spotify-embed], [data-image-embed]";
+
+const ensureTrailingParagraph = () => {
+  const last = noteEditor.lastElementChild;
+
+  if (last && last.matches(EMBED_SELECTOR)) {
+    const p = document.createElement("p");
+    p.innerHTML = "<br>";
+    noteEditor.appendChild(p);
+  }
+};
+
+const ensureLeadingParagraph = () => {
+  const first = noteEditor.firstElementChild;
+
+  if (first && first.matches(EMBED_SELECTOR)) {
+    const p = document.createElement("p");
+    p.innerHTML = "<br>";
+    noteEditor.prepend(p);
+  }
+};
+
 const extractYouTubeVideoId = (url) => {
   try {
     const parsed = new URL(url);
@@ -3259,6 +3281,14 @@ const processImageFiles = (files) => {
   });
 };
 
+// Returns the nearest block-level ancestor of `link` that is a direct (or nested) child of
+// noteEditor, but never noteEditor itself.  Includes <div> because Chrome's contenteditable
+// wraps paragraphs in <div> elements by default.
+const findLinkBlock = (link) => {
+  const block = link.closest("p, div, h2, h3, h4, h5, h6, li, blockquote");
+  return (block && block !== noteEditor) ? block : null;
+};
+
 const processYouTubeEmbeds = () => {
   noteEditor.querySelectorAll("a[data-auto-url-link='true']").forEach((link) => {
     const videoId = extractYouTubeVideoId(link.href);
@@ -3267,7 +3297,7 @@ const processYouTubeEmbeds = () => {
       return;
     }
 
-    const block = link.closest(BLOCK_LEVEL_ELEMENTS);
+    const block = findLinkBlock(link);
 
     if (!block) {
       return;
@@ -3283,8 +3313,103 @@ const processYouTubeEmbeds = () => {
 
     const embed = createYouTubeEmbed(videoId);
     const emptyParagraph = document.createElement("p");
+    emptyParagraph.innerHTML = "<br>";
     block.replaceWith(embed, emptyParagraph);
   });
+
+  ensureTrailingParagraph();
+  ensureLeadingParagraph();
+};
+
+const SPOTIFY_EMBED_TYPES = new Set(["track", "album", "playlist", "artist", "episode", "show"]);
+
+const extractSpotifyEmbedInfo = (url) => {
+  try {
+    if (url.startsWith("spotify:")) {
+      const parts = url.split(":");
+
+      if (parts.length === 3 && SPOTIFY_EMBED_TYPES.has(parts[1])) {
+        return { type: parts[1], id: parts[2] };
+      }
+    }
+
+    const parsed = new URL(url);
+    const host = parsed.hostname.replace(/^www\./, "");
+
+    if (host === "open.spotify.com") {
+      const parts = parsed.pathname.split("/").filter(Boolean);
+
+      if (parts.length === 2 && SPOTIFY_EMBED_TYPES.has(parts[0])) {
+        return { type: parts[0], id: parts[1] };
+      }
+    }
+  } catch {
+    // invalid URL
+  }
+
+  return null;
+};
+
+const createSpotifyEmbed = ({ type, id }) => {
+  const outerDiv = document.createElement("div");
+  outerDiv.className = "spotify-embed";
+  outerDiv.dataset.spotifyEmbed = `${type}:${id}`;
+  outerDiv.contentEditable = "false";
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "spotify-embed-wrapper";
+
+  const iframe = document.createElement("iframe");
+  iframe.className = "spotify-embed-frame";
+  iframe.src = `https://open.spotify.com/embed/${encodeURIComponent(type)}/${encodeURIComponent(id)}?utm_source=generator`;
+  iframe.setAttribute("allow", "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture");
+  iframe.setAttribute("allowfullscreen", "");
+  iframe.setAttribute("loading", "lazy");
+  iframe.title = "Spotify player";
+
+  const deleteBtn = document.createElement("button");
+  deleteBtn.className = "spotify-embed-delete";
+  deleteBtn.type = "button";
+  deleteBtn.setAttribute("aria-label", "Remove Spotify embed");
+  deleteBtn.textContent = "✕";
+
+  wrapper.appendChild(iframe);
+  wrapper.appendChild(deleteBtn);
+  outerDiv.appendChild(wrapper);
+
+  return outerDiv;
+};
+
+const processSpotifyEmbeds = () => {
+  noteEditor.querySelectorAll("a[data-auto-url-link='true']").forEach((link) => {
+    const embedInfo = extractSpotifyEmbedInfo(link.href);
+
+    if (!embedInfo) {
+      return;
+    }
+
+    const block = findLinkBlock(link);
+
+    if (!block) {
+      return;
+    }
+
+    const cloned = block.cloneNode(true);
+    cloned.querySelectorAll("a").forEach((anchor) => anchor.remove());
+    const remainingText = cloned.textContent.trim();
+
+    if (remainingText) {
+      return;
+    }
+
+    const embed = createSpotifyEmbed(embedInfo);
+    const emptyParagraph = document.createElement("p");
+    emptyParagraph.innerHTML = "<br>";
+    block.replaceWith(embed, emptyParagraph);
+  });
+
+  ensureTrailingParagraph();
+  ensureLeadingParagraph();
 };
 
 const validateDomainWithDoh = async (domain) => {
@@ -3302,6 +3427,7 @@ const validateDomainWithDoh = async (domain) => {
     if (isValid) {
       linkifyUrls();
       processYouTubeEmbeds();
+      processSpotifyEmbeds();
     }
   } catch {
     domainValidationCache.set(domain, false);
@@ -3370,6 +3496,10 @@ const linkifyUrls = ({ suppressAtCaret = false } = {}) => {
         }
 
         if (node.parentElement?.closest("[data-image-embed]")) {
+          return NodeFilter.FILTER_REJECT;
+        }
+
+        if (node.parentElement?.closest("[data-spotify-embed]")) {
           return NodeFilter.FILTER_REJECT;
         }
 
@@ -3811,11 +3941,21 @@ const renderActiveNote = () => {
   renderMetadataSummary();
   renderNoteMetadataFields();
   noteEditor.innerHTML = activeNote.content;
+  // Trim browser-injected leading spacers first, then guarantee at least one
+  // block-level element.  The guard MUST come after trimming: for a blank note
+  // whose saved content is "<p><br></p>", the trim would remove that element
+  // and leave the editor empty — causing Chrome to inject content as bare text
+  // nodes or <div>s instead of <p>s, which breaks findLinkBlock and embed creation.
   trimEditorLeadingSpacerNodes();
+  if (!noteEditor.firstChild) {
+    noteEditor.innerHTML = "<p><br></p>";
+  }
   linkifyScriptureReferences();
   linkifyUrls();
   processYouTubeEmbeds();
+  processSpotifyEmbeds();
   refreshTableUi();
+  ensureTrailingParagraph();
 };
 
 const renderNoteManager = () => {
@@ -4612,7 +4752,6 @@ const saveActiveNote = () => {
     return;
   }
 
-  trimEditorLeadingSpacerNodes();
   activeNote.content = noteEditor.innerHTML;
   noteMetaFields.querySelectorAll("[data-field-id]").forEach((input) => {
     activeNote.metadata[input.dataset.fieldId] = input.value;
@@ -5195,42 +5334,169 @@ noteEditor.addEventListener("keydown", (event) => {
 });
 
 noteEditor.addEventListener("input", (event) => {
-  trimEditorLeadingSpacerNodes();
-
   if (event.inputType === "insertParagraph" || event.inputType === "insertLineBreak") {
+    // Save the browser's cursor position (in the newly-created empty paragraph) using a
+    // DOM Range rather than a plain text offset.  restoreCaretTextOffset() cannot find
+    // empty paragraphs (they contain no text nodes), so it would move the cursor back to
+    // the end of the previous paragraph's text — exactly the "cursor jumps" bug.
+    const sel = window.getSelection();
+    const savedContainer = sel.rangeCount ? sel.getRangeAt(0).startContainer : null;
+    const savedOffset   = sel.rangeCount ? sel.getRangeAt(0).startOffset   : 0;
+
+    // suppressAtCaret: false — after Enter the caret is in the *new* empty paragraph, whose
+    // global text offset happens to equal the end of the URL in the previous paragraph.
+    // Using true would therefore suppress that URL and prevent embed creation.
+    linkifyUrls({ suppressAtCaret: false });
+    processYouTubeEmbeds();
+    processSpotifyEmbeds();
+
+    // Restore cursor to the saved DOM position (the new empty paragraph).
+    // If processYouTubeEmbeds/processSpotifyEmbeds replaced the old paragraph with an embed,
+    // the new paragraph (savedContainer) is still in the DOM and the cursor is correct.
+    if (savedContainer && noteEditor.contains(savedContainer)) {
+      try {
+        const r = document.createRange();
+        r.setStart(savedContainer, savedOffset);
+        r.collapse(true);
+        sel.removeAllRanges();
+        sel.addRange(r);
+      } catch {
+        // Range became invalid (e.g. savedContainer was inside the replaced block); leave
+        // the cursor wherever the browser placed it.
+      }
+    }
+
     saveActiveNote();
     return;
   }
 
+  // Trim browser-injected leading whitespace/BR nodes that can appear during normal typing.
+  // This is intentionally NOT called from saveActiveNote: doing so would immediately remove
+  // any empty leading paragraph the user just created (e.g. by pressing Enter at position 0),
+  // making the Enter key appear broken at the start of a document.
+  trimEditorLeadingSpacerNodes();
+  // Defensive: if trim left the editor completely empty, re-seed it with an empty paragraph
+  // so Chrome wraps subsequent typing in <p> rather than bare text nodes.
+  if (!noteEditor.firstChild) {
+    const p = document.createElement("p");
+    p.innerHTML = "<br>";
+    noteEditor.appendChild(p);
+  }
   linkifyScriptureReferences({ jumpToCaretReference: true });
   linkifyUrls({ suppressAtCaret: event.inputType !== "insertFromPaste" });
   processYouTubeEmbeds();
+  processSpotifyEmbeds();
+
+  // If the cursor was orphaned because an embed replaced its containing block
+  // (e.g. user pressed Space after a lone URL), move it to the trailing empty paragraph.
+  // This also handles the case where Chrome updates the selection to point at noteEditor
+  // itself (rather than a detached node) when the host <p> is replaced by the embed.
+  {
+    const sel = window.getSelection();
+    const container = sel.rangeCount ? sel.getRangeAt(0).startContainer : null;
+
+    if (container && (!noteEditor.contains(container) || container === noteEditor)) {
+      const emptyPara = [...noteEditor.querySelectorAll("p")]
+        .findLast((p) => !p.textContent.trim());
+
+      if (emptyPara) {
+        const r = document.createRange();
+        r.setStart(emptyPara, 0);
+        r.collapse(true);
+        sel.removeAllRanges();
+        sel.addRange(r);
+      }
+    }
+  }
+
   saveActiveNote();
 });
 
 noteEditor.addEventListener("keydown", (event) => {
-  if (event.key !== "Backspace") {
-    return;
-  }
-
-  const autoLink = findAutoLinkAtCaret();
-
-  if (!autoLink) {
-    return;
-  }
-
-  event.preventDefault();
-  const textNode = document.createTextNode(autoLink.textContent);
-  autoLink.replaceWith(textNode);
-
-  const range = document.createRange();
-  range.setStart(textNode, textNode.textContent.length);
-  range.collapse(true);
-
   const selection = window.getSelection();
-  selection.removeAllRanges();
-  selection.addRange(range);
-  saveActiveNote();
+
+  if (!selection.rangeCount || !selection.isCollapsed) {
+    return;
+  }
+
+  const range = selection.getRangeAt(0);
+
+  // Helper: get the top-level block inside noteEditor that contains a node
+  const getEditorBlock = (node) => {
+    let el = node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
+
+    while (el && el.parentElement !== noteEditor) {
+      el = el.parentElement;
+    }
+
+    return el;
+  };
+
+  if (event.key === "Backspace") {
+    // --- Backspace over an embed immediately before the caret block ---
+    const block = getEditorBlock(range.startContainer);
+
+    if (block) {
+      const prevSibling = block.previousElementSibling;
+
+      if (prevSibling?.matches(EMBED_SELECTOR)) {
+        const blockRange = document.createRange();
+        blockRange.selectNodeContents(block);
+        const atBlockStart = range.compareBoundaryPoints(Range.START_TO_START, blockRange) === 0;
+
+        if (atBlockStart) {
+          event.preventDefault();
+          prevSibling.remove();
+          ensureTrailingParagraph();
+          saveActiveNote();
+          return;
+        }
+      }
+    }
+
+    // --- Original: Backspace collapses an auto-link ---
+    const autoLink = findAutoLinkAtCaret();
+
+    if (!autoLink) {
+      return;
+    }
+
+    event.preventDefault();
+    const textNode = document.createTextNode(autoLink.textContent);
+    autoLink.replaceWith(textNode);
+
+    const newRange = document.createRange();
+    newRange.setStart(textNode, textNode.textContent.length);
+    newRange.collapse(true);
+
+    selection.removeAllRanges();
+    selection.addRange(newRange);
+    saveActiveNote();
+    return;
+  }
+
+  if (event.key === "Delete") {
+    // --- Delete over an embed immediately after the caret block ---
+    const block = getEditorBlock(range.startContainer);
+
+    if (block) {
+      const nextSibling = block.nextElementSibling;
+
+      if (nextSibling?.matches(EMBED_SELECTOR)) {
+        const blockRange = document.createRange();
+        blockRange.selectNodeContents(block);
+        const atBlockEnd = range.compareBoundaryPoints(Range.START_TO_END, blockRange) === 0;
+
+        if (atBlockEnd) {
+          event.preventDefault();
+          nextSibling.remove();
+          ensureTrailingParagraph();
+          saveActiveNote();
+          return;
+        }
+      }
+    }
+  }
 });
 
 noteEditor.addEventListener("paste", (event) => {
@@ -5326,6 +5592,7 @@ noteEditor.addEventListener("click", (event) => {
 
     if (embed) {
       embed.remove();
+      ensureTrailingParagraph();
       saveActiveNote();
     }
 
@@ -5340,6 +5607,22 @@ noteEditor.addEventListener("click", (event) => {
 
     if (embed) {
       embed.remove();
+      ensureTrailingParagraph();
+      saveActiveNote();
+    }
+
+    return;
+  }
+
+  const spotifyDeleteBtn = event.target.closest(".spotify-embed-delete");
+
+  if (spotifyDeleteBtn) {
+    event.preventDefault();
+    const embed = spotifyDeleteBtn.closest("[data-spotify-embed]");
+
+    if (embed) {
+      embed.remove();
+      ensureTrailingParagraph();
       saveActiveNote();
     }
 
