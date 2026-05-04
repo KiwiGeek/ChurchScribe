@@ -72,6 +72,7 @@ const addTypeButton = document.querySelector("#add-type-button");
 const addMetadataFieldButton = document.querySelector("#add-metadata-field-button");
 const deleteTypeButton = document.querySelector("#delete-type-button");
 const overflowMenu = document.querySelector(".overflow-menu");
+const openOnboardingButton = document.querySelector("#open-onboarding-button");
 const syncConflictDialog = document.querySelector("#sync-conflict-dialog");
 const conflictDialogTitle = document.querySelector("#conflict-dialog-title");
 const conflictDialogDescription = document.querySelector("#conflict-dialog-description");
@@ -85,6 +86,16 @@ const firstSyncCancelButton = document.querySelector("#first-sync-cancel-button"
 const aboutVersionInfo = document.querySelector("#about-version-info");
 const mobileWarning = document.querySelector("#mobile-warning");
 const mobileWarningDismissButton = document.querySelector("#mobile-warning-dismiss");
+const onboardingDialog = document.querySelector("#onboarding-dialog");
+const onboardingStepKicker = document.querySelector("#onboarding-step-kicker");
+const onboardingStepTitle = document.querySelector("#onboarding-step-title");
+const onboardingStepCopy = document.querySelector("#onboarding-step-copy");
+const onboardingStepPoints = document.querySelector("#onboarding-step-points");
+const onboardingStepCallout = document.querySelector("#onboarding-step-callout");
+const onboardingProgress = document.querySelector("#onboarding-progress");
+const onboardingBackButton = document.querySelector("#onboarding-back-button");
+const onboardingNextButton = document.querySelector("#onboarding-next-button");
+const onboardingFinishButton = document.querySelector("#onboarding-finish-button");
 const insertTableButton = document.querySelector("#insert-table-button");
 const tableToolbar = document.querySelector("#table-toolbar");
 const tableDialog = document.querySelector("#table-dialog");
@@ -108,6 +119,7 @@ const translationStorageKey = "service-notes-translation";
 const cloudSyncStorageKey = "service-notes-cloud-sync";
 const colorThemeStorageKey = "service-notes-color-theme";
 const lastBookChapterStorageKey = "service-notes-last-book-chapter";
+const onboardingStorageKey = "service-notes-onboarding-seen";
 const autoCloudSyncDelayMs = 10000;
 
 const noOpProvider = {
@@ -204,6 +216,7 @@ let scriptureSearchQuery = "";
 let savedSelectionForTableInsert = null;
 let activeTableCell = null;
 let contextMenuTableCell = null;
+let activeOnboardingStepIndex = 0;
 let dbPromise;
 let pendingAutoSyncTimer = null;
 let syncInFlightPromise = null;
@@ -244,6 +257,64 @@ const settingsTabs = [
   {
     id: "about",
     label: "About"
+  }
+];
+
+const onboardingSteps = [
+  {
+    kicker: "Welcome",
+    title: "ChurchScribe keeps your notes on your device",
+    copy: "ChurchScribe is designed to feel lightweight and private. Your notes live in your browser on your own computer unless you explicitly connect an auxiliary storage provider.",
+    points: [
+      "Nothing is automatically sent to a server run by ChurchScribe.",
+      "You stay in control of when and where any backups or sync copies are created.",
+      "You can clear or export your workspace later from Settings if you ever need to."
+    ],
+    callout: "Good to know: the default experience is local-first and privacy-friendly."
+  },
+  {
+    kicker: "Taking Notes",
+    title: "The note editor works like a focused writing surface",
+    copy: "Each note is its own editable document. Use the toolbar for quick formatting, lists, headings, quotes, images, and tables while you capture sermon points, study notes, or prayer requests.",
+    points: [
+      "The main note area saves locally as you type.",
+      "Use the notes browser to jump between notes when your library grows.",
+      "Formatting is intentionally simple so you can stay in the flow during live note-taking."
+    ],
+    callout: "Tip: the app is optimized for desktop and tablet use, especially during active note-taking."
+  },
+  {
+    kicker: "Scripture Linking",
+    title: "Verse references are matched automatically",
+    copy: "When you type a Bible reference in your notes, ChurchScribe tries to recognize it and turn it into a clickable scripture link automatically.",
+    points: [
+      "Matched references can jump you straight to the passage in the Scripture pane.",
+      "Common abbreviations are supported, and you can fine-tune them in Settings.",
+      "Copying verses from the Scripture pane keeps useful formatting like emphasis where possible."
+    ],
+    callout: "If a book abbreviation is unusual in your church context, check the Scripture Abbreviations section in Settings."
+  },
+  {
+    kicker: "Note Types",
+    title: "Note types shape the details attached to each note",
+    copy: "ChurchScribe lets you define note types such as sermon notes, Bible studies, Sabbath School, or anything else you need. Each type can have its own metadata fields.",
+    points: [
+      "Use Settings → Note Types to add, rename, or adjust note types.",
+      "Metadata fields can be customized to match the information you track most often.",
+      "The note options dialog lets you switch a note to a different type when that actually matters."
+    ],
+    callout: "This is one of the app’s best customization points: shape the workspace around your ministry context."
+  },
+  {
+    kicker: "Make It Yours",
+    title: "Explore themes and optional cloud sync next",
+    copy: "Once the basics feel comfortable, check out the color themes and display settings, then consider connecting auxiliary storage if you want another copy of your notes outside this device.",
+    points: [
+      "Themes and layout settings can make the app feel much more personal.",
+      "Auxiliary storage is optional, but useful if you want backup or cross-device workflows.",
+      "You can reopen this tutorial any time from Settings → About."
+    ],
+    callout: "Recommended next steps: try a different theme, review your note types, and then decide whether cloud sync is worth setting up."
   }
 ];
 
@@ -4218,6 +4289,7 @@ const clearLocalWorkspace = async () => {
     deleteStoredValue(translationStorageKey),
     deleteStoredValue(colorThemeStorageKey),
     deleteStoredValue(lastBookChapterStorageKey),
+    deleteStoredValue(onboardingStorageKey),
     deleteStoredValue(notesStorageKey)
   ]);
 
@@ -4289,6 +4361,7 @@ const clearAllData = async () => {
     deleteStoredValue(translationStorageKey),
     deleteStoredValue(colorThemeStorageKey),
     deleteStoredValue(lastBookChapterStorageKey),
+    deleteStoredValue(onboardingStorageKey),
     deleteStoredValue(notesStorageKey)
   ]);
 
@@ -4475,6 +4548,37 @@ const renderWorkspace = () => {
 
   if (settingsDialog.open) {
     renderSettings();
+  }
+};
+
+const renderOnboardingStep = () => {
+  const step = onboardingSteps[activeOnboardingStepIndex];
+
+  onboardingStepKicker.textContent = step.kicker;
+  onboardingStepTitle.textContent = step.title;
+  onboardingStepCopy.textContent = step.copy;
+  onboardingStepCallout.textContent = step.callout;
+  onboardingStepPoints.innerHTML = "";
+
+  step.points.forEach((point) => {
+    const item = document.createElement("li");
+    item.textContent = point;
+    onboardingStepPoints.append(item);
+  });
+
+  onboardingProgress.textContent = `${activeOnboardingStepIndex + 1} of ${onboardingSteps.length}`;
+  onboardingBackButton.disabled = activeOnboardingStepIndex === 0;
+  onboardingNextButton.classList.toggle("is-hidden", activeOnboardingStepIndex === onboardingSteps.length - 1);
+  onboardingFinishButton.classList.toggle("is-hidden", activeOnboardingStepIndex !== onboardingSteps.length - 1);
+};
+
+const openOnboarding = ({ markSeen = false, startAt = 0 } = {}) => {
+  activeOnboardingStepIndex = Math.max(0, Math.min(startAt, onboardingSteps.length - 1));
+  renderOnboardingStep();
+  openDialog(onboardingDialog);
+
+  if (markSeen) {
+    void writeStoredValue(onboardingStorageKey, true);
   }
 };
 
@@ -5450,6 +5554,33 @@ settingsTabNav.addEventListener("click", (event) => {
   renderSettings();
 });
 
+openOnboardingButton.addEventListener("click", () => {
+  openOnboarding();
+});
+
+onboardingBackButton.addEventListener("click", () => {
+  if (activeOnboardingStepIndex === 0) {
+    return;
+  }
+
+  activeOnboardingStepIndex -= 1;
+  renderOnboardingStep();
+});
+
+onboardingNextButton.addEventListener("click", () => {
+  if (activeOnboardingStepIndex >= onboardingSteps.length - 1) {
+    return;
+  }
+
+  activeOnboardingStepIndex += 1;
+  renderOnboardingStep();
+});
+
+onboardingFinishButton.addEventListener("click", () => {
+  onboardingDialog.close();
+  void writeStoredValue(onboardingStorageKey, true);
+});
+
 typeNameInput.addEventListener("change", () => {
   updateSelectedTypeName(typeNameInput.value);
 });
@@ -5701,6 +5832,12 @@ const bootstrap = async () => {
     }
   });
   await restoreWorkspace();
+
+  const hasSeenOnboarding = await readStoredValue(onboardingStorageKey);
+
+  if (hasSeenOnboarding !== true) {
+    openOnboarding({ markSeen: true });
+  }
 };
 
 void bootstrap();
