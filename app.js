@@ -2863,6 +2863,16 @@ const ensureTrailingParagraph = () => {
   }
 };
 
+const ensureLeadingParagraph = () => {
+  const first = noteEditor.firstElementChild;
+
+  if (first && first.matches(EMBED_SELECTOR)) {
+    const p = document.createElement("p");
+    p.innerHTML = "<br>";
+    noteEditor.prepend(p);
+  }
+};
+
 const extractYouTubeVideoId = (url) => {
   try {
     const parsed = new URL(url);
@@ -3306,6 +3316,7 @@ const processYouTubeEmbeds = () => {
   });
 
   ensureTrailingParagraph();
+  ensureLeadingParagraph();
 };
 
 const SPOTIFY_EMBED_TYPES = new Set(["track", "album", "playlist", "artist", "episode", "show"]);
@@ -3395,6 +3406,7 @@ const processSpotifyEmbeds = () => {
   });
 
   ensureTrailingParagraph();
+  ensureLeadingParagraph();
 };
 
 const validateDomainWithDoh = async (domain) => {
@@ -4734,7 +4746,6 @@ const saveActiveNote = () => {
     return;
   }
 
-  trimEditorLeadingSpacerNodes();
   activeNote.content = noteEditor.innerHTML;
   noteMetaFields.querySelectorAll("[data-field-id]").forEach((input) => {
     activeNote.metadata[input.dataset.fieldId] = input.value;
@@ -5361,10 +5372,13 @@ noteEditor.addEventListener("input", (event) => {
 
   // If the cursor was orphaned because an embed replaced its containing block
   // (e.g. user pressed Space after a lone URL), move it to the trailing empty paragraph.
+  // This also handles the case where Chrome updates the selection to point at noteEditor
+  // itself (rather than a detached node) when the host <p> is replaced by the embed.
   {
     const sel = window.getSelection();
+    const container = sel.rangeCount ? sel.getRangeAt(0).startContainer : null;
 
-    if (sel.rangeCount && !noteEditor.contains(sel.getRangeAt(0).startContainer)) {
+    if (container && (!noteEditor.contains(container) || container === noteEditor)) {
       const emptyPara = [...noteEditor.querySelectorAll("p")]
         .findLast((p) => !p.textContent.trim());
 
