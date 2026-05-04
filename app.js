@@ -2905,7 +2905,7 @@ const closeTableContextMenu = () => {
 const refreshTableUi = () => {
   const currentCell = getTableCellFromSelection();
   activeTableCell = currentCell;
-  tableToolbar.hidden = !currentCell;
+  tableToolbar.toggleAttribute("hidden", !currentCell);
 
   if (!currentCell) {
     closeTableContextMenu();
@@ -4897,6 +4897,12 @@ document.addEventListener("click", (e) => {
   }
 
   if (!tableContextMenu.hidden && !tableContextMenu.contains(e.target)) {
+    closeTableContextMenu();
+  }
+});
+
+document.addEventListener("contextmenu", (event) => {
+  if (!tableContextMenu.hidden && !tableContextMenu.contains(event.target)) {
     closeTableContextMenu();
   }
 });

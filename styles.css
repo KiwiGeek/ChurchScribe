@@ -616,6 +616,11 @@ h1 {
   padding: 0 20px 12px;
 }
 
+.table-toolbar[hidden],
+.table-context-menu[hidden] {
+  display: none !important;
+}
+
 .table-toolbar-label {
   font-size: 0.78rem;
   font-weight: 800;
@@ -918,10 +923,11 @@ h1 {
 }
 
 .note-table {
-  width: 100%;
+  width: auto;
+  max-width: 100%;
   margin: 1rem 0;
   border-collapse: collapse;
-  table-layout: fixed;
+  table-layout: auto;
 }
 
 .note-table td,
