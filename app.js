@@ -4757,28 +4757,90 @@ noteEditor.addEventListener("input", (event) => {
 });
 
 noteEditor.addEventListener("keydown", (event) => {
-  if (event.key !== "Backspace") {
-    return;
-  }
-
-  const autoLink = findAutoLinkAtCaret();
-
-  if (!autoLink) {
-    return;
-  }
-
-  event.preventDefault();
-  const textNode = document.createTextNode(autoLink.textContent);
-  autoLink.replaceWith(textNode);
-
-  const range = document.createRange();
-  range.setStart(textNode, textNode.textContent.length);
-  range.collapse(true);
-
   const selection = window.getSelection();
-  selection.removeAllRanges();
-  selection.addRange(range);
-  saveActiveNote();
+
+  if (!selection.rangeCount || !selection.isCollapsed) {
+    return;
+  }
+
+  const range = selection.getRangeAt(0);
+
+  // Helper: get the top-level block inside noteEditor that contains a node
+  const getEditorBlock = (node) => {
+    let el = node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
+
+    while (el && el.parentElement !== noteEditor) {
+      el = el.parentElement;
+    }
+
+    return el;
+  };
+
+  if (event.key === "Backspace") {
+    // --- Backspace over an embed immediately before the caret block ---
+    const block = getEditorBlock(range.startContainer);
+
+    if (block) {
+      const prevSibling = block.previousElementSibling;
+
+      if (prevSibling?.matches(EMBED_SELECTOR)) {
+        const blockRange = document.createRange();
+        blockRange.selectNodeContents(block);
+        const atBlockStart = range.compareBoundaryPoints(Range.START_TO_START, blockRange) === 0;
+
+        if (atBlockStart) {
+          event.preventDefault();
+          prevSibling.remove();
+          ensureTrailingParagraph();
+          saveActiveNote();
+          return;
+        }
+      }
+    }
+
+    // --- Original: Backspace collapses an auto-link ---
+    const autoLink = findAutoLinkAtCaret();
+
+    if (!autoLink) {
+      return;
+    }
+
+    event.preventDefault();
+    const textNode = document.createTextNode(autoLink.textContent);
+    autoLink.replaceWith(textNode);
+
+    const newRange = document.createRange();
+    newRange.setStart(textNode, textNode.textContent.length);
+    newRange.collapse(true);
+
+    selection.removeAllRanges();
+    selection.addRange(newRange);
+    saveActiveNote();
+    return;
+  }
+
+  if (event.key === "Delete") {
+    // --- Delete over an embed immediately after the caret block ---
+    const block = getEditorBlock(range.startContainer);
+
+    if (block) {
+      const nextSibling = block.nextElementSibling;
+
+      if (nextSibling?.matches(EMBED_SELECTOR)) {
+        const blockRange = document.createRange();
+        blockRange.selectNodeContents(block);
+        const atBlockEnd = range.compareBoundaryPoints(Range.START_TO_END, blockRange) === 0;
+
+        if (atBlockEnd) {
+          event.preventDefault();
+          nextSibling.remove();
+          ensureTrailingParagraph();
+          saveActiveNote();
+          return;
+        }
+      }
+    }
+  }
 });
 
 noteEditor.addEventListener("paste", (event) => {
