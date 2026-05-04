@@ -6292,6 +6292,9 @@ const parseTranslationJs = (content) => {
 /**
  * Validate that a parsed translation object has the expected shape:
  * { BookName: [{ chapter: N, verses: [{ verse: N, text: "..." }, ...] }] }
+ * We check only the first 3 books for performance — translation files are very
+ * large (entire Bible) and a structural check of a representative sample is
+ * sufficient to distinguish a valid translation from an unrelated file.
  */
 const validateTranslationData = (data) => {
   if (!data || typeof data !== "object" || Array.isArray(data)) {
@@ -6387,6 +6390,9 @@ const importTranslationFromFile = async (file) => {
     throw new Error(`"${code}" is already a built-in translation and cannot be overwritten.`);
   }
 
+  // Use the variable-name portion as the label. Users can re-import with a
+  // renamed variable to get a different code; renaming labels in-app is
+  // a potential future enhancement.
   const label = code;
   registerCustomTranslation(code, label, data);
   return code;
@@ -6421,6 +6427,7 @@ const importTranslationFromUrl = async (url) => {
     throw new Error(`"${code}" is already a built-in translation and cannot be overwritten.`);
   }
 
+  // Use the variable-name portion as the label (same rationale as importTranslationFromFile).
   const label = code;
   registerCustomTranslation(code, label, data);
   return code;
