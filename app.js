@@ -2162,7 +2162,7 @@ const isEditorSpacerNode = (node) => {
   }
 
   if (node.nodeType === Node.TEXT_NODE) {
-    return !node.textContent.trim();
+    return !node.textContent.replace(/\u200b/g, "").trim();
   }
 
   if (node.nodeType !== Node.ELEMENT_NODE) {
@@ -2179,12 +2179,22 @@ const isEditorSpacerNode = (node) => {
     return false;
   }
 
-  const normalizedHtml = node.innerHTML
-    .replace(/&nbsp;/gi, "")
-    .replace(/\s+/g, "")
-    .toLowerCase();
+  if (node.querySelector("table, img, iframe, ul, ol, blockquote, h2, h3, h4, h5, h6")) {
+    return false;
+  }
 
-  return normalizedHtml === "" || normalizedHtml === "<br>" || normalizedHtml === "<br/>";
+  const textContent = node.textContent.replace(/\u200b/g, "").replace(/\u00a0/g, "").trim();
+
+  if (textContent) {
+    return false;
+  }
+
+  const htmlWithoutBreaks = node.innerHTML
+    .replace(/<br\s*\/?>/gi, "")
+    .replace(/&nbsp;/gi, "")
+    .replace(/\s+/g, "");
+
+  return htmlWithoutBreaks === "";
 };
 
 const trimEditorLeadingSpacerNodes = () => {
@@ -3730,6 +3740,7 @@ const renderActiveNote = () => {
   renderMetadataSummary();
   renderNoteMetadataFields();
   noteEditor.innerHTML = activeNote.content;
+  trimEditorLeadingSpacerNodes();
   linkifyScriptureReferences();
   linkifyUrls();
   processYouTubeEmbeds();
@@ -5080,6 +5091,8 @@ noteEditor.addEventListener("keydown", (event) => {
 });
 
 noteEditor.addEventListener("input", (event) => {
+  trimEditorLeadingSpacerNodes();
+
   if (event.inputType === "insertParagraph" || event.inputType === "insertLineBreak") {
     saveActiveNote();
     return;
