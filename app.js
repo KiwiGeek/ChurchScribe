@@ -1882,7 +1882,11 @@ const MAX_SCRIPTURE_SEARCH_RESULTS = 100;
 const parseSearchQuery = (query) => {
   const terms = [];
   const phrases = [];
-  const lower = query.trim().toLowerCase();
+  // Auto-close an unclosed " anywhere in the string by appending one at the end.
+  let lower = query.trim().toLowerCase();
+  if ((lower.match(/"/g) ?? []).length % 2 !== 0) {
+    lower += '"';
+  }
   const regex = /"([^"]+)"|(\S+)/g;
 
   for (const match of lower.matchAll(regex)) {
