@@ -1,15 +1,18 @@
 const translationLibrary = {
   KJV: {
     label: "King James Version",
-    books: window.KJV_BIBLE
+    scriptSrc: "kjv.js",
+    books: null
   },
   NKJV: {
     label: "New King James Version",
-    books: window.NKJV_BIBLE
+    scriptSrc: "nkjv.js",
+    books: null
   },
   ASV: {
     label: "American Standard Version",
-    books: window.ASV_BIBLE
+    scriptSrc: "asv.js",
+    books: null
   }
 };
 
@@ -1163,7 +1166,7 @@ const buildCloudSyncPayload = () => {
   };
 };
 
-const applyCloudPayload = (payload) => {
+const applyCloudPayload = async (payload) => {
   if (payload.workspace) {
     workspace.noteTypes = payload.workspace.noteTypes;
     workspace.activeNoteId = payload.workspace.activeNoteId;
@@ -1174,6 +1177,21 @@ const applyCloudPayload = (payload) => {
 
   if (Array.isArray(payload.notes)) {
     workspace.notes = payload.notes;
+  }
+
+  // Apply custom translations first so they are available when preferences (translation code) are applied.
+  if (Array.isArray(payload.customTranslations)) {
+    userTranslations = [];
+
+    for (const { code, label, data } of payload.customTranslations) {
+      if (code && label && !BUILTIN_TRANSLATION_CODES.has(code) && validateTranslationData(data)) {
+        translationLibrary[code] = { label, books: data };
+        userTranslations.push({ code, label, data });
+      }
+    }
+
+    void writeStoredValue(customTranslationsStorageKey, userTranslations);
+    populateTranslationSelect();
   }
 
   if (payload.preferences) {
@@ -1193,7 +1211,7 @@ const applyCloudPayload = (payload) => {
     }
 
     if (payload.preferences.translation) {
-      applyTranslation(payload.preferences.translation);
+      await applyTranslation(payload.preferences.translation);
       void writeStoredValue(translationStorageKey, payload.preferences.translation);
     }
 
@@ -1201,20 +1219,6 @@ const applyCloudPayload = (payload) => {
       applyColorTheme(payload.preferences.colorTheme);
       void writeStoredValue(colorThemeStorageKey, payload.preferences.colorTheme);
     }
-  }
-
-  if (Array.isArray(payload.customTranslations)) {
-    userTranslations = [];
-
-    for (const { code, label, data } of payload.customTranslations) {
-      if (code && label && !BUILTIN_TRANSLATION_CODES.has(code) && validateTranslationData(data)) {
-        translationLibrary[code] = { label, books: data };
-        userTranslations.push({ code, label, data });
-      }
-    }
-
-    void writeStoredValue(customTranslationsStorageKey, userTranslations);
-    populateTranslationSelect();
   }
 
   ensureWorkspaceConsistency();
@@ -1393,7 +1397,7 @@ const pullFromCloud = async () => {
     console.log(`[CloudSync] Conflict resolution: ${resolution}`);
 
     if (resolution === "remote") {
-      applyCloudPayload(remotePayload);
+      await applyCloudPayload(remotePayload);
 
       if (remotePayload.updatedAt) {
         cloudSyncSettings.lastSyncAt = remotePayload.updatedAt;
@@ -1952,10 +1956,12 @@ const renderChapter = () => {
   }
 };
 
-const applyTranslation = (translationCode) => {
+const applyTranslation = async (translationCode) => {
   if (!translationLibrary[translationCode]) {
     return;
   }
+
+  await ensureTranslationLoaded(translationCode);
 
   currentTranslationCode = translationCode;
   translationSelect.value = translationCode;
@@ -4207,7 +4213,7 @@ const restoreWorkspaceFromBackup = async (file) => {
       }
 
       if (preferences.translation) {
-        applyTranslation(preferences.translation);
+        await applyTranslation(preferences.translation);
         void writeStoredValue(translationStorageKey, preferences.translation);
       }
 
@@ -4479,7 +4485,7 @@ const renderSettings = () => {
 
   aliasList.innerHTML = "";
 
-  Object.keys(translationLibrary.KJV.books).forEach((book) => {
+  Object.keys(getCurrentTranslation()?.books ?? {}).forEach((book) => {
     const row = document.createElement("div");
     row.className = "alias-row";
 
@@ -5900,10 +5906,10 @@ noteEditor.addEventListener("mousedown", (event) => {
   document.addEventListener("mouseup", onMouseUp);
 });
 
-translationSelect.addEventListener("change", () => {
+translationSelect.addEventListener("change", async () => {
   activeScriptureFocus = null;
   void writeStoredValue(translationStorageKey, translationSelect.value);
-  applyTranslation(translationSelect.value);
+  await applyTranslation(translationSelect.value);
   markLocalSettingsUpdated();
   scheduleAutoCloudSync();
 });
@@ -6031,8 +6037,7 @@ userTranslationList.addEventListener("click", (event) => {
     return;
   }
 
-  deleteCustomTranslation(code);
-  renderTranslationsPanel();
+  void deleteCustomTranslation(code).then(() => renderTranslationsPanel());
 });
 
 
@@ -6310,6 +6315,43 @@ const parseTranslationJs = (content) => {
   return { code, label, data };
 };
 
+const builtinTranslationCacheKeyPrefix = "service-notes-builtin-";
+
+/**
+ * Ensure a translation's book data is loaded. For built-in translations this
+ * checks the IndexedDB cache first; if absent it fetches the .js file, parses
+ * it with parseTranslationJs, and caches the result for future sessions.
+ * Custom translations already have `books` populated when loaded from IndexedDB
+ * so this is a no-op for them.
+ */
+const ensureTranslationLoaded = async (code) => {
+  const entry = translationLibrary[code];
+
+  if (!entry || entry.books) {
+    return;
+  }
+
+  // Try the IndexedDB cache first.
+  const cached = await readStoredValue(`${builtinTranslationCacheKeyPrefix}${code}`);
+
+  if (cached && typeof cached === "object" && !Array.isArray(cached)) {
+    entry.books = cached;
+    return;
+  }
+
+  // Cache miss — fetch and parse the source file.
+  const response = await fetch(entry.scriptSrc);
+
+  if (!response.ok) {
+    throw new Error(`Failed to load translation "${code}": ${response.status} ${response.statusText}`);
+  }
+
+  const text = await response.text();
+  const { data } = parseTranslationJs(text);
+  entry.books = data;
+  void writeStoredValue(`${builtinTranslationCacheKeyPrefix}${code}`, data);
+};
+
 /**
  * Validate that a parsed translation object has the expected shape:
  * { BookName: [{ chapter: N, verses: [{ verse: N, text: "..." }, ...] }] }
@@ -6449,7 +6491,7 @@ const importTranslationFromUrl = async (url) => {
 };
 
 /** Remove a user-added translation from the library and IndexedDB. */
-const deleteCustomTranslation = (code) => {
+const deleteCustomTranslation = async (code) => {
   if (BUILTIN_TRANSLATION_CODES.has(code)) {
     return;
   }
@@ -6459,7 +6501,7 @@ const deleteCustomTranslation = (code) => {
   void writeStoredValue(customTranslationsStorageKey, userTranslations);
 
   if (currentTranslationCode === code) {
-    applyTranslation("KJV");
+    await applyTranslation("KJV");
     void writeStoredValue(translationStorageKey, "KJV");
   }
 
@@ -6575,8 +6617,14 @@ document.addEventListener("drop", (event) => {
 
 
 const buildBookAliasMap = () => {
+  const currentBooks = getCurrentTranslation()?.books;
+
+  if (!currentBooks) {
+    return;
+  }
+
   bookAliasMap.clear();
-  Object.keys(translationLibrary.KJV.books).forEach((book) => {
+  Object.keys(currentBooks).forEach((book) => {
     getEffectiveAliasesForBook(book).forEach((alias) => {
       addBookAlias(alias, book);
     });
@@ -6601,11 +6649,11 @@ const buildBookAliasMap = () => {
 const bootstrap = async () => {
   await loadCustomTranslations();
   populateTranslationSelect();
-  buildBookAliasMap();
   applyThemeMode(await getPreferredTheme(), { rerender: false });
   applyPaneOrder(await getPreferredPaneOrder());
   applySplit(await getPreferredSplit());
-  applyTranslation(await getPreferredTranslation());
+  await applyTranslation(await getPreferredTranslation());
+  buildBookAliasMap();
   await restoreLastBookChapter();
   applyColorTheme(await getPreferredColorTheme());
   await restoreCloudSyncSettings();
