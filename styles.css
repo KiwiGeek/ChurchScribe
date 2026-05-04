@@ -908,6 +908,10 @@ h1 {
   padding: 0 20px 12px;
 }
 
+.verse-search-field {
+  grid-column: 1 / -1;
+}
+
 .field {
   display: flex;
   flex-direction: column;
@@ -960,6 +964,71 @@ h1 {
   overflow-y: auto;
   min-height: 0;
   margin-bottom: 16px;
+}
+
+.scripture-search-results {
+  flex: 1;
+  margin: 0 20px;
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  background: var(--verse-surface);
+  border: 1px solid var(--verse-border);
+  overflow-y: auto;
+  min-height: 0;
+  margin-bottom: 16px;
+}
+
+.scripture-search-count {
+  margin: 0 0 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.scripture-search-result {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+
+.scripture-search-result:last-of-type {
+  border-bottom: none;
+}
+
+.scripture-search-result:hover .scripture-search-result-ref,
+.scripture-search-result:focus .scripture-search-result-ref {
+  text-decoration: underline;
+}
+
+.scripture-search-result-ref {
+  margin: 0 0 4px;
+  color: var(--accent);
+  font-size: 0.84rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.scripture-search-result-text {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.scripture-search-result-text mark {
+  background: rgba(140, 75, 47, 0.15);
+  color: inherit;
+  border-radius: 2px;
+  padding: 0 1px;
+}
+
+.scripture-search-empty {
+  margin: 0;
+  padding: 40px 0;
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--muted);
 }
 
 .verse-reference {
@@ -1802,7 +1871,8 @@ body.is-pane-dragging {
   }
 
   .note-editor,
-  .verse-display {
+  .verse-display,
+  .scripture-search-results {
     margin-left: 18px;
     margin-right: 18px;
   }

@@ -31,6 +31,9 @@ const chapterSelect = document.querySelector("#chapter-select");
 const verseReference = document.querySelector("#verse-reference");
 const chapterText = document.querySelector("#chapter-text");
 const verseTranslation = document.querySelector("#verse-translation");
+const verseDisplay = document.querySelector("#verse-display");
+const scriptureSearchInput = document.querySelector("#scripture-search-input");
+const scriptureSearchResults = document.querySelector("#scripture-search-results");
 const paneGrid = document.querySelector(".pane-grid");
 const noteManagerDialog = document.querySelector("#note-manager-dialog");
 const noteManagerList = document.querySelector("#note-manager-list");
@@ -190,6 +193,7 @@ let noteBrowserFilter = "";
 let noteBrowserTypeFilter = "all";
 let noteBrowserSort = "updated-desc";
 let noteBrowserSelectedNoteId = null;
+let scriptureSearchQuery = "";
 let dbPromise;
 let pendingAutoSyncTimer = null;
 let syncInFlightPromise = null;
@@ -1865,6 +1869,127 @@ const applyTranslation = (translationCode) => {
   populateChapterOptions(currentBook);
   chapterSelect.value = String(chapterIndex >= 0 ? chapterIndex : 0);
   renderChapter();
+
+  if (scriptureSearchQuery) {
+    performScriptureSearch(scriptureSearchQuery);
+  }
+};
+
+const MAX_SCRIPTURE_SEARCH_RESULTS = 100;
+
+const renderScriptureSearchResults = (results) => {
+  scriptureSearchResults.innerHTML = "";
+
+  if (!results.length) {
+    const empty = document.createElement("p");
+    empty.className = "scripture-search-empty";
+    empty.textContent = "No verses found. Try different search words.";
+    scriptureSearchResults.append(empty);
+    return;
+  }
+
+  const count = document.createElement("p");
+  count.className = "scripture-search-count";
+  count.textContent = results.length === MAX_SCRIPTURE_SEARCH_RESULTS
+    ? `Showing first ${MAX_SCRIPTURE_SEARCH_RESULTS} results`
+    : `${results.length} ${results.length === 1 ? "verse" : "verses"} found`;
+  scriptureSearchResults.append(count);
+
+  const terms = scriptureSearchQuery.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  const escapeRegExp = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const highlightPattern = new RegExp(`(${terms.map(escapeRegExp).join("|")})`, "gi");
+
+  results.forEach(({ book, chapter, verse, text }) => {
+    const item = document.createElement("div");
+    item.className = "scripture-search-result";
+    item.setAttribute("role", "button");
+    item.setAttribute("tabindex", "0");
+
+    const ref = document.createElement("p");
+    ref.className = "scripture-search-result-ref";
+    ref.textContent = `${book} ${chapter}:${verse}`;
+
+    const body = document.createElement("p");
+    body.className = "scripture-search-result-text";
+    body.innerHTML = text.replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(highlightPattern, "<mark>$1</mark>");
+
+    item.append(ref, body);
+
+    const navigate = () => {
+      const scriptureLibrary = getCurrentScriptureLibrary();
+      const chapterIndex = scriptureLibrary[book].findIndex((c) => c.chapter === chapter);
+
+      if (chapterIndex === -1) {
+        return;
+      }
+
+      activeScriptureFocus = { book, chapter, firstVerse: verse, verses: [verse] };
+      bookSelect.value = book;
+      populateChapterOptions(book);
+      chapterSelect.value = String(chapterIndex);
+      renderChapter();
+      saveLastBookChapter();
+
+      scriptureSearchInput.value = "";
+      scriptureSearchQuery = "";
+      scriptureSearchResults.classList.add("is-hidden");
+      verseDisplay.classList.remove("is-hidden");
+    };
+
+    item.addEventListener("click", navigate);
+    item.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        navigate();
+      }
+    });
+
+    scriptureSearchResults.append(item);
+  });
+};
+
+const performScriptureSearch = (query) => {
+  scriptureSearchQuery = query.trim().toLowerCase();
+
+  if (!scriptureSearchQuery) {
+    scriptureSearchResults.classList.add("is-hidden");
+    verseDisplay.classList.remove("is-hidden");
+    return;
+  }
+
+  const scriptureLibrary = getCurrentScriptureLibrary();
+  const terms = scriptureSearchQuery.split(/\s+/).filter(Boolean);
+  const results = [];
+
+  for (const [bookName, chapters] of Object.entries(scriptureLibrary)) {
+    if (results.length >= MAX_SCRIPTURE_SEARCH_RESULTS) {
+      break;
+    }
+
+    for (const chapter of chapters) {
+      if (results.length >= MAX_SCRIPTURE_SEARCH_RESULTS) {
+        break;
+      }
+
+      for (const verse of chapter.verses) {
+        if (results.length >= MAX_SCRIPTURE_SEARCH_RESULTS) {
+          break;
+        }
+
+        const verseText = verse.text ?? "";
+        const verseTextLower = verseText.toLowerCase();
+
+        if (terms.every((term) => verseTextLower.includes(term))) {
+          results.push({ book: bookName, chapter: chapter.chapter, verse: verse.verse, text: verseText });
+        }
+      }
+    }
+  }
+
+  verseDisplay.classList.add("is-hidden");
+  scriptureSearchResults.classList.remove("is-hidden");
+  renderScriptureSearchResults(results);
 };
 
 const applyCommand = (command) => {
@@ -4691,6 +4816,10 @@ translationSelect.addEventListener("change", () => {
   applyTranslation(translationSelect.value);
   markLocalSettingsUpdated();
   scheduleAutoCloudSync();
+});
+
+scriptureSearchInput.addEventListener("input", () => {
+  performScriptureSearch(scriptureSearchInput.value);
 });
 
 systemThemeMediaQuery.addEventListener("change", () => {

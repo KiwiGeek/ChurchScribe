@@ -125,13 +125,20 @@
             <span>Chapter</span>
             <select id="chapter-select" name="chapter"></select>
           </label>
+
+          <label class="field verse-search-field">
+            <span>Search</span>
+            <input type="search" id="scripture-search-input" placeholder="Search verses…" autocomplete="off">
+          </label>
         </form>
 
-        <article class="verse-display" aria-live="polite">
+        <article class="verse-display" id="verse-display" aria-live="polite">
           <p class="verse-reference" id="verse-reference"></p>
           <div class="chapter-text" id="chapter-text"></div>
           <p class="verse-translation" id="verse-translation"></p>
         </article>
+
+        <div class="scripture-search-results is-hidden" id="scripture-search-results" aria-live="polite" aria-label="Scripture search results"></div>
       </aside>
     </main>
   </div>
