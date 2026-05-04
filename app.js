@@ -5364,6 +5364,10 @@ noteEditor.addEventListener("input", (event) => {
     return;
   }
 
+  // Trim browser-injected leading whitespace/BR nodes that can appear during normal typing.
+  // This is intentionally NOT called from saveActiveNote: doing so would immediately remove
+  // any empty leading paragraph the user just created (e.g. by pressing Enter at position 0),
+  // making the Enter key appear broken at the start of a document.
   trimEditorLeadingSpacerNodes();
   linkifyScriptureReferences({ jumpToCaretReference: true });
   linkifyUrls({ suppressAtCaret: event.inputType !== "insertFromPaste" });
