@@ -77,9 +77,21 @@
             </button>
             <div class="color-picker-dropdown" id="color-picker-dropdown" hidden role="dialog" aria-label="Text color"></div>
           </div>
+          <button class="tool-button" type="button" id="insert-table-button" aria-label="Insert table">Table</button>
           <button class="tool-button" type="button" id="insert-image-button" aria-label="Insert image">Image</button>
         </div>
         <input type="file" id="insert-image-file" accept="image/*" multiple hidden>
+
+        <div class="table-toolbar" id="table-toolbar" hidden aria-label="Table actions">
+          <span class="table-toolbar-label">Table</span>
+          <button class="ghost-button table-action-button" type="button" data-table-action="insert-row-above">Row above</button>
+          <button class="ghost-button table-action-button" type="button" data-table-action="insert-row-below">Row below</button>
+          <button class="ghost-button table-action-button" type="button" data-table-action="delete-row">Delete row</button>
+          <button class="ghost-button table-action-button" type="button" data-table-action="insert-column-left">Column left</button>
+          <button class="ghost-button table-action-button" type="button" data-table-action="insert-column-right">Column right</button>
+          <button class="ghost-button table-action-button" type="button" data-table-action="delete-column">Delete column</button>
+          <button class="ghost-button table-action-button" type="button" data-table-action="delete-table">Delete table</button>
+        </div>
 
         <div
           id="note-editor"
@@ -192,6 +204,35 @@
 
       <div class="dialog-body">
         <div class="note-meta details-meta" id="note-meta-fields"></div>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="management-dialog compact-dialog" id="table-dialog">
+    <form class="dialog-shell compact-shell" method="dialog">
+      <div class="dialog-header">
+        <div>
+          <p class="panel-kicker">Editor</p>
+          <h2>Insert Table</h2>
+        </div>
+        <button class="ghost-button" type="submit">Close</button>
+      </div>
+
+      <div class="dialog-body">
+        <div class="table-insert-grid">
+          <label class="field">
+            <span>Rows</span>
+            <input id="table-rows-input" type="number" min="1" max="20" step="1" value="3">
+          </label>
+          <label class="field">
+            <span>Columns</span>
+            <input id="table-columns-input" type="number" min="1" max="12" step="1" value="3">
+          </label>
+        </div>
+        <div class="dialog-actions">
+          <button class="ghost-button" type="submit">Cancel</button>
+          <button class="ghost-button primary-button" id="table-insert-confirm-button" type="button">Insert table</button>
+        </div>
       </div>
     </form>
   </dialog>
@@ -379,6 +420,16 @@
       </div>
     </form>
   </dialog>
+
+  <div class="table-context-menu" id="table-context-menu" hidden role="menu" aria-label="Table actions">
+    <button class="table-context-menu-button" type="button" data-table-action="insert-row-above" role="menuitem">Insert row above</button>
+    <button class="table-context-menu-button" type="button" data-table-action="insert-row-below" role="menuitem">Insert row below</button>
+    <button class="table-context-menu-button" type="button" data-table-action="delete-row" role="menuitem">Delete row</button>
+    <button class="table-context-menu-button" type="button" data-table-action="insert-column-left" role="menuitem">Insert column left</button>
+    <button class="table-context-menu-button" type="button" data-table-action="insert-column-right" role="menuitem">Insert column right</button>
+    <button class="table-context-menu-button" type="button" data-table-action="delete-column" role="menuitem">Delete column</button>
+    <button class="table-context-menu-button is-destructive" type="button" data-table-action="delete-table" role="menuitem">Delete table</button>
+  </div>
 
   <dialog class="management-dialog compact-dialog" id="sync-conflict-dialog">
     <div class="dialog-shell compact-shell">
