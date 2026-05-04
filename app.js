@@ -2827,7 +2827,7 @@ const extractSpotifyEmbedInfo = (url) => {
     if (url.startsWith("spotify:")) {
       const parts = url.split(":");
 
-      if (parts.length >= 3 && SPOTIFY_EMBED_TYPES.has(parts[1])) {
+      if (parts.length === 3 && SPOTIFY_EMBED_TYPES.has(parts[1])) {
         return { type: parts[1], id: parts[2] };
       }
     }
@@ -2838,7 +2838,7 @@ const extractSpotifyEmbedInfo = (url) => {
     if (host === "open.spotify.com") {
       const parts = parsed.pathname.split("/").filter(Boolean);
 
-      if (parts.length >= 2 && SPOTIFY_EMBED_TYPES.has(parts[0])) {
+      if (parts.length === 2 && SPOTIFY_EMBED_TYPES.has(parts[0])) {
         return { type: parts[0], id: parts[1] };
       }
     }
@@ -2860,7 +2860,7 @@ const createSpotifyEmbed = ({ type, id }) => {
 
   const iframe = document.createElement("iframe");
   iframe.className = "spotify-embed-frame";
-  iframe.src = `https://open.spotify.com/embed/${type}/${id}?utm_source=generator`;
+  iframe.src = `https://open.spotify.com/embed/${encodeURIComponent(type)}/${encodeURIComponent(id)}?utm_source=generator`;
   iframe.setAttribute("allow", "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture");
   iframe.setAttribute("allowfullscreen", "");
   iframe.setAttribute("loading", "lazy");
