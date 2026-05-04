@@ -5475,9 +5475,19 @@ noteEditor.addEventListener("keydown", (event) => {
     }
 
     if (!isGhostBlock) {
-      // Regular paragraph ending at an embed: land in the gap between this
-      // paragraph and the embed (one step at a time).
-      insertGhostAndFocus((ghost) => block.after(ghost));
+      // Non-ghost paragraph above an embed. Look past the embed to decide
+      // whether a ghost is needed.
+      const afterNextEmbed = nextEmbed.nextElementSibling;
+
+      if (!afterNextEmbed) {
+        // Embed is the last child — ghost must go after it.
+        insertGhostAndFocus((ghost) => noteEditor.appendChild(ghost));
+      } else if (afterNextEmbed.matches(EMBED_SELECTOR)) {
+        // Another embed follows — ghost goes between the two embeds.
+        insertGhostAndFocus((ghost) => nextEmbed.after(ghost));
+      }
+      // A real paragraph already follows the embed — the browser will
+      // navigate there naturally; no ghost needed.
     } else {
       // Already in a ghost between two embeds: step past the next embed.
       const afterNextEmbed = nextEmbed.nextElementSibling;
@@ -5508,9 +5518,19 @@ noteEditor.addEventListener("keydown", (event) => {
     }
 
     if (!isGhostBlock) {
-      // Regular paragraph starting at an embed: land in the gap between the
-      // embed and this paragraph (one step at a time).
-      insertGhostAndFocus((ghost) => block.before(ghost));
+      // Non-ghost paragraph below an embed. Look past the embed to decide
+      // whether a ghost is needed.
+      const beforePrevEmbed = prevEmbed.previousElementSibling;
+
+      if (!beforePrevEmbed) {
+        // Embed is the first child — ghost must go before it.
+        insertGhostAndFocus((ghost) => noteEditor.prepend(ghost));
+      } else if (beforePrevEmbed.matches(EMBED_SELECTOR)) {
+        // Another embed precedes — ghost goes between the two embeds.
+        insertGhostAndFocus((ghost) => prevEmbed.before(ghost));
+      }
+      // A real paragraph already precedes the embed — the browser will
+      // navigate there naturally; no ghost needed.
     } else {
       // Already in a ghost between two embeds: step past the preceding embed.
       const beforePrevEmbed = prevEmbed.previousElementSibling;
