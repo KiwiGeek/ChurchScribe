@@ -175,7 +175,6 @@ const bookAliasMap = new Map();
 const domainValidationCache = new Map();
 const MIN_EMBED_WIDTH = 240;
 const EDITOR_HORIZONTAL_PADDING = 40;
-const DEFAULT_IMAGE_EMBED_WIDTH = 400;
 const BLOCK_LEVEL_ELEMENTS = "p, h2, h3, h4, h5, h6, li, blockquote";
 const knownTlds = [
   "ac","ad","ae","af","ag","ai","al","am","ao","ar","as","at","au","aw","az",
@@ -2852,7 +2851,9 @@ const unwrapAutoUrlLinks = () => {
   noteEditor.normalize();
 };
 
-const EMBED_SELECTOR = "[data-youtube-embed], [data-spotify-embed], [data-image-embed]";
+// Unified embed selector — derived at runtime from the registered embed classes so
+// that adding a new embed type only requires registering it in its own file.
+const EMBED_SELECTOR = EmbedBase.selector;
 
 const ensureTrailingParagraph = () => {
   const last = noteEditor.lastElementChild;
@@ -2874,107 +2875,10 @@ const ensureLeadingParagraph = () => {
   }
 };
 
-const extractYouTubeVideoId = (url) => {
-  try {
-    const parsed = new URL(url);
-    const host = parsed.hostname.replace(/^www\./, "").replace(/^m\./, "");
 
-    if (host === "youtu.be") {
-      const id = parsed.pathname.slice(1).split("/")[0];
-      return id || null;
-    }
-
-    if (host === "youtube.com") {
-      if (parsed.pathname === "/watch") {
-        return parsed.searchParams.get("v") || null;
-      }
-
-      if (parsed.pathname.startsWith("/shorts/")) {
-        return parsed.pathname.slice(8).split("/")[0] || null;
-      }
-
-      if (parsed.pathname.startsWith("/embed/")) {
-        return parsed.pathname.slice(7).split("/")[0] || null;
-      }
-    }
-  } catch {
-    // invalid URL
-  }
-
-  return null;
-};
-
-const createYouTubeEmbed = (videoId, width = 560) => {
-  const outerDiv = document.createElement("div");
-  outerDiv.className = "youtube-embed";
-  outerDiv.dataset.youtubeEmbed = videoId;
-  outerDiv.contentEditable = "false";
-
-  const wrapper = document.createElement("div");
-  wrapper.className = "youtube-embed-wrapper";
-  wrapper.style.width = `${width}px`;
-
-  const iframe = document.createElement("iframe");
-  iframe.className = "youtube-embed-frame";
-  iframe.src = `https://www.youtube.com/embed/${videoId}`;
-  iframe.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share");
-  iframe.setAttribute("allowfullscreen", "");
-  iframe.title = "YouTube video";
-
-  const deleteBtn = document.createElement("button");
-  deleteBtn.className = "youtube-embed-delete";
-  deleteBtn.type = "button";
-  deleteBtn.setAttribute("aria-label", "Remove video embed");
-  deleteBtn.textContent = "✕";
-
-  const resizeHandle = document.createElement("div");
-  resizeHandle.className = "youtube-embed-resize-handle";
-  resizeHandle.setAttribute("aria-hidden", "true");
-
-  wrapper.appendChild(iframe);
-  wrapper.appendChild(deleteBtn);
-  wrapper.appendChild(resizeHandle);
-  outerDiv.appendChild(wrapper);
-
-  return outerDiv;
-};
-
-const createImageEmbed = (src, width = DEFAULT_IMAGE_EMBED_WIDTH) => {
-  const outerDiv = document.createElement("div");
-  outerDiv.className = "image-embed";
-  outerDiv.dataset.imageEmbed = "true";
-  outerDiv.contentEditable = "false";
-
-  const wrapper = document.createElement("div");
-  wrapper.className = "image-embed-wrapper";
-  wrapper.style.width = `${width}px`;
-
-  const img = document.createElement("img");
-  img.className = "image-embed-img";
-  img.src = src;
-  img.alt = "Embedded image";
-
-  const deleteBtn = document.createElement("button");
-  deleteBtn.className = "image-embed-delete";
-  deleteBtn.type = "button";
-  deleteBtn.setAttribute("aria-label", "Remove image");
-  deleteBtn.textContent = "✕";
-
-  const resizeHandle = document.createElement("div");
-  resizeHandle.className = "image-embed-resize-handle";
-  resizeHandle.setAttribute("aria-hidden", "true");
-
-  wrapper.appendChild(img);
-  wrapper.appendChild(deleteBtn);
-  wrapper.appendChild(resizeHandle);
-  outerDiv.appendChild(wrapper);
-
-  return outerDiv;
-};
-
-const insertImageAtCaret = (src, width = DEFAULT_IMAGE_EMBED_WIDTH) => {
+const insertImageAtCaret = (src, width = ImageEmbed.DEFAULT_WIDTH) => {
   noteEditor.focus();
-  const embed = createImageEmbed(src, width);
+  const embed = new ImageEmbed().create(src, { width });
   const emptyParagraph = document.createElement("p");
   emptyParagraph.innerHTML = "<br>";
 
@@ -3289,11 +3193,11 @@ const findLinkBlock = (link) => {
   return (block && block !== noteEditor) ? block : null;
 };
 
-const processYouTubeEmbeds = () => {
+const processUrlEmbeds = () => {
   noteEditor.querySelectorAll("a[data-auto-url-link='true']").forEach((link) => {
-    const videoId = extractYouTubeVideoId(link.href);
+    const match = EmbedBase.matchUrl(link.href);
 
-    if (!videoId) {
+    if (!match) {
       return;
     }
 
@@ -3311,105 +3215,13 @@ const processYouTubeEmbeds = () => {
       return;
     }
 
-    const embed = createYouTubeEmbed(videoId);
+    const embed = match.handler.create(match.data);
     const emptyParagraph = document.createElement("p");
     emptyParagraph.innerHTML = "<br>";
     block.replaceWith(embed, emptyParagraph);
   });
 
   ensureTrailingParagraph();
-  ensureLeadingParagraph();
-};
-
-const SPOTIFY_EMBED_TYPES = new Set(["track", "album", "playlist", "artist", "episode", "show"]);
-
-const extractSpotifyEmbedInfo = (url) => {
-  try {
-    if (url.startsWith("spotify:")) {
-      const parts = url.split(":");
-
-      if (parts.length === 3 && SPOTIFY_EMBED_TYPES.has(parts[1])) {
-        return { type: parts[1], id: parts[2] };
-      }
-    }
-
-    const parsed = new URL(url);
-    const host = parsed.hostname.replace(/^www\./, "");
-
-    if (host === "open.spotify.com") {
-      const parts = parsed.pathname.split("/").filter(Boolean);
-
-      if (parts.length === 2 && SPOTIFY_EMBED_TYPES.has(parts[0])) {
-        return { type: parts[0], id: parts[1] };
-      }
-    }
-  } catch {
-    // invalid URL
-  }
-
-  return null;
-};
-
-const createSpotifyEmbed = ({ type, id }) => {
-  const outerDiv = document.createElement("div");
-  outerDiv.className = "spotify-embed";
-  outerDiv.dataset.spotifyEmbed = `${type}:${id}`;
-  outerDiv.contentEditable = "false";
-
-  const wrapper = document.createElement("div");
-  wrapper.className = "spotify-embed-wrapper";
-
-  const iframe = document.createElement("iframe");
-  iframe.className = "spotify-embed-frame";
-  iframe.src = `https://open.spotify.com/embed/${encodeURIComponent(type)}/${encodeURIComponent(id)}?utm_source=generator`;
-  iframe.setAttribute("allow", "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture");
-  iframe.setAttribute("allowfullscreen", "");
-  iframe.setAttribute("loading", "lazy");
-  iframe.title = "Spotify player";
-
-  const deleteBtn = document.createElement("button");
-  deleteBtn.className = "spotify-embed-delete";
-  deleteBtn.type = "button";
-  deleteBtn.setAttribute("aria-label", "Remove Spotify embed");
-  deleteBtn.textContent = "✕";
-
-  wrapper.appendChild(iframe);
-  wrapper.appendChild(deleteBtn);
-  outerDiv.appendChild(wrapper);
-
-  return outerDiv;
-};
-
-const processSpotifyEmbeds = () => {
-  noteEditor.querySelectorAll("a[data-auto-url-link='true']").forEach((link) => {
-    const embedInfo = extractSpotifyEmbedInfo(link.href);
-
-    if (!embedInfo) {
-      return;
-    }
-
-    const block = findLinkBlock(link);
-
-    if (!block) {
-      return;
-    }
-
-    const cloned = block.cloneNode(true);
-    cloned.querySelectorAll("a").forEach((anchor) => anchor.remove());
-    const remainingText = cloned.textContent.trim();
-
-    if (remainingText) {
-      return;
-    }
-
-    const embed = createSpotifyEmbed(embedInfo);
-    const emptyParagraph = document.createElement("p");
-    emptyParagraph.innerHTML = "<br>";
-    block.replaceWith(embed, emptyParagraph);
-  });
-
-  ensureTrailingParagraph();
-  ensureLeadingParagraph();
 };
 
 const validateDomainWithDoh = async (domain) => {
@@ -3426,8 +3238,7 @@ const validateDomainWithDoh = async (domain) => {
 
     if (isValid) {
       linkifyUrls();
-      processYouTubeEmbeds();
-      processSpotifyEmbeds();
+      processUrlEmbeds();
     }
   } catch {
     domainValidationCache.set(domain, false);
@@ -3491,15 +3302,7 @@ const linkifyUrls = ({ suppressAtCaret = false } = {}) => {
           return NodeFilter.FILTER_REJECT;
         }
 
-        if (node.parentElement?.closest("[data-youtube-embed]")) {
-          return NodeFilter.FILTER_REJECT;
-        }
-
-        if (node.parentElement?.closest("[data-image-embed]")) {
-          return NodeFilter.FILTER_REJECT;
-        }
-
-        if (node.parentElement?.closest("[data-spotify-embed]")) {
+        if (node.parentElement?.closest(EMBED_SELECTOR)) {
           return NodeFilter.FILTER_REJECT;
         }
 
@@ -3952,8 +3755,7 @@ const renderActiveNote = () => {
   }
   linkifyScriptureReferences();
   linkifyUrls();
-  processYouTubeEmbeds();
-  processSpotifyEmbeds();
+  processUrlEmbeds();
   refreshTableUi();
   ensureTrailingParagraph();
 };
@@ -4752,7 +4554,27 @@ const saveActiveNote = () => {
     return;
   }
 
-  activeNote.content = noteEditor.innerHTML;
+  // Produce a clean copy of the editor content:
+  // • remove empty ghost paragraphs (they only exist for keyboard navigation)
+  // • strip the ghost marker from non-empty paragraphs (user typed there)
+  // • strip the drag-state marker so it is never persisted
+  const editorClone = noteEditor.cloneNode(true);
+
+  editorClone.querySelectorAll("[data-embed-ghost]").forEach((ghost) => {
+    const empty = !ghost.textContent && (!ghost.innerHTML || ghost.innerHTML === "<br>");
+
+    if (empty) {
+      ghost.remove();
+    } else {
+      ghost.removeAttribute("data-embed-ghost");
+    }
+  });
+
+  editorClone.querySelectorAll("[data-embed-dragging]").forEach((el) => {
+    el.removeAttribute("data-embed-dragging");
+  });
+
+  activeNote.content = editorClone.innerHTML;
   noteMetaFields.querySelectorAll("[data-field-id]").forEach((input) => {
     activeNote.metadata[input.dataset.fieldId] = input.value;
   });
@@ -5347,11 +5169,10 @@ noteEditor.addEventListener("input", (event) => {
     // global text offset happens to equal the end of the URL in the previous paragraph.
     // Using true would therefore suppress that URL and prevent embed creation.
     linkifyUrls({ suppressAtCaret: false });
-    processYouTubeEmbeds();
-    processSpotifyEmbeds();
+    processUrlEmbeds();
 
     // Restore cursor to the saved DOM position (the new empty paragraph).
-    // If processYouTubeEmbeds/processSpotifyEmbeds replaced the old paragraph with an embed,
+    // If processUrlEmbeds() replaced the old paragraph with an embed,
     // the new paragraph (savedContainer) is still in the DOM and the cursor is correct.
     if (savedContainer && noteEditor.contains(savedContainer)) {
       try {
@@ -5384,8 +5205,7 @@ noteEditor.addEventListener("input", (event) => {
   }
   linkifyScriptureReferences({ jumpToCaretReference: true });
   linkifyUrls({ suppressAtCaret: event.inputType !== "insertFromPaste" });
-  processYouTubeEmbeds();
-  processSpotifyEmbeds();
+  processUrlEmbeds();
 
   // If the cursor was orphaned because an embed replaced its containing block
   // (e.g. user pressed Space after a lone URL), move it to the trailing empty paragraph.
@@ -5454,6 +5274,53 @@ noteEditor.addEventListener("keydown", (event) => {
       }
     }
 
+    // --- Backspace from start of empty block whose previous block ends with an auto-link ---
+    // First Backspace: move cursor to the end of the link (no delink yet).
+    // Second Backspace: cursor is now directly after the link, triggering the delink below.
+    if (block) {
+      const blockHtml = block.innerHTML?.trim() ?? "";
+      const isEmptyBlock = !block.textContent.trim() && (!blockHtml || blockHtml === "<br>");
+
+      if (isEmptyBlock && block.previousElementSibling) {
+        const prevBlock = block.previousElementSibling;
+        const autoLinks = prevBlock.querySelectorAll(
+          "a[data-auto-url-link='true'], a[data-auto-scripture-link='true']"
+        );
+
+        if (autoLinks.length) {
+          const lastLink = autoLinks[autoLinks.length - 1];
+
+          // Only act if nothing meaningful follows the link inside its block.
+          let trailingNode = lastLink.nextSibling;
+          let onlyTrivialTrailing = true;
+
+          while (trailingNode) {
+            if (trailingNode.nodeType === Node.TEXT_NODE && trailingNode.nodeValue.trim()) {
+              onlyTrivialTrailing = false;
+              break;
+            }
+
+            if (trailingNode.nodeType === Node.ELEMENT_NODE && trailingNode.tagName !== "BR") {
+              onlyTrivialTrailing = false;
+              break;
+            }
+
+            trailingNode = trailingNode.nextSibling;
+          }
+
+          if (onlyTrivialTrailing) {
+            event.preventDefault();
+            const r = document.createRange();
+            r.setStartAfter(lastLink);
+            r.collapse(true);
+            selection.removeAllRanges();
+            selection.addRange(r);
+            return;
+          }
+        }
+      }
+    }
+
     // --- Original: Backspace collapses an auto-link ---
     const autoLink = findAutoLinkAtCaret();
 
@@ -5499,6 +5366,208 @@ noteEditor.addEventListener("keydown", (event) => {
   }
 });
 
+// ── Smart ghost-paragraph navigation ─────────────────────────────────────────
+// When the cursor is at the edge of an embed (first or last direct child of
+// noteEditor, or a gap between consecutive embeds), pressing an arrow key
+// inserts a temporary empty paragraph so the user can type there.  Once the
+// cursor moves away without typing anything, the paragraph is removed.
+
+noteEditor.addEventListener("keydown", (event) => {
+  if (!["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) {
+    return;
+  }
+
+  const sel = window.getSelection();
+
+  if (!sel || !sel.rangeCount || !sel.isCollapsed) {
+    return;
+  }
+
+  const range = sel.getRangeAt(0);
+
+  const getEditorBlock = (node) => {
+    let el = node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
+
+    while (el && el.parentElement !== noteEditor) {
+      el = el.parentElement;
+    }
+
+    return el;
+  };
+
+  const block = getEditorBlock(range.startContainer);
+
+  if (!block) {
+    return;
+  }
+
+  const isAtBlockEnd = () => {
+    const blockRange = document.createRange();
+    blockRange.selectNodeContents(block);
+
+    return range.compareBoundaryPoints(Range.START_TO_END, blockRange) === 0;
+  };
+
+  const isAtBlockStart = () => {
+    const blockRange = document.createRange();
+    blockRange.selectNodeContents(block);
+
+    return range.compareBoundaryPoints(Range.START_TO_START, blockRange) === 0;
+  };
+
+  // Visual-line helpers: check whether the caret sits on the first/last
+  // rendered line of the block (regardless of character offset).  These are
+  // used for ArrowUp/Down so that a user positioned anywhere on the first or
+  // last visual line of a paragraph can navigate into/out of an adjacent embed.
+  const isOnFirstVisualLine = () => {
+    if (!block.textContent) return true;
+
+    // Build a range from the block's start to the current caret.
+    // If getClientRects() returns ≤ 1 rect the range fits on a single visual
+    // line, meaning the caret is on the first line of the block.
+    const r = document.createRange();
+    r.setStart(block, 0);
+    r.setEnd(range.startContainer, range.startOffset);
+
+    return r.getClientRects().length <= 1;
+  };
+
+  const isOnLastVisualLine = () => {
+    if (!block.textContent) return true;
+
+    const r = document.createRange();
+    r.setStart(range.startContainer, range.startOffset);
+    r.setEnd(block, block.childNodes.length);
+
+    return r.getClientRects().length <= 1;
+  };
+
+  const insertGhostAndFocus = (insertFn) => {
+    event.preventDefault();
+    const ghost = document.createElement("p");
+    ghost.innerHTML = "<br>";
+    ghost.dataset.embedGhost = "true";
+    insertFn(ghost);
+    const r = document.createRange();
+    r.setStart(ghost, 0);
+    r.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(r);
+  };
+
+  const isGhostBlock = block.dataset.embedGhost === "true";
+
+  if (event.key === "ArrowDown" || event.key === "ArrowRight") {
+    // For Down, fire when the caret is on the last visual line (cursor may be
+    // anywhere horizontally within that line). For Right, only fire when the
+    // caret is at the very last character position so Left/Right navigation
+    // within a line is unaffected.
+    const atEnd = event.key === "ArrowDown" ? isOnLastVisualLine() : isAtBlockEnd();
+
+    if (!atEnd) {
+      return;
+    }
+
+    const nextEmbed = block.nextElementSibling;
+
+    if (!nextEmbed || !nextEmbed.matches(EMBED_SELECTOR)) {
+      return;
+    }
+
+    if (!isGhostBlock) {
+      // Non-ghost paragraph above an embed. Look past the embed to decide
+      // whether a ghost is needed.
+      const afterNextEmbed = nextEmbed.nextElementSibling;
+
+      if (!afterNextEmbed) {
+        // Embed is the last child — ghost must go after it.
+        insertGhostAndFocus((ghost) => noteEditor.appendChild(ghost));
+      } else if (afterNextEmbed.matches(EMBED_SELECTOR)) {
+        // Another embed follows — ghost goes between the two embeds.
+        insertGhostAndFocus((ghost) => nextEmbed.after(ghost));
+      }
+      // A real paragraph already follows the embed — the browser will
+      // navigate there naturally; no ghost needed.
+    } else {
+      // Already in a ghost between two embeds: step past the next embed.
+      const afterNextEmbed = nextEmbed.nextElementSibling;
+
+      if (!afterNextEmbed) {
+        // nextEmbed is the last child — ghost goes after it (at editor end).
+        insertGhostAndFocus((ghost) => noteEditor.appendChild(ghost));
+      } else if (afterNextEmbed.matches(EMBED_SELECTOR)) {
+        // Another embed follows nextEmbed — ghost goes between those two embeds.
+        insertGhostAndFocus((ghost) => nextEmbed.after(ghost));
+      }
+      // If a real paragraph follows nextEmbed, the browser navigates naturally.
+    }
+  } else {
+    // ArrowUp or ArrowLeft
+    // For Up, fire when the caret is on the first visual line. For Left, only
+    // fire when the caret is at the very first character position.
+    const atStart = event.key === "ArrowUp" ? isOnFirstVisualLine() : isAtBlockStart();
+
+    if (!atStart) {
+      return;
+    }
+
+    const prevEmbed = block.previousElementSibling;
+
+    if (!prevEmbed || !prevEmbed.matches(EMBED_SELECTOR)) {
+      return;
+    }
+
+    if (!isGhostBlock) {
+      // Non-ghost paragraph below an embed. Look past the embed to decide
+      // whether a ghost is needed.
+      const beforePrevEmbed = prevEmbed.previousElementSibling;
+
+      if (!beforePrevEmbed) {
+        // Embed is the first child — ghost must go before it.
+        insertGhostAndFocus((ghost) => noteEditor.prepend(ghost));
+      } else if (beforePrevEmbed.matches(EMBED_SELECTOR)) {
+        // Another embed precedes — ghost goes between the two embeds.
+        insertGhostAndFocus((ghost) => prevEmbed.before(ghost));
+      }
+      // A real paragraph already precedes the embed — the browser will
+      // navigate there naturally; no ghost needed.
+    } else {
+      // Already in a ghost between two embeds: step past the preceding embed.
+      const beforePrevEmbed = prevEmbed.previousElementSibling;
+
+      if (!beforePrevEmbed) {
+        // prevEmbed is the first child — ghost goes before it (at editor start).
+        insertGhostAndFocus((ghost) => noteEditor.prepend(ghost));
+      } else if (beforePrevEmbed.matches(EMBED_SELECTOR)) {
+        // Another embed precedes prevEmbed — ghost goes between those two embeds.
+        insertGhostAndFocus((ghost) => prevEmbed.before(ghost));
+      }
+      // If a real paragraph precedes prevEmbed, the browser navigates naturally.
+    }
+  }
+});
+
+// Remove ghost paragraphs once the cursor leaves them (if still empty).
+document.addEventListener("selectionchange", () => {
+  const sel = window.getSelection();
+  const container = sel && sel.rangeCount ? sel.getRangeAt(0).startContainer : null;
+
+  noteEditor.querySelectorAll("[data-embed-ghost]").forEach((ghost) => {
+    if (ghost.contains(container)) {
+      return; // cursor is still inside — leave it
+    }
+
+    const empty = !ghost.textContent && (!ghost.innerHTML || ghost.innerHTML === "<br>");
+
+    if (empty) {
+      ghost.remove();
+    } else {
+      // User typed something — promote to a real paragraph.
+      ghost.removeAttribute("data-embed-ghost");
+    }
+  });
+});
+
 noteEditor.addEventListener("paste", (event) => {
   const imageItems = [...event.clipboardData.items].filter((item) => item.type.startsWith("image/"));
 
@@ -5525,14 +5594,120 @@ noteEditor.addEventListener("paste", (event) => {
   });
 });
 
+// ── Embed drag-and-drop ────────────────────────────────────────────────────
+// Embeds expose draggable="true" (set by EmbedBase._makeContainer).  We
+// serialise the outer HTML into the dataTransfer on dragstart and re-insert
+// it on drop.  The original embed is removed when the drop completes.
+
+noteEditor.addEventListener("dragstart", (event) => {
+  const embed = event.target.closest(EMBED_SELECTOR);
+
+  if (!embed || !noteEditor.contains(embed)) {
+    return;
+  }
+
+  event.dataTransfer.effectAllowed = "move";
+  event.dataTransfer.setData("text/html", embed.outerHTML);
+  event.dataTransfer.setData("application/x-churchscribe-embed", "true");
+  embed.dataset.embedDragging = "true";
+});
+
+noteEditor.addEventListener("dragend", () => {
+  noteEditor.querySelectorAll("[data-embed-dragging]").forEach((el) => {
+    el.removeAttribute("data-embed-dragging");
+  });
+});
+
 noteEditor.addEventListener("dragover", (event) => {
-  if ([...event.dataTransfer.types].includes("Files")) {
+  const types = [...event.dataTransfer.types];
+
+  if (types.includes("Files") || types.includes("application/x-churchscribe-embed")) {
     event.preventDefault();
-    event.dataTransfer.dropEffect = "copy";
+    event.dataTransfer.dropEffect = types.includes("Files") ? "copy" : "move";
   }
 });
 
 noteEditor.addEventListener("drop", (event) => {
+  const types = [...event.dataTransfer.types];
+
+  // Helper: resolve drop caret position.
+  const getDropRange = () => {
+    if (document.caretRangeFromPoint) {
+      return document.caretRangeFromPoint(event.clientX, event.clientY);
+    }
+
+    if (document.caretPositionFromPoint) {
+      const pos = document.caretPositionFromPoint(event.clientX, event.clientY);
+
+      if (pos) {
+        const r = document.createRange();
+        r.setStart(pos.offsetNode, pos.offset);
+        r.collapse(true);
+
+        return r;
+      }
+    }
+
+    return null;
+  };
+
+  // ── Embed-move drop ──────────────────────────────────────────────────────
+  if (types.includes("application/x-churchscribe-embed")) {
+    event.preventDefault();
+
+    const embedHtml = event.dataTransfer.getData("text/html");
+    const draggedEmbed = noteEditor.querySelector("[data-embed-dragging]");
+
+    if (!embedHtml) {
+      if (draggedEmbed) {
+        draggedEmbed.removeAttribute("data-embed-dragging");
+      }
+
+      return;
+    }
+
+    const temp = document.createElement("div");
+    temp.innerHTML = embedHtml;
+    const newEmbed = temp.firstElementChild;
+
+    if (!newEmbed) {
+      return;
+    }
+
+    newEmbed.removeAttribute("data-embed-dragging");
+
+    const dropRange = getDropRange();
+    let targetBlock = null;
+
+    if (dropRange && noteEditor.contains(dropRange.commonAncestorContainer)) {
+      let el = dropRange.startContainer;
+      el = el.nodeType === Node.TEXT_NODE ? el.parentElement : el;
+
+      while (el && el.parentElement !== noteEditor) {
+        el = el.parentElement;
+      }
+
+      targetBlock = el && el !== noteEditor ? el : null;
+    }
+
+    // Remove the original embed before inserting the clone.
+    if (draggedEmbed) {
+      draggedEmbed.remove();
+    }
+
+    if (targetBlock) {
+      targetBlock.before(newEmbed);
+    } else {
+      noteEditor.appendChild(newEmbed);
+    }
+
+    ensureTrailingParagraph();
+    saveActiveNote();
+
+    return;
+  }
+
+  // ── Image-file drop ──────────────────────────────────────────────────────
   const imageFiles = [...event.dataTransfer.files].filter((file) => file.type.startsWith("image/"));
 
   if (!imageFiles.length) {
@@ -5541,19 +5716,7 @@ noteEditor.addEventListener("drop", (event) => {
 
   event.preventDefault();
 
-  let dropRange = null;
-
-  if (document.caretRangeFromPoint) {
-    dropRange = document.caretRangeFromPoint(event.clientX, event.clientY);
-  } else if (document.caretPositionFromPoint) {
-    const pos = document.caretPositionFromPoint(event.clientX, event.clientY);
-
-    if (pos) {
-      dropRange = document.createRange();
-      dropRange.setStart(pos.offsetNode, pos.offset);
-      dropRange.collapse(true);
-    }
-  }
+  const dropRange = getDropRange();
 
   if (dropRange && noteEditor.contains(dropRange.commonAncestorContainer)) {
     const selection = window.getSelection();
@@ -5584,41 +5747,15 @@ noteEditor.addEventListener("drop", (event) => {
 
 noteEditor.addEventListener("click", (event) => {
   closeTableContextMenu();
-  const imageDeleteBtn = event.target.closest(".image-embed-delete");
 
-  if (imageDeleteBtn) {
-    event.preventDefault();
-    const embed = imageDeleteBtn.closest("[data-image-embed]");
-
-    if (embed) {
-      embed.remove();
-      ensureTrailingParagraph();
-      saveActiveNote();
-    }
-
-    return;
-  }
-
-  const deleteBtn = event.target.closest(".youtube-embed-delete");
+  // Unified delete-button handler — works for all embed types (old and new DOM).
+  const deleteBtn = event.target.closest(
+    ".embed-delete, .youtube-embed-delete, .spotify-embed-delete, .image-embed-delete"
+  );
 
   if (deleteBtn) {
     event.preventDefault();
-    const embed = deleteBtn.closest("[data-youtube-embed]");
-
-    if (embed) {
-      embed.remove();
-      ensureTrailingParagraph();
-      saveActiveNote();
-    }
-
-    return;
-  }
-
-  const spotifyDeleteBtn = event.target.closest(".spotify-embed-delete");
-
-  if (spotifyDeleteBtn) {
-    event.preventDefault();
-    const embed = spotifyDeleteBtn.closest("[data-spotify-embed]");
+    const embed = deleteBtn.closest(EMBED_SELECTOR);
 
     if (embed) {
       embed.remove();
@@ -5680,21 +5817,42 @@ noteEditor.addEventListener("scroll", closeTableContextMenu);
 
 document.addEventListener("selectionchange", refreshTableUi);
 
+// Unified drag-resize handler — works for both YouTube and image embeds
+// (and any future embed type that uses the shared .embed-resize-handle class).
 noteEditor.addEventListener("mousedown", (event) => {
-  const handle = event.target.closest(".youtube-embed-resize-handle");
+  const handle = event.target.closest(
+    ".embed-resize-handle, .youtube-embed-resize-handle, .image-embed-resize-handle"
+  );
 
   if (!handle) {
     return;
   }
 
   event.preventDefault();
-  const wrapper = handle.closest(".youtube-embed").querySelector(".youtube-embed-wrapper");
-  const iframe = wrapper.querySelector(".youtube-embed-frame");
+
+  // Find the containing embed element then the inner wrapper and media.
+  const embedEl = handle.closest(EMBED_SELECTOR);
+
+  if (!embedEl) {
+    return;
+  }
+
+  const handler = EmbedBase.findHandler(embedEl);
+  const wrapper = handler ? handler.getWrapper(embedEl) : embedEl.firstElementChild;
+  const mediaEl = handler ? handler.getMediaElement(embedEl) : embedEl.querySelector("iframe, img");
+
+  if (!wrapper) {
+    return;
+  }
+
   const startX = event.clientX;
   const startWidth = wrapper.offsetWidth;
   const maxWidth = noteEditor.clientWidth - EDITOR_HORIZONTAL_PADDING;
 
-  iframe.style.pointerEvents = "none";
+  if (mediaEl) {
+    mediaEl.style.pointerEvents = "none";
+  }
+
   document.body.style.cursor = "ew-resize";
 
   const onMouseMove = (e) => {
@@ -5703,41 +5861,10 @@ noteEditor.addEventListener("mousedown", (event) => {
   };
 
   const onMouseUp = () => {
-    iframe.style.pointerEvents = "";
-    document.body.style.cursor = "";
-    document.removeEventListener("mousemove", onMouseMove);
-    document.removeEventListener("mouseup", onMouseUp);
-    saveActiveNote();
-  };
+    if (mediaEl) {
+      mediaEl.style.pointerEvents = "";
+    }
 
-  document.addEventListener("mousemove", onMouseMove);
-  document.addEventListener("mouseup", onMouseUp);
-});
-
-noteEditor.addEventListener("mousedown", (event) => {
-  const handle = event.target.closest(".image-embed-resize-handle");
-
-  if (!handle) {
-    return;
-  }
-
-  event.preventDefault();
-  const wrapper = handle.closest(".image-embed").querySelector(".image-embed-wrapper");
-  const img = wrapper.querySelector(".image-embed-img");
-  const startX = event.clientX;
-  const startWidth = wrapper.offsetWidth;
-  const maxWidth = noteEditor.clientWidth - EDITOR_HORIZONTAL_PADDING;
-
-  img.style.pointerEvents = "none";
-  document.body.style.cursor = "ew-resize";
-
-  const onMouseMove = (e) => {
-    const newWidth = Math.min(maxWidth, Math.max(MIN_EMBED_WIDTH, startWidth + (e.clientX - startX)));
-    wrapper.style.width = `${newWidth}px`;
-  };
-
-  const onMouseUp = () => {
-    img.style.pointerEvents = "";
     document.body.style.cursor = "";
     document.removeEventListener("mousemove", onMouseMove);
     document.removeEventListener("mouseup", onMouseUp);

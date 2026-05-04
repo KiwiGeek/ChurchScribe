@@ -685,6 +685,32 @@ h1 {
   outline: none;
 }
 
+/* ── Shared embed styles ────────────────────────────────────────────────────
+   Applied to all embed types via the shared "embed" class added by
+   EmbedBase._makeContainer().  Type-specific rules below extend these. */
+
+.embed {
+  display: block;
+  margin: 0.75em 0;
+  line-height: 0;
+  user-select: none;
+  /* Ensure the outline appears around the outer container. */
+  outline: none;
+}
+
+/* Visual selection ring shown while the embed element holds keyboard focus
+   (tabindex="-1" means focus is only set programmatically). */
+.embed:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-md);
+}
+
+/* Muted outline while the embed is being dragged. */
+.embed[data-embed-dragging] {
+  opacity: 0.4;
+}
+
 .youtube-embed {
   display: block;
   margin: 0.75em 0;
@@ -700,7 +726,6 @@ h1 {
   background: #000;
   border-radius: var(--radius-md);
   overflow: hidden;
-  padding-bottom: 18px;
 }
 
 .youtube-embed-frame {
@@ -840,16 +865,12 @@ h1 {
   max-width: 100%;
   border-radius: var(--radius-md);
   overflow: hidden;
-  padding-bottom: 18px;
-  background: var(--surface-strong);
 }
 
 .image-embed-img {
   display: block;
   width: 100%;
   height: auto;
-  object-fit: contain;
-  border-radius: var(--radius-md) var(--radius-md) 0 0;
 }
 
 .image-embed-delete {
@@ -896,7 +917,6 @@ h1 {
   padding-right: 8px;
   opacity: 0;
   transition: opacity 0.15s ease;
-  background: rgba(0, 0, 0, 0.25);
 }
 
 .image-embed-wrapper:hover .image-embed-resize-handle {
