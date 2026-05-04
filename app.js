@@ -10,10 +10,6 @@ const translationLibrary = {
   ASV: {
     label: "American Standard Version",
     books: window.ASV_BIBLE
-  },
-  WEB: {
-    label: "World English Bible",
-    books: window.WEB_BIBLE
   }
 };
 
@@ -6285,18 +6281,20 @@ const BUILTIN_TRANSLATION_CODES = new Set(Object.keys(translationLibrary));
 /**
  * Parse a translation .js file of the form:
  *   window.CODE_BIBLE = { "Genesis": [...], ... }
+ * Optionally also reads a label declaration above it:
+ *   window.CODE_LABEL = "Full Translation Name";
  * The data portion is valid JSON so we use JSON.parse – no eval required.
  */
 const parseTranslationJs = (content) => {
   const trimmed = content.trim();
-  const match = trimmed.match(/^window\.([A-Z][A-Z0-9_]*)_BIBLE\s*=\s*/);
+  const match = trimmed.match(/window\.([A-Z][A-Z0-9_]*)_BIBLE\s*=\s*/);
 
   if (!match) {
     throw new Error("File does not look like a translation file. Expected: window.CODE_BIBLE = {...}");
   }
 
   const code = match[1];
-  const jsonPart = trimmed.slice(match[0].length).replace(/;\s*$/, "");
+  const jsonPart = trimmed.slice(match.index + match[0].length).replace(/;\s*$/, "");
   let data;
 
   try {
@@ -6305,7 +6303,11 @@ const parseTranslationJs = (content) => {
     throw new Error(`Could not parse translation data: ${e.message}`);
   }
 
-  return { code, data };
+  // Optionally extract a human-readable label from window.CODE_LABEL = "...".
+  const labelMatch = trimmed.match(new RegExp(`window\\.${code}_LABEL\\s*=\\s*"([^"]+)"`));
+  const label = labelMatch ? labelMatch[1] : code;
+
+  return { code, label, data };
 };
 
 /**
@@ -6399,7 +6401,7 @@ const loadCustomTranslations = async () => {
  */
 const importTranslationFromFile = async (file) => {
   const content = await file.text();
-  const { code, data } = parseTranslationJs(content);
+  const { code, label, data } = parseTranslationJs(content);
 
   if (!validateTranslationData(data)) {
     throw new Error(`"${file.name}" does not contain valid Bible translation data.`);
@@ -6409,10 +6411,6 @@ const importTranslationFromFile = async (file) => {
     throw new Error(`"${code}" is already a built-in translation and cannot be overwritten.`);
   }
 
-  // Use the variable-name portion as the label. Users can re-import with a
-  // renamed variable to get a different code; renaming labels in-app is
-  // a potential future enhancement.
-  const label = code;
   registerCustomTranslation(code, label, data);
   return code;
 };
@@ -6436,7 +6434,7 @@ const importTranslationFromUrl = async (url) => {
     throw new Error(`Failed to download translation: ${e.message}`);
   }
 
-  const { code, data } = parseTranslationJs(content);
+  const { code, label, data } = parseTranslationJs(content);
 
   if (!validateTranslationData(data)) {
     throw new Error("The downloaded file does not contain valid Bible translation data.");
@@ -6446,8 +6444,6 @@ const importTranslationFromUrl = async (url) => {
     throw new Error(`"${code}" is already a built-in translation and cannot be overwritten.`);
   }
 
-  // Use the variable-name portion as the label (same rationale as importTranslationFromFile).
-  const label = code;
   registerCustomTranslation(code, label, data);
   return code;
 };
