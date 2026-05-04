@@ -2156,6 +2156,43 @@ const getTableContext = (cell) => {
   };
 };
 
+const isEditorSpacerNode = (node) => {
+  if (!node) {
+    return false;
+  }
+
+  if (node.nodeType === Node.TEXT_NODE) {
+    return !node.textContent.trim();
+  }
+
+  if (node.nodeType !== Node.ELEMENT_NODE) {
+    return false;
+  }
+
+  const tagName = node.tagName;
+
+  if (tagName === "BR") {
+    return true;
+  }
+
+  if (!["P", "DIV"].includes(tagName)) {
+    return false;
+  }
+
+  const normalizedHtml = node.innerHTML
+    .replace(/&nbsp;/gi, "")
+    .replace(/\s+/g, "")
+    .toLowerCase();
+
+  return normalizedHtml === "" || normalizedHtml === "<br>" || normalizedHtml === "<br/>";
+};
+
+const trimEditorLeadingSpacerNodes = () => {
+  while (isEditorSpacerNode(noteEditor.firstChild)) {
+    noteEditor.firstChild.remove();
+  }
+};
+
 const getCaretTextOffset = (root) => {
   const selection = window.getSelection();
 
@@ -4460,6 +4497,7 @@ const saveActiveNote = () => {
     return;
   }
 
+  trimEditorLeadingSpacerNodes();
   activeNote.content = noteEditor.innerHTML;
   noteMetaFields.querySelectorAll("[data-field-id]").forEach((input) => {
     activeNote.metadata[input.dataset.fieldId] = input.value;

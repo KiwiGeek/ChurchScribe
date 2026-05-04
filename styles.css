@@ -876,6 +876,24 @@ h1 {
   color: var(--placeholder);
 }
 
+.note-editor > :first-child {
+  margin-top: 0;
+}
+
+.note-editor > :last-child {
+  margin-bottom: 0;
+}
+
+.note-editor p,
+.note-editor div {
+  margin: 0 0 0.9em;
+}
+
+.note-editor ul,
+.note-editor ol {
+  margin: 0 0 0.9em 1.35em;
+}
+
 .panel-footer {
   padding: 0 20px 16px;
 }
