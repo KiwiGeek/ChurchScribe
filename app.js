@@ -2156,6 +2156,53 @@ const getTableContext = (cell) => {
   };
 };
 
+const isEditorSpacerNode = (node) => {
+  if (!node) {
+    return false;
+  }
+
+  if (node.nodeType === Node.TEXT_NODE) {
+    return !node.textContent.replace(/\u200b/g, "").trim();
+  }
+
+  if (node.nodeType !== Node.ELEMENT_NODE) {
+    return false;
+  }
+
+  const tagName = node.tagName;
+
+  if (tagName === "BR") {
+    return true;
+  }
+
+  if (!["P", "DIV"].includes(tagName)) {
+    return false;
+  }
+
+  if (node.querySelector("table, img, iframe, ul, ol, blockquote, h2, h3, h4, h5, h6")) {
+    return false;
+  }
+
+  const textContent = node.textContent.replace(/\u200b/g, "").replace(/\u00a0/g, "").trim();
+
+  if (textContent) {
+    return false;
+  }
+
+  const htmlWithoutBreaks = node.innerHTML
+    .replace(/<br\s*\/?>/gi, "")
+    .replace(/&nbsp;/gi, "")
+    .replace(/\s+/g, "");
+
+  return htmlWithoutBreaks === "";
+};
+
+const trimEditorLeadingSpacerNodes = () => {
+  while (isEditorSpacerNode(noteEditor.firstChild)) {
+    noteEditor.firstChild.remove();
+  }
+};
+
 const getCaretTextOffset = (root) => {
   const selection = window.getSelection();
 
@@ -3693,6 +3740,7 @@ const renderActiveNote = () => {
   renderMetadataSummary();
   renderNoteMetadataFields();
   noteEditor.innerHTML = activeNote.content;
+  trimEditorLeadingSpacerNodes();
   linkifyScriptureReferences();
   linkifyUrls();
   processYouTubeEmbeds();
@@ -4460,6 +4508,7 @@ const saveActiveNote = () => {
     return;
   }
 
+  trimEditorLeadingSpacerNodes();
   activeNote.content = noteEditor.innerHTML;
   noteMetaFields.querySelectorAll("[data-field-id]").forEach((input) => {
     activeNote.metadata[input.dataset.fieldId] = input.value;
@@ -5042,6 +5091,8 @@ noteEditor.addEventListener("keydown", (event) => {
 });
 
 noteEditor.addEventListener("input", (event) => {
+  trimEditorLeadingSpacerNodes();
+
   if (event.inputType === "insertParagraph" || event.inputType === "insertLineBreak") {
     saveActiveNote();
     return;

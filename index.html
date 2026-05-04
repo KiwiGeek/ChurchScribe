@@ -82,6 +82,16 @@
         </div>
         <input type="file" id="insert-image-file" accept="image/*" multiple hidden>
 
+        <div
+          id="note-editor"
+          class="note-editor"
+          contenteditable="true"
+          spellcheck="true"
+          role="textbox"
+          aria-multiline="true"
+          data-placeholder="Start typing sermon notes, key points, or prayer requests..."
+        ></div>
+
         <div class="table-toolbar" id="table-toolbar" hidden aria-label="Table actions">
           <span class="table-toolbar-label">Table</span>
           <button class="ghost-button table-action-button" type="button" data-table-action="insert-row-above">Row above</button>
@@ -92,16 +102,6 @@
           <button class="ghost-button table-action-button" type="button" data-table-action="delete-column">Delete column</button>
           <button class="ghost-button table-action-button" type="button" data-table-action="delete-table">Delete table</button>
         </div>
-
-        <div
-          id="note-editor"
-          class="note-editor"
-          contenteditable="true"
-          spellcheck="true"
-          role="textbox"
-          aria-multiline="true"
-          data-placeholder="Start typing sermon notes, key points, or prayer requests..."
-        ></div>
 
         <div class="panel-footer">
           <p id="save-status" class="save-status"></p>
