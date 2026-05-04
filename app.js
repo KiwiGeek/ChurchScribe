@@ -2004,8 +2004,8 @@ const performScriptureSearch = (query) => {
     return;
   }
 
+  const { terms, phrases } = parseSearchQuery(query);
   const scriptureLibrary = getCurrentScriptureLibrary();
-  const terms = scriptureSearchQuery.split(/\s+/).filter(Boolean);
   const results = [];
 
   for (const [bookName, chapters] of Object.entries(scriptureLibrary)) {
@@ -2026,7 +2026,11 @@ const performScriptureSearch = (query) => {
         const verseText = verse.text ?? "";
         const verseTextLower = verseText.toLowerCase();
 
-        if (terms.every((term) => verseTextLower.includes(term))) {
+        const matchesAll =
+          phrases.every((phrase) => verseTextLower.includes(phrase)) &&
+          terms.every((term) => verseTextLower.includes(term));
+
+        if (matchesAll) {
           results.push({ book: bookName, chapter: chapter.chapter, verse: verse.verse, text: verseText });
         }
       }
@@ -2035,7 +2039,8 @@ const performScriptureSearch = (query) => {
 
   verseDisplay.classList.add("is-hidden");
   scriptureSearchResults.classList.remove("is-hidden");
-  renderScriptureSearchResults(results, terms);
+  // Phrases first so longer patterns take priority in regex alternation during highlighting.
+  renderScriptureSearchResults(results, [...phrases, ...terms]);
 };
 
 const applyCommand = (command) => {
