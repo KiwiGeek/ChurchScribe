@@ -10,6 +10,10 @@ const translationLibrary = {
   ASV: {
     label: "American Standard Version",
     books: window.ASV_BIBLE
+  },
+  WEB: {
+    label: "World English Bible",
+    books: window.WEB_BIBLE
   }
 };
 
@@ -1143,7 +1147,8 @@ const buildCloudSettingsPayload = (updatedAt = new Date().toISOString()) => ({
   syncSettings: {
     provider: cloudSyncSettings.provider,
     pollIntervalSeconds: cloudSyncSettings.pollIntervalSeconds
-  }
+  },
+  customTranslations: structuredClone(userTranslations)
 });
 
 const buildCloudNotesPayload = (updatedAt = new Date().toISOString()) => ({
@@ -1200,6 +1205,20 @@ const applyCloudPayload = (payload) => {
       applyColorTheme(payload.preferences.colorTheme);
       void writeStoredValue(colorThemeStorageKey, payload.preferences.colorTheme);
     }
+  }
+
+  if (Array.isArray(payload.customTranslations)) {
+    userTranslations = [];
+
+    for (const { code, label, data } of payload.customTranslations) {
+      if (code && label && !BUILTIN_TRANSLATION_CODES.has(code) && validateTranslationData(data)) {
+        translationLibrary[code] = { label, books: data };
+        userTranslations.push({ code, label, data });
+      }
+    }
+
+    void writeStoredValue(customTranslationsStorageKey, userTranslations);
+    populateTranslationSelect();
   }
 
   ensureWorkspaceConsistency();
@@ -5991,7 +6010,7 @@ importTranslationUrlButton.addEventListener("click", () => {
   importTranslationFromUrl(url).then((code) => {
     translationUrlInput.value = "";
     renderTranslationsPanel();
-    setSaveStatus(`Translation "${code}" imported successfully.`);
+    updateSaveStatus(`Translation "${code}" imported successfully.`);
     setTimeout(() => refreshSaveStatus(), 4000);
   }).catch((err) => {
     // eslint-disable-next-line no-alert
@@ -6545,7 +6564,7 @@ document.addEventListener("drop", (event) => {
 
   jsFiles.forEach((file) => {
     importTranslationFromFile(file).then((code) => {
-      setSaveStatus(`Translation "${code}" imported successfully.`);
+      updateSaveStatus(`Translation "${code}" imported successfully.`);
       setTimeout(() => refreshSaveStatus(), 4000);
 
       if (settingsDialog.open && activeSettingsTabId === "translations") {
