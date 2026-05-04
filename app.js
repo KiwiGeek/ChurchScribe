@@ -2859,6 +2859,7 @@ const ensureTrailingParagraph = () => {
 
   if (last && last.matches(EMBED_SELECTOR)) {
     const p = document.createElement("p");
+    p.innerHTML = "<br>";
     noteEditor.appendChild(p);
   }
 };
