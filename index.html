@@ -121,11 +121,7 @@
         <form class="verse-picker" id="verse-picker">
           <label class="field">
             <span>Translation</span>
-            <select id="translation-select" name="translation">
-              <option value="KJV">KJV</option>
-              <option value="NKJV">NKJV</option>
-              <option value="ASV">ASV</option>
-            </select>
+            <select id="translation-select" name="translation"></select>
           </label>
 
           <label class="field">
@@ -366,6 +362,38 @@
               <button class="ghost-button" id="google-connect-button" type="button">Connect Google Drive</button>
               <button class="ghost-button" id="google-disconnect-button" type="button">Disconnect</button>
               <button class="ghost-button" id="google-sync-now-button" type="button">Sync Now</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="type-editor-panel settings-translations-panel" data-settings-panel="translations" aria-labelledby="translations-title">
+          <div class="note-switcher-header">
+            <h3 id="translations-title">Bible Translations</h3>
+          </div>
+          <p class="settings-copy">Manage custom Bible translation files. Drop a <code>.js</code> translation file anywhere on the page to import it, or enter a URL below to download one.</p>
+
+          <div class="data-management-section">
+            <h4 class="data-section-title">Built-in Translations</h4>
+            <ul class="translation-list" id="builtin-translation-list"></ul>
+          </div>
+
+          <div class="data-management-section" id="user-translations-section">
+            <h4 class="data-section-title">User-Added Translations</h4>
+            <p class="settings-copy" id="user-translations-empty-note">No custom translations have been added yet.</p>
+            <ul class="translation-list" id="user-translation-list"></ul>
+          </div>
+
+          <div class="data-management-section">
+            <h4 class="data-section-title">Import from URL</h4>
+            <p class="settings-copy">Enter the URL of a <code>.js</code> translation file to download and import it.</p>
+            <div class="display-field-grid">
+              <label class="field">
+                <span>URL</span>
+                <input id="translation-url-input" type="url" placeholder="https://example.com/translation.js">
+              </label>
+            </div>
+            <div class="dialog-actions data-actions">
+              <button class="ghost-button" id="import-translation-url-button" type="button">Import from URL</button>
             </div>
           </div>
         </section>
