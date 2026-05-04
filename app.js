@@ -5401,28 +5401,6 @@ noteEditor.addEventListener("keydown", (event) => {
     return;
   }
 
-  // Helper: walk past consecutive embed elements and return the first
-  // non-embed sibling (or null).
-  const firstNonEmbedAfter = (el) => {
-    let s = el.nextElementSibling;
-
-    while (s && s.matches(EMBED_SELECTOR)) {
-      s = s.nextElementSibling;
-    }
-
-    return s;
-  };
-
-  const firstNonEmbedBefore = (el) => {
-    let s = el.previousElementSibling;
-
-    while (s && s.matches(EMBED_SELECTOR)) {
-      s = s.previousElementSibling;
-    }
-
-    return s;
-  };
-
   const isAtBlockEnd = () => {
     const blockRange = document.createRange();
     blockRange.selectNodeContents(block);
@@ -5450,6 +5428,8 @@ noteEditor.addEventListener("keydown", (event) => {
     sel.addRange(r);
   };
 
+  const isGhostBlock = block.dataset.embedGhost === "true";
+
   if (event.key === "ArrowDown" || event.key === "ArrowRight") {
     if (!isAtBlockEnd()) {
       return;
@@ -5461,15 +5441,23 @@ noteEditor.addEventListener("keydown", (event) => {
       return;
     }
 
-    // There are one or more embeds immediately after this block.
-    // If nothing editable follows the embed chain, insert a ghost at the end.
-    const afterChain = firstNonEmbedAfter(block);
+    if (!isGhostBlock) {
+      // Regular paragraph ending at an embed: land in the gap between this
+      // paragraph and the embed (one step at a time).
+      insertGhostAndFocus((ghost) => block.after(ghost));
+    } else {
+      // Already in a ghost between two embeds: step past the next embed.
+      const afterNextEmbed = nextEmbed.nextElementSibling;
 
-    if (!afterChain) {
-      insertGhostAndFocus((ghost) => noteEditor.appendChild(ghost));
+      if (!afterNextEmbed) {
+        // nextEmbed is the last child — ghost goes after it (at editor end).
+        insertGhostAndFocus((ghost) => noteEditor.appendChild(ghost));
+      } else if (afterNextEmbed.matches(EMBED_SELECTOR)) {
+        // Another embed follows nextEmbed — ghost goes between those two embeds.
+        insertGhostAndFocus((ghost) => nextEmbed.after(ghost));
+      }
+      // If a real paragraph follows nextEmbed, the browser navigates naturally.
     }
-    // If there is an editable paragraph after the chain the browser will
-    // navigate there naturally — no intervention needed.
   } else {
     // ArrowUp or ArrowLeft
     if (!isAtBlockStart()) {
@@ -5482,22 +5470,22 @@ noteEditor.addEventListener("keydown", (event) => {
       return;
     }
 
-    // Insert a ghost paragraph immediately before the nearest preceding embed.
-    // This lets the user navigate into the gap between consecutive embeds one
-    // step at a time rather than jumping past the entire chain at once.
-    const beforePrevEmbed = prevEmbed.previousElementSibling;
+    if (!isGhostBlock) {
+      // Regular paragraph starting at an embed: land in the gap between the
+      // embed and this paragraph (one step at a time).
+      insertGhostAndFocus((ghost) => block.before(ghost));
+    } else {
+      // Already in a ghost between two embeds: step past the preceding embed.
+      const beforePrevEmbed = prevEmbed.previousElementSibling;
 
-    if (!beforePrevEmbed) {
-      // prevEmbed is the first child — ghost goes before it (at editor start).
-      insertGhostAndFocus((ghost) => noteEditor.prepend(ghost));
-    } else if (beforePrevEmbed.matches(EMBED_SELECTOR)) {
-      // Another embed precedes prevEmbed — ghost goes between those two embeds.
-      insertGhostAndFocus((ghost) => prevEmbed.before(ghost));
-    }
-    // If a real (non-embed) paragraph precedes prevEmbed, the browser can
-    // navigate there naturally — no ghost is needed.
-    else {
-      return;
+      if (!beforePrevEmbed) {
+        // prevEmbed is the first child — ghost goes before it (at editor start).
+        insertGhostAndFocus((ghost) => noteEditor.prepend(ghost));
+      } else if (beforePrevEmbed.matches(EMBED_SELECTOR)) {
+        // Another embed precedes prevEmbed — ghost goes between those two embeds.
+        insertGhostAndFocus((ghost) => prevEmbed.before(ghost));
+      }
+      // If a real paragraph precedes prevEmbed, the browser navigates naturally.
     }
   }
 });

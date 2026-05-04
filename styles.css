@@ -866,16 +866,12 @@ h1 {
   max-width: 100%;
   border-radius: var(--radius-md);
   overflow: hidden;
-  padding-bottom: 18px;
-  background: var(--surface-strong);
 }
 
 .image-embed-img {
   display: block;
   width: 100%;
   height: auto;
-  object-fit: contain;
-  border-radius: var(--radius-md) var(--radius-md) 0 0;
 }
 
 .image-embed-delete {
