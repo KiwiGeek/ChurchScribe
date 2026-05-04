@@ -2631,6 +2631,17 @@ const unwrapAutoUrlLinks = () => {
   noteEditor.normalize();
 };
 
+const EMBED_SELECTOR = "[data-youtube-embed], [data-spotify-embed], [data-image-embed]";
+
+const ensureTrailingParagraph = () => {
+  const last = noteEditor.lastElementChild;
+
+  if (last && last.matches(EMBED_SELECTOR)) {
+    const p = document.createElement("p");
+    noteEditor.appendChild(p);
+  }
+};
+
 const extractYouTubeVideoId = (url) => {
   try {
     const parsed = new URL(url);
@@ -2818,6 +2829,8 @@ const processYouTubeEmbeds = () => {
     const emptyParagraph = document.createElement("p");
     block.replaceWith(embed, emptyParagraph);
   });
+
+  ensureTrailingParagraph();
 };
 
 const SPOTIFY_EMBED_TYPES = new Set(["track", "album", "playlist", "artist", "episode", "show"]);
@@ -2905,6 +2918,8 @@ const processSpotifyEmbeds = () => {
     const emptyParagraph = document.createElement("p");
     block.replaceWith(embed, emptyParagraph);
   });
+
+  ensureTrailingParagraph();
 };
 
 const validateDomainWithDoh = async (domain) => {
@@ -3440,6 +3455,7 @@ const renderActiveNote = () => {
   linkifyUrls();
   processYouTubeEmbeds();
   processSpotifyEmbeds();
+  ensureTrailingParagraph();
 };
 
 const renderNoteManager = () => {
@@ -4839,6 +4855,7 @@ noteEditor.addEventListener("click", (event) => {
 
     if (embed) {
       embed.remove();
+      ensureTrailingParagraph();
       saveActiveNote();
     }
 
@@ -4853,6 +4870,7 @@ noteEditor.addEventListener("click", (event) => {
 
     if (embed) {
       embed.remove();
+      ensureTrailingParagraph();
       saveActiveNote();
     }
 
@@ -4867,6 +4885,7 @@ noteEditor.addEventListener("click", (event) => {
 
     if (embed) {
       embed.remove();
+      ensureTrailingParagraph();
       saveActiveNote();
     }
 
