@@ -5304,13 +5304,18 @@ noteEditor.addEventListener("keydown", (event) => {
 });
 
 noteEditor.addEventListener("input", (event) => {
-  trimEditorLeadingSpacerNodes();
-
   if (event.inputType === "insertParagraph" || event.inputType === "insertLineBreak") {
+    // Do NOT trim leading spacers here: the browser may have just inserted an intentional
+    // empty paragraph at the start of the editor (e.g. Enter pressed at the very beginning
+    // of the first block), and trimming would silently delete it.
+    linkifyUrls({ suppressAtCaret: true });
+    processYouTubeEmbeds();
+    processSpotifyEmbeds();
     saveActiveNote();
     return;
   }
 
+  trimEditorLeadingSpacerNodes();
   linkifyScriptureReferences({ jumpToCaretReference: true });
   linkifyUrls({ suppressAtCaret: event.inputType !== "insertFromPaste" });
   processYouTubeEmbeds();
