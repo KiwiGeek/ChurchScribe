@@ -726,7 +726,6 @@ h1 {
   background: #000;
   border-radius: var(--radius-md);
   overflow: hidden;
-  padding-bottom: 18px;
 }
 
 .youtube-embed-frame {

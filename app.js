@@ -5415,6 +5415,33 @@ noteEditor.addEventListener("keydown", (event) => {
     return range.compareBoundaryPoints(Range.START_TO_START, blockRange) === 0;
   };
 
+  // Visual-line helpers: check whether the caret sits on the first/last
+  // rendered line of the block (regardless of character offset).  These are
+  // used for ArrowUp/Down so that a user positioned anywhere on the first or
+  // last visual line of a paragraph can navigate into/out of an adjacent embed.
+  const isOnFirstVisualLine = () => {
+    if (!block.textContent) return true;
+
+    // Build a range from the block's start to the current caret.
+    // If getClientRects() returns ≤ 1 rect the range fits on a single visual
+    // line, meaning the caret is on the first line of the block.
+    const r = document.createRange();
+    r.setStart(block, 0);
+    r.setEnd(range.startContainer, range.startOffset);
+
+    return r.getClientRects().length <= 1;
+  };
+
+  const isOnLastVisualLine = () => {
+    if (!block.textContent) return true;
+
+    const r = document.createRange();
+    r.setStart(range.startContainer, range.startOffset);
+    r.setEnd(block, block.childNodes.length);
+
+    return r.getClientRects().length <= 1;
+  };
+
   const insertGhostAndFocus = (insertFn) => {
     event.preventDefault();
     const ghost = document.createElement("p");
@@ -5431,7 +5458,13 @@ noteEditor.addEventListener("keydown", (event) => {
   const isGhostBlock = block.dataset.embedGhost === "true";
 
   if (event.key === "ArrowDown" || event.key === "ArrowRight") {
-    if (!isAtBlockEnd()) {
+    // For Down, fire when the caret is on the last visual line (cursor may be
+    // anywhere horizontally within that line). For Right, only fire when the
+    // caret is at the very last character position so Left/Right navigation
+    // within a line is unaffected.
+    const atEnd = event.key === "ArrowDown" ? isOnLastVisualLine() : isAtBlockEnd();
+
+    if (!atEnd) {
       return;
     }
 
@@ -5460,7 +5493,11 @@ noteEditor.addEventListener("keydown", (event) => {
     }
   } else {
     // ArrowUp or ArrowLeft
-    if (!isAtBlockStart()) {
+    // For Up, fire when the caret is on the first visual line. For Left, only
+    // fire when the caret is at the very first character position.
+    const atStart = event.key === "ArrowUp" ? isOnFirstVisualLine() : isAtBlockStart();
+
+    if (!atStart) {
       return;
     }
 
