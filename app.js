@@ -1951,6 +1951,11 @@ const isValidScriptureReference = (canonicalBook, chapter, verseStart = null, ve
   return verseStart >= 1 && effectiveVerseEnd <= maxVerse;
 };
 
+const isSingleChapterBook = (canonicalBook) => {
+  const scriptureLibrary = getCurrentScriptureLibrary();
+  return (scriptureLibrary[canonicalBook]?.length ?? 0) === 1;
+};
+
 const parseScriptureReference = (referenceText) => {
   const match = referenceText.match(fullExplicitScriptureReferencePattern);
 
@@ -2028,12 +2033,26 @@ const parseScriptureReference = (referenceText) => {
     }
 
     if (currentChapter === null) {
-      currentChapter = Number(fullChapterSegment[1]);
+      const parsedNum = Number(fullChapterSegment[1]);
 
-      if (!isValidScriptureReference(canonicalBook, currentChapter)) {
-        return null;
+      if (!isValidScriptureReference(canonicalBook, parsedNum)) {
+        if (!isSingleChapterBook(canonicalBook) || !isValidScriptureReference(canonicalBook, 1, parsedNum)) {
+          return null;
+        }
+
+        currentChapter = 1;
+        const singleChapterVerses = chapterHighlights.get(1) ?? new Set();
+        singleChapterVerses.add(parsedNum);
+        chapterHighlights.set(1, singleChapterVerses);
+
+        if (firstVerse === null) {
+          firstVerse = parsedNum;
+        }
+
+        continue;
       }
 
+      currentChapter = parsedNum;
       continue;
     }
 
@@ -2108,20 +2127,33 @@ const resolveReferenceSegment = (canonicalBook, segment, currentChapter) => {
   }
 
   if (currentChapter === null) {
-    const chapter = Number(verseOnlyMatch[1]);
+    const parsedNum = Number(verseOnlyMatch[1]);
 
-    if (!isValidScriptureReference(canonicalBook, chapter)) {
-      return null;
+    if (!isValidScriptureReference(canonicalBook, parsedNum)) {
+      if (!isSingleChapterBook(canonicalBook) || !isValidScriptureReference(canonicalBook, 1, parsedNum)) {
+        return null;
+      }
+
+      const verseSet = new Set([parsedNum]);
+      return {
+        parsedReference: {
+          book: canonicalBook,
+          chapter: 1,
+          firstVerse: parsedNum,
+          chapterHighlights: new Map([[1, verseSet]])
+        },
+        currentChapter: 1
+      };
     }
 
     return {
       parsedReference: {
         book: canonicalBook,
-        chapter,
+        chapter: parsedNum,
         firstVerse: null,
         chapterHighlights: new Map()
       },
-      currentChapter: chapter
+      currentChapter: parsedNum
     };
   }
 
