@@ -5496,6 +5496,9 @@ noteEditor.addEventListener("keydown", (event) => {
     }
     // If a real (non-embed) paragraph precedes prevEmbed, the browser can
     // navigate there naturally — no ghost is needed.
+    else {
+      return;
+    }
   }
 });
 
