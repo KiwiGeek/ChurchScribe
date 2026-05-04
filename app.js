@@ -6345,7 +6345,7 @@ const populateTranslationSelect = () => {
   if (translationLibrary[current]) {
     translationSelect.value = current;
   } else {
-    translationSelect.value = Object.keys(translationLibrary)[0] ?? "";
+    translationSelect.value = translationLibrary["KJV"] ? "KJV" : (Object.keys(translationLibrary)[0] ?? "");
   }
 };
 
