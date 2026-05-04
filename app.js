@@ -3270,6 +3270,14 @@ const processImageFiles = (files) => {
   });
 };
 
+// Returns the nearest block-level ancestor of `link` that is a direct (or nested) child of
+// noteEditor, but never noteEditor itself.  Includes <div> because Chrome's contenteditable
+// wraps paragraphs in <div> elements by default.
+const findLinkBlock = (link) => {
+  const block = link.closest("p, div, h2, h3, h4, h5, h6, li, blockquote");
+  return (block && block !== noteEditor) ? block : null;
+};
+
 const processYouTubeEmbeds = () => {
   noteEditor.querySelectorAll("a[data-auto-url-link='true']").forEach((link) => {
     const videoId = extractYouTubeVideoId(link.href);
@@ -3278,7 +3286,7 @@ const processYouTubeEmbeds = () => {
       return;
     }
 
-    const block = link.closest(BLOCK_LEVEL_ELEMENTS);
+    const block = findLinkBlock(link);
 
     if (!block) {
       return;
@@ -3367,7 +3375,7 @@ const processSpotifyEmbeds = () => {
       return;
     }
 
-    const block = link.closest(BLOCK_LEVEL_ELEMENTS);
+    const block = findLinkBlock(link);
 
     if (!block) {
       return;
@@ -3918,6 +3926,11 @@ const renderActiveNote = () => {
   renderMetadataSummary();
   renderNoteMetadataFields();
   noteEditor.innerHTML = activeNote.content;
+  // Ensure the editor always has at least one block-level element so Chrome's
+  // contenteditable creates <p> (not bare <div>) paragraphs when the user types.
+  if (!noteEditor.firstChild) {
+    noteEditor.innerHTML = "<p><br></p>";
+  }
   trimEditorLeadingSpacerNodes();
   linkifyScriptureReferences();
   linkifyUrls();
@@ -5305,12 +5318,37 @@ noteEditor.addEventListener("keydown", (event) => {
 
 noteEditor.addEventListener("input", (event) => {
   if (event.inputType === "insertParagraph" || event.inputType === "insertLineBreak") {
-    // Do NOT trim leading spacers here: the browser may have just inserted an intentional
-    // empty paragraph at the start of the editor (e.g. Enter pressed at the very beginning
-    // of the first block), and trimming would silently delete it.
-    linkifyUrls({ suppressAtCaret: true });
+    // Save the browser's cursor position (in the newly-created empty paragraph) using a
+    // DOM Range rather than a plain text offset.  restoreCaretTextOffset() cannot find
+    // empty paragraphs (they contain no text nodes), so it would move the cursor back to
+    // the end of the previous paragraph's text — exactly the "cursor jumps" bug.
+    const sel = window.getSelection();
+    const savedContainer = sel.rangeCount ? sel.getRangeAt(0).startContainer : null;
+    const savedOffset   = sel.rangeCount ? sel.getRangeAt(0).startOffset   : 0;
+
+    // suppressAtCaret: false — after Enter the caret is in the *new* empty paragraph, whose
+    // global text offset happens to equal the end of the URL in the previous paragraph.
+    // Using true would therefore suppress that URL and prevent embed creation.
+    linkifyUrls({ suppressAtCaret: false });
     processYouTubeEmbeds();
     processSpotifyEmbeds();
+
+    // Restore cursor to the saved DOM position (the new empty paragraph).
+    // If processYouTubeEmbeds/processSpotifyEmbeds replaced the old paragraph with an embed,
+    // the new paragraph (savedContainer) is still in the DOM and the cursor is correct.
+    if (savedContainer && noteEditor.contains(savedContainer)) {
+      try {
+        const r = document.createRange();
+        r.setStart(savedContainer, savedOffset);
+        r.collapse(true);
+        sel.removeAllRanges();
+        sel.addRange(r);
+      } catch {
+        // Range became invalid (e.g. savedContainer was inside the replaced block); leave
+        // the cursor wherever the browser placed it.
+      }
+    }
+
     saveActiveNote();
     return;
   }
@@ -5320,6 +5358,26 @@ noteEditor.addEventListener("input", (event) => {
   linkifyUrls({ suppressAtCaret: event.inputType !== "insertFromPaste" });
   processYouTubeEmbeds();
   processSpotifyEmbeds();
+
+  // If the cursor was orphaned because an embed replaced its containing block
+  // (e.g. user pressed Space after a lone URL), move it to the trailing empty paragraph.
+  {
+    const sel = window.getSelection();
+
+    if (sel.rangeCount && !noteEditor.contains(sel.getRangeAt(0).startContainer)) {
+      const emptyPara = [...noteEditor.querySelectorAll("p")]
+        .findLast((p) => !p.textContent.trim());
+
+      if (emptyPara) {
+        const r = document.createRange();
+        r.setStart(emptyPara, 0);
+        r.collapse(true);
+        sel.removeAllRanges();
+        sel.addRange(r);
+      }
+    }
+  }
+
   saveActiveNote();
 });
 
