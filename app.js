@@ -2970,6 +2970,21 @@ const isLastTableCell = (context) => {
   return isLastRow && isLastColumn;
 };
 
+const getNextTableCell = (context) => {
+  if (!context) {
+    return null;
+  }
+
+  const nextCellInRow = context.row.cells[context.columnIndex + 1];
+
+  if (nextCellInRow) {
+    return nextCellInRow;
+  }
+
+  const nextRow = context.table.rows[context.rowIndex + 1];
+  return nextRow?.cells[0] ?? null;
+};
+
 const createEmptyParagraph = () => {
   const paragraph = document.createElement("p");
   paragraph.innerHTML = "<br>";
@@ -5009,13 +5024,20 @@ noteEditor.addEventListener("keydown", (event) => {
 
   const context = getTableContext(getTableCellFromSelection());
 
-  if (!isLastTableCell(context)) {
+  if (!context) {
     return;
   }
 
   event.preventDefault();
-  insertTableRow(context, 1, 0);
-  saveActiveNote();
+
+  if (isLastTableCell(context)) {
+    insertTableRow(context, 1, 0);
+    saveActiveNote();
+    refreshTableUi();
+    return;
+  }
+
+  focusTableCell(getNextTableCell(context));
   refreshTableUi();
 });
 
