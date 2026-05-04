@@ -3312,6 +3312,7 @@ const processYouTubeEmbeds = () => {
 
     const embed = createYouTubeEmbed(videoId);
     const emptyParagraph = document.createElement("p");
+    emptyParagraph.innerHTML = "<br>";
     block.replaceWith(embed, emptyParagraph);
   });
 
@@ -3402,6 +3403,7 @@ const processSpotifyEmbeds = () => {
 
     const embed = createSpotifyEmbed(embedInfo);
     const emptyParagraph = document.createElement("p");
+    emptyParagraph.innerHTML = "<br>";
     block.replaceWith(embed, emptyParagraph);
   });
 
@@ -3938,12 +3940,15 @@ const renderActiveNote = () => {
   renderMetadataSummary();
   renderNoteMetadataFields();
   noteEditor.innerHTML = activeNote.content;
-  // Ensure the editor always has at least one block-level element so Chrome's
-  // contenteditable creates <p> (not bare <div>) paragraphs when the user types.
+  // Trim browser-injected leading spacers first, then guarantee at least one
+  // block-level element.  The guard MUST come after trimming: for a blank note
+  // whose saved content is "<p><br></p>", the trim would remove that element
+  // and leave the editor empty — causing Chrome to inject content as bare text
+  // nodes or <div>s instead of <p>s, which breaks findLinkBlock and embed creation.
+  trimEditorLeadingSpacerNodes();
   if (!noteEditor.firstChild) {
     noteEditor.innerHTML = "<p><br></p>";
   }
-  trimEditorLeadingSpacerNodes();
   linkifyScriptureReferences();
   linkifyUrls();
   processYouTubeEmbeds();
@@ -5369,6 +5374,13 @@ noteEditor.addEventListener("input", (event) => {
   // any empty leading paragraph the user just created (e.g. by pressing Enter at position 0),
   // making the Enter key appear broken at the start of a document.
   trimEditorLeadingSpacerNodes();
+  // Defensive: if trim left the editor completely empty, re-seed it with an empty paragraph
+  // so Chrome wraps subsequent typing in <p> rather than bare text nodes.
+  if (!noteEditor.firstChild) {
+    const p = document.createElement("p");
+    p.innerHTML = "<br>";
+    noteEditor.appendChild(p);
+  }
   linkifyScriptureReferences({ jumpToCaretReference: true });
   linkifyUrls({ suppressAtCaret: event.inputType !== "insertFromPaste" });
   processYouTubeEmbeds();
