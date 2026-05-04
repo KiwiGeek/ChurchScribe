@@ -2960,6 +2960,16 @@ const insertTableAtSelection = (rows, columns) => {
 
 const getTableActionContext = () => getTableContext(contextMenuTableCell ?? activeTableCell);
 
+const isLastTableCell = (context) => {
+  if (!context) {
+    return false;
+  }
+
+  const isLastRow = context.rowIndex === context.table.rows.length - 1;
+  const isLastColumn = context.columnIndex === context.row.cells.length - 1;
+  return isLastRow && isLastColumn;
+};
+
 const createEmptyParagraph = () => {
   const paragraph = document.createElement("p");
   paragraph.innerHTML = "<br>";
@@ -4990,6 +5000,23 @@ noteMetaFields.addEventListener("change", (event) => {
   }
 
   changeNoteType(typeSelect.dataset.noteTypeChange, typeSelect.value);
+});
+
+noteEditor.addEventListener("keydown", (event) => {
+  if (event.key !== "Tab" || event.shiftKey || event.altKey || event.ctrlKey || event.metaKey) {
+    return;
+  }
+
+  const context = getTableContext(getTableCellFromSelection());
+
+  if (!isLastTableCell(context)) {
+    return;
+  }
+
+  event.preventDefault();
+  insertTableRow(context, 1);
+  saveActiveNote();
+  refreshTableUi();
 });
 
 noteEditor.addEventListener("input", (event) => {
