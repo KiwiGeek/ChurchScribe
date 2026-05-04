@@ -1877,8 +1877,6 @@ const applyTranslation = (translationCode) => {
 
 const MAX_SCRIPTURE_SEARCH_RESULTS = 100;
 
-const escapeRegExp = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-
 const buildHighlightedTextContent = (text, terms) => {
   const pattern = new RegExp(`(${terms.map(escapeRegExp).join("|")})`, "gi");
   const fragment = document.createDocumentFragment();
