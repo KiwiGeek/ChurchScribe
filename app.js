@@ -3,6 +3,10 @@ const translationLibrary = {
     label: "King James Version",
     books: window.KJV_BIBLE
   },
+  NKJV: {
+    label: "New King James Version",
+    books: window.NKJV_BIBLE
+  },
   ASV: {
     label: "American Standard Version",
     books: window.ASV_BIBLE
@@ -1787,7 +1791,7 @@ const renderChapter = () => {
     const text = document.createElement("span");
     text.className = "chapter-verse-text";
 
-    if (currentTranslationCode === "KJV" && typeof verse.html === "string") {
+    if (typeof verse.html === "string") {
       text.innerHTML = verse.html;
     } else {
       text.textContent = verse.text;
