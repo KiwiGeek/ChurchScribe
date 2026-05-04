@@ -72,6 +72,7 @@ const addTypeButton = document.querySelector("#add-type-button");
 const addMetadataFieldButton = document.querySelector("#add-metadata-field-button");
 const deleteTypeButton = document.querySelector("#delete-type-button");
 const overflowMenu = document.querySelector(".overflow-menu");
+const openOnboardingButton = document.querySelector("#open-onboarding-button");
 const syncConflictDialog = document.querySelector("#sync-conflict-dialog");
 const conflictDialogTitle = document.querySelector("#conflict-dialog-title");
 const conflictDialogDescription = document.querySelector("#conflict-dialog-description");
@@ -85,6 +86,23 @@ const firstSyncCancelButton = document.querySelector("#first-sync-cancel-button"
 const aboutVersionInfo = document.querySelector("#about-version-info");
 const mobileWarning = document.querySelector("#mobile-warning");
 const mobileWarningDismissButton = document.querySelector("#mobile-warning-dismiss");
+const onboardingDialog = document.querySelector("#onboarding-dialog");
+const onboardingStepKicker = document.querySelector("#onboarding-step-kicker");
+const onboardingStepTitle = document.querySelector("#onboarding-step-title");
+const onboardingStepCopy = document.querySelector("#onboarding-step-copy");
+const onboardingStepPoints = document.querySelector("#onboarding-step-points");
+const onboardingStepCallout = document.querySelector("#onboarding-step-callout");
+const onboardingProgress = document.querySelector("#onboarding-progress");
+const onboardingBackButton = document.querySelector("#onboarding-back-button");
+const onboardingNextButton = document.querySelector("#onboarding-next-button");
+const onboardingFinishButton = document.querySelector("#onboarding-finish-button");
+const insertTableButton = document.querySelector("#insert-table-button");
+const tableToolbar = document.querySelector("#table-toolbar");
+const tableDialog = document.querySelector("#table-dialog");
+const tableRowsInput = document.querySelector("#table-rows-input");
+const tableColumnsInput = document.querySelector("#table-columns-input");
+const tableInsertConfirmButton = document.querySelector("#table-insert-confirm-button");
+const tableContextMenu = document.querySelector("#table-context-menu");
 const insertImageButton = document.querySelector("#insert-image-button");
 const insertImageFile = document.querySelector("#insert-image-file");
 
@@ -101,6 +119,7 @@ const translationStorageKey = "service-notes-translation";
 const cloudSyncStorageKey = "service-notes-cloud-sync";
 const colorThemeStorageKey = "service-notes-color-theme";
 const lastBookChapterStorageKey = "service-notes-last-book-chapter";
+const onboardingStorageKey = "service-notes-onboarding-seen";
 const autoCloudSyncDelayMs = 10000;
 
 const noOpProvider = {
@@ -194,6 +213,10 @@ let noteBrowserTypeFilter = "all";
 let noteBrowserSort = "updated-desc";
 let noteBrowserSelectedNoteId = null;
 let scriptureSearchQuery = "";
+let savedSelectionForTableInsert = null;
+let activeTableCell = null;
+let contextMenuTableCell = null;
+let activeOnboardingStepIndex = 0;
 let dbPromise;
 let pendingAutoSyncTimer = null;
 let syncInFlightPromise = null;
@@ -234,6 +257,64 @@ const settingsTabs = [
   {
     id: "about",
     label: "About"
+  }
+];
+
+const onboardingSteps = [
+  {
+    kicker: "Welcome",
+    title: "ChurchScribe keeps your notes on your device",
+    copy: "ChurchScribe is designed to feel lightweight and private. Your notes live in your browser on your own computer unless you explicitly connect an auxiliary storage provider.",
+    points: [
+      "Nothing is automatically sent to a server run by ChurchScribe.",
+      "You stay in control of when and where any backups or sync copies are created.",
+      "You can clear or export your workspace later from Settings if you ever need to."
+    ],
+    callout: "Good to know: the default experience is local-first and privacy-friendly."
+  },
+  {
+    kicker: "Taking Notes",
+    title: "The note editor works like a focused writing surface",
+    copy: "Each note is its own editable document. Use the toolbar for quick formatting, lists, headings, quotes, images, and tables while you capture sermon points, study notes, or prayer requests.",
+    points: [
+      "The main note area saves locally as you type.",
+      "Use the notes browser to jump between notes when your library grows.",
+      "Formatting is intentionally simple so you can stay in the flow during live note-taking."
+    ],
+    callout: "Tip: the app is optimized for desktop and tablet use, especially during active note-taking."
+  },
+  {
+    kicker: "Scripture Linking",
+    title: "Verse references are matched automatically",
+    copy: "When you type a Bible reference in your notes, ChurchScribe tries to recognize it and turn it into a clickable scripture link automatically.",
+    points: [
+      "Matched references can jump you straight to the passage in the Scripture pane.",
+      "Common abbreviations are supported, and you can fine-tune them in Settings.",
+      "Copying verses from the Scripture pane keeps useful formatting like emphasis where possible."
+    ],
+    callout: "If a book abbreviation is unusual in your church context, check the Scripture Abbreviations section in Settings."
+  },
+  {
+    kicker: "Note Types",
+    title: "Note types shape the details attached to each note",
+    copy: "ChurchScribe lets you define note types such as sermon notes, Bible studies, Sabbath School, or anything else you need. Each type can have its own metadata fields.",
+    points: [
+      "Use Settings → Note Types to add, rename, or adjust note types.",
+      "Metadata fields can be customized to match the information you track most often.",
+      "The note options dialog lets you switch a note to a different type when that actually matters."
+    ],
+    callout: "This is one of the app’s best customization points: shape the workspace around your ministry context."
+  },
+  {
+    kicker: "Make It Yours",
+    title: "Explore themes and optional cloud sync next",
+    copy: "Once the basics feel comfortable, check out the color themes and display settings, then consider connecting auxiliary storage if you want another copy of your notes outside this device.",
+    points: [
+      "Themes and layout settings can make the app feel much more personal.",
+      "Auxiliary storage is optional, but useful if you want backup or cross-device workflows.",
+      "You can reopen this tutorial any time from Settings → About."
+    ],
+    callout: "Recommended next steps: try a different theme, review your note types, and then decide whether cloud sync is worth setting up."
   }
 ];
 
@@ -2053,6 +2134,146 @@ const applyBlock = (block) => {
   document.execCommand("formatBlock", false, block);
 };
 
+const getEditorRange = () => {
+  const selection = window.getSelection();
+
+  if (!selection || !selection.rangeCount) {
+    return null;
+  }
+
+  const range = selection.getRangeAt(0);
+  return noteEditor.contains(range.commonAncestorContainer) ? range : null;
+};
+
+const saveEditorSelection = () => {
+  const range = getEditorRange();
+  return range ? range.cloneRange() : null;
+};
+
+const restoreEditorSelection = (savedRange) => {
+  if (!savedRange) {
+    return false;
+  }
+
+  const selection = window.getSelection();
+  selection.removeAllRanges();
+  selection.addRange(savedRange);
+  return true;
+};
+
+const getClosestEditorElement = (node, selector) => {
+  if (!node) {
+    return null;
+  }
+
+  const element = node.nodeType === Node.ELEMENT_NODE ? node : node.parentElement;
+  return element?.closest(selector) ?? null;
+};
+
+const ensureEditableCellContent = (cell) => {
+  if (!cell) {
+    return;
+  }
+
+  if (!cell.innerHTML.trim()) {
+    cell.innerHTML = "<br>";
+  }
+};
+
+const focusTableCell = (cell) => {
+  if (!cell) {
+    return;
+  }
+
+  ensureEditableCellContent(cell);
+  noteEditor.focus();
+  const range = document.createRange();
+  range.selectNodeContents(cell);
+  range.collapse(true);
+  const selection = window.getSelection();
+  selection.removeAllRanges();
+  selection.addRange(range);
+};
+
+const getTableCellFromSelection = () => {
+  const range = getEditorRange();
+
+  if (!range) {
+    return null;
+  }
+
+  const candidate = getClosestEditorElement(range.startContainer, "td, th");
+  return candidate && noteEditor.contains(candidate) ? candidate : null;
+};
+
+const getTableContext = (cell) => {
+  if (!cell) {
+    return null;
+  }
+
+  const table = cell.closest("table");
+  const row = cell.parentElement;
+
+  if (!table || !row) {
+    return null;
+  }
+
+  return {
+    cell,
+    row,
+    table,
+    rowIndex: [...table.rows].indexOf(row),
+    columnIndex: [...row.cells].indexOf(cell)
+  };
+};
+
+const isEditorSpacerNode = (node) => {
+  if (!node) {
+    return false;
+  }
+
+  if (node.nodeType === Node.TEXT_NODE) {
+    return !node.textContent.replace(/\u200b/g, "").trim();
+  }
+
+  if (node.nodeType !== Node.ELEMENT_NODE) {
+    return false;
+  }
+
+  const tagName = node.tagName;
+
+  if (tagName === "BR") {
+    return true;
+  }
+
+  if (!["P", "DIV"].includes(tagName)) {
+    return false;
+  }
+
+  if (node.querySelector("table, img, iframe, ul, ol, blockquote, h2, h3, h4, h5, h6")) {
+    return false;
+  }
+
+  const textContent = node.textContent.replace(/\u200b/g, "").replace(/\u00a0/g, "").trim();
+
+  if (textContent) {
+    return false;
+  }
+
+  const htmlWithoutBreaks = node.innerHTML
+    .replace(/<br\s*\/?>/gi, "")
+    .replace(/&nbsp;/gi, "")
+    .replace(/\s+/g, "");
+
+  return htmlWithoutBreaks === "";
+};
+
+const trimEditorLeadingSpacerNodes = () => {
+  while (isEditorSpacerNode(noteEditor.firstChild)) {
+    noteEditor.firstChild.remove();
+  }
+};
+
 const getCaretTextOffset = (root) => {
   const selection = window.getSelection();
 
@@ -2787,6 +3008,252 @@ const insertImageAtCaret = (src, width = DEFAULT_IMAGE_EMBED_WIDTH) => {
   saveActiveNote();
 };
 
+const buildTableMarkup = (rows, columns, markerId) => {
+  const safeRows = Math.max(1, Math.min(20, rows));
+  const safeColumns = Math.max(1, Math.min(12, columns));
+  let body = "";
+
+  for (let rowIndex = 0; rowIndex < safeRows; rowIndex += 1) {
+    let cells = "";
+
+    for (let columnIndex = 0; columnIndex < safeColumns; columnIndex += 1) {
+      cells += "<td><br></td>";
+    }
+
+    body += `<tr>${cells}</tr>`;
+  }
+
+  return `<table class="note-table" data-table-marker="${markerId}"><tbody>${body}</tbody></table><p><br></p>`;
+};
+
+const closeTableContextMenu = () => {
+  tableContextMenu.hidden = true;
+  contextMenuTableCell = null;
+};
+
+const refreshTableUi = () => {
+  const currentCell = getTableCellFromSelection();
+  activeTableCell = currentCell;
+  tableToolbar.toggleAttribute("hidden", !currentCell);
+
+  if (!currentCell) {
+    closeTableContextMenu();
+  }
+};
+
+const insertTableAtSelection = (rows, columns) => {
+  noteEditor.focus();
+  const restoredSelection = restoreEditorSelection(savedSelectionForTableInsert);
+
+  if (!restoredSelection && !getEditorRange()) {
+    const range = document.createRange();
+    range.selectNodeContents(noteEditor);
+    range.collapse(false);
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
+
+  const markerId = `table-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  const currentTable = getTableCellFromSelection()?.closest("table");
+  let insertedTable = null;
+
+  if (currentTable && noteEditor.contains(currentTable)) {
+    const fragmentHost = document.createElement("div");
+    fragmentHost.innerHTML = buildTableMarkup(rows, columns, markerId);
+    const insertedNodes = [...fragmentHost.childNodes];
+    currentTable.after(...insertedNodes);
+    insertedTable = insertedNodes.find((node) => node.nodeName === "TABLE") ?? null;
+  } else {
+    document.execCommand("insertHTML", false, buildTableMarkup(rows, columns, markerId));
+    insertedTable = noteEditor.querySelector(`[data-table-marker="${markerId}"]`);
+  }
+
+  if (!insertedTable) {
+    saveActiveNote();
+    refreshTableUi();
+    return;
+  }
+
+  insertedTable.removeAttribute("data-table-marker");
+  const firstCell = insertedTable.rows[0]?.cells[0] ?? null;
+
+  if (firstCell) {
+    focusTableCell(firstCell);
+  }
+
+  savedSelectionForTableInsert = null;
+  saveActiveNote();
+  refreshTableUi();
+};
+
+const getTableActionContext = () => getTableContext(contextMenuTableCell ?? activeTableCell);
+
+const isLastTableCell = (context) => {
+  if (!context) {
+    return false;
+  }
+
+  const isLastRow = context.rowIndex === context.table.rows.length - 1;
+  const isLastColumn = context.columnIndex === context.row.cells.length - 1;
+  return isLastRow && isLastColumn;
+};
+
+const getNextTableCell = (context) => {
+  if (!context) {
+    return null;
+  }
+
+  const nextCellInRow = context.row.cells[context.columnIndex + 1];
+
+  if (nextCellInRow) {
+    return nextCellInRow;
+  }
+
+  const nextRow = context.table.rows[context.rowIndex + 1];
+  return nextRow?.cells[0] ?? null;
+};
+
+const createEmptyParagraph = () => {
+  const paragraph = document.createElement("p");
+  paragraph.innerHTML = "<br>";
+  return paragraph;
+};
+
+const focusAfterTableRemoval = (table) => {
+  let focusTarget = table.nextElementSibling;
+
+  if (!focusTarget || !noteEditor.contains(focusTarget)) {
+    focusTarget = createEmptyParagraph();
+    table.after(focusTarget);
+  }
+
+  noteEditor.focus();
+  const range = document.createRange();
+  range.selectNodeContents(focusTarget);
+  range.collapse(true);
+  const selection = window.getSelection();
+  selection.removeAllRanges();
+  selection.addRange(range);
+};
+
+const insertTableRow = (context, offset, focusColumnIndex = context.columnIndex) => {
+  const { table, rowIndex, columnIndex } = context;
+  const insertIndex = offset < 0 ? rowIndex : rowIndex + 1;
+  const columnCount = table.rows[0]?.cells.length ?? 0;
+  const row = table.insertRow(insertIndex);
+
+  for (let index = 0; index < columnCount; index += 1) {
+    const cell = row.insertCell();
+    cell.innerHTML = "<br>";
+  }
+
+  focusTableCell(row.cells[Math.min(focusColumnIndex, row.cells.length - 1)] ?? row.cells[0] ?? null);
+};
+
+const deleteTableRow = (context) => {
+  const { table, rowIndex, columnIndex } = context;
+
+  if (table.rows.length <= 1) {
+    focusAfterTableRemoval(table);
+    table.remove();
+    return;
+  }
+
+  table.deleteRow(rowIndex);
+  const nextRow = table.rows[Math.min(rowIndex, table.rows.length - 1)];
+  focusTableCell(nextRow?.cells[Math.min(columnIndex, nextRow.cells.length - 1)] ?? nextRow?.cells[0] ?? null);
+};
+
+const insertTableColumn = (context, offset) => {
+  const { table, columnIndex, rowIndex } = context;
+  const insertIndex = offset < 0 ? columnIndex : columnIndex + 1;
+
+  [...table.rows].forEach((row) => {
+    const cell = row.insertCell(insertIndex);
+    cell.innerHTML = "<br>";
+  });
+
+  const targetRow = table.rows[rowIndex] ?? table.rows[0];
+  focusTableCell(targetRow?.cells[insertIndex] ?? null);
+};
+
+const deleteTableColumn = (context) => {
+  const { table, columnIndex, rowIndex } = context;
+  const columnCount = table.rows[0]?.cells.length ?? 0;
+
+  if (columnCount <= 1) {
+    focusAfterTableRemoval(table);
+    table.remove();
+    return;
+  }
+
+  [...table.rows].forEach((row) => {
+    if (row.cells[columnIndex]) {
+      row.deleteCell(columnIndex);
+    }
+  });
+
+  const targetRow = table.rows[Math.min(rowIndex, table.rows.length - 1)] ?? null;
+  const nextColumnIndex = Math.min(columnIndex, (targetRow?.cells.length ?? 1) - 1);
+  focusTableCell(targetRow?.cells[nextColumnIndex] ?? null);
+};
+
+const deleteTableAtContext = (context) => {
+  const { table } = context;
+  focusAfterTableRemoval(table);
+  table.remove();
+};
+
+const runTableAction = (action) => {
+  const context = getTableActionContext();
+
+  if (!context) {
+    return;
+  }
+
+  switch (action) {
+    case "insert-row-above":
+      insertTableRow(context, -1);
+      break;
+    case "insert-row-below":
+      insertTableRow(context, 1);
+      break;
+    case "delete-row":
+      deleteTableRow(context);
+      break;
+    case "insert-column-left":
+      insertTableColumn(context, -1);
+      break;
+    case "insert-column-right":
+      insertTableColumn(context, 1);
+      break;
+    case "delete-column":
+      deleteTableColumn(context);
+      break;
+    case "delete-table":
+      deleteTableAtContext(context);
+      break;
+    default:
+      return;
+  }
+
+  closeTableContextMenu();
+  saveActiveNote();
+  refreshTableUi();
+};
+
+const openTableContextMenu = (cell, x, y) => {
+  contextMenuTableCell = cell;
+  const margin = 12;
+  tableContextMenu.hidden = false;
+  const menuRect = tableContextMenu.getBoundingClientRect();
+  const maxX = window.innerWidth - menuRect.width - margin;
+  const maxY = window.innerHeight - menuRect.height - margin;
+  tableContextMenu.style.left = `${Math.max(margin, Math.min(x, maxX))}px`;
+  tableContextMenu.style.top = `${Math.max(margin, Math.min(y, maxY))}px`;
+};
+
 const processImageFiles = (files) => {
   [...files].forEach((file) => {
     if (!file.type.startsWith("image/")) {
@@ -3451,10 +3918,12 @@ const renderActiveNote = () => {
   renderMetadataSummary();
   renderNoteMetadataFields();
   noteEditor.innerHTML = activeNote.content;
+  trimEditorLeadingSpacerNodes();
   linkifyScriptureReferences();
   linkifyUrls();
   processYouTubeEmbeds();
   processSpotifyEmbeds();
+  refreshTableUi();
   ensureTrailingParagraph();
 };
 
@@ -3929,6 +4398,7 @@ const clearLocalWorkspace = async () => {
     deleteStoredValue(translationStorageKey),
     deleteStoredValue(colorThemeStorageKey),
     deleteStoredValue(lastBookChapterStorageKey),
+    deleteStoredValue(onboardingStorageKey),
     deleteStoredValue(notesStorageKey)
   ]);
 
@@ -4000,6 +4470,7 @@ const clearAllData = async () => {
     deleteStoredValue(translationStorageKey),
     deleteStoredValue(colorThemeStorageKey),
     deleteStoredValue(lastBookChapterStorageKey),
+    deleteStoredValue(onboardingStorageKey),
     deleteStoredValue(notesStorageKey)
   ]);
 
@@ -4189,6 +4660,37 @@ const renderWorkspace = () => {
   }
 };
 
+const renderOnboardingStep = () => {
+  const step = onboardingSteps[activeOnboardingStepIndex];
+
+  onboardingStepKicker.textContent = step.kicker;
+  onboardingStepTitle.textContent = step.title;
+  onboardingStepCopy.textContent = step.copy;
+  onboardingStepCallout.textContent = step.callout;
+  onboardingStepPoints.innerHTML = "";
+
+  step.points.forEach((point) => {
+    const item = document.createElement("li");
+    item.textContent = point;
+    onboardingStepPoints.append(item);
+  });
+
+  onboardingProgress.textContent = `${activeOnboardingStepIndex + 1} of ${onboardingSteps.length}`;
+  onboardingBackButton.disabled = activeOnboardingStepIndex === 0;
+  onboardingNextButton.classList.toggle("is-hidden", activeOnboardingStepIndex === onboardingSteps.length - 1);
+  onboardingFinishButton.classList.toggle("is-hidden", activeOnboardingStepIndex !== onboardingSteps.length - 1);
+};
+
+const openOnboarding = ({ markSeen = false, startAt = 0 } = {}) => {
+  activeOnboardingStepIndex = Math.max(0, Math.min(startAt, onboardingSteps.length - 1));
+  renderOnboardingStep();
+  openDialog(onboardingDialog);
+
+  if (markSeen) {
+    void writeStoredValue(onboardingStorageKey, true);
+  }
+};
+
 const touchNote = (note) => {
   note.updatedAt = new Date().toISOString();
 };
@@ -4219,6 +4721,7 @@ const saveActiveNote = () => {
     return;
   }
 
+  trimEditorLeadingSpacerNodes();
   activeNote.content = noteEditor.innerHTML;
   noteMetaFields.querySelectorAll("[data-field-id]").forEach((input) => {
     activeNote.metadata[input.dataset.fieldId] = input.value;
@@ -4519,6 +5022,24 @@ toolbarButtons.forEach((button) => {
   });
 });
 
+insertTableButton.addEventListener("click", () => {
+  savedSelectionForTableInsert = saveEditorSelection();
+  tableRowsInput.value = "3";
+  tableColumnsInput.value = "3";
+  openDialog(tableDialog);
+  window.setTimeout(() => {
+    tableRowsInput.focus();
+    tableRowsInput.select();
+  }, 0);
+});
+
+tableInsertConfirmButton.addEventListener("click", () => {
+  const rows = Number.parseInt(tableRowsInput.value, 10);
+  const columns = Number.parseInt(tableColumnsInput.value, 10);
+  tableDialog.close();
+  insertTableAtSelection(Number.isFinite(rows) ? rows : 3, Number.isFinite(columns) ? columns : 3);
+});
+
 // ── Color picker ───────────────────────────────────────────────────────
 const colorPickerWrapper = document.querySelector("#color-picker-wrapper");
 const colorPickerTrigger = document.querySelector("#color-picker-trigger");
@@ -4661,9 +5182,24 @@ document.addEventListener("click", (e) => {
   if (!overflowMenu.contains(e.target)) {
     closeOverflowMenu();
   }
+
+  if (!tableContextMenu.hidden && !tableContextMenu.contains(e.target)) {
+    closeTableContextMenu();
+  }
+});
+
+document.addEventListener("contextmenu", (event) => {
+  if (!tableContextMenu.hidden && !tableContextMenu.contains(event.target)) {
+    closeTableContextMenu();
+  }
 });
 
 document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && !tableContextMenu.hidden) {
+    closeTableContextMenu();
+    return;
+  }
+
   if (e.key === "Escape" && !colorPickerDropdown.hidden) {
     closeColorPicker();
     colorPickerTrigger.focus();
@@ -4743,7 +5279,33 @@ noteMetaFields.addEventListener("change", (event) => {
   changeNoteType(typeSelect.dataset.noteTypeChange, typeSelect.value);
 });
 
+noteEditor.addEventListener("keydown", (event) => {
+  if (event.key !== "Tab" || event.shiftKey || event.altKey || event.ctrlKey || event.metaKey) {
+    return;
+  }
+
+  const context = getTableContext(getTableCellFromSelection());
+
+  if (!context) {
+    return;
+  }
+
+  event.preventDefault();
+
+  if (isLastTableCell(context)) {
+    insertTableRow(context, 1, 0);
+    saveActiveNote();
+    refreshTableUi();
+    return;
+  }
+
+  focusTableCell(getNextTableCell(context));
+  refreshTableUi();
+});
+
 noteEditor.addEventListener("input", (event) => {
+  trimEditorLeadingSpacerNodes();
+
   if (event.inputType === "insertParagraph" || event.inputType === "insertLineBreak") {
     saveActiveNote();
     return;
@@ -4908,7 +5470,26 @@ noteEditor.addEventListener("drop", (event) => {
   processImageFiles(imageFiles);
 });
 
+[tableToolbar, tableContextMenu].forEach((container) => {
+  container.addEventListener("mousedown", (event) => {
+    if (event.target.closest("[data-table-action]")) {
+      event.preventDefault();
+    }
+  });
+
+  container.addEventListener("click", (event) => {
+    const actionButton = event.target.closest("[data-table-action]");
+
+    if (!actionButton) {
+      return;
+    }
+
+    runTableAction(actionButton.dataset.tableAction);
+  });
+});
+
 noteEditor.addEventListener("click", (event) => {
+  closeTableContextMenu();
   const imageDeleteBtn = event.target.closest(".image-embed-delete");
 
   if (imageDeleteBtn) {
@@ -4980,7 +5561,30 @@ noteEditor.addEventListener("click", (event) => {
 
   event.preventDefault();
   jumpToScripture(link.dataset.scriptureRef);
+  return;
 });
+
+noteEditor.addEventListener("contextmenu", (event) => {
+  const cell = event.target.closest("td, th");
+
+  if (!cell || !noteEditor.contains(cell)) {
+    closeTableContextMenu();
+    refreshTableUi();
+    return;
+  }
+
+  event.preventDefault();
+  event.stopPropagation();
+  focusTableCell(cell);
+  openTableContextMenu(cell, event.clientX, event.clientY);
+  refreshTableUi();
+});
+
+noteEditor.addEventListener("keyup", refreshTableUi);
+noteEditor.addEventListener("mouseup", refreshTableUi);
+noteEditor.addEventListener("scroll", closeTableContextMenu);
+
+document.addEventListener("selectionchange", refreshTableUi);
 
 noteEditor.addEventListener("mousedown", (event) => {
   const handle = event.target.closest(".youtube-embed-resize-handle");
@@ -5137,6 +5741,33 @@ settingsTabNav.addEventListener("click", (event) => {
 
   activeSettingsTabId = button.dataset.settingsTab;
   renderSettings();
+});
+
+openOnboardingButton.addEventListener("click", () => {
+  openOnboarding();
+});
+
+onboardingBackButton.addEventListener("click", () => {
+  if (activeOnboardingStepIndex === 0) {
+    return;
+  }
+
+  activeOnboardingStepIndex -= 1;
+  renderOnboardingStep();
+});
+
+onboardingNextButton.addEventListener("click", () => {
+  if (activeOnboardingStepIndex >= onboardingSteps.length - 1) {
+    return;
+  }
+
+  activeOnboardingStepIndex += 1;
+  renderOnboardingStep();
+});
+
+onboardingFinishButton.addEventListener("click", () => {
+  onboardingDialog.close();
+  void writeStoredValue(onboardingStorageKey, true);
 });
 
 typeNameInput.addEventListener("change", () => {
@@ -5390,6 +6021,12 @@ const bootstrap = async () => {
     }
   });
   await restoreWorkspace();
+
+  const hasSeenOnboarding = await readStoredValue(onboardingStorageKey);
+
+  if (hasSeenOnboarding !== true) {
+    openOnboarding({ markSeen: true });
+  }
 };
 
 void bootstrap();
