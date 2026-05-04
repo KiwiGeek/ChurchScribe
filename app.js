@@ -2993,7 +2993,7 @@ const focusAfterTableRemoval = (table) => {
   selection.addRange(range);
 };
 
-const insertTableRow = (context, offset) => {
+const insertTableRow = (context, offset, focusColumnIndex = context.columnIndex) => {
   const { table, rowIndex, columnIndex } = context;
   const insertIndex = offset < 0 ? rowIndex : rowIndex + 1;
   const columnCount = table.rows[0]?.cells.length ?? 0;
@@ -3004,7 +3004,7 @@ const insertTableRow = (context, offset) => {
     cell.innerHTML = "<br>";
   }
 
-  focusTableCell(row.cells[Math.min(columnIndex, row.cells.length - 1)] ?? row.cells[0] ?? null);
+  focusTableCell(row.cells[Math.min(focusColumnIndex, row.cells.length - 1)] ?? row.cells[0] ?? null);
 };
 
 const deleteTableRow = (context) => {
@@ -5014,7 +5014,7 @@ noteEditor.addEventListener("keydown", (event) => {
   }
 
   event.preventDefault();
-  insertTableRow(context, 1);
+  insertTableRow(context, 1, 0);
   saveActiveNote();
   refreshTableUi();
 });
