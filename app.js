@@ -2820,6 +2820,93 @@ const processYouTubeEmbeds = () => {
   });
 };
 
+const SPOTIFY_EMBED_TYPES = new Set(["track", "album", "playlist", "artist", "episode", "show"]);
+
+const extractSpotifyEmbedInfo = (url) => {
+  try {
+    if (url.startsWith("spotify:")) {
+      const parts = url.split(":");
+
+      if (parts.length >= 3 && SPOTIFY_EMBED_TYPES.has(parts[1])) {
+        return { type: parts[1], id: parts[2] };
+      }
+    }
+
+    const parsed = new URL(url);
+    const host = parsed.hostname.replace(/^www\./, "");
+
+    if (host === "open.spotify.com") {
+      const parts = parsed.pathname.split("/").filter(Boolean);
+
+      if (parts.length >= 2 && SPOTIFY_EMBED_TYPES.has(parts[0])) {
+        return { type: parts[0], id: parts[1] };
+      }
+    }
+  } catch {
+    // invalid URL
+  }
+
+  return null;
+};
+
+const createSpotifyEmbed = ({ type, id }) => {
+  const outerDiv = document.createElement("div");
+  outerDiv.className = "spotify-embed";
+  outerDiv.dataset.spotifyEmbed = `${type}:${id}`;
+  outerDiv.contentEditable = "false";
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "spotify-embed-wrapper";
+
+  const iframe = document.createElement("iframe");
+  iframe.className = "spotify-embed-frame";
+  iframe.src = `https://open.spotify.com/embed/${type}/${id}?utm_source=generator`;
+  iframe.setAttribute("allow", "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture");
+  iframe.setAttribute("allowfullscreen", "");
+  iframe.setAttribute("loading", "lazy");
+  iframe.title = "Spotify player";
+
+  const deleteBtn = document.createElement("button");
+  deleteBtn.className = "spotify-embed-delete";
+  deleteBtn.type = "button";
+  deleteBtn.setAttribute("aria-label", "Remove Spotify embed");
+  deleteBtn.textContent = "✕";
+
+  wrapper.appendChild(iframe);
+  wrapper.appendChild(deleteBtn);
+  outerDiv.appendChild(wrapper);
+
+  return outerDiv;
+};
+
+const processSpotifyEmbeds = () => {
+  noteEditor.querySelectorAll("a[data-auto-url-link='true']").forEach((link) => {
+    const embedInfo = extractSpotifyEmbedInfo(link.href);
+
+    if (!embedInfo) {
+      return;
+    }
+
+    const block = link.closest(BLOCK_LEVEL_ELEMENTS);
+
+    if (!block) {
+      return;
+    }
+
+    const cloned = block.cloneNode(true);
+    cloned.querySelectorAll("a").forEach((anchor) => anchor.remove());
+    const remainingText = cloned.textContent.trim();
+
+    if (remainingText) {
+      return;
+    }
+
+    const embed = createSpotifyEmbed(embedInfo);
+    const emptyParagraph = document.createElement("p");
+    block.replaceWith(embed, emptyParagraph);
+  });
+};
+
 const validateDomainWithDoh = async (domain) => {
   domainValidationCache.set(domain, "pending");
 
@@ -2835,6 +2922,7 @@ const validateDomainWithDoh = async (domain) => {
     if (isValid) {
       linkifyUrls();
       processYouTubeEmbeds();
+      processSpotifyEmbeds();
     }
   } catch {
     domainValidationCache.set(domain, false);
@@ -2903,6 +2991,10 @@ const linkifyUrls = ({ suppressAtCaret = false } = {}) => {
         }
 
         if (node.parentElement?.closest("[data-image-embed]")) {
+          return NodeFilter.FILTER_REJECT;
+        }
+
+        if (node.parentElement?.closest("[data-spotify-embed]")) {
           return NodeFilter.FILTER_REJECT;
         }
 
@@ -3347,6 +3439,7 @@ const renderActiveNote = () => {
   linkifyScriptureReferences();
   linkifyUrls();
   processYouTubeEmbeds();
+  processSpotifyEmbeds();
 };
 
 const renderNoteManager = () => {
@@ -4643,6 +4736,7 @@ noteEditor.addEventListener("input", (event) => {
   linkifyScriptureReferences({ jumpToCaretReference: true });
   linkifyUrls({ suppressAtCaret: event.inputType !== "insertFromPaste" });
   processYouTubeEmbeds();
+  processSpotifyEmbeds();
   saveActiveNote();
 });
 
@@ -4756,6 +4850,20 @@ noteEditor.addEventListener("click", (event) => {
   if (deleteBtn) {
     event.preventDefault();
     const embed = deleteBtn.closest("[data-youtube-embed]");
+
+    if (embed) {
+      embed.remove();
+      saveActiveNote();
+    }
+
+    return;
+  }
+
+  const spotifyDeleteBtn = event.target.closest(".spotify-embed-delete");
+
+  if (spotifyDeleteBtn) {
+    event.preventDefault();
+    const embed = spotifyDeleteBtn.closest("[data-spotify-embed]");
 
     if (embed) {
       embed.remove();
