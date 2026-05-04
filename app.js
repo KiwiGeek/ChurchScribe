@@ -1877,7 +1877,32 @@ const applyTranslation = (translationCode) => {
 
 const MAX_SCRIPTURE_SEARCH_RESULTS = 100;
 
-const renderScriptureSearchResults = (results) => {
+const escapeRegExp = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+const buildHighlightedTextContent = (text, terms) => {
+  const pattern = new RegExp(`(${terms.map(escapeRegExp).join("|")})`, "gi");
+  const fragment = document.createDocumentFragment();
+  let lastIndex = 0;
+
+  for (const match of text.matchAll(pattern)) {
+    if (match.index > lastIndex) {
+      fragment.append(document.createTextNode(text.slice(lastIndex, match.index)));
+    }
+
+    const mark = document.createElement("mark");
+    mark.textContent = match[0];
+    fragment.append(mark);
+    lastIndex = match.index + match[0].length;
+  }
+
+  if (lastIndex < text.length) {
+    fragment.append(document.createTextNode(text.slice(lastIndex)));
+  }
+
+  return fragment;
+};
+
+const renderScriptureSearchResults = (results, terms) => {
   scriptureSearchResults.innerHTML = "";
 
   if (!results.length) {
@@ -1895,10 +1920,6 @@ const renderScriptureSearchResults = (results) => {
     : `${results.length} ${results.length === 1 ? "verse" : "verses"} found`;
   scriptureSearchResults.append(count);
 
-  const terms = scriptureSearchQuery.trim().toLowerCase().split(/\s+/).filter(Boolean);
-  const escapeRegExp = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const highlightPattern = new RegExp(`(${terms.map(escapeRegExp).join("|")})`, "gi");
-
   results.forEach(({ book, chapter, verse, text }) => {
     const item = document.createElement("div");
     item.className = "scripture-search-result";
@@ -1911,8 +1932,7 @@ const renderScriptureSearchResults = (results) => {
 
     const body = document.createElement("p");
     body.className = "scripture-search-result-text";
-    body.innerHTML = text.replace(/</g, "&lt;").replace(/>/g, "&gt;")
-      .replace(highlightPattern, "<mark>$1</mark>");
+    body.append(buildHighlightedTextContent(text, terms));
 
     item.append(ref, body);
 
@@ -1989,7 +2009,7 @@ const performScriptureSearch = (query) => {
 
   verseDisplay.classList.add("is-hidden");
   scriptureSearchResults.classList.remove("is-hidden");
-  renderScriptureSearchResults(results);
+  renderScriptureSearchResults(results, terms);
 };
 
 const applyCommand = (command) => {
