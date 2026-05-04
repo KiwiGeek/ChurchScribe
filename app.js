@@ -3222,7 +3222,6 @@ const processUrlEmbeds = () => {
   });
 
   ensureTrailingParagraph();
-  ensureLeadingParagraph();
 };
 
 const validateDomainWithDoh = async (domain) => {
@@ -5275,6 +5274,53 @@ noteEditor.addEventListener("keydown", (event) => {
       }
     }
 
+    // --- Backspace from start of empty block whose previous block ends with an auto-link ---
+    // First Backspace: move cursor to the end of the link (no delink yet).
+    // Second Backspace: cursor is now directly after the link, triggering the delink below.
+    if (block) {
+      const blockHtml = block.innerHTML?.trim() ?? "";
+      const isEmptyBlock = !block.textContent.trim() && (!blockHtml || blockHtml === "<br>");
+
+      if (isEmptyBlock && block.previousElementSibling) {
+        const prevBlock = block.previousElementSibling;
+        const autoLinks = prevBlock.querySelectorAll(
+          "a[data-auto-url-link='true'], a[data-auto-scripture-link='true']"
+        );
+
+        if (autoLinks.length) {
+          const lastLink = autoLinks[autoLinks.length - 1];
+
+          // Only act if nothing meaningful follows the link inside its block.
+          let trailingNode = lastLink.nextSibling;
+          let onlyTrivialTrailing = true;
+
+          while (trailingNode) {
+            if (trailingNode.nodeType === Node.TEXT_NODE && trailingNode.nodeValue.trim()) {
+              onlyTrivialTrailing = false;
+              break;
+            }
+
+            if (trailingNode.nodeType === Node.ELEMENT_NODE && trailingNode.tagName !== "BR") {
+              onlyTrivialTrailing = false;
+              break;
+            }
+
+            trailingNode = trailingNode.nextSibling;
+          }
+
+          if (onlyTrivialTrailing) {
+            event.preventDefault();
+            const r = document.createRange();
+            r.setStartAfter(lastLink);
+            r.collapse(true);
+            selection.removeAllRanges();
+            selection.addRange(r);
+            return;
+          }
+        }
+      }
+    }
+
     // --- Original: Backspace collapses an auto-link ---
     const autoLink = findAutoLinkAtCaret();
 
@@ -5436,11 +5482,20 @@ noteEditor.addEventListener("keydown", (event) => {
       return;
     }
 
-    const beforeChain = firstNonEmbedBefore(block);
+    // Insert a ghost paragraph immediately before the nearest preceding embed.
+    // This lets the user navigate into the gap between consecutive embeds one
+    // step at a time rather than jumping past the entire chain at once.
+    const beforePrevEmbed = prevEmbed.previousElementSibling;
 
-    if (!beforeChain) {
+    if (!beforePrevEmbed) {
+      // prevEmbed is the first child — ghost goes before it (at editor start).
       insertGhostAndFocus((ghost) => noteEditor.prepend(ghost));
+    } else if (beforePrevEmbed.matches(EMBED_SELECTOR)) {
+      // Another embed precedes prevEmbed — ghost goes between those two embeds.
+      insertGhostAndFocus((ghost) => prevEmbed.before(ghost));
     }
+    // If a real (non-embed) paragraph precedes prevEmbed, the browser can
+    // navigate there naturally — no ghost is needed.
   }
 });
 
