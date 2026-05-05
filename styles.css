@@ -1588,10 +1588,12 @@ h1 {
   border-radius: var(--radius-md);
   background: var(--surface);
   box-sizing: border-box;
+  /* 3 columns with 8px gap: (8px * 2) / 3 columns = ~6px per item */
   width: calc(33.333% - 6px);
 }
 
 #user-translation-list .translation-list-item {
+  /* 2 columns with 8px gap: 8px / 2 columns = 4px per item */
   width: calc(50% - 4px);
 }
 
