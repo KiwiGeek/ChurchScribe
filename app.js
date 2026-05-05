@@ -6365,17 +6365,23 @@ const ensureTranslationLoaded = async (code) => {
   const cached = await readStoredValue(`${builtinTranslationCacheKeyPrefix}${code}`);
 
   if (cached && typeof cached === "object" && !Array.isArray(cached)) {
-    // If the cached entry carries a version number and it matches (or there is
-    // no declared version in the library entry), use the cached books.
+    // Only use cached data when the version matches. Old caches that pre-date
+    // versioning (no _version field) are always considered stale when the
+    // library entry declares a version.
     const cachedVersion = cached._version ?? null;
     const currentVersion = entry.version ?? null;
 
-    if (currentVersion === null || cachedVersion === currentVersion) {
+    if (currentVersion !== null && cachedVersion === currentVersion) {
       entry.books = cached.books ?? cached;
       return;
     }
 
-    // Version mismatch – fall through to re-fetch.
+    if (currentVersion === null && cached.books) {
+      entry.books = cached.books;
+      return;
+    }
+
+    // Version mismatch or stale legacy cache – fall through to re-fetch.
   }
 
   // Cache miss or stale version — fetch and parse the source file.
@@ -6450,7 +6456,7 @@ const populateTranslationSelect = () => {
   const sorted = Object.entries(translationLibrary).sort(([, a], [, b]) => {
     const aLabel = a.label ?? "";
     const bLabel = b.label ?? "";
-    return aLabel.localeCompare(bLabel);
+    return aLabel.localeCompare(bLabel, undefined, { sensitivity: "base" });
   });
 
   sorted.forEach(([code, entry]) => {
