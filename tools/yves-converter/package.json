@@ -1,0 +1,20 @@
+{
+  "name": "yves-converter",
+  "version": "1.0.0",
+  "description": "Convert Yves-encrypted Bible zip files to ChurchScribe JS translation files",
+  "main": "convert-yves.js",
+  "bin": {
+    "convert-yves": "./convert-yves.js"
+  },
+  "scripts": {
+    "start": "node convert-yves.js"
+  },
+  "dependencies": {
+    "adm-zip": "^0.5.16",
+    "htmlparser2": "^9.1.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "license": "MIT"
+}
