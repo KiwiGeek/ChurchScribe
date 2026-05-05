@@ -32,6 +32,7 @@ const { DomUtils } = require("htmlparser2");
 // ── USFM book-code → canonical book name ─────────────────────────────────────
 
 const USFM_TO_BOOK = {
+  // ── Old Testament ─────────────────────────────────────────────────────────
   GEN: "Genesis",       EXO: "Exodus",        LEV: "Leviticus",
   NUM: "Numbers",       DEU: "Deuteronomy",   JOS: "Joshua",
   JDG: "Judges",        RUT: "Ruth",          "1SA": "1 Samuel",
@@ -45,6 +46,30 @@ const USFM_TO_BOOK = {
   OBA: "Obadiah",       JON: "Jonah",         MIC: "Micah",
   NAM: "Nahum",         HAB: "Habakkuk",      ZEP: "Zephaniah",
   HAG: "Haggai",        ZEC: "Zechariah",     MAL: "Malachi",
+  // ── Deuterocanon / Apocrypha ──────────────────────────────────────────────
+  TOB: "Tobit",
+  JDT: "Judith",
+  ESG: "Esther (Greek)",
+  WIS: "Wisdom of Solomon",
+  SIR: "Sirach",
+  BAR: "Baruch",
+  LJE: "Letter of Jeremiah",
+  S3Y: "Prayer of Azariah",
+  SUS: "Susanna",
+  BEL: "Bel and the Dragon",
+  "1MA": "1 Maccabees",
+  "2MA": "2 Maccabees",
+  "3MA": "3 Maccabees",
+  "4MA": "4 Maccabees",
+  "1ES": "1 Esdras",
+  "2ES": "2 Esdras",
+  MAN: "Prayer of Manasseh",
+  PS2: "Psalm 151",
+  ODA: "Odes",
+  PSS: "Psalms of Solomon",
+  DAG: "Daniel (Greek)",
+  LAO: "Laodiceans",
+  // ── New Testament ─────────────────────────────────────────────────────────
   MAT: "Matthew",       MRK: "Mark",          LUK: "Luke",
   JHN: "John",          ACT: "Acts",          ROM: "Romans",
   "1CO": "1 Corinthians","2CO": "2 Corinthians",GAL: "Galatians",
@@ -57,15 +82,26 @@ const USFM_TO_BOOK = {
   REV: "Revelation",
 };
 
-// Canonical book order (for consistent output ordering)
+// Canonical book order (for consistent output ordering).
+// Deuterocanonical/apocryphal books are placed between Malachi and Matthew,
+// following the standard deuterocanonical ordering used in Catholic bibles.
 const BOOK_ORDER = [
+  // Old Testament
   "Genesis","Exodus","Leviticus","Numbers","Deuteronomy","Joshua",
   "Judges","Ruth","1 Samuel","2 Samuel","1 Kings","2 Kings",
   "1 Chronicles","2 Chronicles","Ezra","Nehemiah","Esther","Job",
   "Psalms","Proverbs","Ecclesiastes","Song of Solomon","Isaiah",
   "Jeremiah","Lamentations","Ezekiel","Daniel","Hosea","Joel","Amos",
   "Obadiah","Jonah","Micah","Nahum","Habakkuk","Zephaniah","Haggai",
-  "Zechariah","Malachi","Matthew","Mark","Luke","John","Acts","Romans",
+  "Zechariah","Malachi",
+  // Deuterocanon / Apocrypha
+  "Tobit","Judith","Esther (Greek)","Wisdom of Solomon","Sirach",
+  "Baruch","Letter of Jeremiah","Prayer of Azariah","Susanna",
+  "Bel and the Dragon","1 Maccabees","2 Maccabees","3 Maccabees",
+  "4 Maccabees","1 Esdras","2 Esdras","Prayer of Manasseh","Psalm 151",
+  "Odes","Psalms of Solomon","Daniel (Greek)","Laodiceans",
+  // New Testament
+  "Matthew","Mark","Luke","John","Acts","Romans",
   "1 Corinthians","2 Corinthians","Galatians","Ephesians","Philippians",
   "Colossians","1 Thessalonians","2 Thessalonians","1 Timothy","2 Timothy",
   "Titus","Philemon","Hebrews","James","1 Peter","2 Peter","1 John",
@@ -491,12 +527,15 @@ function parseArgs(argv) {
  * @param {string} zipFile    Path to the zip file
  * @param {object} args       Parsed CLI arguments (outputDir, code)
  * @param {object|null} metadata  Parsed translations metadata JSON, or null
- * @returns {boolean} true on success, false on error
+ * @returns {{ success: boolean, code: string, label: string, reason: string|null, unknownClasses: Set }}
  */
 function convertZip(zipFile, args, metadata) {
+  const failResult = (code, label, reason, unknownClasses = new Set()) =>
+    ({ success: false, code, label, reason, unknownClasses });
+
   if (!fs.existsSync(zipFile)) {
     process.stderr.write(`Error: file not found: ${zipFile}\n`);
-    return false;
+    return failResult("?", path.basename(zipFile), "File not found");
   }
 
   // Resolve translation info
@@ -549,7 +588,7 @@ function convertZip(zipFile, args, metadata) {
 
   if (processedFiles === 0) {
     process.stderr.write(`  Error: no .yves files found in "${path.basename(zipFile)}" — skipping.\n`);
-    return false;
+    return failResult(code, label, "No .yves files found");
   }
 
   // If any unrecognised classes were found, report them and skip output
@@ -557,7 +596,7 @@ function convertZip(zipFile, args, metadata) {
     const classList = [...unknownClasses].sort().join(", ");
     process.stderr.write(`  Skipped — unrecognised inline class(es): ${classList}\n`);
     process.stderr.write(`  Add handling for these classes to KNOWN_INLINE_CLASSES / htmlContent() and re-run.\n`);
-    return false;
+    return failResult(code, label, "Unrecognised inline class(es)", unknownClasses);
   }
 
   const bibleData = toChurchScribeFormat(rawData);
@@ -575,7 +614,7 @@ function convertZip(zipFile, args, metadata) {
   fs.writeFileSync(outputFile, jsContent, "utf8");
 
   process.stdout.write(`  Output written to: ${outputFile}\n`);
-  return true;
+  return { success: true, code, label, reason: null, unknownClasses: new Set() };
 }
 
 function main() {
@@ -593,7 +632,8 @@ function main() {
 
   if (args.zipFile) {
     // Single-file mode
-    if (!convertZip(args.zipFile, args, metadata)) {
+    const result = convertZip(args.zipFile, args, metadata);
+    if (!result.success) {
       process.exit(1);
     }
     return;
@@ -619,20 +659,34 @@ function main() {
   process.stdout.write(`Found ${zipFiles.length} zip file(s) to convert.\n\n`);
 
   let succeeded = 0;
-  let failed    = 0;
+  const failures = []; // { zipFile, code, label, reason, unknownClasses }
   for (const zipFile of zipFiles) {
     // --code is not meaningful across multiple files; ignore it in batch mode
     const batchArgs = { ...args, code: null };
-    if (convertZip(zipFile, batchArgs, metadata)) {
+    const result = convertZip(zipFile, batchArgs, metadata);
+    if (result.success) {
       succeeded++;
     } else {
-      failed++;
+      failures.push({ zipFile, ...result });
     }
     process.stdout.write("\n");
   }
 
-  process.stdout.write(`Done. ${succeeded} succeeded, ${failed} failed.\n`);
-  if (failed > 0) {
+  process.stdout.write(`Done. ${succeeded} succeeded, ${failures.length} failed.\n`);
+
+  if (failures.length > 0) {
+    process.stdout.write(`\nFailed conversions:\n`);
+    for (const f of failures) {
+      const tag = f.code && f.code !== "?" ? ` (${f.code} — ${f.label})` : ` (${f.label})`;
+      process.stdout.write(`  "${path.basename(f.zipFile)}"${tag}\n`);
+      if (f.unknownClasses && f.unknownClasses.size > 0) {
+        const classList = [...f.unknownClasses].sort().join(", ");
+        process.stdout.write(`    Unrecognised inline class(es): ${classList}\n`);
+        process.stdout.write(`    Add handling for these classes to KNOWN_INLINE_CLASSES / htmlContent() and re-run.\n`);
+      } else {
+        process.stdout.write(`    Reason: ${f.reason}\n`);
+      }
+    }
     process.exit(1);
   }
 }
