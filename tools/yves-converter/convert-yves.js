@@ -117,13 +117,29 @@ const KNOWN_INLINE_CLASSES = new Set([
   "sc",       // small caps                        → <small>
   "nd",       // divine name                       → <span class="divine-name">
   "wj",       // words of Jesus                    → <span class="words-of-jesus">
+  "bd",       // bold text                         → <strong>
+  "bdit",     // bold-italic text                  → <strong><em>
   // Excluded by the excludeClasses parameter
   "note",     // footnote
   "label",    // verse number label
   // Transparent wrappers (just pass inner content through)
   "content",
   "verse",
+  // vN classes (v1, v2, …) are verse-number spans embedded in flowing text;
+  // matched by isVerseNumberClass() below rather than listed literally here.
 ]);
+
+/**
+ * Returns true for classes of the form "v" followed by one or more digits
+ * (e.g. "v1", "v12", "v176").  These are inline verse-number markers that
+ * should be treated the same as the "label" class — excluded from output.
+ *
+ * @param {string} cls
+ * @returns {boolean}
+ */
+function isVerseNumberClass(cls) {
+  return /^v\d+$/.test(cls);
+}
 
 /**
  * Check whether a DOM node has a given class.
@@ -163,11 +179,14 @@ function textContent(node, excludeClasses = []) {
  * and convert certain USX inline classes into semantic HTML equivalents.
  *
  * USX → HTML mappings used here:
- *   .it   → <em> (italics / translator-added words)
- *   .sc   → <small> (small caps)
- *   .nd   → <span class="divine-name"> (name of deity)
- *   .wj   → <span class="words-of-jesus"> (words of Jesus)
- *   .note → excluded entirely
+ *   .it    → <em> (italics / translator-added words)
+ *   .sc    → <small> (small caps)
+ *   .nd    → <span class="divine-name"> (name of deity)
+ *   .wj    → <span class="words-of-jesus"> (words of Jesus)
+ *   .bd    → <strong> (bold)
+ *   .bdit  → <strong><em> (bold-italic)
+ *   .vN    → excluded entirely (inline verse-number marker)
+ *   .note  → excluded entirely
  *
  * @param {object}   node
  * @param {string[]} excludeClasses
@@ -189,10 +208,15 @@ function htmlContent(node, excludeClasses = [], unknownClasses = null) {
   if (unknownClasses) {
     const nodeClasses = (node.attribs && node.attribs.class || "").split(/\s+/).filter(Boolean);
     for (const cls of nodeClasses) {
-      if (!KNOWN_INLINE_CLASSES.has(cls) && !excludeClasses.includes(cls)) {
+      if (!KNOWN_INLINE_CLASSES.has(cls) && !isVerseNumberClass(cls) && !excludeClasses.includes(cls)) {
         unknownClasses.add(cls);
       }
     }
+  }
+
+  // vN classes (e.g. v1, v12) are inline verse-number markers — skip them
+  if ((node.attribs && node.attribs.class || "").split(/\s+/).some(isVerseNumberClass)) {
+    return "";
   }
 
   const inner = (node.children || []).map(c => htmlContent(c, excludeClasses, unknownClasses)).join("");
@@ -208,6 +232,12 @@ function htmlContent(node, excludeClasses = [], unknownClasses = null) {
   }
   if (hasClass(node, "wj")) {
     return `<span class="words-of-jesus">${inner}</span>`;
+  }
+  if (hasClass(node, "bd")) {
+    return `<strong>${inner}</strong>`;
+  }
+  if (hasClass(node, "bdit")) {
+    return `<strong><em>${inner}</em></strong>`;
   }
   // For .content and other transparent wrappers, just return inner text
   return inner;
