@@ -1,15 +1,18 @@
 const translationLibrary = {
   KJV: {
     label: "King James Version",
-    books: window.KJV_BIBLE
+    scriptSrc: "kjv.js",
+    books: null
   },
   NKJV: {
     label: "New King James Version",
-    books: window.NKJV_BIBLE
+    scriptSrc: "nkjv.js",
+    books: null
   },
   ASV: {
     label: "American Standard Version",
-    books: window.ASV_BIBLE
+    scriptSrc: "asv.js",
+    books: null
   }
 };
 
@@ -120,6 +123,7 @@ const cloudSyncStorageKey = "service-notes-cloud-sync";
 const colorThemeStorageKey = "service-notes-color-theme";
 const lastBookChapterStorageKey = "service-notes-last-book-chapter";
 const onboardingStorageKey = "service-notes-onboarding-seen";
+const customTranslationsStorageKey = "service-notes-custom-translations";
 const autoCloudSyncDelayMs = 10000;
 
 const noOpProvider = {
@@ -221,6 +225,7 @@ let pendingAutoSyncTimer = null;
 let syncInFlightPromise = null;
 let isPullInFlight = false;
 let cloudPollTimer = null;
+let userTranslations = [];
 const systemThemeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
 const workspace = {
@@ -248,6 +253,10 @@ const settingsTabs = [
   {
     id: "cloud-sync",
     label: "Auxiliary Storage"
+  },
+  {
+    id: "translations",
+    label: "Translations"
   },
   {
     id: "data",
@@ -1137,7 +1146,8 @@ const buildCloudSettingsPayload = (updatedAt = new Date().toISOString()) => ({
   syncSettings: {
     provider: cloudSyncSettings.provider,
     pollIntervalSeconds: cloudSyncSettings.pollIntervalSeconds
-  }
+  },
+  customTranslations: structuredClone(userTranslations)
 });
 
 const buildCloudNotesPayload = (updatedAt = new Date().toISOString()) => ({
@@ -1156,7 +1166,7 @@ const buildCloudSyncPayload = () => {
   };
 };
 
-const applyCloudPayload = (payload) => {
+const applyCloudPayload = async (payload) => {
   if (payload.workspace) {
     workspace.noteTypes = payload.workspace.noteTypes;
     workspace.activeNoteId = payload.workspace.activeNoteId;
@@ -1167,6 +1177,21 @@ const applyCloudPayload = (payload) => {
 
   if (Array.isArray(payload.notes)) {
     workspace.notes = payload.notes;
+  }
+
+  // Apply custom translations first so they are available when preferences (translation code) are applied.
+  if (Array.isArray(payload.customTranslations)) {
+    userTranslations = [];
+
+    for (const { code, label, data } of payload.customTranslations) {
+      if (code && label && !BUILTIN_TRANSLATION_CODES.has(code) && validateTranslationData(data)) {
+        translationLibrary[code] = { label, books: data };
+        userTranslations.push({ code, label, data });
+      }
+    }
+
+    void writeStoredValue(customTranslationsStorageKey, userTranslations);
+    populateTranslationSelect();
   }
 
   if (payload.preferences) {
@@ -1186,7 +1211,7 @@ const applyCloudPayload = (payload) => {
     }
 
     if (payload.preferences.translation) {
-      applyTranslation(payload.preferences.translation);
+      await applyTranslation(payload.preferences.translation);
       void writeStoredValue(translationStorageKey, payload.preferences.translation);
     }
 
@@ -1372,7 +1397,7 @@ const pullFromCloud = async () => {
     console.log(`[CloudSync] Conflict resolution: ${resolution}`);
 
     if (resolution === "remote") {
-      applyCloudPayload(remotePayload);
+      await applyCloudPayload(remotePayload);
 
       if (remotePayload.updatedAt) {
         cloudSyncSettings.lastSyncAt = remotePayload.updatedAt;
@@ -1931,10 +1956,12 @@ const renderChapter = () => {
   }
 };
 
-const applyTranslation = (translationCode) => {
+const applyTranslation = async (translationCode) => {
   if (!translationLibrary[translationCode]) {
     return;
   }
+
+  await ensureTranslationLoaded(translationCode);
 
   currentTranslationCode = translationCode;
   translationSelect.value = translationCode;
@@ -4186,7 +4213,7 @@ const restoreWorkspaceFromBackup = async (file) => {
       }
 
       if (preferences.translation) {
-        applyTranslation(preferences.translation);
+        await applyTranslation(preferences.translation);
         void writeStoredValue(translationStorageKey, preferences.translation);
       }
 
@@ -4232,7 +4259,8 @@ const clearLocalWorkspace = async () => {
     deleteStoredValue(colorThemeStorageKey),
     deleteStoredValue(lastBookChapterStorageKey),
     deleteStoredValue(onboardingStorageKey),
-    deleteStoredValue(notesStorageKey)
+    deleteStoredValue(notesStorageKey),
+    deleteStoredValue(customTranslationsStorageKey)
   ]);
 
   window.location.reload();
@@ -4304,7 +4332,8 @@ const clearAllData = async () => {
     deleteStoredValue(colorThemeStorageKey),
     deleteStoredValue(lastBookChapterStorageKey),
     deleteStoredValue(onboardingStorageKey),
-    deleteStoredValue(notesStorageKey)
+    deleteStoredValue(notesStorageKey),
+    deleteStoredValue(customTranslationsStorageKey)
   ]);
 
   window.location.reload();
@@ -4330,6 +4359,8 @@ const renderSettings = () => {
   if (uiContent) {
     renderUiSettings(uiContent);
   }
+
+  renderTranslationsPanel();
 
   cloudProviderSelect.value = cloudSyncSettings.provider;
   cloudPollIntervalSelect.value = String(cloudSyncSettings.pollIntervalSeconds);
@@ -4454,7 +4485,7 @@ const renderSettings = () => {
 
   aliasList.innerHTML = "";
 
-  Object.keys(translationLibrary.KJV.books).forEach((book) => {
+  Object.keys(getCurrentTranslation()?.books ?? {}).forEach((book) => {
     const row = document.createElement("div");
     row.className = "alias-row";
 
@@ -5875,10 +5906,10 @@ noteEditor.addEventListener("mousedown", (event) => {
   document.addEventListener("mouseup", onMouseUp);
 });
 
-translationSelect.addEventListener("change", () => {
+translationSelect.addEventListener("change", async () => {
   activeScriptureFocus = null;
   void writeStoredValue(translationStorageKey, translationSelect.value);
-  applyTranslation(translationSelect.value);
+  await applyTranslation(translationSelect.value);
   markLocalSettingsUpdated();
   scheduleAutoCloudSync();
 });
@@ -5963,6 +5994,53 @@ settingsTabNav.addEventListener("click", (event) => {
   activeSettingsTabId = button.dataset.settingsTab;
   renderSettings();
 });
+
+const translationUrlInput = document.querySelector("#translation-url-input");
+const importTranslationUrlButton = document.querySelector("#import-translation-url-button");
+const userTranslationList = document.querySelector("#user-translation-list");
+
+importTranslationUrlButton.addEventListener("click", () => {
+  const url = translationUrlInput.value.trim();
+
+  if (!url) {
+    return;
+  }
+
+  importTranslationUrlButton.disabled = true;
+  importTranslationUrlButton.textContent = "Importing…";
+
+  importTranslationFromUrl(url).then((code) => {
+    translationUrlInput.value = "";
+    renderTranslationsPanel();
+    updateSaveStatus(`Translation "${code}" imported successfully.`);
+    setTimeout(() => refreshSaveStatus(), 4000);
+  }).catch((err) => {
+    // eslint-disable-next-line no-alert
+    window.alert(`Import failed: ${err.message}`);
+  }).finally(() => {
+    importTranslationUrlButton.disabled = false;
+    importTranslationUrlButton.textContent = "Import from URL";
+  });
+});
+
+userTranslationList.addEventListener("click", (event) => {
+  const btn = event.target.closest("[data-delete-translation]");
+
+  if (!btn) {
+    return;
+  }
+
+  const code = btn.dataset.deleteTranslation;
+
+  // eslint-disable-next-line no-alert
+  if (!window.confirm(`Delete the "${code}" translation? This cannot be undone.`)) {
+    return;
+  }
+
+  void deleteCustomTranslation(code).then(() => renderTranslationsPanel());
+});
+
+
 
 openOnboardingButton.addEventListener("click", () => {
   openOnboarding();
@@ -6201,9 +6279,352 @@ insertImageFile.addEventListener("change", () => {
   processImageFiles(files);
 });
 
+// ── Custom translation import ──────────────────────────────────────────────
+
+const BUILTIN_TRANSLATION_CODES = new Set(Object.keys(translationLibrary));
+
+/**
+ * Parse a translation .js file of the form:
+ *   window.CODE_BIBLE = { "Genesis": [...], ... }
+ * Optionally also reads a label declaration above it:
+ *   window.CODE_LABEL = "Full Translation Name";
+ * The data portion is valid JSON so we use JSON.parse – no eval required.
+ */
+const parseTranslationJs = (content) => {
+  const trimmed = content.trim();
+  const match = trimmed.match(/window\.([A-Z][A-Z0-9_]*)_BIBLE\s*=\s*/);
+
+  if (!match) {
+    throw new Error("File does not look like a translation file. Expected: window.CODE_BIBLE = {...}");
+  }
+
+  const code = match[1];
+  const jsonPart = trimmed.slice(match.index + match[0].length).replace(/;\s*$/, "");
+  let data;
+
+  try {
+    data = JSON.parse(jsonPart);
+  } catch (e) {
+    throw new Error(`Could not parse translation data: ${e.message}`);
+  }
+
+  // Optionally extract a human-readable label from window.CODE_LABEL = "...".
+  const labelMatch = trimmed.match(new RegExp(`window\\.${code}_LABEL\\s*=\\s*"([^"]+)"`));
+  const label = labelMatch ? labelMatch[1] : code;
+
+  return { code, label, data };
+};
+
+const builtinTranslationCacheKeyPrefix = "service-notes-builtin-";
+
+/**
+ * Ensure a translation's book data is loaded. For built-in translations this
+ * checks the IndexedDB cache first; if absent it fetches the .js file, parses
+ * it with parseTranslationJs, and caches the result for future sessions.
+ * Custom translations already have `books` populated when loaded from IndexedDB
+ * so this is a no-op for them.
+ */
+const ensureTranslationLoaded = async (code) => {
+  const entry = translationLibrary[code];
+
+  if (!entry || entry.books) {
+    return;
+  }
+
+  // Try the IndexedDB cache first.
+  const cached = await readStoredValue(`${builtinTranslationCacheKeyPrefix}${code}`);
+
+  if (cached && typeof cached === "object" && !Array.isArray(cached)) {
+    entry.books = cached;
+    return;
+  }
+
+  // Cache miss — fetch and parse the source file.
+  const response = await fetch(entry.scriptSrc);
+
+  if (!response.ok) {
+    throw new Error(`Failed to load translation "${code}": ${response.status} ${response.statusText}`);
+  }
+
+  const text = await response.text();
+  const { data } = parseTranslationJs(text);
+  entry.books = data;
+  void writeStoredValue(`${builtinTranslationCacheKeyPrefix}${code}`, data);
+};
+
+/**
+ * Validate that a parsed translation object has the expected shape:
+ * { BookName: [{ chapter: N, verses: [{ verse: N, text: "..." }, ...] }] }
+ * We check only the first 3 books for performance — translation files are very
+ * large (entire Bible) and a structural check of a representative sample is
+ * sufficient to distinguish a valid translation from an unrelated file.
+ */
+const validateTranslationData = (data) => {
+  if (!data || typeof data !== "object" || Array.isArray(data)) {
+    return false;
+  }
+
+  const books = Object.keys(data);
+
+  if (books.length === 0) {
+    return false;
+  }
+
+  for (const book of books.slice(0, 3)) {
+    const chapters = data[book];
+
+    if (!Array.isArray(chapters) || chapters.length === 0) {
+      return false;
+    }
+
+    const chapter = chapters[0];
+
+    if (!chapter || typeof chapter.chapter !== "number" || !Array.isArray(chapter.verses) || chapter.verses.length === 0) {
+      return false;
+    }
+
+    const verse = chapter.verses[0];
+
+    if (!verse || typeof verse.verse !== "number" || typeof verse.text !== "string") {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+/** Populate the translation <select> from the current translationLibrary. */
+const populateTranslationSelect = () => {
+  const current = translationSelect.value || currentTranslationCode;
+  translationSelect.innerHTML = "";
+
+  Object.entries(translationLibrary).forEach(([code, entry]) => {
+    const option = document.createElement("option");
+    option.value = code;
+    option.textContent = entry.label ?? code;
+    translationSelect.append(option);
+  });
+
+  if (translationLibrary[current]) {
+    translationSelect.value = current;
+  } else {
+    translationSelect.value = translationLibrary["KJV"] ? "KJV" : (Object.keys(translationLibrary)[0] ?? "");
+  }
+};
+
+/** Register a parsed translation into the live library and persist it. */
+const registerCustomTranslation = (code, label, data) => {
+  translationLibrary[code] = { label, books: data };
+  userTranslations = userTranslations.filter((t) => t.code !== code);
+  userTranslations.push({ code, label, data });
+  void writeStoredValue(customTranslationsStorageKey, userTranslations);
+  populateTranslationSelect();
+};
+
+/** Load user-added translations from IndexedDB and inject into translationLibrary. */
+const loadCustomTranslations = async () => {
+  const stored = await readStoredValue(customTranslationsStorageKey);
+
+  if (!Array.isArray(stored)) {
+    return;
+  }
+
+  stored.forEach(({ code, label, data }) => {
+    if (code && label && validateTranslationData(data)) {
+      translationLibrary[code] = { label, books: data };
+      userTranslations.push({ code, label, data });
+    }
+  });
+};
+
+/**
+ * Import a translation from a File object.
+ * Returns a promise that resolves with the translation code on success.
+ */
+const importTranslationFromFile = async (file) => {
+  const content = await file.text();
+  const { code, label, data } = parseTranslationJs(content);
+
+  if (!validateTranslationData(data)) {
+    throw new Error(`"${file.name}" does not contain valid Bible translation data.`);
+  }
+
+  if (BUILTIN_TRANSLATION_CODES.has(code)) {
+    throw new Error(`"${code}" is already a built-in translation and cannot be overwritten.`);
+  }
+
+  registerCustomTranslation(code, label, data);
+  return code;
+};
+
+/**
+ * Download and import a translation from a URL.
+ * Returns a promise that resolves with the translation code on success.
+ */
+const importTranslationFromUrl = async (url) => {
+  let content;
+
+  try {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error(`Server returned ${response.status} ${response.statusText}`);
+    }
+
+    content = await response.text();
+  } catch (e) {
+    throw new Error(`Failed to download translation: ${e.message}`);
+  }
+
+  const { code, label, data } = parseTranslationJs(content);
+
+  if (!validateTranslationData(data)) {
+    throw new Error("The downloaded file does not contain valid Bible translation data.");
+  }
+
+  if (BUILTIN_TRANSLATION_CODES.has(code)) {
+    throw new Error(`"${code}" is already a built-in translation and cannot be overwritten.`);
+  }
+
+  registerCustomTranslation(code, label, data);
+  return code;
+};
+
+/** Remove a user-added translation from the library and IndexedDB. */
+const deleteCustomTranslation = async (code) => {
+  if (BUILTIN_TRANSLATION_CODES.has(code)) {
+    return;
+  }
+
+  delete translationLibrary[code];
+  userTranslations = userTranslations.filter((t) => t.code !== code);
+  void writeStoredValue(customTranslationsStorageKey, userTranslations);
+
+  if (currentTranslationCode === code) {
+    await applyTranslation("KJV");
+    void writeStoredValue(translationStorageKey, "KJV");
+  }
+
+  populateTranslationSelect();
+};
+
+/** Render the Translations settings panel. */
+const renderTranslationsPanel = () => {
+  const builtinList = document.querySelector("#builtin-translation-list");
+  const userList = document.querySelector("#user-translation-list");
+  const emptyNote = document.querySelector("#user-translations-empty-note");
+
+  if (!builtinList || !userList || !emptyNote) {
+    return;
+  }
+
+  builtinList.innerHTML = "";
+  BUILTIN_TRANSLATION_CODES.forEach((code) => {
+    const entry = translationLibrary[code];
+
+    if (!entry) {
+      return;
+    }
+
+    const li = document.createElement("li");
+    li.className = "translation-list-item";
+
+    const info = document.createElement("span");
+    info.className = "translation-list-item-info";
+
+    const codeEl = document.createElement("span");
+    codeEl.className = "translation-list-item-code";
+    codeEl.textContent = code;
+
+    const labelEl = document.createElement("span");
+    labelEl.className = "translation-list-item-label";
+    labelEl.textContent = entry.label;
+
+    info.append(codeEl, labelEl);
+    li.append(info);
+    builtinList.append(li);
+  });
+
+  userList.innerHTML = "";
+  const hasUser = userTranslations.length > 0;
+  emptyNote.hidden = hasUser;
+
+  userTranslations.forEach(({ code, label }) => {
+    const li = document.createElement("li");
+    li.className = "translation-list-item";
+
+    const info = document.createElement("span");
+    info.className = "translation-list-item-info";
+
+    const codeEl = document.createElement("span");
+    codeEl.className = "translation-list-item-code";
+    codeEl.textContent = code;
+
+    const labelEl = document.createElement("span");
+    labelEl.className = "translation-list-item-label";
+    labelEl.textContent = label;
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.type = "button";
+    deleteBtn.className = "ghost-button ghost-button--danger ghost-button--small";
+    deleteBtn.textContent = "Delete";
+    deleteBtn.dataset.deleteTranslation = code;
+
+    info.append(codeEl, labelEl);
+    li.append(info, deleteBtn);
+    userList.append(li);
+  });
+};
+
+// ── Document-level drag-and-drop for .js translation files ────────────────
+
+document.addEventListener("dragover", (event) => {
+  if ([...event.dataTransfer.types].includes("Files")) {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "copy";
+  }
+});
+
+document.addEventListener("drop", (event) => {
+  if (![...event.dataTransfer.types].includes("Files")) {
+    return;
+  }
+
+  const jsFiles = [...event.dataTransfer.files].filter((f) => f.name.endsWith(".js"));
+
+  if (jsFiles.length === 0) {
+    // Not a translation file — prevent browser from navigating to it, but do nothing else.
+    event.preventDefault();
+    return;
+  }
+
+  event.preventDefault();
+
+  jsFiles.forEach((file) => {
+    importTranslationFromFile(file).then((code) => {
+      updateSaveStatus(`Translation "${code}" imported successfully.`);
+      setTimeout(() => refreshSaveStatus(), 4000);
+
+      if (settingsDialog.open && activeSettingsTabId === "translations") {
+        renderTranslationsPanel();
+      }
+    }).catch((err) => {
+      // eslint-disable-next-line no-alert
+      window.alert(`Translation import failed: ${err.message}`);
+    });
+  });
+});
+
+
 const buildBookAliasMap = () => {
+  const currentBooks = getCurrentTranslation()?.books;
+
+  if (!currentBooks) {
+    return;
+  }
+
   bookAliasMap.clear();
-  Object.keys(translationLibrary.KJV.books).forEach((book) => {
+  Object.keys(currentBooks).forEach((book) => {
     getEffectiveAliasesForBook(book).forEach((alias) => {
       addBookAlias(alias, book);
     });
@@ -6226,11 +6647,13 @@ const buildBookAliasMap = () => {
 };
 
 const bootstrap = async () => {
-  buildBookAliasMap();
+  await loadCustomTranslations();
+  populateTranslationSelect();
   applyThemeMode(await getPreferredTheme(), { rerender: false });
   applyPaneOrder(await getPreferredPaneOrder());
   applySplit(await getPreferredSplit());
-  applyTranslation(await getPreferredTranslation());
+  await applyTranslation(await getPreferredTranslation());
+  buildBookAliasMap();
   await restoreLastBookChapter();
   applyColorTheme(await getPreferredColorTheme());
   await restoreCloudSyncSettings();

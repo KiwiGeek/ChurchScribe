@@ -1477,7 +1477,8 @@ h1 {
 .settings-type-editor,
 .settings-alias-panel,
 .settings-cloud-panel,
-.settings-about-panel {
+.settings-about-panel,
+.settings-translations-panel {
   display: none;
   align-self: stretch;
   min-height: 0;
@@ -1518,6 +1519,14 @@ h1 {
   overflow: auto;
 }
 
+.settings-translations-panel {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  height: 100%;
+  max-height: 100%;
+  overflow: auto;
+}
+
 .settings-data-panel {
   grid-column: 2;
   grid-row: 1 / span 2;
@@ -1531,6 +1540,7 @@ h1 {
 .settings-alias-panel.is-active,
 .settings-cloud-panel.is-active,
 .settings-about-panel.is-active,
+.settings-translations-panel.is-active,
 .settings-data-panel.is-active {
   display: block;
 }
@@ -1557,6 +1567,46 @@ h1 {
   justify-content: flex-start;
   gap: 10px;
   flex-wrap: wrap;
+}
+
+.translation-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.translation-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+
+.translation-list-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.translation-list-item-code {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.translation-list-item-label {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.ghost-button--small {
+  padding: 0.3rem 0.65rem;
+  font-size: 0.82rem;
 }
 
 .ghost-button--danger {
