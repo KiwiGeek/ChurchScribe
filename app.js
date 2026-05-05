@@ -1,17 +1,22 @@
 const translationLibrary = {
   KJV: {
     label: "King James Version",
-    scriptSrc: "kjv.js",
+    scriptSrc: "translations\\kjv.js",
     books: null
   },
   NKJV: {
     label: "New King James Version",
-    scriptSrc: "nkjv.js",
+    scriptSrc: "translations\\nkjv.js",
     books: null
   },
   ASV: {
     label: "American Standard Version",
-    scriptSrc: "asv.js",
+    scriptSrc: "translations\\asv.js",
+    books: null
+  },
+  WEB: {
+    label: "World English Bible",
+    scriptSrc: "translations\\web.js",
     books: null
   }
 };
