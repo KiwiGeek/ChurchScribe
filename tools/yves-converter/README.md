@@ -28,8 +28,11 @@ npm install
 ## Usage
 
 ```
-node convert-yves.js <zip-file> [options]
+node convert-yves.js [zip-file] [options]
 ```
+
+If no `zip-file` is supplied the tool automatically processes **every `*.zip`
+file in the current directory** (batch mode).
 
 ### Options
 
@@ -37,13 +40,12 @@ node convert-yves.js <zip-file> [options]
 |---|---|
 | `--metadata <file>` | Path to the translations metadata JSON (see below) |
 | `--output <dir>` | Output directory (default: current directory) |
-| `--code <code>` | Override the translation code (e.g. `NASB1995`) |
+| `--code <code>` | Override the translation code — single-file mode only |
 | `--help` | Show help message |
 
 ### Examples
 
-Convert a zip file using the translations metadata to auto-detect the label,
-language, and code:
+Convert a single zip file using the translations metadata:
 
 ```bash
 node convert-yves.js 100-14.zip \
@@ -51,7 +53,13 @@ node convert-yves.js 100-14.zip \
   --output ./out
 ```
 
-Convert without metadata, using a manually specified code:
+Process all zip files in the current directory (batch mode):
+
+```bash
+node convert-yves.js --metadata 20240318223222.json --output ./out
+```
+
+Convert a single file without metadata, using a manually specified code:
 
 ```bash
 node convert-yves.js 100-14.zip --code NASB1995 --output ./out

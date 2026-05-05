@@ -377,15 +377,18 @@ function renderJs(code, label, language, copyright, bibleData) {
 
 function printHelp() {
   process.stdout.write(`
-Usage: node convert-yves.js <zip-file> [options]
+Usage: node convert-yves.js [zip-file] [options]
+
+If no zip-file is specified, every *.zip file in the current directory is
+processed automatically (batch mode).
 
 Options:
   --metadata <file>   Path to translations metadata JSON
   --output   <dir>    Output directory (default: current directory)
-  --code     <code>   Override the translation code (e.g. NASB1995)
+  --code     <code>   Override the translation code (single-file mode only)
   --help              Show this help message
 
-The zip-file name is expected to be of the form <id>-<revision>.zip,
+Zip filenames are expected to be of the form <id>-<revision>.zip,
 matching the format used by offline Bible downloads (e.g. 100-14.zip).
 `);
 }
@@ -412,37 +415,27 @@ function parseArgs(argv) {
   return args;
 }
 
-function main() {
-  const args = parseArgs(process.argv.slice(2));
-
-  if (!args.zipFile) {
-    process.stderr.write("Error: no zip file specified.\n\n");
-    printHelp();
-    process.exit(1);
-  }
-
-  if (!fs.existsSync(args.zipFile)) {
-    process.stderr.write(`Error: file not found: ${args.zipFile}\n`);
-    process.exit(1);
-  }
-
-  // Load optional metadata
-  let metadata = null;
-  if (args.metadataFile) {
-    if (!fs.existsSync(args.metadataFile)) {
-      process.stderr.write(`Error: metadata file not found: ${args.metadataFile}\n`);
-      process.exit(1);
-    }
-    metadata = JSON.parse(fs.readFileSync(args.metadataFile, "utf8"));
+/**
+ * Convert a single zip file and write the output .js translation file.
+ *
+ * @param {string} zipFile    Path to the zip file
+ * @param {object} args       Parsed CLI arguments (outputDir, code)
+ * @param {object|null} metadata  Parsed translations metadata JSON, or null
+ * @returns {boolean} true on success, false on error
+ */
+function convertZip(zipFile, args, metadata) {
+  if (!fs.existsSync(zipFile)) {
+    process.stderr.write(`Error: file not found: ${zipFile}\n`);
+    return false;
   }
 
   // Resolve translation info
-  let code      = args.code  || null;
+  let code      = args.code || null;
   let label     = null;
   let language  = null;
   let copyright = null;
 
-  const versionInfo = metadata ? findVersionInMetadata(args.zipFile, metadata) : null;
+  const versionInfo = metadata ? findVersionInMetadata(zipFile, metadata) : null;
   if (versionInfo) {
     code      = code      || versionInfo.abbreviation;
     label     = versionInfo.title;
@@ -452,19 +445,19 @@ function main() {
 
   if (!code) {
     // Fall back to the base name of the zip without the revision suffix
-    code = sanitiseCode(path.basename(args.zipFile, ".zip").replace(/-\d+$/, ""));
+    code = sanitiseCode(path.basename(zipFile, ".zip").replace(/-\d+$/, ""));
   }
   label     = label     || code;
   language  = language  || "";
   copyright = copyright || "";
 
-  process.stdout.write(`Converting "${path.basename(args.zipFile)}"...\n`);
+  process.stdout.write(`Converting "${path.basename(zipFile)}"...\n`);
   process.stdout.write(`  Code:      ${code}\n`);
   process.stdout.write(`  Label:     ${label}\n`);
   process.stdout.write(`  Language:  ${language}\n`);
 
   // Open zip and process each .yves entry
-  const zip = new AdmZip(args.zipFile);
+  const zip     = new AdmZip(zipFile);
   const entries = zip.getEntries();
 
   const rawData = {}; // { book: { ch: { v: entry } } }
@@ -484,8 +477,8 @@ function main() {
   process.stdout.write(`  Processed ${processedFiles} .yves files\n`);
 
   if (processedFiles === 0) {
-    process.stderr.write("Error: no .yves files found in the zip archive.\n");
-    process.exit(1);
+    process.stderr.write(`  Error: no .yves files found in "${path.basename(zipFile)}" — skipping.\n`);
+    return false;
   }
 
   const bibleData = toChurchScribeFormat(rawData);
@@ -503,6 +496,60 @@ function main() {
   fs.writeFileSync(outputFile, jsContent, "utf8");
 
   process.stdout.write(`  Output written to: ${outputFile}\n`);
+  return true;
+}
+
+function main() {
+  const args = parseArgs(process.argv.slice(2));
+
+  // Load optional metadata (shared across all conversions)
+  let metadata = null;
+  if (args.metadataFile) {
+    if (!fs.existsSync(args.metadataFile)) {
+      process.stderr.write(`Error: metadata file not found: ${args.metadataFile}\n`);
+      process.exit(1);
+    }
+    metadata = JSON.parse(fs.readFileSync(args.metadataFile, "utf8"));
+  }
+
+  if (args.zipFile) {
+    // Single-file mode
+    if (!convertZip(args.zipFile, args, metadata)) {
+      process.exit(1);
+    }
+    return;
+  }
+
+  // Batch mode: find all *.zip files in the current directory
+  const zipFiles = fs.readdirSync(".")
+    .filter(f => f.toLowerCase().endsWith(".zip"))
+    .sort();
+
+  if (zipFiles.length === 0) {
+    process.stderr.write("Error: no zip file specified and no *.zip files found in the current directory.\n\n");
+    printHelp();
+    process.exit(1);
+  }
+
+  process.stdout.write(`Found ${zipFiles.length} zip file(s) to convert.\n\n`);
+
+  let succeeded = 0;
+  let failed    = 0;
+  for (const zipFile of zipFiles) {
+    // --code is not meaningful across multiple files; ignore it in batch mode
+    const batchArgs = { ...args, code: null };
+    if (convertZip(zipFile, batchArgs, metadata)) {
+      succeeded++;
+    } else {
+      failed++;
+    }
+    process.stdout.write("\n");
+  }
+
+  process.stdout.write(`Done. ${succeeded} succeeded, ${failed} failed.\n`);
+  if (failed > 0) {
+    process.exit(1);
+  }
 }
 
 main();
