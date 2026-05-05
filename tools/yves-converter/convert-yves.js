@@ -379,11 +379,13 @@ function printHelp() {
   process.stdout.write(`
 Usage: node convert-yves.js [zip-file] [options]
 
-If no zip-file is specified, every *.zip file in the current directory is
+If no zip-file is specified, every *.zip file in the source directory is
 processed automatically (batch mode).
 
 Options:
   --metadata <file>   Path to translations metadata JSON
+  --input    <dir>    Source directory to scan for *.zip files (batch mode only,
+                      default: current directory)
   --output   <dir>    Output directory (default: current directory)
   --code     <code>   Override the translation code (single-file mode only)
   --help              Show this help message
@@ -394,7 +396,7 @@ matching the format used by offline Bible downloads (e.g. 100-14.zip).
 }
 
 function parseArgs(argv) {
-  const args = { zipFile: null, metadataFile: null, outputDir: ".", code: null };
+  const args = { zipFile: null, metadataFile: null, inputDir: ".", outputDir: ".", code: null };
   let i = 0;
   while (i < argv.length) {
     const arg = argv[i];
@@ -403,6 +405,8 @@ function parseArgs(argv) {
       process.exit(0);
     } else if (arg === "--metadata") {
       args.metadataFile = argv[++i];
+    } else if (arg === "--input") {
+      args.inputDir = argv[++i];
     } else if (arg === "--output") {
       args.outputDir = argv[++i];
     } else if (arg === "--code") {
@@ -520,13 +524,19 @@ function main() {
     return;
   }
 
-  // Batch mode: find all *.zip files in the current directory
-  const zipFiles = fs.readdirSync(".")
+  // Batch mode: find all *.zip files in the source directory
+  const scanDir = path.resolve(args.inputDir);
+  if (!fs.existsSync(scanDir)) {
+    process.stderr.write(`Error: input directory not found: ${scanDir}\n`);
+    process.exit(1);
+  }
+  const zipFiles = fs.readdirSync(scanDir)
     .filter(f => f.toLowerCase().endsWith(".zip"))
-    .sort();
+    .sort()
+    .map(f => path.join(scanDir, f));
 
   if (zipFiles.length === 0) {
-    process.stderr.write("Error: no zip file specified and no *.zip files found in the current directory.\n\n");
+    process.stderr.write(`Error: no zip file specified and no *.zip files found in "${scanDir}".\n\n`);
     printHelp();
     process.exit(1);
   }

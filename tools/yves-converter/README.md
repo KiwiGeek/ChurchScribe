@@ -39,7 +39,8 @@ file in the current directory** (batch mode).
 | Option | Description |
 |---|---|
 | `--metadata <file>` | Path to the translations metadata JSON (see below) |
-| `--output <dir>` | Output directory (default: current directory) |
+| `--input <dir>` | Directory to scan for `*.zip` files — batch mode only (default: current directory) |
+| `--output <dir>` | Output directory for generated `.js` files (default: current directory) |
 | `--code <code>` | Override the translation code — single-file mode only |
 | `--help` | Show help message |
 
@@ -57,6 +58,15 @@ Process all zip files in the current directory (batch mode):
 
 ```bash
 node convert-yves.js --metadata 20240318223222.json --output ./out
+```
+
+Process all zip files from a specific directory (batch mode with `--input`):
+
+```bash
+node convert-yves.js \
+  --input ./downloads \
+  --metadata 20240318223222.json \
+  --output ./out
 ```
 
 Convert a single file without metadata, using a manually specified code:
