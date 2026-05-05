@@ -69,9 +69,18 @@ const USFM_TO_BOOK = {
   PSS: "Psalms of Solomon",
   DAG: "Daniel (Greek)",
   LAO: "Laodiceans",
+  // ── Ethiopian Orthodox extra-canonical books ───────────────────────────────
+  ENO: "Enoch",
+  JUB: "Jubilees",
+  "1MQ": "1 Meqabyan",
+  "2MQ": "2 Meqabyan",
+  "3MQ": "3 Meqabyan",
+  "4BA": "4 Baruch",
+  REP:  "Reproof",
   // ── New Testament ─────────────────────────────────────────────────────────
   MAT: "Matthew",       MRK: "Mark",          LUK: "Luke",
-  JHN: "John",          ACT: "Acts",          ROM: "Romans",
+  JHN: "John",          ACT: "Acts",          LKA: "Luke-Acts",
+  ROM: "Romans",
   "1CO": "1 Corinthians","2CO": "2 Corinthians",GAL: "Galatians",
   EPH: "Ephesians",     PHP: "Philippians",   COL: "Colossians",
   "1TH": "1 Thessalonians","2TH": "2 Thessalonians",
@@ -100,8 +109,10 @@ const BOOK_ORDER = [
   "Bel and the Dragon","1 Maccabees","2 Maccabees","3 Maccabees",
   "4 Maccabees","1 Esdras","2 Esdras","Prayer of Manasseh","Psalm 151",
   "Odes","Psalms of Solomon","Daniel (Greek)","Laodiceans",
+  // Ethiopian Orthodox extra-canonical books
+  "Enoch","Jubilees","1 Meqabyan","2 Meqabyan","3 Meqabyan","4 Baruch","Reproof",
   // New Testament
-  "Matthew","Mark","Luke","John","Acts","Romans",
+  "Matthew","Mark","Luke","John","Acts","Luke-Acts","Romans",
   "1 Corinthians","2 Corinthians","Galatians","Ephesians","Philippians",
   "Colossians","1 Thessalonians","2 Thessalonians","1 Timothy","2 Timothy",
   "Titus","Philemon","Hebrews","James","1 Peter","2 Peter","1 John",
