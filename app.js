@@ -6581,7 +6581,13 @@ const renderTranslationsPanel = () => {
   }
 
   builtinList.innerHTML = "";
-  BUILTIN_TRANSLATION_CODES.forEach((code) => {
+  [...BUILTIN_TRANSLATION_CODES]
+    .sort((a, b) => {
+      const aLabel = translationLibrary[a]?.label ?? a;
+      const bLabel = translationLibrary[b]?.label ?? b;
+      return aLabel.localeCompare(bLabel, undefined, { sensitivity: "base" });
+    })
+    .forEach((code) => {
     const entry = translationLibrary[code];
 
     if (!entry) {
@@ -6611,7 +6617,9 @@ const renderTranslationsPanel = () => {
   const hasUser = userTranslations.length > 0;
   emptyNote.hidden = hasUser;
 
-  userTranslations.forEach(({ code, label }) => {
+  [...userTranslations]
+    .sort((a, b) => (a.label ?? a.code).localeCompare(b.label ?? b.code, undefined, { sensitivity: "base" }))
+    .forEach(({ code, label }) => {
     const li = document.createElement("li");
     li.className = "translation-list-item";
 

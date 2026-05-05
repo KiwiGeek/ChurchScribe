@@ -1574,7 +1574,8 @@ h1 {
   padding: 0;
   margin: 0;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
   gap: 8px;
 }
 
@@ -1586,6 +1587,12 @@ h1 {
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   background: var(--surface);
+  box-sizing: border-box;
+  width: calc(33.333% - 6px);
+}
+
+#user-translation-list .translation-list-item {
+  width: calc(50% - 4px);
 }
 
 .translation-list-item-info {
