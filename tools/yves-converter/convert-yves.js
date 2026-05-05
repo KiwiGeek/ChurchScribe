@@ -310,10 +310,11 @@ function normalise(s) {
  * }
  *
  * @param {string} html
- * @param {Set}    unknownClasses  Collector for unrecognised inline classes
+ * @param {Set}    unknownClasses   Collector for unrecognised inline classes
+ * @param {Set}    unknownBookCodes Collector for unrecognised USFM book codes
  * @returns {object}
  */
-function parseYvesHtml(html, unknownClasses = null) {
+function parseYvesHtml(html, unknownClasses = null, unknownBookCodes = null) {
   const dom = parseDocument(html, { lowerCaseTags: false });
   const result = {};
 
@@ -336,7 +337,7 @@ function parseYvesHtml(html, unknownClasses = null) {
 
     const bookName = USFM_TO_BOOK[bookCode];
     if (!bookName) {
-      process.stderr.write(`Warning: unknown USFM book code "${bookCode}"\n`);
+      if (unknownBookCodes) unknownBookCodes.add(bookCode);
       continue;
     }
 
@@ -527,11 +528,11 @@ function parseArgs(argv) {
  * @param {string} zipFile    Path to the zip file
  * @param {object} args       Parsed CLI arguments (outputDir, code)
  * @param {object|null} metadata  Parsed translations metadata JSON, or null
- * @returns {{ success: boolean, code: string, label: string, reason: string|null, unknownClasses: Set }}
+ * @returns {{ success: boolean, code: string, label: string, reason: string|null, unknownClasses: Set, unknownBookCodes: Set }}
  */
 function convertZip(zipFile, args, metadata) {
-  const failResult = (code, label, reason, unknownClasses = new Set()) =>
-    ({ success: false, code, label, reason, unknownClasses });
+  const failResult = (code, label, reason, unknownClasses = new Set(), unknownBookCodes = new Set()) =>
+    ({ success: false, code, label, reason, unknownClasses, unknownBookCodes });
 
   if (!fs.existsSync(zipFile)) {
     process.stderr.write(`Error: file not found: ${zipFile}\n`);
@@ -569,8 +570,9 @@ function convertZip(zipFile, args, metadata) {
   const zip     = new AdmZip(zipFile);
   const entries = zip.getEntries();
 
-  const rawData      = {}; // { book: { ch: { v: entry } } }
-  const unknownClasses = new Set();
+  const rawData        = {}; // { book: { ch: { v: entry } } }
+  const unknownClasses   = new Set();
+  const unknownBookCodes = new Set();
   let processedFiles = 0;
 
   for (const entry of entries) {
@@ -579,7 +581,7 @@ function convertZip(zipFile, args, metadata) {
 
     const buffer  = entry.getData();
     const decoded = decodeYves(buffer);
-    const parsed  = parseYvesHtml(decoded, unknownClasses);
+    const parsed  = parseYvesHtml(decoded, unknownClasses, unknownBookCodes);
     mergeInto(rawData, parsed);
     processedFiles++;
   }
@@ -596,7 +598,7 @@ function convertZip(zipFile, args, metadata) {
     const classList = [...unknownClasses].sort().join(", ");
     process.stderr.write(`  Skipped — unrecognised inline class(es): ${classList}\n`);
     process.stderr.write(`  Add handling for these classes to KNOWN_INLINE_CLASSES / htmlContent() and re-run.\n`);
-    return failResult(code, label, "Unrecognised inline class(es)", unknownClasses);
+    return failResult(code, label, "Unrecognised inline class(es)", unknownClasses, unknownBookCodes);
   }
 
   const bibleData = toChurchScribeFormat(rawData);
@@ -614,7 +616,7 @@ function convertZip(zipFile, args, metadata) {
   fs.writeFileSync(outputFile, jsContent, "utf8");
 
   process.stdout.write(`  Output written to: ${outputFile}\n`);
-  return { success: true, code, label, reason: null, unknownClasses: new Set() };
+  return { success: true, code, label, reason: null, unknownClasses: new Set(), unknownBookCodes };
 }
 
 function main() {
@@ -660,6 +662,9 @@ function main() {
 
   let succeeded = 0;
   const failures = []; // { zipFile, code, label, reason, unknownClasses }
+  // Map of USFM book code → array of "CODE (Label)" strings for every translation that skipped it
+  const allUnknownBookCodes = new Map();
+
   for (const zipFile of zipFiles) {
     // --code is not meaningful across multiple files; ignore it in batch mode
     const batchArgs = { ...args, code: null };
@@ -668,6 +673,16 @@ function main() {
       succeeded++;
     } else {
       failures.push({ zipFile, ...result });
+    }
+    // Collect unknown book codes from every conversion (success or failure)
+    if (result.unknownBookCodes && result.unknownBookCodes.size > 0) {
+      const translationTag = result.code && result.code !== "?"
+        ? `${result.code} (${result.label})`
+        : result.label || path.basename(zipFile);
+      for (const bookCode of result.unknownBookCodes) {
+        if (!allUnknownBookCodes.has(bookCode)) allUnknownBookCodes.set(bookCode, []);
+        allUnknownBookCodes.get(bookCode).push(translationTag);
+      }
     }
     process.stdout.write("\n");
   }
@@ -687,6 +702,16 @@ function main() {
         process.stdout.write(`    Reason: ${f.reason}\n`);
       }
     }
+  }
+
+  if (allUnknownBookCodes.size > 0) {
+    process.stdout.write(`\nUnrecognised USFM book codes (verses silently skipped):\n`);
+    for (const [bookCode, translations] of [...allUnknownBookCodes.entries()].sort()) {
+      process.stdout.write(`  ${bookCode}: ${translations.join(", ")}\n`);
+    }
+  }
+
+  if (failures.length > 0 || allUnknownBookCodes.size > 0) {
     process.exit(1);
   }
 }
