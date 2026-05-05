@@ -1,21 +1,33 @@
 const translationLibrary = {
   KJV: {
     label: "King James Version",
+    language: "en",
+    copyright: "Public Domain",
+    version: 1,
     scriptSrc: "translations\\kjv.js",
     books: null
   },
   NKJV: {
     label: "New King James Version",
+    language: "en",
+    copyright: "Copyright \u00a9 1982 by Thomas Nelson, Inc.",
+    version: 1,
     scriptSrc: "translations\\nkjv.js",
     books: null
   },
   ASV: {
     label: "American Standard Version",
+    language: "en",
+    copyright: "Public Domain",
+    version: 1,
     scriptSrc: "translations\\asv.js",
     books: null
   },
   WEB: {
     label: "World English Bible",
+    language: "en",
+    copyright: "Public Domain",
+    version: 1,
     scriptSrc: "translations\\web.js",
     books: null
   }
@@ -6291,8 +6303,11 @@ const BUILTIN_TRANSLATION_CODES = new Set(Object.keys(translationLibrary));
 /**
  * Parse a translation .js file of the form:
  *   window.CODE_BIBLE = { "Genesis": [...], ... }
- * Optionally also reads a label declaration above it:
+ * Optionally also reads metadata declarations above it:
  *   window.CODE_LABEL = "Full Translation Name";
+ *   window.CODE_LANGUAGE = "en";
+ *   window.CODE_COPYRIGHT = "...";
+ *   window.CODE_VERSION = 1;
  * The data portion is valid JSON so we use JSON.parse – no eval required.
  */
 const parseTranslationJs = (content) => {
@@ -6313,19 +6328,29 @@ const parseTranslationJs = (content) => {
     throw new Error(`Could not parse translation data: ${e.message}`);
   }
 
-  // Optionally extract a human-readable label from window.CODE_LABEL = "...".
+  // Optionally extract metadata from declarations above the BIBLE assignment.
   const labelMatch = trimmed.match(new RegExp(`window\\.${code}_LABEL\\s*=\\s*"([^"]+)"`));
   const label = labelMatch ? labelMatch[1] : code;
 
-  return { code, label, data };
+  const languageMatch = trimmed.match(new RegExp(`window\\.${code}_LANGUAGE\\s*=\\s*"([^"]+)"`));
+  const language = languageMatch ? languageMatch[1] : null;
+
+  const copyrightMatch = trimmed.match(new RegExp(`window\\.${code}_COPYRIGHT\\s*=\\s*"([^"]+)"`));
+  const copyright = copyrightMatch ? copyrightMatch[1] : null;
+
+  const versionMatch = trimmed.match(new RegExp(`window\\.${code}_VERSION\\s*=\\s*(\\d+)`));
+  const version = versionMatch ? Number(versionMatch[1]) : null;
+
+  return { code, label, language, copyright, version, data };
 };
 
 const builtinTranslationCacheKeyPrefix = "service-notes-builtin-";
 
 /**
  * Ensure a translation's book data is loaded. For built-in translations this
- * checks the IndexedDB cache first; if absent it fetches the .js file, parses
- * it with parseTranslationJs, and caches the result for future sessions.
+ * checks the IndexedDB cache first; if absent (or the cached version is older
+ * than the current version) it fetches the .js file, parses it with
+ * parseTranslationJs, and caches the result for future sessions.
  * Custom translations already have `books` populated when loaded from IndexedDB
  * so this is a no-op for them.
  */
@@ -6340,11 +6365,26 @@ const ensureTranslationLoaded = async (code) => {
   const cached = await readStoredValue(`${builtinTranslationCacheKeyPrefix}${code}`);
 
   if (cached && typeof cached === "object" && !Array.isArray(cached)) {
-    entry.books = cached;
-    return;
+    // Only use cached data when the version matches. Old caches that pre-date
+    // versioning (no _version field) are always considered stale when the
+    // library entry declares a version.
+    const cachedVersion = cached._version ?? null;
+    const currentVersion = entry.version ?? null;
+
+    if (currentVersion !== null && cachedVersion === currentVersion) {
+      entry.books = cached.books ?? cached;
+      return;
+    }
+
+    if (currentVersion === null && cached.books) {
+      entry.books = cached.books;
+      return;
+    }
+
+    // Version mismatch or stale legacy cache – fall through to re-fetch.
   }
 
-  // Cache miss — fetch and parse the source file.
+  // Cache miss or stale version — fetch and parse the source file.
   const response = await fetch(entry.scriptSrc);
 
   if (!response.ok) {
@@ -6354,7 +6394,7 @@ const ensureTranslationLoaded = async (code) => {
   const text = await response.text();
   const { data } = parseTranslationJs(text);
   entry.books = data;
-  void writeStoredValue(`${builtinTranslationCacheKeyPrefix}${code}`, data);
+  void writeStoredValue(`${builtinTranslationCacheKeyPrefix}${code}`, { _version: entry.version ?? null, books: data });
 };
 
 /**
@@ -6403,10 +6443,27 @@ const populateTranslationSelect = () => {
   const current = translationSelect.value || currentTranslationCode;
   translationSelect.innerHTML = "";
 
-  Object.entries(translationLibrary).forEach(([code, entry]) => {
+  // Determine whether there are multiple languages in the library so we can
+  // show the ISO language code as a disambiguating suffix.
+  const languages = new Set(
+    Object.values(translationLibrary)
+      .map((e) => e.language)
+      .filter(Boolean)
+  );
+  const showLanguage = languages.size > 1;
+
+  // Sort entries alphabetically by label.
+  const sorted = Object.entries(translationLibrary).sort(([, a], [, b]) => {
+    const aLabel = a.label ?? "";
+    const bLabel = b.label ?? "";
+    return aLabel.localeCompare(bLabel, undefined, { sensitivity: "base" });
+  });
+
+  sorted.forEach(([code, entry]) => {
     const option = document.createElement("option");
     option.value = code;
-    option.textContent = entry.label ?? code;
+    const label = entry.label ?? code;
+    option.textContent = showLanguage && entry.language ? `${label} (${entry.language})` : label;
     translationSelect.append(option);
   });
 
@@ -6418,10 +6475,10 @@ const populateTranslationSelect = () => {
 };
 
 /** Register a parsed translation into the live library and persist it. */
-const registerCustomTranslation = (code, label, data) => {
-  translationLibrary[code] = { label, books: data };
+const registerCustomTranslation = (code, label, language, copyright, data) => {
+  translationLibrary[code] = { label, language: language ?? null, copyright: copyright ?? null, books: data };
   userTranslations = userTranslations.filter((t) => t.code !== code);
-  userTranslations.push({ code, label, data });
+  userTranslations.push({ code, label, language: language ?? null, copyright: copyright ?? null, data });
   void writeStoredValue(customTranslationsStorageKey, userTranslations);
   populateTranslationSelect();
 };
@@ -6434,10 +6491,10 @@ const loadCustomTranslations = async () => {
     return;
   }
 
-  stored.forEach(({ code, label, data }) => {
+  stored.forEach(({ code, label, language, copyright, data }) => {
     if (code && label && validateTranslationData(data)) {
-      translationLibrary[code] = { label, books: data };
-      userTranslations.push({ code, label, data });
+      translationLibrary[code] = { label, language: language ?? null, copyright: copyright ?? null, books: data };
+      userTranslations.push({ code, label, language: language ?? null, copyright: copyright ?? null, data });
     }
   });
 };
@@ -6448,7 +6505,7 @@ const loadCustomTranslations = async () => {
  */
 const importTranslationFromFile = async (file) => {
   const content = await file.text();
-  const { code, label, data } = parseTranslationJs(content);
+  const { code, label, language, copyright, data } = parseTranslationJs(content);
 
   if (!validateTranslationData(data)) {
     throw new Error(`"${file.name}" does not contain valid Bible translation data.`);
@@ -6458,7 +6515,7 @@ const importTranslationFromFile = async (file) => {
     throw new Error(`"${code}" is already a built-in translation and cannot be overwritten.`);
   }
 
-  registerCustomTranslation(code, label, data);
+  registerCustomTranslation(code, label, language, copyright, data);
   return code;
 };
 
@@ -6481,7 +6538,7 @@ const importTranslationFromUrl = async (url) => {
     throw new Error(`Failed to download translation: ${e.message}`);
   }
 
-  const { code, label, data } = parseTranslationJs(content);
+  const { code, label, language, copyright, data } = parseTranslationJs(content);
 
   if (!validateTranslationData(data)) {
     throw new Error("The downloaded file does not contain valid Bible translation data.");
@@ -6491,7 +6548,7 @@ const importTranslationFromUrl = async (url) => {
     throw new Error(`"${code}" is already a built-in translation and cannot be overwritten.`);
   }
 
-  registerCustomTranslation(code, label, data);
+  registerCustomTranslation(code, label, language, copyright, data);
   return code;
 };
 
@@ -6524,7 +6581,13 @@ const renderTranslationsPanel = () => {
   }
 
   builtinList.innerHTML = "";
-  BUILTIN_TRANSLATION_CODES.forEach((code) => {
+  [...BUILTIN_TRANSLATION_CODES]
+    .sort((a, b) => {
+      const aLabel = translationLibrary[a]?.label ?? a;
+      const bLabel = translationLibrary[b]?.label ?? b;
+      return aLabel.localeCompare(bLabel, undefined, { sensitivity: "base" });
+    })
+    .forEach((code) => {
     const entry = translationLibrary[code];
 
     if (!entry) {
@@ -6554,7 +6617,9 @@ const renderTranslationsPanel = () => {
   const hasUser = userTranslations.length > 0;
   emptyNote.hidden = hasUser;
 
-  userTranslations.forEach(({ code, label }) => {
+  [...userTranslations]
+    .sort((a, b) => (a.label ?? a.code).localeCompare(b.label ?? b.code, undefined, { sensitivity: "base" }))
+    .forEach(({ code, label }) => {
     const li = document.createElement("li");
     li.className = "translation-list-item";
 
