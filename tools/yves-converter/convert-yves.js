@@ -102,6 +102,30 @@ function decodeYves(buffer) {
 // ── HTML parsing ──────────────────────────────────────────────────────────────
 
 /**
+ * All inline USX classes the converter explicitly handles or intentionally
+ * ignores.  Any class found on an element that is NOT in this set is added to
+ * the `unknownClasses` collector passed through htmlContent / parseYvesHtml,
+ * which causes the output file to be skipped and a report to be printed.
+ *
+ * To add support for a new class:
+ *   1. Add it here so it stops being reported as unknown.
+ *   2. Add rendering logic in htmlContent() if it needs non-trivial output.
+ */
+const KNOWN_INLINE_CLASSES = new Set([
+  // Explicitly rendered
+  "it",       // italics / translator-added words  → <em>
+  "sc",       // small caps                        → <small>
+  "nd",       // divine name                       → <span class="divine-name">
+  "wj",       // words of Jesus                    → <span class="words-of-jesus">
+  // Excluded by the excludeClasses parameter
+  "note",     // footnote
+  "label",    // verse number label
+  // Transparent wrappers (just pass inner content through)
+  "content",
+  "verse",
+]);
+
+/**
  * Check whether a DOM node has a given class.
  *
  * @param {object} node
@@ -145,11 +169,12 @@ function textContent(node, excludeClasses = []) {
  *   .wj   → <span class="words-of-jesus"> (words of Jesus)
  *   .note → excluded entirely
  *
- * @param {object} node
+ * @param {object}   node
  * @param {string[]} excludeClasses
+ * @param {Set}      unknownClasses  Collector: any unrecognised class is added here
  * @returns {string}
  */
-function htmlContent(node, excludeClasses = []) {
+function htmlContent(node, excludeClasses = [], unknownClasses = null) {
   if (node.type === "text") {
     return escapeHtml(node.data);
   }
@@ -160,7 +185,17 @@ function htmlContent(node, excludeClasses = []) {
     return "";
   }
 
-  const inner = (node.children || []).map(c => htmlContent(c, excludeClasses)).join("");
+  // Check every class on this element against the known set
+  if (unknownClasses) {
+    const nodeClasses = (node.attribs && node.attribs.class || "").split(/\s+/).filter(Boolean);
+    for (const cls of nodeClasses) {
+      if (!KNOWN_INLINE_CLASSES.has(cls) && !excludeClasses.includes(cls)) {
+        unknownClasses.add(cls);
+      }
+    }
+  }
+
+  const inner = (node.children || []).map(c => htmlContent(c, excludeClasses, unknownClasses)).join("");
 
   if (hasClass(node, "it")) {
     return `<em>${inner}</em>`;
@@ -209,9 +244,10 @@ function normalise(s) {
  * }
  *
  * @param {string} html
+ * @param {Set}    unknownClasses  Collector for unrecognised inline classes
  * @returns {object}
  */
-function parseYvesHtml(html) {
+function parseYvesHtml(html, unknownClasses = null) {
   const dom = parseDocument(html, { lowerCaseTags: false });
   const result = {};
 
@@ -242,7 +278,7 @@ function parseYvesHtml(html) {
     const plainText = normalise(textContent(verseNode, ["note", "label"]));
     if (!plainText) continue;
 
-    const richHtml  = normalise(htmlContent(verseNode, ["note", "label"]));
+    const richHtml  = normalise(htmlContent(verseNode, ["note", "label"], unknownClasses));
     const entry = { verse: verseNum, text: plainText };
     if (richHtml && richHtml !== escapeHtml(plainText)) {
       entry.html = richHtml;
@@ -464,7 +500,8 @@ function convertZip(zipFile, args, metadata) {
   const zip     = new AdmZip(zipFile);
   const entries = zip.getEntries();
 
-  const rawData = {}; // { book: { ch: { v: entry } } }
+  const rawData      = {}; // { book: { ch: { v: entry } } }
+  const unknownClasses = new Set();
   let processedFiles = 0;
 
   for (const entry of entries) {
@@ -473,7 +510,7 @@ function convertZip(zipFile, args, metadata) {
 
     const buffer  = entry.getData();
     const decoded = decodeYves(buffer);
-    const parsed  = parseYvesHtml(decoded);
+    const parsed  = parseYvesHtml(decoded, unknownClasses);
     mergeInto(rawData, parsed);
     processedFiles++;
   }
@@ -482,6 +519,14 @@ function convertZip(zipFile, args, metadata) {
 
   if (processedFiles === 0) {
     process.stderr.write(`  Error: no .yves files found in "${path.basename(zipFile)}" — skipping.\n`);
+    return false;
+  }
+
+  // If any unrecognised classes were found, report them and skip output
+  if (unknownClasses.size > 0) {
+    const classList = [...unknownClasses].sort().join(", ");
+    process.stderr.write(`  Skipped — unrecognised inline class(es): ${classList}\n`);
+    process.stderr.write(`  Add handling for these classes to KNOWN_INLINE_CLASSES / htmlContent() and re-run.\n`);
     return false;
   }
 
