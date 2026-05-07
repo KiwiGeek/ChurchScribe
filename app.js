@@ -387,6 +387,18 @@ const normalizeCloudSyncSettings = (value = {}) => ({
 const getCurrentTranslation = () => translationLibrary[currentTranslationCode];
 const getCurrentScriptureLibrary = () => getCurrentTranslation().books;
 const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const debounce = (callback, delayMs) => {
+  let timerId = null;
+  return (...args) => {
+    if (timerId) {
+      window.clearTimeout(timerId);
+    }
+    timerId = window.setTimeout(() => {
+      timerId = null;
+      callback(...args);
+    }, delayMs);
+  };
+};
 const createId = (prefix) => `${prefix}-${crypto.randomUUID()}`;
 const formatSyncTimestamp = (value) => value ? new Date(value).toLocaleString() : "Not synced yet";
 const normalizeThemeMode = (value) => ["light", "dark", "system"].includes(value) ? value : "system";
@@ -4937,9 +4949,17 @@ settingsButton.addEventListener("click", () => {
 cardTitleFieldSelect.addEventListener("change", updateSelectedTypeCardFields);
 cardSubtitleFieldSelect.addEventListener("change", updateSelectedTypeCardFields);
 
+const debouncedRenderNoteManager = debounce(() => {
+  renderNoteManager();
+}, 120);
+
+const debouncedPerformScriptureSearch = debounce((query) => {
+  performScriptureSearch(query);
+}, 180);
+
 noteBrowserFilterInput.addEventListener("input", () => {
   noteBrowserFilter = noteBrowserFilterInput.value;
-  renderNoteManager();
+  debouncedRenderNoteManager();
 });
 
 noteBrowserTypeFilterSelect.addEventListener("change", () => {
@@ -5732,7 +5752,7 @@ translationSelect.addEventListener("change", async () => {
 });
 
 scriptureSearchInput.addEventListener("input", () => {
-  performScriptureSearch(scriptureSearchInput.value);
+  debouncedPerformScriptureSearch(scriptureSearchInput.value);
 });
 
 systemThemeMediaQuery.addEventListener("change", () => {
