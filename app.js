@@ -2067,6 +2067,24 @@ const trimEditorLeadingSpacerNodes = () => {
   }
 };
 
+const isEditorEffectivelyEmpty = () => {
+  if (!noteEditor.childNodes.length) {
+    return true;
+  }
+
+  return [...noteEditor.childNodes].every((node) => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      return !node.textContent.replace(/\u200b/g, "").replace(/\u00a0/g, "").trim();
+    }
+
+    return isEditorSpacerNode(node);
+  });
+};
+
+const updateNoteEditorPlaceholderState = () => {
+  noteEditor.classList.toggle("is-empty", isEditorEffectivelyEmpty());
+};
+
 const getCaretTextOffset = (root) => {
   const selection = window.getSelection();
 
@@ -3550,6 +3568,7 @@ const renderActiveNote = () => {
   processUrlEmbeds();
   refreshTableUi();
   ensureTrailingParagraph();
+  updateNoteEditorPlaceholderState();
 };
 
 const renderNoteManager = () => {
@@ -5053,6 +5072,7 @@ noteEditor.addEventListener("input", (event) => {
     }
   }
 
+  updateNoteEditorPlaceholderState();
   saveActiveNote();
 });
 
