@@ -15,6 +15,18 @@
 //   _makeWrapper(wrapperClass, width)
 //   _makeDeleteButton(btnClass, ariaLabel)
 //   _makeResizeHandle(handleClass)
+//
+// Fun future embed ideas (not implemented yet):
+//   • Vimeo video links
+//   • Apple Podcasts episodes/shows
+//   • SoundCloud tracks/playlists
+//   • Google Maps locations
+//   • Figma files/prototypes
+//   • CodePen demos
+//   • Loom recordings
+//   • Public Google Slides decks
+//   • Public PDF documents
+//   • BibleGateway passage links
 
 class EmbedBase {
   // Static registry — one instance per registered embed type.
