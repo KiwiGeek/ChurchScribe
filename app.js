@@ -112,6 +112,8 @@ const onboardingStepTitle = document.querySelector("#onboarding-step-title");
 const onboardingStepCopy = document.querySelector("#onboarding-step-copy");
 const onboardingStepPoints = document.querySelector("#onboarding-step-points");
 const onboardingStepCallout = document.querySelector("#onboarding-step-callout");
+const onboardingStepCounter = document.querySelector("#onboarding-step-counter");
+const onboardingStepDots = document.querySelector("#onboarding-step-dots");
 const onboardingProgress = document.querySelector("#onboarding-progress");
 const onboardingBackButton = document.querySelector("#onboarding-back-button");
 const onboardingNextButton = document.querySelector("#onboarding-next-button");
@@ -4289,12 +4291,30 @@ const renderOnboardingStep = () => {
   onboardingStepTitle.textContent = step.title;
   onboardingStepCopy.textContent = step.copy;
   onboardingStepCallout.textContent = step.callout;
+  onboardingStepCounter.textContent = `Step ${activeOnboardingStepIndex + 1}`;
   onboardingStepPoints.innerHTML = "";
+  onboardingStepDots.innerHTML = "";
 
-  step.points.forEach((point) => {
+  step.points.forEach((point, index) => {
     const item = document.createElement("li");
-    item.textContent = point;
+    const badge = document.createElement("span");
+    badge.className = "onboarding-point-badge";
+    badge.textContent = `${index + 1}`;
+
+    const text = document.createElement("span");
+    text.className = "onboarding-point-text";
+    text.textContent = point;
+
+    item.append(badge, text);
     onboardingStepPoints.append(item);
+  });
+
+  onboardingSteps.forEach((_, index) => {
+    const dot = document.createElement("span");
+    dot.className = "onboarding-step-dot";
+    dot.classList.toggle("is-active", index === activeOnboardingStepIndex);
+    dot.classList.toggle("is-complete", index < activeOnboardingStepIndex);
+    onboardingStepDots.append(dot);
   });
 
   onboardingProgress.textContent = `${activeOnboardingStepIndex + 1} of ${onboardingSteps.length}`;
