@@ -126,8 +126,8 @@ body::before {
   display: flex;
   justify-content: space-between;
   gap: 20px;
-  align-items: end;
-  margin-bottom: 14px;
+  align-items: center;
+  margin-bottom: 12px;
 }
 
 .header-actions {
@@ -171,8 +171,8 @@ h3 {
 }
 
 h1 {
-  font-size: clamp(1.8rem, 3.8vw, 3.1rem);
-  max-width: 12ch;
+  font-size: clamp(1.7rem, 3vw, 2.45rem);
+  max-width: 14ch;
 }
 
 .header-copy {
@@ -270,10 +270,10 @@ h1 {
 
 .panel-header {
   display: flex;
-  align-items: center;
+  align-items: start;
   justify-content: space-between;
-  gap: 16px;
-  padding: 16px 20px 12px;
+  gap: 20px;
+  padding: 18px 20px 10px;
 }
 
 .panel-header h2 {
@@ -508,18 +508,21 @@ h1 {
   text-transform: uppercase;
 }
 
-.active-note-bar {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 14px;
-  align-items: center;
-  padding: 0 20px 14px;
-}
-
 .active-note-summary {
   min-width: 0;
   display: grid;
-  gap: 4px;
+  gap: 6px;
+}
+
+.panel-note-summary {
+  padding-right: 12px;
+}
+
+.panel-note-title-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 100%;
 }
 
 .active-note-label,
@@ -529,31 +532,72 @@ h1 {
 }
 
 .active-note-label {
-  font-size: 0.76rem;
+  font-size: 0.72rem;
   font-weight: 800;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
 .active-note-title {
   margin: 0;
-  font-size: 1.05rem;
-  line-height: 1.2;
+  font-size: clamp(1.35rem, 2vw, 1.8rem);
+  line-height: 1.05;
+}
+
+.panel-note-title {
+  max-width: 22ch;
+}
+
+.panel-note-edit-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--ghost-surface);
+  color: var(--muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.95rem;
+  line-height: 1;
+  opacity: 0;
+  transform: translateX(-6px);
+  pointer-events: none;
+  transition: opacity 160ms ease, transform 160ms ease, color 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.panel-note-summary:hover .panel-note-edit-button,
+.panel-note-summary:focus-within .panel-note-edit-button,
+.panel-note-edit-button:focus-visible {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+.panel-note-edit-button:hover,
+.panel-note-edit-button:focus-visible {
+  color: var(--text);
+  border-color: var(--tool-hover-border);
+  background: var(--surface-accent);
+  outline: none;
 }
 
 .active-note-meta {
-  font-size: 0.88rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
 }
 
 .note-meta-bar {
-  padding: 0 20px 12px;
+  padding: 0 20px 14px;
 }
 
 .metadata-summary {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  min-height: 44px;
   align-items: center;
 }
 
@@ -2266,17 +2310,11 @@ body.is-pane-dragging {
 
   .panel-header,
   .toolbar,
-  .active-note-bar,
   .note-meta-bar,
   .note-meta,
   .verse-picker {
     padding-left: 18px;
     padding-right: 18px;
-  }
-
-  .active-note-bar {
-    grid-template-columns: 1fr;
-    align-items: start;
   }
 
   .note-meta {

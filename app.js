@@ -41,8 +41,11 @@ const deleteNoteButton = document.querySelector("#delete-note-button");
 const manageNotesButton = document.querySelector("#manage-notes-button");
 const settingsButton = document.querySelector("#settings-button");
 const noteDetailsButton = document.querySelector("#note-details-button");
+const activeNoteLabel = document.querySelector("#active-note-label");
 const activeNoteTitle = document.querySelector("#active-note-title");
+const activeNoteEditButton = document.querySelector("#active-note-edit-button");
 const activeNoteMeta = document.querySelector("#active-note-meta");
+const noteMetaBar = document.querySelector("#note-meta-bar");
 const metadataSummary = document.querySelector("#metadata-summary");
 const noteMetaFields = document.querySelector("#note-meta-fields");
 const translationSelect = document.querySelector("#translation-select");
@@ -546,7 +549,7 @@ const buildMetadataForType = (type, sourceMetadata = {}, sourceType = null) => {
   return nextMetadata;
 };
 
-const getDefaultCardTitleFieldId = (type) => {
+const getSuggestedCardTitleFieldId = (type) => {
   const titleField = type.fields.find((field) => normalizeFieldLabel(field.label) === "title");
   return titleField?.id ?? type.fields[0]?.id ?? "";
 };
@@ -558,7 +561,7 @@ const getDefaultCardSubtitleFieldId = (type) => {
     return speakerField.id;
   }
 
-  const titleFieldId = getDefaultCardTitleFieldId(type);
+  const titleFieldId = getSuggestedCardTitleFieldId(type);
   const fallbackField = type.fields.find((field) => field.id !== titleFieldId);
   return fallbackField?.id ?? "";
 };
@@ -683,11 +686,15 @@ const ensureWorkspaceConsistency = () => {
         : []
     };
 
-    normalizedType.cardTitleFieldId = normalizedType.fields.some((field) => field.id === type.cardTitleFieldId)
-      ? type.cardTitleFieldId
-      : getDefaultCardTitleFieldId(normalizedType);
-    normalizedType.cardSubtitleFieldId = normalizedType.fields.some((field) => field.id === type.cardSubtitleFieldId)
-      ? type.cardSubtitleFieldId
+    normalizedType.cardTitleFieldId = typeof type.cardTitleFieldId === "string"
+      ? (type.cardTitleFieldId === "" || normalizedType.fields.some((field) => field.id === type.cardTitleFieldId)
+          ? type.cardTitleFieldId
+          : getSuggestedCardTitleFieldId(normalizedType))
+      : getSuggestedCardTitleFieldId(normalizedType);
+    normalizedType.cardSubtitleFieldId = typeof type.cardSubtitleFieldId === "string"
+      ? (type.cardSubtitleFieldId === "" || normalizedType.fields.some((field) => field.id === type.cardSubtitleFieldId)
+          ? type.cardSubtitleFieldId
+          : getDefaultCardSubtitleFieldId(normalizedType))
       : getDefaultCardSubtitleFieldId(normalizedType);
 
     return normalizedType;
@@ -3290,18 +3297,14 @@ const findAutoLinkAtCaret = () => {
 
 const getNoteDisplayTitle = (note) => {
   const type = getNoteTypeById(note.typeId);
-  const preferredField = type.fields.find((field) => field.id === type.cardTitleFieldId) ?? type.fields[0];
+  const preferredField = type.fields.find((field) => field.id === type.cardTitleFieldId) ?? null;
   const titleValue = preferredField ? note.metadata[preferredField.id]?.trim() : "";
 
   if (titleValue) {
     return titleValue;
   }
 
-  const anyValue = type.fields
-    .map((field) => note.metadata[field.id]?.trim())
-    .find(Boolean);
-
-  return anyValue || formatNoteDate(note.createdAt);
+  return formatNoteDate(note.createdAt);
 };
 
 const getNoteDisplayMeta = (note) => {
@@ -3426,18 +3429,19 @@ const renderMetadataSummary = () => {
 
   const populatedFields = type.fields
     .map((field) => ({
+      id: field.id,
       label: field.label,
       value: (activeNote.metadata[field.id] ?? "").trim()
     }))
-    .filter((field) => field.value);
+    .filter((field) => field.value)
+    .filter((field) => field.id !== type.cardTitleFieldId && field.id !== type.cardSubtitleFieldId);
 
   if (!populatedFields.length) {
-    const emptyState = document.createElement("p");
-    emptyState.className = "metadata-summary-empty";
-    emptyState.textContent = "No note details added yet.";
-    metadataSummary.append(emptyState);
+    noteMetaBar.classList.add("is-hidden");
     return;
   }
+
+  noteMetaBar.classList.remove("is-hidden");
 
   populatedFields.forEach((field) => {
     const chip = document.createElement("div");
@@ -3506,14 +3510,15 @@ const renderNoteMetadataFields = () => {
 const renderActiveNoteSummary = () => {
   const activeNote = getActiveNote();
   const type = getNoteTypeById(activeNote.typeId);
-  const metaBits = [type.name];
   const secondaryMeta = getNoteDisplayMeta(activeNote);
+  const metaBits = [];
 
   if (secondaryMeta) {
     metaBits.push(secondaryMeta);
   }
 
   metaBits.push(`Updated ${formatNoteDate(activeNote.updatedAt)}`);
+  activeNoteLabel.textContent = type.name || "Notes";
   activeNoteTitle.textContent = getNoteDisplayTitle(activeNote);
   activeNoteMeta.textContent = metaBits.join(" • ");
 };
@@ -4180,6 +4185,11 @@ const renderSettings = () => {
   cardTitleFieldSelect.innerHTML = "";
   cardSubtitleFieldSelect.innerHTML = "";
 
+  const noPrimaryOption = document.createElement("option");
+  noPrimaryOption.value = "";
+  noPrimaryOption.textContent = "None (use date)";
+  cardTitleFieldSelect.append(noPrimaryOption);
+
   const noneOption = document.createElement("option");
   noneOption.value = "";
   noneOption.textContent = "None";
@@ -4535,7 +4545,7 @@ const updateSelectedTypeCardFields = () => {
     return;
   }
 
-  type.cardTitleFieldId = cardTitleFieldSelect.value || getDefaultCardTitleFieldId(type);
+  type.cardTitleFieldId = cardTitleFieldSelect.value;
   type.cardSubtitleFieldId = cardSubtitleFieldSelect.value || "";
   persistWorkspace();
   renderWorkspace();
@@ -4595,7 +4605,7 @@ const removeMetadataField = (fieldId) => {
 
   type.fields = type.fields.filter((entry) => entry.id !== fieldId);
   if (type.cardTitleFieldId === fieldId) {
-    type.cardTitleFieldId = getDefaultCardTitleFieldId(type);
+    type.cardTitleFieldId = getSuggestedCardTitleFieldId(type);
   }
 
   if (type.cardSubtitleFieldId === fieldId) {
@@ -4882,6 +4892,11 @@ deleteNoteButton.addEventListener("click", () => {
   closeOverflowMenu();
 });
 noteDetailsButton.addEventListener("click", () => {
+  renderNoteMetadataFields();
+  openDialog(noteDetailsDialog);
+});
+
+activeNoteEditButton.addEventListener("click", () => {
   renderNoteMetadataFields();
   openDialog(noteDetailsDialog);
 });
