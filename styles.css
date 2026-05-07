@@ -903,6 +903,7 @@ h1 {
 }
 
 .pdf-embed-wrapper {
+  --pdf-fallback-height: 34px;
   position: relative;
   display: inline-block;
   width: 560px;
@@ -924,7 +925,7 @@ h1 {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  min-height: 34px;
+  min-height: var(--pdf-fallback-height);
   padding: 6px 10px;
   background: var(--surface);
   border-top: 1px solid var(--border);
@@ -976,7 +977,7 @@ h1 {
 
 .pdf-embed-resize-handle {
   position: absolute;
-  bottom: 34px;
+  bottom: var(--pdf-fallback-height);
   left: 0;
   right: 0;
   height: 18px;

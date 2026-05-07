@@ -8,6 +8,7 @@ class PdfEmbed extends EmbedBase {
   get canResize() { return true; }
 
   // Returns the PDF URL when `url` is a recognisable direct PDF URL, else null.
+  // This matcher intentionally uses extension-based detection (.pdf path suffix).
   matchUrl(url) {
     try {
       const parsed = new URL(url);
