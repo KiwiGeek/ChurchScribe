@@ -37,13 +37,24 @@ class PdfEmbed extends EmbedBase {
     iframe.className = "pdf-embed-frame";
     iframe.src = pdfUrl;
     iframe.setAttribute("loading", "lazy");
-    iframe.setAttribute("sandbox", "allow-downloads");
     iframe.title = "Embedded PDF";
+
+    const fallback = document.createElement("div");
+    fallback.className = "pdf-embed-fallback";
+
+    const openLink = document.createElement("a");
+    openLink.className = "pdf-embed-open-link";
+    openLink.href = pdfUrl;
+    openLink.target = "_blank";
+    openLink.rel = "noopener noreferrer";
+    openLink.textContent = "Open PDF in new tab";
 
     const deleteBtn = this._makeDeleteButton("pdf-embed-delete", "Remove PDF embed");
     const resizeHandle = this._makeResizeHandle("pdf-embed-resize-handle");
 
+    fallback.appendChild(openLink);
     wrapper.appendChild(iframe);
+    wrapper.appendChild(fallback);
     wrapper.appendChild(deleteBtn);
     wrapper.appendChild(resizeHandle);
     outerDiv.appendChild(wrapper);

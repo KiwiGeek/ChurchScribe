@@ -915,9 +915,32 @@ h1 {
 .pdf-embed-frame {
   display: block;
   width: 100%;
-  height: min(70vh, 640px);
+  height: min(64vh, 600px);
   border: none;
   background: #fff;
+}
+
+.pdf-embed-fallback {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  min-height: 34px;
+  padding: 6px 10px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  line-height: 1;
+}
+
+.pdf-embed-open-link {
+  color: var(--accent);
+  font-size: 0.8rem;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.pdf-embed-open-link:hover,
+.pdf-embed-open-link:focus-visible {
+  color: var(--accent-strong);
 }
 
 .pdf-embed-delete {
@@ -953,7 +976,7 @@ h1 {
 
 .pdf-embed-resize-handle {
   position: absolute;
-  bottom: 0;
+  bottom: 34px;
   left: 0;
   right: 0;
   height: 18px;
