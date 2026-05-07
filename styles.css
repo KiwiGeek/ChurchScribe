@@ -1700,33 +1700,160 @@ button.about-link--block {
 
 .onboarding-layout {
   display: grid;
-  gap: 16px;
+  gap: 18px;
+  background:
+    radial-gradient(circle at top right, color-mix(in srgb, var(--accent) 12%, transparent), transparent 36%),
+    linear-gradient(180deg, color-mix(in srgb, var(--surface-strong) 72%, transparent), transparent 65%);
 }
 
 .onboarding-copy {
-  margin-bottom: 0;
+  margin: 0;
   font-size: 1rem;
+  line-height: 1.65;
+  color: var(--text);
+  max-width: 58ch;
+}
+
+.onboarding-hero-card,
+.onboarding-panel,
+.onboarding-callout-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--note-chip-border);
+  border-radius: calc(var(--radius-lg) - 2px);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--surface-strong) 92%, transparent), color-mix(in srgb, var(--note-chip-surface) 82%, transparent));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.onboarding-hero-card::before,
+.onboarding-panel::before,
+.onboarding-callout-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent 42%);
+}
+
+.onboarding-hero-card {
+  padding: 18px 20px 20px;
+  display: grid;
+  gap: 16px;
+}
+
+.onboarding-step-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.onboarding-step-counter {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface-accent) 78%, transparent);
+  color: var(--accent-strong);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.onboarding-step-dots {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.onboarding-step-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--border));
+  background: color-mix(in srgb, var(--ghost-surface) 88%, transparent);
+  transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+}
+
+.onboarding-step-dot.is-complete {
+  background: color-mix(in srgb, var(--accent) 78%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 78%, transparent);
+}
+
+.onboarding-step-dot.is-active {
+  width: 34px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+  border-color: transparent;
+}
+
+.onboarding-content-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(240px, 0.95fr);
+  gap: 16px;
+}
+
+.onboarding-panel,
+.onboarding-callout-card {
+  padding: 18px 20px;
+}
+
+.onboarding-section-label {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
 .onboarding-points {
   margin: 0;
-  padding-left: 1.25rem;
+  padding: 0;
   display: grid;
-  gap: 10px;
+  gap: 12px;
+  list-style: none;
   color: var(--text);
 }
 
 .onboarding-points li {
-  line-height: 1.5;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 12px;
+  padding: 14px 14px 14px 12px;
+  border: 1px solid var(--note-chip-border);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--ghost-surface) 76%, transparent);
+  line-height: 1.55;
+}
+
+.onboarding-point-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 999px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 26%, var(--surface-accent)), color-mix(in srgb, var(--accent-strong) 20%, var(--surface-accent)));
+  color: var(--accent-strong);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.onboarding-point-text {
+  min-width: 0;
 }
 
 .onboarding-callout {
-  padding: 0.85rem 1rem;
-  border: 1px solid var(--note-chip-border);
-  border-radius: var(--radius-md);
-  background: var(--note-chip-surface);
-  color: var(--muted);
-  line-height: 1.45;
+  padding: 14px 16px;
+  border-left: 3px solid color-mix(in srgb, var(--accent) 58%, transparent);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  background: color-mix(in srgb, var(--surface-accent) 34%, transparent);
+  color: var(--text);
+  line-height: 1.6;
 }
 
 .onboarding-actions {
@@ -1737,8 +1864,9 @@ button.about-link--block {
 }
 
 .onboarding-progress {
-  color: var(--muted);
-  font-size: 0.92rem;
+  color: var(--accent-strong);
+  font-size: 0.86rem;
+  font-weight: 700;
   text-align: center;
 }
 
@@ -2117,6 +2245,14 @@ body.is-pane-dragging {
   .alias-row {
     grid-template-columns: 1fr;
   }
+
+  .onboarding-content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .onboarding-step-meta {
+    align-items: start;
+  }
 }
 
 @media (max-width: 640px) {
@@ -2204,6 +2340,39 @@ body.is-pane-dragging {
   }
 
   .header-controls {
+    width: 100%;
+  }
+
+  .onboarding-dialog {
+    width: calc(100% - 12px);
+  }
+
+  .onboarding-layout {
+    gap: 14px;
+  }
+
+  .onboarding-hero-card,
+  .onboarding-panel,
+  .onboarding-callout-card {
+    padding: 16px;
+  }
+
+  .onboarding-step-dots {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .onboarding-actions {
+    grid-template-columns: 1fr 1fr;
+    justify-items: stretch;
+  }
+
+  .onboarding-progress {
+    grid-column: 1 / -1;
+    order: -1;
+  }
+
+  .onboarding-actions button {
     width: 100%;
   }
 }

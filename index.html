@@ -463,9 +463,25 @@
       </div>
 
       <div class="dialog-body onboarding-layout">
-        <p class="settings-copy onboarding-copy" id="onboarding-step-copy"></p>
-        <ul class="onboarding-points" id="onboarding-step-points"></ul>
-        <div class="onboarding-callout" id="onboarding-step-callout"></div>
+        <div class="onboarding-hero-card">
+          <div class="onboarding-step-meta">
+            <div class="onboarding-step-counter" id="onboarding-step-counter" aria-live="polite"></div>
+            <div class="onboarding-step-dots" id="onboarding-step-dots" aria-hidden="true"></div>
+          </div>
+          <p class="settings-copy onboarding-copy" id="onboarding-step-copy"></p>
+        </div>
+
+        <div class="onboarding-content-grid">
+          <section class="onboarding-panel">
+            <p class="onboarding-section-label">In this step</p>
+            <ul class="onboarding-points" id="onboarding-step-points"></ul>
+          </section>
+
+          <aside class="onboarding-callout-card">
+            <p class="onboarding-section-label">Worth remembering</p>
+            <div class="onboarding-callout" id="onboarding-step-callout"></div>
+          </aside>
+        </div>
       </div>
 
       <div class="dialog-actions onboarding-actions">
