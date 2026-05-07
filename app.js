@@ -913,8 +913,7 @@ const buildCloudSettingsPayload = (updatedAt = new Date().toISOString()) => ({
   syncSettings: {
     provider: cloudSyncSettings.provider,
     pollIntervalSeconds: cloudSyncSettings.pollIntervalSeconds
-  },
-  customTranslations: structuredClone(userTranslations)
+  }
 });
 
 const buildCloudNotesPayload = (updatedAt = new Date().toISOString()) => ({
@@ -944,21 +943,6 @@ const applyCloudPayload = async (payload) => {
 
   if (Array.isArray(payload.notes)) {
     workspace.notes = payload.notes;
-  }
-
-  // Apply custom translations first so they are available when preferences (translation code) are applied.
-  if (Array.isArray(payload.customTranslations)) {
-    userTranslations = [];
-
-    for (const { code, label, data } of payload.customTranslations) {
-      if (code && label && !BUILTIN_TRANSLATION_CODES.has(code) && validateTranslationData(data)) {
-        translationLibrary[code] = { label, books: data };
-        userTranslations.push({ code, label, data });
-      }
-    }
-
-    void writeStoredValue(customTranslationsStorageKey, userTranslations);
-    populateTranslationSelect();
   }
 
   if (payload.preferences) {
