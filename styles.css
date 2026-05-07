@@ -992,7 +992,7 @@ h1 {
   outline-offset: 2px;
 }
 
-.note-editor:empty::before {
+.note-editor.is-empty::before {
   content: attr(data-placeholder);
   color: var(--placeholder);
 }
