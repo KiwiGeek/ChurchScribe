@@ -893,6 +893,114 @@ h1 {
   background: rgba(200, 30, 30, 0.85);
 }
 
+/* ── PDF embeds ──────────────────────────────────────────────────────── */
+
+.pdf-embed {
+  display: block;
+  margin: 0.75em 0;
+  line-height: 0;
+  user-select: none;
+}
+
+.pdf-embed-wrapper {
+  --pdf-fallback-height: 34px;
+  position: relative;
+  display: inline-block;
+  width: 560px;
+  max-width: 100%;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.pdf-embed-frame {
+  display: block;
+  width: 100%;
+  height: min(64vh, 600px);
+  border: none;
+  background: #fff;
+}
+
+.pdf-embed-fallback {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  min-height: var(--pdf-fallback-height);
+  padding: 6px 10px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  line-height: 1;
+}
+
+.pdf-embed-open-link {
+  color: var(--accent);
+  font-size: 0.8rem;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.pdf-embed-open-link:hover,
+.pdf-embed-open-link:focus-visible {
+  color: var(--accent-strong);
+}
+
+.pdf-embed-delete {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.15s ease, background 0.15s ease;
+  z-index: 10;
+  padding: 0;
+}
+
+.pdf-embed-wrapper:hover .pdf-embed-delete,
+.pdf-embed-wrapper:focus-within .pdf-embed-delete {
+  opacity: 1;
+}
+
+.pdf-embed-delete:hover {
+  background: rgba(200, 30, 30, 0.85);
+}
+
+.pdf-embed-resize-handle {
+  position: absolute;
+  bottom: var(--pdf-fallback-height);
+  left: 0;
+  right: 0;
+  height: 18px;
+  cursor: ew-resize;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 8px;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.pdf-embed-wrapper:hover .pdf-embed-resize-handle {
+  opacity: 1;
+}
+
+.pdf-embed-resize-handle::after {
+  content: "⟺";
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1;
+}
+
 /* ── Image embeds ──────────────────────────────────────────────────── */
 
 .image-embed {
