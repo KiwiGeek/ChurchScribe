@@ -3918,6 +3918,7 @@ const downloadWorkspaceBackup = () => {
       selectedNewNoteTypeId: workspace.selectedNewNoteTypeId
     },
     notes: structuredClone(workspace.notes),
+    customTranslations: structuredClone(userTranslations),
     preferences: {
       theme: currentThemeMode,
       paneOrder: paneGrid.dataset.order === "scripture-first" ? "scripture-first" : "notes-first",
@@ -3961,6 +3962,25 @@ const restoreWorkspaceFromBackup = async (file) => {
     workspace.activeNoteId = backup.workspace.activeNoteId ?? workspace.activeNoteId;
     workspace.selectedNewNoteTypeId = backup.workspace.selectedNewNoteTypeId ?? workspace.selectedNewNoteTypeId;
     workspace.notes = backup.notes;
+
+    if (Array.isArray(backup.customTranslations)) {
+      userTranslations.forEach(({ code }) => {
+        if (!BUILTIN_TRANSLATION_CODES.has(code)) {
+          delete translationLibrary[code];
+        }
+      });
+      userTranslations = [];
+
+      backup.customTranslations.forEach(({ code, label, language, copyright, data }) => {
+        if (code && label && !BUILTIN_TRANSLATION_CODES.has(code) && validateTranslationData(data)) {
+          translationLibrary[code] = { label, language: language ?? null, copyright: copyright ?? null, books: data };
+          userTranslations.push({ code, label, language: language ?? null, copyright: copyright ?? null, data });
+        }
+      });
+
+      void writeStoredValue(customTranslationsStorageKey, userTranslations);
+      populateTranslationSelect();
+    }
 
     if (backup.preferences) {
       const { preferences } = backup;
