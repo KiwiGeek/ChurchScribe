@@ -1861,6 +1861,7 @@ button.about-link--block {
   grid-template-columns: auto 1fr auto auto;
   align-items: center;
   gap: 12px;
+  padding: 0 12px 12px;
 }
 
 .onboarding-progress {
