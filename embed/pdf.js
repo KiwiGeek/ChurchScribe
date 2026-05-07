@@ -37,7 +37,7 @@ class PdfEmbed extends EmbedBase {
     iframe.className = "pdf-embed-frame";
     iframe.src = pdfUrl;
     iframe.setAttribute("loading", "lazy");
-    iframe.setAttribute("sandbox", "allow-scripts allow-downloads");
+    iframe.setAttribute("sandbox", "allow-downloads");
     iframe.title = "Embedded PDF";
 
     const deleteBtn = this._makeDeleteButton("pdf-embed-delete", "Remove PDF embed");
