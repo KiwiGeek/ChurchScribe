@@ -1776,6 +1776,29 @@ h1 {
   color: var(--muted);
 }
 
+.translation-list-item-tag {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 2px 8px;
+  font-size: 0.72rem;
+  border-radius: 999px;
+  align-self: flex-start;
+  background: var(--surface-2, rgba(0, 0, 0, 0.06));
+  color: var(--muted);
+  border: 1px solid var(--border, rgba(0, 0, 0, 0.1));
+}
+
+.translation-list-item-tag[data-state="missing"] {
+  color: var(--error, #c0392b);
+  border-color: currentColor;
+  background: transparent;
+}
+
+.download-all-translations-status {
+  margin-left: 12px;
+  align-self: center;
+}
+
 .ghost-button--small {
   padding: 0.3rem 0.65rem;
   font-size: 0.82rem;

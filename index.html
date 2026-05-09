@@ -4,6 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Scriptoria</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2a2118">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <link rel="apple-touch-icon" href="icon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@400;500;600;700&family=Orbitron:wght@400;700&family=Cinzel:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
@@ -373,6 +377,11 @@
 
           <div class="data-management-section">
             <h4 class="data-section-title">Built-in Translations</h4>
+            <p class="settings-copy">Translations download automatically the first time you select them. Use the button below to grab them all now so the full set is available offline.</p>
+            <div class="dialog-actions">
+              <button class="ghost-button" id="download-all-translations-button" type="button">Download all for offline use</button>
+              <span class="settings-copy download-all-translations-status" id="download-all-translations-status" aria-live="polite"></span>
+            </div>
             <ul class="translation-list" id="builtin-translation-list"></ul>
           </div>
 
@@ -624,3 +633,4 @@
 </body>
 </html>
                                
+
