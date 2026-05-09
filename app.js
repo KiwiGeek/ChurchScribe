@@ -6870,3 +6870,10 @@ mobileWarningDismissButton.addEventListener("click", () => {
   mobileWarning.classList.add("is-hidden");
   sessionStorage.setItem("mobile-warning-dismissed", "1");
 });
+
+const betaBanner = document.querySelector("#beta-banner");
+const betaBannerDismiss = document.querySelector("#beta-banner-dismiss");
+
+betaBannerDismiss.addEventListener("click", () => {
+  betaBanner.classList.add("is-hidden");
+});
