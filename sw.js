@@ -62,6 +62,9 @@ const PRECACHE_URLS = [
   "notes/model.js",
   "notes/render.js",
   "notes/browser.js",
+  "sync/status.js",
+  "sync/payloads.js",
+  "sync/cloud-sync.js",
   "translations/manager.js",
 
   // Cloud-storage providers (loaded by index.html before app.js)

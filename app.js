@@ -283,13 +283,6 @@ let activeTableCell = null;
 let contextMenuTableCell = null;
 let activeOnboardingStepIndex = 0;
 let dbPromise;
-let pendingAutoSyncTimer = null;
-let syncInFlightPromise = null;
-let isPullInFlight = false;
-let cloudPollTimer = null;
-// Set when an auto-sync attempt was deferred because the browser was offline.
-// The "online" event handler consumes this flag to retry the sync.
-let cloudSyncQueuedWhileOffline = false;
 let userTranslations = [];
 const systemThemeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
@@ -426,6 +419,35 @@ const normalizeCloudSyncSettings = (value = {}) => ({
     ? value.providerSettings
     : {}
 });
+
+let syncStatusApi = null;
+let syncPayloadApi = null;
+let syncCloudApi = null;
+
+const persistCloudSyncSettings = (...args) => syncCloudApi.persistCloudSyncSettings(...args);
+const markLocalSettingsUpdated = (...args) => syncCloudApi.markLocalSettingsUpdated(...args);
+const resetTransientCloudSessionState = (...args) => syncCloudApi.resetTransientCloudSessionState(...args);
+const restoreCloudSyncSettings = (...args) => syncCloudApi.restoreCloudSyncSettings(...args);
+const buildCloudStatusText = (...args) => syncStatusApi.buildCloudStatusText(...args);
+const buildSaveStatusText = (...args) => syncStatusApi.buildSaveStatusText(...args);
+const refreshSaveStatus = (...args) => syncStatusApi.refreshSaveStatus(...args);
+const getActiveProviderSettings = (...args) => syncStatusApi.getActiveProviderSettings(...args);
+const getCloudTargetLabel = (...args) => syncStatusApi.getCloudTargetLabel(...args);
+const buildProviderStatusLabel = (...args) => syncStatusApi.buildProviderStatusLabel(...args);
+const buildCloudSettingsPayload = (...args) => syncPayloadApi.buildCloudSettingsPayload(...args);
+const buildCloudNotesPayload = (...args) => syncPayloadApi.buildCloudNotesPayload(...args);
+const buildCloudSyncPayload = (...args) => syncPayloadApi.buildCloudSyncPayload(...args);
+const applyCloudPayload = (...args) => syncPayloadApi.applyCloudPayload(...args);
+const pullFromCloud = (...args) => syncCloudApi.pullFromCloud(...args);
+const stopCloudPolling = (...args) => syncCloudApi.stopCloudPolling(...args);
+const startCloudPolling = (...args) => syncCloudApi.startCloudPolling(...args);
+const syncWorkspaceToCloud = (...args) => syncCloudApi.syncWorkspaceToCloud(...args);
+const scheduleAutoCloudSync = (...args) => syncCloudApi.scheduleAutoCloudSync(...args);
+const connectCloud = (...args) => syncCloudApi.connectCloud(...args);
+const disconnectCloud = (...args) => syncCloudApi.disconnectCloud(...args);
+const reconnectCloud = (...args) => syncCloudApi.reconnectCloud(...args);
+const clearPendingAutoSync = (...args) => syncCloudApi.clearPendingAutoSync(...args);
+const consumeQueuedCloudSync = (...args) => syncCloudApi.consumeQueuedCloudSync(...args);
 
 const getCurrentTranslation = () => translationLibrary[currentTranslationCode];
 const getCurrentScriptureLibrary = () => getCurrentTranslation().books;
@@ -640,6 +662,7 @@ const addBookAlias = (alias, canonicalBook) => {
 let getNoteDisplayTitle = () => "";
 let getNoteDisplayMeta = () => "";
 let getNoteSearchableText = () => "";
+let renderNoteMetadataFields = () => {};
 let renderWorkspace = () => {};
 let renderNoteManager = () => {};
 let openNotesBrowser = () => {};
@@ -893,621 +916,6 @@ const updateSaveStatus = (message) => {
   });
 
   saveStatus.append(localText, syncButton);
-};
-
-const persistCloudSyncSettings = () => {
-  void writeStoredValue(cloudSyncStorageKey, structuredClone(cloudSyncSettings));
-};
-
-const markLocalSettingsUpdated = () => {
-  cloudSyncSettings.localSettingsUpdatedAt = new Date().toISOString();
-  persistCloudSyncSettings();
-};
-
-const resetTransientCloudSessionState = () => {
-  if (activeProvider.hasActiveSession()) {
-    return;
-  }
-
-  cloudSyncSettings.connectedEmail = "";
-
-  if (
-    cloudSyncSettings.status.startsWith("Connected to") ||
-    cloudSyncSettings.status.startsWith("Syncing")
-  ) {
-    cloudSyncSettings.status = "Not connected";
-  }
-};
-
-const restoreCloudSyncSettings = async () => {
-  const savedSettings = await readStoredValue(cloudSyncStorageKey);
-  Object.assign(cloudSyncSettings, normalizeCloudSyncSettings(savedSettings));
-
-  activeProvider = providerRegistry[cloudSyncSettings.provider] ?? noOpProvider;
-
-  const providerId = activeProvider.id;
-  const defaults = activeProvider.getSettingsValues();
-
-  if (!cloudSyncSettings.providerSettings[providerId]) {
-    cloudSyncSettings.providerSettings[providerId] = { ...defaults };
-  } else {
-    cloudSyncSettings.providerSettings[providerId] = {
-      ...defaults,
-      ...cloudSyncSettings.providerSettings[providerId]
-    };
-  }
-
-  resetTransientCloudSessionState();
-  persistCloudSyncSettings();
-};
-
-const buildCloudStatusText = () => {
-  if (activeProvider.id === "none") {
-    return "No sync & backup provider configured";
-  }
-
-  const isLocalDrive = activeProvider.id === "local-drive";
-
-  if (!activeProvider.isAvailable()) {
-    return isLocalDrive
-      ? "Local file access not supported in this browser"
-      : "Storage provider not available";
-  }
-
-  if (isLocalDrive) {
-    if (!activeProvider.hasActiveSession()) {
-      return "No folder selected";
-    }
-
-    const folderName = getCloudTargetLabel();
-    return folderName ? `Folder: ${folderName}` : "Folder selected";
-  }
-
-  if (
-    cloudSyncSettings.status &&
-    !cloudSyncSettings.status.startsWith("Connected to") &&
-    cloudSyncSettings.status !== "Not connected"
-  ) {
-    return cloudSyncSettings.status;
-  }
-
-  if (cloudSyncSettings.connectedEmail) {
-    return `Connected as ${cloudSyncSettings.connectedEmail}`;
-  }
-
-  return cloudSyncSettings.status;
-};
-
-const buildSaveStatusText = (savedAt = new Date(), syncedAt = cloudSyncSettings.lastSyncAt) => {
-  const localLabel = `Saved locally ${new Date(savedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}`;
-  // Offline takes precedence over every other sync state — once the browser
-  // reports offline, the user's edits are local-only until connectivity returns.
-  const syncLabel = !navigator.onLine && activeProvider.hasActiveSession()
-    ? "Offline — sync paused"
-    : cloudSyncSettings.status.startsWith("Syncing")
-      ? "Syncing ..."
-      : cloudSyncSettings.lastError
-        ? `Sync failed: ${cloudSyncSettings.lastError}`
-        : syncedAt
-          ? `Synced ${new Date(syncedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}`
-          : "Not synced yet";
-
-  return { localLabel, syncLabel };
-};
-
-const refreshSaveStatus = () => {
-  const activeNote = getActiveNote();
-  const savedAt = activeNote?.updatedAt ?? new Date();
-  updateSaveStatus(buildSaveStatusText(savedAt));
-};
-
-const getActiveProviderSettings = () => ({
-  ...cloudSyncSettings.providerSettings[activeProvider.id],
-  remoteSettingsFileId: cloudSyncSettings.remoteSettingsFileId,
-  remoteNoteFileIds: structuredClone(cloudSyncSettings.remoteNoteFileIds),
-  remoteWorkspaceFileId: cloudSyncSettings.remoteWorkspaceFileId,
-  remoteWorkspaceParentId: cloudSyncSettings.remoteWorkspaceParentId
-});
-
-const getCloudTargetLabel = () =>
-  activeProvider.getLocationLabel(cloudSyncSettings.providerSettings[activeProvider.id] ?? {});
-
-const buildProviderStatusLabel = () => {
-  const suffix = getCloudTargetLabel();
-  return suffix ? `${activeProvider.displayName} (${suffix})` : activeProvider.displayName;
-};
-
-const buildCloudSettingsPayload = (updatedAt = new Date().toISOString()) => ({
-  version: 2,
-  updatedAt,
-  workspace: {
-    noteTypes: structuredClone(workspace.noteTypes),
-    activeNoteId: workspace.activeNoteId,
-    selectedNewNoteTypeId: workspace.selectedNewNoteTypeId,
-    customBookAliases: structuredClone(workspace.customBookAliases),
-    updatedAt: workspace.updatedAt ?? updatedAt
-  },
-  preferences: {
-    theme: currentThemeMode,
-    paneOrder: paneGrid.dataset.order === "scripture-first" ? "scripture-first" : "notes-first",
-    paneSplit: currentPaneSplit,
-    translation: currentTranslationCode,
-    colorTheme: currentColorThemeId
-  },
-  syncSettings: {
-    provider: cloudSyncSettings.provider,
-    pollIntervalSeconds: cloudSyncSettings.pollIntervalSeconds
-  }
-});
-
-const buildCloudNotesPayload = (updatedAt = new Date().toISOString()) => ({
-  version: 2,
-  updatedAt,
-  notes: structuredClone(workspace.notes)
-});
-
-const buildCloudSyncPayload = () => {
-  // Make sure any debounced editor work is flushed so the active note's content
-  // reflects what the user has actually typed before we serialise for upload.
-  flushEditorWorkNow();
-  const updatedAt = new Date().toISOString();
-
-  return {
-    updatedAt,
-    settings: buildCloudSettingsPayload(updatedAt),
-    notes: buildCloudNotesPayload(updatedAt)
-  };
-};
-
-const applyCloudPayload = async (payload) => {
-  if (payload.workspace) {
-    workspace.noteTypes = payload.workspace.noteTypes;
-    workspace.activeNoteId = payload.workspace.activeNoteId;
-    workspace.selectedNewNoteTypeId = payload.workspace.selectedNewNoteTypeId;
-    workspace.customBookAliases = payload.workspace.customBookAliases ?? {};
-    workspace.updatedAt = payload.workspace.updatedAt ?? payload.updatedAt ?? new Date().toISOString();
-  }
-
-  if (Array.isArray(payload.notes)) {
-    workspace.notes = payload.notes;
-  }
-
-  if (payload.preferences) {
-    if (payload.preferences.theme) {
-      applyThemeMode(payload.preferences.theme, { rerender: false });
-      void writeStoredValue(themeStorageKey, normalizeThemeMode(payload.preferences.theme));
-    }
-
-    if (payload.preferences.paneOrder) {
-      applyPaneOrder(payload.preferences.paneOrder);
-      void writeStoredValue(paneOrderStorageKey, payload.preferences.paneOrder);
-    }
-
-    if (typeof payload.preferences.paneSplit === "number") {
-      applySplit(payload.preferences.paneSplit);
-      void writeStoredValue(paneSplitStorageKey, currentPaneSplit);
-    }
-
-    if (payload.preferences.translation) {
-      await applyTranslation(payload.preferences.translation);
-      void writeStoredValue(translationStorageKey, payload.preferences.translation);
-    }
-
-    if (payload.preferences.colorTheme) {
-      applyColorTheme(payload.preferences.colorTheme);
-      void writeStoredValue(colorThemeStorageKey, payload.preferences.colorTheme);
-    }
-  }
-
-  ensureWorkspaceConsistency();
-  buildBookAliasMap();
-  renderWorkspace();
-  // IndexedDB.put structured-clones synchronously; the explicit pre-clone is
-  // redundant.
-  void writeStoredValue(workspaceStorageKey, workspace);
-};
-
-const hasLocalNoteData = () =>
-  workspace.notes.some((note) => note.content || Object.values(note.metadata).some(Boolean));
-
-const hasLocalCloudData = () =>
-  Boolean(cloudSyncSettings.localSettingsUpdatedAt || workspace.updatedAt || hasLocalNoteData());
-
-const hasLocalChangesSinceLastSync = () => {
-  if (!cloudSyncSettings.lastSyncAt) {
-    return hasLocalCloudData();
-  }
-
-  const lastSync = new Date(cloudSyncSettings.lastSyncAt);
-
-  return Boolean(
-    (cloudSyncSettings.localSettingsUpdatedAt && new Date(cloudSyncSettings.localSettingsUpdatedAt) > lastSync) ||
-    (workspace.updatedAt && new Date(workspace.updatedAt) > lastSync) ||
-    workspace.notes.some((note) => new Date(note.updatedAt) > lastSync)
-  );
-};
-
-const showSyncConflictDialog = (remotePayload, mode = "conflict") => new Promise((resolve) => {
-  const mostRecentNote = workspace.notes.reduce(
-    (latest, note) => (!latest || new Date(note.updatedAt) > new Date(latest.updatedAt) ? note : latest),
-    null
-  );
-  const localTime = mostRecentNote
-    ? `Last modified ${new Date(mostRecentNote.updatedAt).toLocaleString()}`
-    : "No local notes";
-  const remoteTime = remotePayload.updatedAt
-    ? new Date(remotePayload.updatedAt).toLocaleString()
-    : "Timestamp unavailable";
-
-  console.log(`[CloudSync] Showing conflict dialog — local: ${localTime}, cloud: ${remoteTime}`);
-
-  const isFirstSync = mode === "first-sync";
-
-  if (isFirstSync) {
-    conflictDialogTitle.textContent = "Existing Cloud Data Found";
-    conflictDialogDescription.textContent = "This provider already contains a workspace. Choose how you want to proceed.";
-    syncConflictDialog.classList.add("is-first-sync");
-  } else {
-    conflictDialogTitle.textContent = "Sync Conflict Detected";
-    conflictDialogDescription.textContent = "Your local data and the cloud copy have both been changed since the last sync. Choose which version to keep.";
-    syncConflictDialog.classList.remove("is-first-sync");
-  }
-
-  conflictLocalTime.textContent = localTime;
-  conflictRemoteTime.textContent = remoteTime;
-
-  const handleKeepLocal = () => {
-    console.log("[CloudSync] User chose: keep local data.");
-    cleanup();
-    resolve("local");
-  };
-
-  const handleUseCloud = () => {
-    console.log("[CloudSync] User chose: use cloud data.");
-    cleanup();
-    resolve("remote");
-  };
-
-  const handleCancel = (event) => {
-    if (isFirstSync) {
-      console.log("[CloudSync] User cancelled first-sync dialog.");
-      cleanup();
-      resolve("cancel");
-    } else {
-      event.preventDefault();
-    }
-  };
-
-  const handleFirstSyncCancel = () => {
-    console.log("[CloudSync] User chose: not now.");
-    cleanup();
-    resolve("cancel");
-  };
-
-  const cleanup = () => {
-    conflictKeepLocalButton.removeEventListener("click", handleKeepLocal);
-    conflictUseCloudButton.removeEventListener("click", handleUseCloud);
-    firstSyncKeepLocalButton.removeEventListener("click", handleKeepLocal);
-    firstSyncUseCloudButton.removeEventListener("click", handleUseCloud);
-    firstSyncCancelButton.removeEventListener("click", handleFirstSyncCancel);
-    syncConflictDialog.removeEventListener("cancel", handleCancel);
-    syncConflictDialog.close();
-  };
-
-  if (isFirstSync) {
-    firstSyncKeepLocalButton.addEventListener("click", handleKeepLocal);
-    firstSyncUseCloudButton.addEventListener("click", handleUseCloud);
-    firstSyncCancelButton.addEventListener("click", handleFirstSyncCancel);
-  } else {
-    conflictKeepLocalButton.addEventListener("click", handleKeepLocal);
-    conflictUseCloudButton.addEventListener("click", handleUseCloud);
-  }
-  syncConflictDialog.addEventListener("cancel", handleCancel);
-  syncConflictDialog.showModal();
-});
-
-const pullFromCloud = async () => {
-  if (!activeProvider.hasActiveSession()) {
-    console.log("[CloudSync] Pull skipped: no active cloud session.");
-    return;
-  }
-
-  if (!navigator.onLine) {
-    console.log("[CloudSync] Pull skipped: browser reports offline.");
-    return;
-  }
-
-  if (syncInFlightPromise) {
-    console.log("[CloudSync] Pull skipped: upload is currently in progress.");
-    return;
-  }
-
-  if (isPullInFlight) {
-    console.log("[CloudSync] Pull skipped: another pull is already in progress.");
-    return;
-  }
-
-  isPullInFlight = true;
-  console.log("[CloudSync] Starting pull from cloud...");
-
-  try {
-    const result = await activeProvider.download(getActiveProviderSettings());
-
-    if (result.remoteSettingsFileId !== cloudSyncSettings.remoteSettingsFileId ||
-        JSON.stringify(result.remoteNoteFileIds ?? {}) !== JSON.stringify(cloudSyncSettings.remoteNoteFileIds) ||
-        result.remoteWorkspaceFileId !== cloudSyncSettings.remoteWorkspaceFileId ||
-        result.remoteWorkspaceParentId !== cloudSyncSettings.remoteWorkspaceParentId) {
-      cloudSyncSettings.remoteSettingsFileId = result.remoteSettingsFileId;
-      cloudSyncSettings.remoteNoteFileIds = result.remoteNoteFileIds ?? {};
-      cloudSyncSettings.remoteWorkspaceFileId = result.remoteWorkspaceFileId;
-      cloudSyncSettings.remoteWorkspaceParentId = result.remoteWorkspaceParentId;
-      persistCloudSyncSettings();
-    }
-
-    const remotePayload = result.data;
-
-    if (!remotePayload) {
-      console.log("[CloudSync] No remote file found; uploading local workspace.");
-      void syncWorkspaceToCloud({ reason: "initial" });
-      return;
-    }
-
-    const remoteUpdatedAt = remotePayload.updatedAt ? new Date(remotePayload.updatedAt) : null;
-    const lastSyncAt = cloudSyncSettings.lastSyncAt ? new Date(cloudSyncSettings.lastSyncAt) : null;
-
-    console.log(`[CloudSync] Remote updatedAt: ${remoteUpdatedAt?.toISOString() ?? "missing"}`);
-    console.log(`[CloudSync] Last synced at:   ${lastSyncAt?.toISOString() ?? "never"}`);
-
-    if (lastSyncAt && remoteUpdatedAt && remoteUpdatedAt <= lastSyncAt) {
-      console.log("[CloudSync] Remote data is not newer than last sync; nothing to apply.");
-      return;
-    }
-
-    const localHasChanges = hasLocalChangesSinceLastSync();
-    console.log(`[CloudSync] Local changes since last sync: ${localHasChanges}`);
-
-    let resolution;
-
-    if (!lastSyncAt) {
-      console.log("[CloudSync] First sync — showing first-sync dialog.");
-      resolution = await showSyncConflictDialog(remotePayload, "first-sync");
-    } else if (localHasChanges) {
-      console.log("[CloudSync] Both sides changed since last sync — showing conflict dialog.");
-      resolution = await showSyncConflictDialog(remotePayload);
-    } else {
-      console.log("[CloudSync] No local changes since last sync — auto-applying remote data.");
-      resolution = "remote";
-    }
-
-    console.log(`[CloudSync] Conflict resolution: ${resolution}`);
-
-    if (resolution === "remote") {
-      await applyCloudPayload(remotePayload);
-
-      if (remotePayload.updatedAt) {
-        cloudSyncSettings.lastSyncAt = remotePayload.updatedAt;
-        cloudSyncSettings.localSettingsUpdatedAt = remotePayload.updatedAt;
-      } else {
-        console.warn("[CloudSync] Remote payload is missing updatedAt timestamp; unable to update last sync time. Sync state may be inconsistent.");
-        cloudSyncSettings.localSettingsUpdatedAt = new Date().toISOString();
-      }
-
-      cloudSyncSettings.lastError = "";
-      persistCloudSyncSettings();
-      renderSettings();
-      refreshSaveStatus();
-      console.log("[CloudSync] Remote data applied successfully.");
-    } else if (resolution === "cancel") {
-      console.log("[CloudSync] User deferred first-sync decision; disconnecting provider.");
-      disconnectCloud();
-    } else {
-      console.log("[CloudSync] Keeping local data; scheduling upload to overwrite cloud.");
-      void syncWorkspaceToCloud({ reason: "conflict-keep-local" });
-    }
-  } catch (error) {
-    console.error("[CloudSync] Pull failed:", error);
-  } finally {
-    isPullInFlight = false;
-  }
-};
-
-const stopCloudPolling = () => {
-  if (cloudPollTimer) {
-    window.clearInterval(cloudPollTimer);
-    cloudPollTimer = null;
-    console.log("[CloudSync] Background polling stopped.");
-  }
-};
-
-const startCloudPolling = () => {
-  stopCloudPolling();
-
-  if (!activeProvider.hasActiveSession()) {
-    console.log(`[CloudSync] Background polling not started (connected=${activeProvider.hasActiveSession()}).`);
-    return;
-  }
-
-  cloudPollTimer = window.setInterval(() => {
-    console.log("[CloudSync] Poll timer fired.");
-    void pullFromCloud();
-  }, cloudSyncSettings.pollIntervalSeconds * 1000);
-
-  console.log(`[CloudSync] Background polling started (interval: ${cloudSyncSettings.pollIntervalSeconds}s).`);
-};
-
-const syncWorkspaceToCloud = async ({ reason = "manual" } = {}) => {
-  if (!activeProvider.hasActiveSession()) {
-    cloudSyncSettings.status = "Connect to cloud storage first.";
-    persistCloudSyncSettings();
-    renderSettings();
-    refreshSaveStatus();
-    return false;
-  }
-
-  if (!navigator.onLine) {
-    // Queue the sync; the "online" listener will replay it once connectivity
-    // returns.  Surface the state to the user so they know edits are local-only.
-    cloudSyncQueuedWhileOffline = true;
-    cloudSyncSettings.status = "Offline — sync paused";
-    persistCloudSyncSettings();
-    renderSettings();
-    refreshSaveStatus();
-    return false;
-  }
-
-  if (syncInFlightPromise) {
-    console.log("[CloudSync] Upload already in progress; awaiting existing request.");
-    return syncInFlightPromise;
-  }
-
-  console.log(`[CloudSync] Starting upload (reason: ${reason})...`);
-
-  syncInFlightPromise = (async () => {
-    try {
-      cloudSyncSettings.status = reason === "idle"
-        ? `Syncing changes to ${buildProviderStatusLabel()}...`
-        : `Syncing to ${buildProviderStatusLabel()}...`;
-      cloudSyncSettings.lastError = "";
-      persistCloudSyncSettings();
-      renderSettings();
-      refreshSaveStatus();
-
-      const result = await activeProvider.upload(buildCloudSyncPayload(), getActiveProviderSettings());
-
-      cloudSyncSettings.remoteSettingsFileId = result.remoteSettingsFileId;
-      cloudSyncSettings.remoteNoteFileIds = result.remoteNoteFileIds ?? {};
-      cloudSyncSettings.remoteWorkspaceFileId = result.remoteWorkspaceFileId;
-      cloudSyncSettings.remoteWorkspaceParentId = result.remoteWorkspaceParentId;
-      cloudSyncSettings.lastSyncAt = new Date().toISOString();
-      cloudSyncSettings.localSettingsUpdatedAt = cloudSyncSettings.lastSyncAt;
-      cloudSyncSettings.status = `Connected to ${buildProviderStatusLabel()}`;
-      cloudSyncSettings.lastError = "";
-      persistCloudSyncSettings();
-      renderSettings();
-      refreshSaveStatus();
-      console.log(`[CloudSync] Upload succeeded (reason: ${reason}). lastSyncAt=${cloudSyncSettings.lastSyncAt}`);
-      return true;
-    } catch (error) {
-      console.error("[CloudSync] Upload failed:", error);
-      const errorMessage = error.message || "Unknown cloud sync error.";
-      cloudSyncSettings.status = `${activeProvider.displayName} sync failed: ${errorMessage}`;
-      cloudSyncSettings.lastError = errorMessage;
-      persistCloudSyncSettings();
-      renderSettings();
-      refreshSaveStatus();
-      return false;
-    } finally {
-      syncInFlightPromise = null;
-    }
-  })();
-
-  return syncInFlightPromise;
-};
-
-const scheduleAutoCloudSync = () => {
-  if (!activeProvider.hasActiveSession()) {
-    return;
-  }
-
-  // If we're offline, don't bother setting a timer — the "online" listener will
-  // call this function again when connectivity returns.  Mark the work as
-  // queued so the user sees an "Offline — sync paused" indicator.
-  if (!navigator.onLine) {
-    cloudSyncQueuedWhileOffline = true;
-    return;
-  }
-
-  if (pendingAutoSyncTimer) {
-    window.clearTimeout(pendingAutoSyncTimer);
-  }
-
-  pendingAutoSyncTimer = window.setTimeout(async () => {
-    pendingAutoSyncTimer = null;
-
-    // Connectivity may have dropped between scheduling and firing; bail out
-    // and let the "online" handler replay the sync when we're back online.
-    if (!navigator.onLine) {
-      cloudSyncQueuedWhileOffline = true;
-      return;
-    }
-
-    console.log("[CloudSync] Idle auto-sync fired; checking for remote changes before uploading...");
-    await pullFromCloud();
-    await syncWorkspaceToCloud({ reason: "idle" });
-  }, autoCloudSyncDelayMs);
-};
-
-const connectCloud = async () => {
-  if (!activeProvider.isAvailable()) {
-    cloudSyncSettings.status = "Cloud provider is still loading.";
-    persistCloudSyncSettings();
-    renderSettings();
-    return;
-  }
-
-  activeProvider.ensureTokenClient();
-  cloudSyncSettings.status = "Waiting for sign-in...";
-  persistCloudSyncSettings();
-  renderSettings();
-
-  try {
-    const { email } = await activeProvider.connect();
-    cloudSyncSettings.connectedEmail = email;
-    cloudSyncSettings.status = `Connected to ${buildProviderStatusLabel()}`;
-    cloudSyncSettings.lastError = "";
-    persistCloudSyncSettings();
-    renderSettings();
-    console.log(`[CloudSync] Connected as ${email || "(unknown)"}.`);
-    startCloudPolling();
-    void pullFromCloud();
-  } catch (error) {
-    cloudSyncSettings.status = `Sign-in failed: ${error.message}`;
-    persistCloudSyncSettings();
-    renderSettings();
-    throw error;
-  }
-};
-
-const disconnectCloud = () => {
-  activeProvider.disconnect();
-  stopCloudPolling();
-
-  if (pendingAutoSyncTimer) {
-    window.clearTimeout(pendingAutoSyncTimer);
-    pendingAutoSyncTimer = null;
-  }
-
-  resetTransientCloudSessionState();
-  persistCloudSyncSettings();
-  renderSettings();
-};
-
-const reconnectCloud = async () => {
-  if (activeProvider.id === "none" || activeProvider.hasActiveSession()) {
-    return;
-  }
-
-  cloudSyncSettings.status = "Verifying connection...";
-  cloudSyncSettings.lastError = "";
-  persistCloudSyncSettings();
-
-  try {
-    activeProvider.ensureTokenClient();
-    const { email } = await activeProvider.attemptSilentReconnect();
-    cloudSyncSettings.connectedEmail = email;
-    cloudSyncSettings.status = `Connected to ${buildProviderStatusLabel()}`;
-    cloudSyncSettings.lastError = "";
-    persistCloudSyncSettings();
-    renderSettings();
-    console.log(`[CloudSync] Silently reconnected as ${email || "(unknown)"}.`);
-    startCloudPolling();
-  } catch {
-    resetTransientCloudSessionState();
-    persistCloudSyncSettings();
-    if (settingsDialog.open) {
-      renderSettings();
-    }
-  }
 };
 
 const migrateLegacyNotes = (savedNotes, legacyNotes) => {
@@ -3552,6 +2960,7 @@ let refreshNoteSurfaces = () => {};
   getNoteDisplayTitle,
   getNoteDisplayMeta,
   getNoteSearchableText,
+  renderNoteMetadataFields,
   refreshNoteSurfaces,
   renderWorkspace
 } = window.ScriptoriaModules.createNotesRender({
@@ -3872,11 +3281,7 @@ const clearLocalWorkspace = async () => {
   }
 
   stopCloudPolling();
-
-  if (pendingAutoSyncTimer) {
-    window.clearTimeout(pendingAutoSyncTimer);
-    pendingAutoSyncTimer = null;
-  }
+  clearPendingAutoSync();
 
   activeProvider.disconnect();
 
@@ -3946,11 +3351,7 @@ const clearAllData = async () => {
   }
 
   stopCloudPolling();
-
-  if (pendingAutoSyncTimer) {
-    window.clearTimeout(pendingAutoSyncTimer);
-    pendingAutoSyncTimer = null;
-  }
+  clearPendingAutoSync();
 
   activeProvider.disconnect();
 
@@ -4415,6 +3816,73 @@ const flushEditorWorkNow = () => {
     runPendingEditorPersistence();
   }
 };
+
+syncStatusApi = window.ScriptoriaModules.createSyncStatus({
+  cloudSyncSettings,
+  getActiveProvider: () => activeProvider,
+  getActiveNote,
+  updateSaveStatus
+});
+
+syncPayloadApi = window.ScriptoriaModules.createSyncPayloads({
+  workspace,
+  cloudSyncSettings,
+  paneGrid,
+  getCurrentThemeMode: () => currentThemeMode,
+  getCurrentPaneSplit: () => currentPaneSplit,
+  getCurrentTranslationCode: () => currentTranslationCode,
+  getCurrentColorThemeId: () => currentColorThemeId,
+  flushEditorWorkNow: () => flushEditorWorkNow(),
+  applyThemeMode,
+  normalizeThemeMode,
+  writeStoredValue,
+  themeStorageKey,
+  applyPaneOrder,
+  paneOrderStorageKey,
+  applySplit,
+  paneSplitStorageKey,
+  applyTranslation,
+  translationStorageKey,
+  applyColorTheme,
+  colorThemeStorageKey,
+  ensureWorkspaceConsistency,
+  buildBookAliasMap: () => buildBookAliasMap(),
+  renderWorkspace: () => renderWorkspace(),
+  workspaceStorageKey
+});
+
+syncCloudApi = window.ScriptoriaModules.createCloudSync({
+  readStoredValue,
+  writeStoredValue,
+  cloudSyncStorageKey,
+  cloudSyncSettings,
+  normalizeCloudSyncSettings,
+  providerRegistry,
+  noOpProvider,
+  getActiveProvider: () => activeProvider,
+  setActiveProvider: (value) => {
+    activeProvider = value;
+  },
+  workspace,
+  renderSettings: () => renderSettings(),
+  refreshSaveStatus: () => refreshSaveStatus(),
+  buildProviderStatusLabel: () => buildProviderStatusLabel(),
+  getActiveProviderSettings: () => getActiveProviderSettings(),
+  buildCloudSyncPayload: () => buildCloudSyncPayload(),
+  applyCloudPayload: (...args) => applyCloudPayload(...args),
+  syncStatusDialog: syncConflictDialog,
+  conflictDialogTitle,
+  conflictDialogDescription,
+  conflictLocalTime,
+  conflictRemoteTime,
+  conflictKeepLocalButton,
+  conflictUseCloudButton,
+  firstSyncKeepLocalButton,
+  firstSyncUseCloudButton,
+  firstSyncCancelButton,
+  autoCloudSyncDelayMs,
+  isSettingsOpen: () => settingsDialog.open
+});
 
 const addNoteType = () => {
   const type = {
@@ -5978,11 +5446,7 @@ cloudProviderSelect.addEventListener("change", () => {
   persistCloudSyncSettings();
 
   stopCloudPolling();
-
-  if (pendingAutoSyncTimer) {
-    window.clearTimeout(pendingAutoSyncTimer);
-    pendingAutoSyncTimer = null;
-  }
+  clearPendingAutoSync();
 
   cloudSyncSettings.provider = newProviderId;
   activeProvider = providerRegistry[newProviderId] ?? noOpProvider;
@@ -6413,8 +5877,7 @@ window.addEventListener("online", () => {
   // Replay any sync work that was deferred while offline.  scheduleAutoCloudSync
   // also covers the case where unsaved-but-not-yet-synced edits exist — it
   // resets the auto-sync timer so the next idle window picks them up.
-  if (cloudSyncQueuedWhileOffline) {
-    cloudSyncQueuedWhileOffline = false;
+  if (consumeQueuedCloudSync()) {
     if (activeProvider.hasActiveSession()) {
       console.log("[CloudSync] Connectivity restored — replaying queued sync.");
       // Match the auto-sync behaviour: pull first to surface any remote
