@@ -85,6 +85,8 @@ const providerSettingsContainer = document.querySelector("#provider-settings-con
 const googleConnectButton = document.querySelector("#google-connect-button");
 const googleDisconnectButton = document.querySelector("#google-disconnect-button");
 const googleSyncNowButton = document.querySelector("#google-sync-now-button");
+const downloadAllTranslationsButton = document.querySelector("#download-all-translations-button");
+const downloadAllTranslationsStatus = document.querySelector("#download-all-translations-status");
 const downloadBackupButton = document.querySelector("#download-backup-button");
 const restoreBackupButton = document.querySelector("#restore-backup-button");
 const restoreBackupFile = document.querySelector("#restore-backup-file");
@@ -283,6 +285,9 @@ let pendingAutoSyncTimer = null;
 let syncInFlightPromise = null;
 let isPullInFlight = false;
 let cloudPollTimer = null;
+// Set when an auto-sync attempt was deferred because the browser was offline.
+// The "online" event handler consumes this flag to retry the sync.
+let cloudSyncQueuedWhileOffline = false;
 let userTranslations = [];
 const systemThemeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
@@ -980,13 +985,17 @@ const buildCloudStatusText = () => {
 
 const buildSaveStatusText = (savedAt = new Date(), syncedAt = cloudSyncSettings.lastSyncAt) => {
   const localLabel = `Saved locally ${new Date(savedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}`;
-  const syncLabel = cloudSyncSettings.status.startsWith("Syncing")
-    ? "Syncing ..."
-    : cloudSyncSettings.lastError
-      ? `Sync failed: ${cloudSyncSettings.lastError}`
-      : syncedAt
-        ? `Synced ${new Date(syncedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}`
-        : "Not synced yet";
+  // Offline takes precedence over every other sync state — once the browser
+  // reports offline, the user's edits are local-only until connectivity returns.
+  const syncLabel = !navigator.onLine && activeProvider.hasActiveSession()
+    ? "Offline — sync paused"
+    : cloudSyncSettings.status.startsWith("Syncing")
+      ? "Syncing ..."
+      : cloudSyncSettings.lastError
+        ? `Sync failed: ${cloudSyncSettings.lastError}`
+        : syncedAt
+          ? `Synced ${new Date(syncedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}`
+          : "Not synced yet";
 
   return { localLabel, syncLabel };
 };
@@ -1208,6 +1217,11 @@ const pullFromCloud = async () => {
     return;
   }
 
+  if (!navigator.onLine) {
+    console.log("[CloudSync] Pull skipped: browser reports offline.");
+    return;
+  }
+
   if (syncInFlightPromise) {
     console.log("[CloudSync] Pull skipped: upload is currently in progress.");
     return;
@@ -1335,6 +1349,17 @@ const syncWorkspaceToCloud = async ({ reason = "manual" } = {}) => {
     return false;
   }
 
+  if (!navigator.onLine) {
+    // Queue the sync; the "online" listener will replay it once connectivity
+    // returns.  Surface the state to the user so they know edits are local-only.
+    cloudSyncQueuedWhileOffline = true;
+    cloudSyncSettings.status = "Offline — sync paused";
+    persistCloudSyncSettings();
+    renderSettings();
+    refreshSaveStatus();
+    return false;
+  }
+
   if (syncInFlightPromise) {
     console.log("[CloudSync] Upload already in progress; awaiting existing request.");
     return syncInFlightPromise;
@@ -1389,12 +1414,28 @@ const scheduleAutoCloudSync = () => {
     return;
   }
 
+  // If we're offline, don't bother setting a timer — the "online" listener will
+  // call this function again when connectivity returns.  Mark the work as
+  // queued so the user sees an "Offline — sync paused" indicator.
+  if (!navigator.onLine) {
+    cloudSyncQueuedWhileOffline = true;
+    return;
+  }
+
   if (pendingAutoSyncTimer) {
     window.clearTimeout(pendingAutoSyncTimer);
   }
 
   pendingAutoSyncTimer = window.setTimeout(async () => {
     pendingAutoSyncTimer = null;
+
+    // Connectivity may have dropped between scheduling and firing; bail out
+    // and let the "online" handler replay the sync when we're back online.
+    if (!navigator.onLine) {
+      cloudSyncQueuedWhileOffline = true;
+      return;
+    }
+
     console.log("[CloudSync] Idle auto-sync fired; checking for remote changes before uploading...");
     await pullFromCloud();
     await syncWorkspaceToCloud({ reason: "idle" });
@@ -1837,7 +1878,34 @@ const applyTranslation = async (translationCode) => {
     return;
   }
 
-  await ensureTranslationLoaded(translationCode);
+  // Offline + not yet cached → can't load this one.  Revert the picker to
+  // whatever's currently active so the UI doesn't sit on an unloadable choice,
+  // and surface a status message via the chapter pane.  We don't throw here
+  // because the user clicking a disabled-looking option is recoverable, not an
+  // error worth alarm.
+  const entry = translationLibrary[translationCode];
+  const alreadyInMemory = !!entry.books;
+  if (!alreadyInMemory && !navigator.onLine && !offlineAvailableTranslations.has(translationCode)) {
+    translationSelect.value = currentTranslationCode || translationSelect.value;
+    if (chapterText) {
+      chapterText.textContent = `"${entry.label ?? translationCode}" hasn't been downloaded yet, and you're currently offline. Connect to the internet and select it again to download.`;
+    }
+    return;
+  }
+
+  try {
+    await ensureTranslationLoaded(translationCode);
+  } catch (err) {
+    // Fetch failed at runtime (offline race, server hiccup, etc.).  Roll the
+    // picker back and keep the previous translation active rather than wedging
+    // the app in a half-loaded state.
+    console.warn(`[Translation] Failed to load "${translationCode}":`, err);
+    translationSelect.value = currentTranslationCode || translationSelect.value;
+    if (chapterText) {
+      chapterText.textContent = `Couldn't load "${entry.label ?? translationCode}". Check your connection and try again.`;
+    }
+    return;
+  }
 
   currentTranslationCode = translationCode;
   translationSelect.value = translationCode;
@@ -6643,6 +6711,50 @@ const parseTranslationJs = (content) => {
 
 const builtinTranslationCacheKeyPrefix = "service-notes-builtin-";
 
+// Codes for translations that can be loaded without network — either because
+// their data is already in memory (custom translations, or built-ins fetched
+// earlier in this session) or because a prior session cached them in
+// IndexedDB.  The translation picker reads this set when offline to disable
+// translations that would require a download.
+const offlineAvailableTranslations = new Set();
+
+/**
+ * Inspect IndexedDB and the in-memory library to figure out which translations
+ * are loadable offline.  Called once at bootstrap (after loadCustomTranslations)
+ * and again when a translation gets cached at runtime.  Cheap (a handful of IDB
+ * key reads) and called rarely.
+ */
+const refreshOfflineTranslationAvailability = async () => {
+  offlineAvailableTranslations.clear();
+
+  for (const [code, entry] of Object.entries(translationLibrary)) {
+    // In-memory data already loaded → available without network.  Custom
+    // translations land here because loadCustomTranslations populates `books`.
+    if (entry.books) {
+      offlineAvailableTranslations.add(code);
+      continue;
+    }
+
+    // Built-ins: check the IndexedDB cache key for a matching version.
+    if (entry.scriptSrc) {
+      const cached = await readStoredValue(`${builtinTranslationCacheKeyPrefix}${code}`);
+      if (cached && typeof cached === "object" && !Array.isArray(cached)) {
+        const cachedVersion = cached._version ?? null;
+        const currentVersion = entry.version ?? null;
+        const versionOk = (currentVersion !== null && cachedVersion === currentVersion)
+          || (currentVersion === null && cached.books);
+        if (versionOk) {
+          offlineAvailableTranslations.add(code);
+        }
+      }
+    } else {
+      // No scriptSrc → custom translation registered without persistent data.
+      // Treat as available; if loading fails the picker will still surface it.
+      offlineAvailableTranslations.add(code);
+    }
+  }
+};
+
 /**
  * Ensure a translation's book data is loaded. For built-in translations this
  * checks the IndexedDB cache first; if absent (or the cached version is older
@@ -6655,6 +6767,7 @@ const ensureTranslationLoaded = async (code) => {
   const entry = translationLibrary[code];
 
   if (!entry || entry.books) {
+    if (entry) offlineAvailableTranslations.add(code);
     return;
   }
 
@@ -6670,11 +6783,13 @@ const ensureTranslationLoaded = async (code) => {
 
     if (currentVersion !== null && cachedVersion === currentVersion) {
       entry.books = cached.books ?? cached;
+      offlineAvailableTranslations.add(code);
       return;
     }
 
     if (currentVersion === null && cached.books) {
       entry.books = cached.books;
+      offlineAvailableTranslations.add(code);
       return;
     }
 
@@ -6692,6 +6807,7 @@ const ensureTranslationLoaded = async (code) => {
   const { data } = parseTranslationJs(text);
   entry.books = data;
   void writeStoredValue(`${builtinTranslationCacheKeyPrefix}${code}`, { _version: entry.version ?? null, books: data });
+  offlineAvailableTranslations.add(code);
 };
 
 /**
@@ -6756,18 +6872,43 @@ const populateTranslationSelect = () => {
     return aLabel.localeCompare(bLabel, undefined, { sensitivity: "base" });
   });
 
+  // When offline, translations whose data isn't already in memory or IndexedDB
+  // can't be loaded, so mark them clearly and disable them.  When online every
+  // option is selectable; the cache-first SW + ensureTranslationLoaded will
+  // fetch on demand and add to offlineAvailableTranslations.
+  const offline = !navigator.onLine;
+
   sorted.forEach(([code, entry]) => {
     const option = document.createElement("option");
     option.value = code;
-    const label = entry.label ?? code;
-    option.textContent = showLanguage && entry.language ? `${label} (${entry.language})` : label;
+    const baseLabel = entry.label ?? code;
+    const labelWithLang = showLanguage && entry.language ? `${baseLabel} (${entry.language})` : baseLabel;
+
+    if (offline && !offlineAvailableTranslations.has(code)) {
+      option.textContent = `${labelWithLang} — not downloaded`;
+      option.disabled = true;
+    } else {
+      option.textContent = labelWithLang;
+    }
+
     translationSelect.append(option);
   });
 
-  if (translationLibrary[current]) {
-    translationSelect.value = current;
+  // Pick a sane default selection.  If the previous value is no longer
+  // available offline, prefer KJV (almost certainly cached) before falling
+  // back to whatever's first.
+  const preferred = translationLibrary[current] && !(offline && !offlineAvailableTranslations.has(current))
+    ? current
+    : null;
+
+  if (preferred) {
+    translationSelect.value = preferred;
+  } else if (translationLibrary["KJV"] && (!offline || offlineAvailableTranslations.has("KJV"))) {
+    translationSelect.value = "KJV";
   } else {
-    translationSelect.value = translationLibrary["KJV"] ? "KJV" : (Object.keys(translationLibrary)[0] ?? "");
+    // Find the first non-disabled code we have.
+    const fallback = sorted.find(([code]) => !offline || offlineAvailableTranslations.has(code));
+    translationSelect.value = fallback ? fallback[0] : (Object.keys(translationLibrary)[0] ?? "");
   }
 };
 
@@ -6868,6 +7009,115 @@ const deleteCustomTranslation = async (code) => {
 };
 
 /** Render the Translations settings panel. */
+// True while a "Download all translations" run is in flight.  Used to disable
+// the button (and skip overlapping presses) without a separate UI lock.
+let downloadAllTranslationsInFlight = false;
+
+// Snap the Download-all button + status text to the current state of the world.
+// Called from renderTranslationsPanel() and from the online/offline listeners.
+const refreshDownloadAllTranslationsUi = () => {
+  if (!downloadAllTranslationsButton || !downloadAllTranslationsStatus) {
+    return;
+  }
+
+  const builtinCodes = [...BUILTIN_TRANSLATION_CODES];
+  const missing = builtinCodes.filter((code) => !offlineAvailableTranslations.has(code));
+  const offline = !navigator.onLine;
+
+  if (downloadAllTranslationsInFlight) {
+    // Active state is updated by the download handler itself; don't overwrite.
+    return;
+  }
+
+  if (missing.length === 0) {
+    downloadAllTranslationsButton.disabled = true;
+    downloadAllTranslationsButton.textContent = "All downloaded";
+    downloadAllTranslationsStatus.textContent = `${builtinCodes.length} of ${builtinCodes.length} available offline.`;
+    return;
+  }
+
+  downloadAllTranslationsButton.textContent = "Download all for offline use";
+
+  if (offline) {
+    downloadAllTranslationsButton.disabled = true;
+    downloadAllTranslationsStatus.textContent = `You're offline — ${missing.length} of ${builtinCodes.length} not yet downloaded. Reconnect to download the rest.`;
+    return;
+  }
+
+  downloadAllTranslationsButton.disabled = false;
+  downloadAllTranslationsStatus.textContent = `${builtinCodes.length - missing.length} of ${builtinCodes.length} available offline.`;
+};
+
+const downloadAllBuiltinTranslations = async () => {
+  if (downloadAllTranslationsInFlight) {
+    return;
+  }
+
+  if (!navigator.onLine) {
+    downloadAllTranslationsStatus.textContent = "You're offline — connect to download.";
+    return;
+  }
+
+  const builtinCodes = [...BUILTIN_TRANSLATION_CODES];
+  const missing = builtinCodes.filter((code) => !offlineAvailableTranslations.has(code));
+
+  if (missing.length === 0) {
+    return;
+  }
+
+  downloadAllTranslationsInFlight = true;
+  downloadAllTranslationsButton.disabled = true;
+
+  let succeeded = 0;
+  let failed = 0;
+
+  for (let i = 0; i < missing.length; i += 1) {
+    const code = missing[i];
+    const entry = translationLibrary[code];
+    const label = entry?.label ?? code;
+
+    downloadAllTranslationsButton.textContent = `Downloading ${i + 1} of ${missing.length}…`;
+    downloadAllTranslationsStatus.textContent = `Downloading ${label}…`;
+
+    try {
+      // ensureTranslationLoaded fetches, parses, persists to IndexedDB, and
+      // adds the code to offlineAvailableTranslations on success.
+      await ensureTranslationLoaded(code);
+      succeeded += 1;
+    } catch (err) {
+      console.warn(`[Translation] Bulk download failed for "${code}":`, err);
+      failed += 1;
+      // Bail early if the user has gone offline mid-run; the remaining ones
+      // would all fail anyway.
+      if (!navigator.onLine) {
+        break;
+      }
+    }
+  }
+
+  downloadAllTranslationsInFlight = false;
+
+  // Refresh dependent UI: per-row tags, picker labels, and the button itself.
+  if (settingsDialog.open && activeSettingsTabId === "translations") {
+    renderTranslationsPanel();
+  }
+  populateTranslationSelect();
+
+  if (failed === 0) {
+    downloadAllTranslationsStatus.textContent = `Downloaded ${succeeded} translation${succeeded === 1 ? "" : "s"}. All available offline.`;
+  } else {
+    downloadAllTranslationsStatus.textContent = `Downloaded ${succeeded}, failed ${failed}. Click again to retry.`;
+  }
+
+  refreshDownloadAllTranslationsUi();
+};
+
+if (downloadAllTranslationsButton) {
+  downloadAllTranslationsButton.addEventListener("click", () => {
+    void downloadAllBuiltinTranslations();
+  });
+}
+
 const renderTranslationsPanel = () => {
   const builtinList = document.querySelector("#builtin-translation-list");
   const userList = document.querySelector("#user-translation-list");
@@ -6905,10 +7155,25 @@ const renderTranslationsPanel = () => {
     labelEl.className = "translation-list-item-label";
     labelEl.textContent = entry.label;
 
-    info.append(codeEl, labelEl);
+    // Per-row offline-availability tag so users can see at a glance which
+    // translations are already on disk and which require a download.
+    const tag = document.createElement("span");
+    tag.className = "translation-list-item-tag";
+    if (offlineAvailableTranslations.has(code)) {
+      tag.textContent = "Downloaded";
+      tag.dataset.state = "downloaded";
+    } else {
+      tag.textContent = "Not downloaded";
+      tag.dataset.state = "missing";
+    }
+
+    info.append(codeEl, labelEl, tag);
     li.append(info);
     builtinList.append(li);
   });
+
+  // Refresh the "Download all" button + status row.
+  refreshDownloadAllTranslationsUi();
 
   userList.innerHTML = "";
   const hasUser = userTranslations.length > 0;
@@ -7016,6 +7281,10 @@ const buildBookAliasMap = () => {
 const bootstrap = async () => {
   await migrateFromLegacyDatabase();
   await loadCustomTranslations();
+  // Inspect IndexedDB for which built-in translations are already cached so the
+  // picker can correctly mark un-cached ones as unavailable when offline.  Must
+  // happen before populateTranslationSelect so the initial render is accurate.
+  await refreshOfflineTranslationAvailability();
   populateTranslationSelect();
   applyThemeMode(await getPreferredTheme(), { rerender: false });
   applyPaneOrder(await getPreferredPaneOrder());
@@ -7137,3 +7406,129 @@ const betaBannerDismiss = document.querySelector("#beta-banner-dismiss");
 betaBannerDismiss.addEventListener("click", () => {
   betaBanner.classList.add("is-hidden");
 });
+
+// ── Online / offline awareness ───────────────────────────────────────────────
+// Cloud sync is the only thing that genuinely needs network connectivity —
+// everything else (notes, translations, themes, embeds-in-cache) keeps working
+// from the SW cache.  The handlers below:
+//   • refresh the save-status indicator so the user can see when sync is paused;
+//   • replay any sync that was queued while offline as soon as we're back;
+//   • update visible cloud-sync UI in Settings if it's open.
+
+window.addEventListener("offline", () => {
+  refreshSaveStatus();
+  // Refresh the translation picker so any not-yet-downloaded translations get
+  // greyed out with a "not downloaded" suffix.
+  populateTranslationSelect();
+  refreshDownloadAllTranslationsUi();
+  if (typeof renderSettings === "function" && settingsDialog && settingsDialog.open) {
+    renderSettings();
+  }
+});
+
+window.addEventListener("online", () => {
+  refreshSaveStatus();
+  // Re-enable previously-disabled translation options now that fetches will
+  // succeed again.
+  populateTranslationSelect();
+  refreshDownloadAllTranslationsUi();
+  if (typeof renderSettings === "function" && settingsDialog && settingsDialog.open) {
+    renderSettings();
+  }
+
+  // Replay any sync work that was deferred while offline.  scheduleAutoCloudSync
+  // also covers the case where unsaved-but-not-yet-synced edits exist — it
+  // resets the auto-sync timer so the next idle window picks them up.
+  if (cloudSyncQueuedWhileOffline) {
+    cloudSyncQueuedWhileOffline = false;
+    if (activeProvider.hasActiveSession()) {
+      console.log("[CloudSync] Connectivity restored — replaying queued sync.");
+      // Match the auto-sync behaviour: pull first to surface any remote
+      // changes, then upload.  Errors are already handled inside each call.
+      void (async () => {
+        await pullFromCloud();
+        await syncWorkspaceToCloud({ reason: "online-resume" });
+      })();
+    }
+  }
+});
+
+// ── Service Worker registration ──────────────────────────────────────────────
+// Registers sw.js (the offline cache + asset shell).  Two URL flags are
+// supported for local testing:
+//
+//   ?nosw=1  — skip registration entirely.  Use when you want to load the
+//              live, uncached version of the app without unregistering an
+//              already-installed worker.  The next plain visit re-arms the SW.
+//
+//   ?reset=1 — unregister any existing SW, delete every cache the page can
+//              see, then reload to a clean URL.  One-click clean slate for
+//              local iteration.
+//
+// On a normal visit, when a new SW is installed and waiting, we tell it to
+// activate immediately (skipWaiting message) and reload the page on
+// `controllerchange` so the user picks up the new shell without a manual
+// refresh.
+{
+  const swParams = new URLSearchParams(location.search);
+
+  if (swParams.has("reset")) {
+    // Clean-slate flag — unregister and clear, then redirect back to the page
+    // without the flag so a normal load follows.
+    (async () => {
+      try {
+        if ("serviceWorker" in navigator) {
+          const regs = await navigator.serviceWorker.getRegistrations();
+          await Promise.all(regs.map((reg) => reg.unregister()));
+        }
+        if ("caches" in window) {
+          const keys = await caches.keys();
+          await Promise.all(keys.map((key) => caches.delete(key)));
+        }
+      } finally {
+        const cleanUrl = new URL(location.href);
+        cleanUrl.searchParams.delete("reset");
+        location.replace(cleanUrl.toString());
+      }
+    })();
+  } else if (!swParams.has("nosw") && "serviceWorker" in navigator) {
+    let reloadingForUpdate = false;
+
+    // When the SW that controls this page changes (i.e., a waiting worker
+    // activated), reload once so the user gets the new shell.  Guard against
+    // reload loops with a flag.
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (reloadingForUpdate) return;
+      reloadingForUpdate = true;
+      location.reload();
+    });
+
+    window.addEventListener("load", async () => {
+      try {
+        const registration = await navigator.serviceWorker.register("sw.js");
+
+        // If there's already a waiting worker (page loaded while update was
+        // pending), kick it to activate.
+        if (registration.waiting) {
+          registration.waiting.postMessage("skip-waiting");
+        }
+
+        // Future updates: when an update is found and reaches "installed", ask
+        // it to skipWaiting so it activates immediately.  Combined with the
+        // controllerchange handler above, this means deploys propagate without
+        // requiring the user to close and reopen the tab.
+        registration.addEventListener("updatefound", () => {
+          const newWorker = registration.installing;
+          if (!newWorker) return;
+          newWorker.addEventListener("statechange", () => {
+            if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+              newWorker.postMessage("skip-waiting");
+            }
+          });
+        });
+      } catch (err) {
+        console.warn("[SW] registration failed:", err);
+      }
+    });
+  }
+}

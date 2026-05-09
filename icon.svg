@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Scriptoria">
+  <!-- Maskable-safe: meaningful content stays within a 410px centered circle (~80% of 512). -->
+  <rect width="512" height="512" rx="96" fill="#2a2118"/>
+  <text
+    x="256" y="256"
+    text-anchor="middle"
+    dominant-baseline="central"
+    fill="#fffaf1"
+    font-family="'Cinzel', 'Playfair Display', 'Times New Roman', serif"
+    font-weight="700"
+    font-size="320"
+    style="font-feature-settings:'lnum';letter-spacing:0">S</text>
+</svg>
