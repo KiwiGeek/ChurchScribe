@@ -142,11 +142,13 @@ const workspaceStorageKey = "service-notes-workspace";
 const notesStorageKey = "service-notes";
 const legacyNotesStorageKey = "service-notes-content";
 const themeStorageKey = "service-notes-theme";
+const themeMirrorStorageKey = "service-notes-theme-mirror";
 const paneOrderStorageKey = "service-notes-pane-order";
 const paneSplitStorageKey = "service-notes-pane-split";
 const translationStorageKey = "service-notes-translation";
 const cloudSyncStorageKey = "service-notes-cloud-sync";
 const colorThemeStorageKey = "service-notes-color-theme";
+const colorThemeMirrorStorageKey = "service-notes-color-theme-mirror";
 const lastBookChapterStorageKey = "service-notes-last-book-chapter";
 const onboardingStorageKey = "service-notes-onboarding-seen";
 const customTranslationsStorageKey = "service-notes-custom-translations";
@@ -589,6 +591,37 @@ const migrateLegacyPreference = async (key, parser = (value) => value) => {
   await writeStoredValue(key, parsedValue);
   window.localStorage.removeItem(key);
   return parsedValue;
+};
+
+const readMirroredPreference = (key) => {
+  try {
+    return window.localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+};
+
+const writeMirroredPreference = (key, value) => {
+  try {
+    if (value == null) {
+      window.localStorage.removeItem(key);
+      return;
+    }
+
+    window.localStorage.setItem(key, String(value));
+  } catch {
+    // Ignore synchronous storage failures and fall back to IndexedDB-backed preferences.
+  }
+};
+
+const syncThemePreferenceMirrors = () => {
+  writeMirroredPreference(themeMirrorStorageKey, normalizeThemeMode(currentThemeMode));
+  writeMirroredPreference(colorThemeMirrorStorageKey, currentColorThemeId || "default");
+};
+
+const clearThemePreferenceMirrors = () => {
+  writeMirroredPreference(themeMirrorStorageKey, null);
+  writeMirroredPreference(colorThemeMirrorStorageKey, null);
 };
 
 const normalizeBookName = (value) =>
@@ -1589,7 +1622,7 @@ const restoreWorkspace = async () => {
 const getPreferredTheme = async () => {
   const savedTheme = await migrateLegacyPreference(themeStorageKey);
 
-  return normalizeThemeMode(savedTheme);
+  return normalizeThemeMode(savedTheme ?? readMirroredPreference(themeMirrorStorageKey));
 };
 
 const getPreferredPaneOrder = async () => {
@@ -1668,6 +1701,7 @@ const applyThemeMode = (mode, { persist = false, markChange = false, rerender = 
   currentThemeMode = normalizeThemeMode(mode);
   document.documentElement.dataset.theme = getResolvedThemeForMode(currentThemeMode);
   syncThemeModeControl(currentThemeMode);
+  syncThemePreferenceMirrors();
 
   if (persist) {
     void writeStoredValue(themeStorageKey, currentThemeMode);
@@ -1729,8 +1763,13 @@ const togglePaneOrder = () => {
 
 const getPreferredColorTheme = async () => {
   const saved = await readStoredValue(colorThemeStorageKey);
+  const mirrored = readMirroredPreference(colorThemeMirrorStorageKey);
   const validIds = colorThemes.map((t) => t.id);
-  return validIds.includes(saved) ? saved : "default";
+  if (validIds.includes(saved)) {
+    return saved;
+  }
+
+  return validIds.includes(mirrored) ? mirrored : "default";
 };
 
 const applyColorTheme = (themeId) => {
@@ -1759,6 +1798,8 @@ const applyColorTheme = (themeId) => {
   if (uiContent) {
     renderUiSettings(uiContent);
   }
+
+  syncThemePreferenceMirrors();
 };
 
 const populateBookOptions = () => {
@@ -4296,6 +4337,7 @@ const clearLocalWorkspace = async () => {
     deleteStoredValue(notesStorageKey),
     deleteStoredValue(customTranslationsStorageKey)
   ]);
+  clearThemePreferenceMirrors();
 
   window.location.reload();
 };
@@ -4369,6 +4411,7 @@ const clearAllData = async () => {
     deleteStoredValue(notesStorageKey),
     deleteStoredValue(customTranslationsStorageKey)
   ]);
+  clearThemePreferenceMirrors();
 
   window.location.reload();
 };
