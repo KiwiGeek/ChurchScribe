@@ -1,0 +1,19 @@
+{
+  "name": "Scriptoria",
+  "short_name": "Scriptoria",
+  "description": "Scripture-aware notes and study tool — works offline.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#fffaf1",
+  "theme_color": "#2a2118",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
