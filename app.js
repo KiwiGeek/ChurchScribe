@@ -637,83 +637,45 @@ const addBookAlias = (alias, canonicalBook) => {
   }
 };
 
-const createMetadataField = (label = "Field", placeholder = "") => ({
-  id: createId("field"),
-  label,
-  placeholder
+let getNoteDisplayTitle = () => "";
+let getNoteDisplayMeta = () => "";
+let getNoteSearchableText = () => "";
+let renderWorkspace = () => {};
+let renderNoteManager = () => {};
+let openNotesBrowser = () => {};
+
+const {
+  createMetadataField,
+  createDefaultNoteType,
+  createEmptyNote,
+  formatNoteDate,
+  getNoteTypeById,
+  getActiveNote,
+  buildMetadataForType,
+  getSuggestedCardTitleFieldId,
+  getDefaultCardSubtitleFieldId,
+  touchNote,
+  createNote,
+  duplicateNote,
+  switchNote,
+  deleteNoteById,
+  changeNoteType
+} = window.ScriptoriaModules.createNotesModel({
+  workspace,
+  createId,
+  normalizeFieldLabel,
+  noteMetaFields,
+  noteEditor,
+  persistWorkspace: () => persistWorkspace(),
+  refreshSaveStatus: () => refreshSaveStatus(),
+  flushEditorWorkNow: () => flushEditorWorkNow(),
+  saveActiveNote: () => saveActiveNote(),
+  windowObject: window,
+  renderWorkspace: () => renderWorkspace(),
+  getNoteDisplayTitle: (note) => getNoteDisplayTitle(note)
 });
 
-const createDefaultNoteType = () => ({
-  id: createId("type"),
-  name: "Bible Study",
-  fields: [
-    createMetadataField("Title", "Optional note title"),
-    createMetadataField("Speaker", "Optional speaker name")
-  ],
-  cardTitleFieldId: null,
-  cardSubtitleFieldId: null
-});
-
-const createEmptyNote = (typeId, metadata = {}) => ({
-  id: createId("note"),
-  typeId,
-  metadata,
-  content: "",
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString()
-});
-
-const formatNoteDate = (isoDate) =>
-  new Date(isoDate).toLocaleDateString([], {
-    month: "short",
-    day: "numeric",
-    year: "numeric"
-  });
-
-const getNoteTypeById = (typeId) => workspace.noteTypes.find((type) => type.id === typeId) ?? workspace.noteTypes[0];
-const getActiveNote = () => workspace.notes.find((note) => note.id === workspace.activeNoteId) ?? workspace.notes[0];
 const getSelectedTypeForManager = () => workspace.noteTypes.find((type) => type.id === activeTypeEditorId) ?? null;
-
-const buildMetadataForType = (type, sourceMetadata = {}, sourceType = null) => {
-  const nextMetadata = {};
-  const byId = new Map(Object.entries(sourceMetadata));
-  const byLabel = new Map();
-
-  if (sourceType) {
-    sourceType.fields.forEach((field) => {
-      byLabel.set(normalizeFieldLabel(field.label), sourceMetadata[field.id] ?? "");
-    });
-  }
-
-  type.fields.forEach((field) => {
-    const byFieldIdValue = byId.get(field.id);
-    const byFieldLabelValue = byLabel.get(normalizeFieldLabel(field.label));
-    nextMetadata[field.id] = typeof byFieldIdValue === "string"
-      ? byFieldIdValue
-      : typeof byFieldLabelValue === "string"
-        ? byFieldLabelValue
-        : "";
-  });
-
-  return nextMetadata;
-};
-
-const getSuggestedCardTitleFieldId = (type) => {
-  const titleField = type.fields.find((field) => normalizeFieldLabel(field.label) === "title");
-  return titleField?.id ?? type.fields[0]?.id ?? "";
-};
-
-const getDefaultCardSubtitleFieldId = (type) => {
-  const speakerField = type.fields.find((field) => normalizeFieldLabel(field.label) === "speaker");
-
-  if (speakerField) {
-    return speakerField.id;
-  }
-
-  const titleFieldId = getSuggestedCardTitleFieldId(type);
-  const fallbackField = type.fields.find((field) => field.id !== titleFieldId);
-  return fallbackField?.id ?? "";
-};
 
 const BOOK_ALIASES = {
   "Genesis":         ["Gen", "Ge", "Gn"],
@@ -3584,447 +3546,41 @@ const findAutoLinkAtCaret = () => {
   return findAutoLinkBeforeCaret();
 };
 
-const getNoteDisplayTitle = (note) => {
-  const type = getNoteTypeById(note.typeId);
-  const preferredField = type.fields.find((field) => field.id === type.cardTitleFieldId) ?? null;
-  const titleValue = preferredField ? note.metadata[preferredField.id]?.trim() : "";
-
-  if (titleValue) {
-    return titleValue;
-  }
-
-  return formatNoteDate(note.createdAt);
-};
-
-const getNoteDisplayMeta = (note) => {
-  const type = getNoteTypeById(note.typeId);
-  const secondaryField = type.fields.find((field) => field.id === type.cardSubtitleFieldId) ?? null;
-  const secondaryValue = secondaryField ? note.metadata[secondaryField.id]?.trim() : "";
-
-  return secondaryValue || "";
-};
-
-const getNoteSearchableText = (note) => {
-  const metadataText = Object.values(note.metadata)
-    .filter((value) => typeof value === "string" && value.trim())
-    .join(" ");
-  const contentText = note.content.replace(/<[^>]+>/g, " ");
-  return [getNoteDisplayTitle(note), getNoteDisplayMeta(note), metadataText, contentText].join(" ").toLowerCase();
-};
-
-const sortNotes = (notes) => {
-  const sortedNotes = notes.slice();
-
-  if (noteBrowserSort === "created-desc") {
-    return sortedNotes.sort((left, right) => new Date(right.createdAt) - new Date(left.createdAt));
-  }
-
-  if (noteBrowserSort === "title-asc") {
-    return sortedNotes.sort((left, right) => getNoteDisplayTitle(left).localeCompare(getNoteDisplayTitle(right)));
-  }
-
-  return sortedNotes.sort((left, right) => new Date(right.updatedAt) - new Date(left.updatedAt));
-};
-
-const getFilteredNotes = () => {
-  const query = noteBrowserFilter.trim().toLowerCase();
-  const activeTypeFilter = workspace.noteTypes.some((type) => type.id === noteBrowserTypeFilter)
-    ? noteBrowserTypeFilter
-    : "all";
-
-  return sortNotes(
-    workspace.notes.filter((note) => {
-      if (activeTypeFilter !== "all" && note.typeId !== activeTypeFilter) {
-        return false;
-      }
-
-      if (!query) {
-        return true;
-      }
-
-      return getNoteSearchableText(note).includes(query);
-    })
-  );
-};
-
-const getSelectedBrowserNote = (filteredNotes) => {
-  const selected = filteredNotes.find((note) => note.id === noteBrowserSelectedNoteId);
-
-  if (selected) {
-    return selected;
-  }
-
-  const active = filteredNotes.find((note) => note.id === workspace.activeNoteId);
-
-  if (active) {
-    noteBrowserSelectedNoteId = active.id;
-    return active;
-  }
-
-  noteBrowserSelectedNoteId = filteredNotes[0]?.id ?? null;
-  return filteredNotes[0] ?? null;
-};
-
-const getNotePreviewText = (note) => note.content
-  .replace(/<[^>]+>/g, " ")
-  .replace(/\s+/g, " ")
-  .trim();
-
-const renderNoteTypeOptions = () => {
-  const showTypeChoices = workspace.noteTypes.length > 1;
-  newNoteActions.innerHTML = "";
-
-  if (!workspace.noteTypes.length) {
-    return;
-  }
-
-  if (!showTypeChoices) {
-    const singleTypeButton = document.createElement("button");
-    singleTypeButton.type = "button";
-    singleTypeButton.className = "ghost-button overflow-action";
-    singleTypeButton.dataset.newNoteType = workspace.noteTypes[0].id;
-    singleTypeButton.textContent = "New entry";
-    newNoteActions.append(singleTypeButton);
-    return;
-  }
-
-  const menu = document.createElement("details");
-  menu.className = "inline-action-menu";
-
-  const summary = document.createElement("summary");
-  summary.className = "ghost-button overflow-action";
-  summary.textContent = "New entry ▾";
-
-  const panel = document.createElement("div");
-  panel.className = "overflow-menu-panel inline-action-panel";
-
-  workspace.noteTypes.forEach((type) => {
-    const typeButton = document.createElement("button");
-    typeButton.type = "button";
-    typeButton.className = "ghost-button overflow-action";
-    typeButton.dataset.newNoteType = type.id;
-    typeButton.textContent = type.name;
-    panel.append(typeButton);
-  });
-
-  menu.append(summary, panel);
-  newNoteActions.append(menu);
-};
-
-const renderMetadataSummary = () => {
-  const activeNote = getActiveNote();
-  const type = getNoteTypeById(activeNote.typeId);
-  metadataSummary.innerHTML = "";
-
-  const populatedFields = type.fields
-    .map((field) => ({
-      id: field.id,
-      label: field.label,
-      value: (activeNote.metadata[field.id] ?? "").trim()
-    }))
-    .filter((field) => field.value)
-    .filter((field) => field.id !== type.cardTitleFieldId && field.id !== type.cardSubtitleFieldId);
-
-  if (!populatedFields.length) {
-    noteMetaBar.classList.add("is-hidden");
-    return;
-  }
-
-  noteMetaBar.classList.remove("is-hidden");
-
-  populatedFields.forEach((field) => {
-    const chip = document.createElement("div");
-    chip.className = "metadata-chip";
-
-    const label = document.createElement("span");
-    label.className = "metadata-chip-label";
-    label.textContent = field.label;
-
-    const value = document.createElement("span");
-    value.className = "metadata-chip-value";
-    value.textContent = field.value;
-
-    chip.append(label, value);
-    metadataSummary.append(chip);
-  });
-};
-
-const renderNoteMetadataFields = () => {
-  const activeNote = getActiveNote();
-  const type = getNoteTypeById(activeNote.typeId);
-  noteMetaFields.innerHTML = "";
-
-  if (workspace.noteTypes.length > 1) {
-    const typeField = document.createElement("label");
-    typeField.className = "field note-meta-primary-field";
-
-    const typeLabel = document.createElement("span");
-    typeLabel.textContent = "Entry type";
-
-    const typeSelect = document.createElement("select");
-    typeSelect.name = "active-note-type";
-    typeSelect.dataset.noteTypeChange = activeNote.id;
-
-    workspace.noteTypes.forEach((noteType) => {
-      const option = document.createElement("option");
-      option.value = noteType.id;
-      option.textContent = noteType.name;
-      typeSelect.append(option);
-    });
-
-    typeSelect.value = activeNote.typeId;
-    typeField.append(typeLabel, typeSelect);
-    noteMetaFields.append(typeField);
-  }
-
-  type.fields.forEach((field) => {
-    const label = document.createElement("label");
-    label.className = "field";
-
-    const title = document.createElement("span");
-    title.textContent = field.label;
-
-    const input = document.createElement("input");
-    input.type = "text";
-    input.name = field.id;
-    input.dataset.fieldId = field.id;
-    input.placeholder = field.placeholder || `Optional ${field.label.toLowerCase()}`;
-    input.value = activeNote.metadata[field.id] ?? "";
-
-    label.append(title, input);
-    noteMetaFields.append(label);
-  });
-};
-
-const renderActiveNoteSummary = () => {
-  const activeNote = getActiveNote();
-  const type = getNoteTypeById(activeNote.typeId);
-  const secondaryMeta = getNoteDisplayMeta(activeNote);
-  const metaBits = [];
-
-  if (secondaryMeta) {
-    metaBits.push(secondaryMeta);
-  }
-
-  metaBits.push(`Updated ${formatNoteDate(activeNote.updatedAt)}`);
-  activeNoteLabel.textContent = type.name || "Entries";
-  activeNoteTitle.textContent = getNoteDisplayTitle(activeNote);
-  activeNoteMeta.textContent = metaBits.join(" • ");
-};
-
-const renderActiveNote = () => {
-  const activeNote = getActiveNote();
-
-  if (!activeNote) {
-    return;
-  }
-
-  workspace.activeNoteId = activeNote.id;
-  renderNoteTypeOptions();
-  renderActiveNoteSummary();
-  renderMetadataSummary();
-  renderNoteMetadataFields();
-  noteEditor.innerHTML = activeNote.content;
-  // Trim browser-injected leading spacers first, then guarantee at least one
-  // block-level element.  The guard MUST come after trimming: for a blank note
-  // whose saved content is "<p><br></p>", the trim would remove that element
-  // and leave the editor empty — causing Chrome to inject content as bare text
-  // nodes or <div>s instead of <p>s, which breaks findLinkBlock and embed creation.
-  trimEditorLeadingSpacerNodes();
-  if (!noteEditor.firstChild) {
-    noteEditor.innerHTML = "<p><br></p>";
-  }
-  linkifyScriptureReferences();
-  linkifyUrls();
-  processUrlEmbeds();
-  refreshTableUi();
-  ensureTrailingParagraph();
-  updateNoteEditorPlaceholderState();
-};
-
-const renderNoteManager = () => {
-  const filteredNotes = getFilteredNotes();
-  noteManagerList.innerHTML = "";
-  noteBrowserDetails.innerHTML = "";
-
-  noteBrowserTypeFilterSelect.innerHTML = "";
-  const allOption = document.createElement("option");
-  allOption.value = "all";
-  allOption.textContent = "All entry types";
-  noteBrowserTypeFilterSelect.append(allOption);
-  workspace.noteTypes.forEach((type) => {
-    const option = document.createElement("option");
-    option.value = type.id;
-    option.textContent = type.name;
-    noteBrowserTypeFilterSelect.append(option);
-  });
-  noteBrowserFilterInput.value = noteBrowserFilter;
-  noteBrowserTypeFilterSelect.value = workspace.noteTypes.some((type) => type.id === noteBrowserTypeFilter)
-    ? noteBrowserTypeFilter
-    : "all";
-  noteBrowserSortSelect.value = noteBrowserSort;
-
-  if (!filteredNotes.length) {
-    const emptyState = document.createElement("p");
-    emptyState.className = "note-browser-empty";
-    emptyState.textContent = noteBrowserFilter || noteBrowserTypeFilter !== "all"
-      ? "No entries match the current filter."
-      : "No entries available.";
-    noteManagerList.append(emptyState);
-    noteBrowserSelectedNoteId = null;
-    return;
-  }
-
-  const selectedNote = getSelectedBrowserNote(filteredNotes);
-
-  workspace.noteTypes
-    .map((type) => ({
-      type,
-      notes: filteredNotes.filter((note) => note.typeId === type.id)
-    }))
-    .filter((entry) => entry.notes.length)
-    .forEach(({ type, notes }) => {
-      const group = document.createElement("section");
-      group.className = "note-browser-group";
-
-      const groupHeader = document.createElement("div");
-      groupHeader.className = "note-browser-group-header";
-
-      const heading = document.createElement("h3");
-      heading.className = "note-browser-group-title";
-      heading.textContent = type.name;
-
-      const count = document.createElement("span");
-      count.className = "note-browser-group-count";
-      count.textContent = `${notes.length} entr${notes.length === 1 ? "y" : "ies"}`;
-
-      groupHeader.append(heading, count);
-      group.append(groupHeader);
-
-      notes.forEach((note) => {
-        const row = document.createElement("button");
-        row.type = "button";
-        row.className = `note-browser-list-item${note.id === noteBrowserSelectedNoteId ? " is-selected" : ""}`;
-        row.dataset.noteSelect = note.id;
-
-        const title = document.createElement("span");
-        title.className = "note-browser-list-title";
-        title.textContent = getNoteDisplayTitle(note);
-
-        const meta = document.createElement("span");
-        meta.className = "note-browser-list-meta";
-        const cardMeta = getNoteDisplayMeta(note);
-        meta.textContent = cardMeta
-          ? `${cardMeta} • ${formatNoteDate(note.updatedAt)}`
-          : formatNoteDate(note.updatedAt);
-
-        row.append(title, meta);
-        group.append(row);
-      });
-
-      noteManagerList.append(group);
-    });
-
-  const detailType = getNoteTypeById(selectedNote.typeId);
-  const previewText = getNotePreviewText(selectedNote);
-  const detailHeader = document.createElement("div");
-  detailHeader.className = "note-browser-detail-header";
-
-  const detailLabel = document.createElement("p");
-  detailLabel.className = "active-note-label";
-  detailLabel.textContent = detailType.name;
-
-  const detailTitle = document.createElement("h3");
-  detailTitle.className = "note-browser-detail-title";
-  detailTitle.textContent = getNoteDisplayTitle(selectedNote);
-
-  const detailMeta = document.createElement("p");
-  detailMeta.className = "note-browser-detail-meta";
-  detailMeta.textContent = `Created ${formatNoteDate(selectedNote.createdAt)} • Updated ${formatNoteDate(selectedNote.updatedAt)}`;
-
-  detailHeader.append(detailLabel, detailTitle, detailMeta);
-
-  const actions = document.createElement("div");
-  actions.className = "note-browser-detail-actions";
-
-        const openButton = document.createElement("button");
-        openButton.type = "button";
-        openButton.className = "ghost-button primary-button";
-        openButton.dataset.noteAction = "open";
-        openButton.dataset.noteId = selectedNote.id;
-        openButton.textContent = "Open";
-
-  const duplicateButton = document.createElement("button");
-  duplicateButton.type = "button";
-  duplicateButton.className = "ghost-button";
-  duplicateButton.dataset.noteAction = "duplicate";
-  duplicateButton.dataset.noteId = selectedNote.id;
-  duplicateButton.textContent = "Copy";
-
-  const deleteButton = document.createElement("button");
-  deleteButton.type = "button";
-  deleteButton.className = "ghost-button";
-  deleteButton.dataset.noteAction = "delete";
-  deleteButton.dataset.noteId = selectedNote.id;
-  deleteButton.textContent = "Delete";
-
-  actions.append(openButton, duplicateButton, deleteButton);
-
-  const metadataBlock = document.createElement("div");
-  metadataBlock.className = "note-browser-detail-block";
-
-  const metadataTitle = document.createElement("p");
-  metadataTitle.className = "note-browser-detail-block-title";
-  metadataTitle.textContent = "Details";
-  metadataBlock.append(metadataTitle);
-
-  const populatedFields = detailType.fields
-    .map((field) => ({
-      label: field.label,
-      value: (selectedNote.metadata[field.id] ?? "").trim()
-    }))
-    .filter((field) => field.value);
-
-  if (populatedFields.length) {
-    const metadataList = document.createElement("div");
-    metadataList.className = "note-browser-detail-metadata";
-    populatedFields.forEach((field) => {
-      const chip = document.createElement("div");
-      chip.className = "metadata-chip";
-
-      const label = document.createElement("span");
-      label.className = "metadata-chip-label";
-      label.textContent = field.label;
-
-      const value = document.createElement("span");
-      value.className = "metadata-chip-value";
-      value.textContent = field.value;
-
-      chip.append(label, value);
-      metadataList.append(chip);
-    });
-    metadataBlock.append(metadataList);
-  } else {
-    const emptyMetadata = document.createElement("p");
-    emptyMetadata.className = "note-browser-empty";
-    emptyMetadata.textContent = "No entry details added yet.";
-    metadataBlock.append(emptyMetadata);
-  }
-
-  const previewBlock = document.createElement("div");
-  previewBlock.className = "note-browser-detail-block";
-
-  const previewTitle = document.createElement("p");
-  previewTitle.className = "note-browser-detail-block-title";
-  previewTitle.textContent = "Preview";
-
-  const preview = document.createElement("p");
-  preview.className = "note-browser-detail-preview";
-  preview.textContent = previewText || "This entry is still empty.";
-
-  previewBlock.append(previewTitle, preview);
-  noteBrowserDetails.append(detailHeader, actions, metadataBlock, previewBlock);
-};
+let refreshNoteSurfaces = () => {};
+
+({
+  getNoteDisplayTitle,
+  getNoteDisplayMeta,
+  getNoteSearchableText,
+  refreshNoteSurfaces,
+  renderWorkspace
+} = window.ScriptoriaModules.createNotesRender({
+  workspace,
+  newNoteActions,
+  activeNoteLabel,
+  activeNoteTitle,
+  activeNoteMeta,
+  metadataSummary,
+  noteMetaBar,
+  noteMetaFields,
+  noteEditor,
+  noteManagerDialog,
+  settingsDialog,
+  processUrlEmbeds,
+  linkifyScriptureReferences,
+  linkifyUrls,
+  refreshTableUi,
+  ensureTrailingParagraph,
+  trimEditorLeadingSpacerNodes,
+  updateNoteEditorPlaceholderState,
+  noteBrowserSelectedNoteIdRef: () => noteBrowserSelectedNoteId,
+  getNoteTypeById,
+  getActiveNote,
+  formatNoteDate,
+  ensureWorkspaceConsistency,
+  renderNoteManager: () => renderNoteManager(),
+  renderSettings: () => renderSettings()
+}));
 
 const renderProviderSettings = () => {
   providerSettingsContainer.innerHTML = "";
@@ -4593,19 +4149,6 @@ const renderSettings = () => {
   });
 };
 
-const renderWorkspace = () => {
-  ensureWorkspaceConsistency();
-  renderActiveNote();
-
-  if (noteManagerDialog.open) {
-    renderNoteManager();
-  }
-
-  if (settingsDialog.open) {
-    renderSettings();
-  }
-};
-
 const renderOnboardingStep = () => {
   const step = onboardingSteps[activeOnboardingStepIndex];
 
@@ -4653,29 +4196,6 @@ const openOnboarding = ({ markSeen = false, startAt = 0 } = {}) => {
   if (markSeen) {
     void writeStoredValue(onboardingStorageKey, true);
   }
-};
-
-const touchNote = (note) => {
-  note.updatedAt = new Date().toISOString();
-};
-
-const refreshNoteSurfaces = () => {
-  renderActiveNoteSummary();
-  renderNoteTypeOptions();
-  renderMetadataSummary();
-
-  if (noteManagerDialog.open) {
-    renderNoteManager();
-  }
-};
-
-const openNotesBrowser = () => {
-  noteBrowserSelectedNoteId = workspace.activeNoteId;
-  renderNoteManager();
-  overflowMenu.removeAttribute("open");
-  openDialog(noteManagerDialog);
-  noteBrowserFilterInput.focus();
-  noteBrowserFilterInput.select();
 };
 
 const saveActiveNote = () => {
@@ -4896,110 +4416,6 @@ const flushEditorWorkNow = () => {
   }
 };
 
-const createNote = (typeId = workspace.selectedNewNoteTypeId) => {
-  const type = getNoteTypeById(typeId) ?? workspace.noteTypes[0];
-
-  if (!type) {
-    return;
-  }
-
-  workspace.selectedNewNoteTypeId = type.id;
-  const note = createEmptyNote(type.id, buildMetadataForType(type));
-  workspace.notes.unshift(note);
-  workspace.activeNoteId = note.id;
-  persistWorkspace();
-  renderWorkspace();
-  refreshSaveStatus();
-  const firstInput = noteMetaFields.querySelector("input");
-  (firstInput ?? noteEditor).focus();
-};
-
-const duplicateNote = (noteId = workspace.activeNoteId) => {
-  const sourceNote = workspace.notes.find((note) => note.id === noteId);
-
-  if (!sourceNote) {
-    return;
-  }
-
-  const duplicate = {
-    ...createEmptyNote(sourceNote.typeId, structuredClone(sourceNote.metadata)),
-    content: sourceNote.content
-  };
-
-  workspace.notes.unshift(duplicate);
-  workspace.activeNoteId = duplicate.id;
-  persistWorkspace();
-  renderWorkspace();
-  refreshSaveStatus();
-};
-
-const switchNote = (noteId) => {
-  if (noteId === workspace.activeNoteId) {
-    return;
-  }
-
-  // Drain any pending debounced linkify/save for the *outgoing* note before we
-  // overwrite activeNoteId — otherwise the deferred saveActiveNote() would
-  // attribute the previous note's content to the new one.
-  flushEditorWorkNow();
-  saveActiveNote();
-  workspace.activeNoteId = noteId;
-  persistWorkspace();
-  renderWorkspace();
-  refreshSaveStatus();
-};
-
-const deleteNoteById = (noteId) => {
-  const note = workspace.notes.find((entry) => entry.id === noteId);
-
-  if (!note) {
-    return;
-  }
-
-  const confirmed = window.confirm(`Delete entry "${getNoteDisplayTitle(note)}"? This cannot be undone.`);
-
-  if (!confirmed) {
-    return;
-  }
-
-  workspace.notes = workspace.notes.filter((entry) => entry.id !== noteId);
-
-  if (!workspace.notes.length) {
-    const fallbackType = workspace.noteTypes[0];
-    const replacement = createEmptyNote(fallbackType.id, buildMetadataForType(fallbackType));
-    workspace.notes = [replacement];
-    workspace.activeNoteId = replacement.id;
-  } else if (workspace.activeNoteId === noteId) {
-    workspace.activeNoteId = workspace.notes[0].id;
-  }
-
-  persistWorkspace();
-  renderWorkspace();
-  refreshSaveStatus();
-};
-
-const changeNoteType = (noteId, nextTypeId) => {
-  const note = workspace.notes.find((entry) => entry.id === noteId);
-  const nextType = getNoteTypeById(nextTypeId);
-
-  if (!note || !nextType || note.typeId === nextType.id) {
-    return;
-  }
-
-  const currentType = getNoteTypeById(note.typeId);
-  note.typeId = nextType.id;
-  note.metadata = buildMetadataForType(nextType, note.metadata, currentType);
-  touchNote(note);
-
-  if (workspace.activeNoteId === noteId) {
-    workspace.selectedNewNoteTypeId = nextType.id;
-  }
-
-  persistWorkspace();
-  renderWorkspace();
-  refreshSaveStatus();
-};
-
 const addNoteType = () => {
   const type = {
     id: createId("type"),
@@ -5174,6 +4590,33 @@ const openDialog = (dialog) => {
     dialog.showModal();
   }
 };
+
+({
+  renderNoteManager,
+  openNotesBrowser
+} = window.ScriptoriaModules.createNotesBrowser({
+  workspace,
+  noteManagerList,
+  noteBrowserDetails,
+  noteBrowserTypeFilterSelect,
+  noteBrowserFilterInput,
+  noteBrowserSortSelect,
+  overflowMenu,
+  noteManagerDialog,
+  openDialog,
+  getNoteBrowserSort: () => noteBrowserSort,
+  getNoteBrowserFilter: () => noteBrowserFilter,
+  getNoteBrowserTypeFilter: () => noteBrowserTypeFilter,
+  getNoteBrowserSelectedNoteId: () => noteBrowserSelectedNoteId,
+  setNoteBrowserSelectedNoteId: (value) => {
+    noteBrowserSelectedNoteId = value;
+  },
+  getNoteDisplayTitle: (note) => getNoteDisplayTitle(note),
+  getNoteDisplayMeta: (note) => getNoteDisplayMeta(note),
+  getNoteSearchableText: (note) => getNoteSearchableText(note),
+  getNoteTypeById,
+  formatNoteDate
+}));
 
 toolbarButtons.forEach((button) => {
   button.addEventListener("click", () => {
