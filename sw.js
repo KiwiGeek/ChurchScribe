@@ -59,6 +59,7 @@ const PRECACHE_URLS = [
   "version.js",
   "app.js",
   "manifest.json",
+  "translations/manager.js",
 
   // Cloud-storage providers (loaded by index.html before app.js)
   "storage/nullprovider.js",
