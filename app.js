@@ -3187,8 +3187,10 @@ const findLinkBlock = (link) => {
   return (block && block !== noteEditor) ? block : null;
 };
 
-const processUrlEmbeds = () => {
-  noteEditor.querySelectorAll("a[data-auto-url-link='true']").forEach((link) => {
+const processUrlEmbeds = (scope = null) => {
+  const root = (scope && noteEditor.contains(scope)) ? scope : noteEditor;
+
+  root.querySelectorAll("a[data-auto-url-link='true']").forEach((link) => {
     const match = EmbedBase.matchUrl(link.href);
 
     if (!match) {
@@ -4572,6 +4574,26 @@ const saveActiveNote = () => {
     return;
   }
 
+  if (pendingEditorPersistTimer) {
+    window.clearTimeout(pendingEditorPersistTimer);
+    pendingEditorPersistTimer = null;
+  }
+  pendingEditorPersistDirty = false;
+
+  activeNote.content = serializeNoteEditorContent();
+  syncActiveNoteMetadata(activeNote);
+  touchNote(activeNote);
+  persistWorkspace();
+  // Phase 3: refreshNoteSurfaces() rebuilds the active note summary, the
+  // new-note-type selector, and the metadata summary.  None of those depend on
+  // editor *content* (they're driven by metadata + types), so we no longer
+  // refresh them on every editor save.  The metadata-fields input handler
+  // (noteMetaFields "input" listener) is responsible for refreshing surfaces
+  // when metadata actually changes.
+  refreshSaveStatus();
+};
+
+const serializeNoteEditorContent = () => {
   // Hot-path optimisation: cloneNode(true) on the whole editor + a follow-up innerHTML
   // serialisation is the most expensive thing this function does.  When typing, the
   // editor almost never contains [data-embed-ghost] (only present while keyboard-
@@ -4609,18 +4631,49 @@ const saveActiveNote = () => {
     serializedContent = noteEditor.innerHTML;
   }
 
-  activeNote.content = serializedContent;
+  return serializedContent;
+};
+
+const syncActiveNoteMetadata = (note) => {
   noteMetaFields.querySelectorAll("[data-field-id]").forEach((input) => {
-    activeNote.metadata[input.dataset.fieldId] = input.value;
+    note.metadata[input.dataset.fieldId] = input.value;
   });
+};
+
+const syncActiveNoteFromEditor = ({ syncMetadata = false } = {}) => {
+  const activeNote = getActiveNote();
+
+  if (!activeNote) {
+    return null;
+  }
+
+  activeNote.content = serializeNoteEditorContent();
+
+  if (syncMetadata) {
+    syncActiveNoteMetadata(activeNote);
+  }
+
   touchNote(activeNote);
+  return activeNote;
+};
+
+let pendingEditorWorkTimer = null;
+let pendingEditorPersistTimer = null;
+let pendingEditorInputType = null;
+let pendingEditorWorkDirty = false;
+let pendingEditorPersistDirty = false;
+const editorWorkDebounceMs = 150;
+const editorPersistDebounceMs = 1000;
+
+const runPendingEditorPersistence = () => {
+  pendingEditorPersistTimer = null;
+
+  if (!pendingEditorPersistDirty) {
+    return;
+  }
+
+  pendingEditorPersistDirty = false;
   persistWorkspace();
-  // Phase 3: refreshNoteSurfaces() rebuilds the active note summary, the
-  // new-note-type selector, and the metadata summary.  None of those depend on
-  // editor *content* (they're driven by metadata + types), so we no longer
-  // refresh them on every editor save.  The metadata-fields input handler
-  // (noteMetaFields "input" listener) is responsible for refreshing surfaces
-  // when metadata actually changes.
   refreshSaveStatus();
 };
 
@@ -4635,11 +4688,6 @@ const saveActiveNote = () => {
 // pass that runs ~150 ms after the user stops typing.  Anything that needs to
 // see the latest content immediately (note switching, manual sync, beforeunload)
 // calls flushEditorWorkNow() to drain the pending pass synchronously.
-let pendingEditorWorkTimer = null;
-let pendingEditorInputType = null;
-let pendingEditorWorkDirty = false;
-const editorWorkDebounceMs = 150;
-
 const runPendingEditorWork = () => {
   pendingEditorWorkTimer = null;
 
@@ -4662,7 +4710,7 @@ const runPendingEditorWork = () => {
     suppressAtCaret: inputType !== "insertFromPaste",
     scope: caretBlock
   });
-  processUrlEmbeds();
+  processUrlEmbeds(caretBlock);
 
   // If the cursor was orphaned because an embed replaced its containing block
   // (e.g. user pressed Space after a lone URL), move it to the trailing empty
@@ -4684,7 +4732,11 @@ const runPendingEditorWork = () => {
     }
   }
 
-  saveActiveNote();
+  if (syncActiveNoteFromEditor()) {
+    pendingEditorPersistDirty = true;
+    refreshSaveStatus();
+    scheduleEditorPersistence();
+  }
 };
 
 const scheduleEditorWork = (inputType) => {
@@ -4703,6 +4755,16 @@ const scheduleEditorWork = (inputType) => {
   pendingEditorWorkTimer = window.setTimeout(runPendingEditorWork, editorWorkDebounceMs);
 };
 
+const scheduleEditorPersistence = () => {
+  pendingEditorPersistDirty = true;
+
+  if (pendingEditorPersistTimer) {
+    window.clearTimeout(pendingEditorPersistTimer);
+  }
+
+  pendingEditorPersistTimer = window.setTimeout(runPendingEditorPersistence, editorPersistDebounceMs);
+};
+
 const flushEditorWorkNow = () => {
   if (pendingEditorWorkTimer) {
     window.clearTimeout(pendingEditorWorkTimer);
@@ -4711,6 +4773,15 @@ const flushEditorWorkNow = () => {
 
   if (pendingEditorWorkDirty) {
     runPendingEditorWork();
+  }
+
+  if (pendingEditorPersistTimer) {
+    window.clearTimeout(pendingEditorPersistTimer);
+    pendingEditorPersistTimer = null;
+  }
+
+  if (pendingEditorPersistDirty) {
+    runPendingEditorPersistence();
   }
 };
 
