@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scriptoria</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@400;500;600;700&family=Orbitron:wght@400;700&family=Cinzel:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="mobile-warning" id="mobile-warning" role="alert">
+    <p class="mobile-warning-text">Scriptoria is designed for desktops and tablets — it may not work well on a small screen.</p>
+    <button class="mobile-warning-dismiss" id="mobile-warning-dismiss" type="button" aria-label="Dismiss warning">✕</button>
+  </div>
+
+  <div class="app-shell">
+    <header class="app-header">
+      <div>
+        <h1>Scriptoria</h1>
+      </div>
+      <div class="header-actions">
+        <div class="header-controls">
+            <button class="theme-toggle" id="settings-button" type="button">
+              <span class="theme-toggle-label">Settings…</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="pane-grid">
+      <section class="panel note-panel" aria-labelledby="active-note-title">
+        <div class="panel-header">
+          <div class="active-note-summary panel-note-summary">
+            <p class="active-note-label" id="active-note-label">Entries</p>
+            <div class="panel-note-title-row">
+              <h2 class="active-note-title panel-note-title" id="active-note-title"></h2>
+              <button class="panel-note-edit-button" id="active-note-edit-button" type="button" aria-label="Edit entry details" title="Edit entry details">✎</button>
+            </div>
+            <p class="active-note-meta panel-note-meta" id="active-note-meta"></p>
+          </div>
+          <div class="note-actions">
+            <button class="ghost-button" id="note-details-button" type="button">Entry Details…</button>
+            <details class="overflow-menu">
+              <summary class="ghost-button">Actions ▾</summary>
+              <div class="overflow-menu-panel">
+                <div id="new-note-actions"></div>
+                <button class="ghost-button overflow-action" id="manage-notes-button" type="button">Open Library</button>
+                <button class="ghost-button overflow-action" id="delete-note-button" type="button">Delete entry</button>
+              </div>
+            </details>
+          </div>
+        </div>
+
+        <div class="note-meta-bar" id="note-meta-bar">
+          <div class="metadata-summary" id="metadata-summary"></div>
+        </div>
+
+        <div class="toolbar" role="toolbar" aria-label="Rich text controls">
+          <button class="tool-button" type="button" data-command="bold" aria-label="Bold"><strong>B</strong></button>
+          <button class="tool-button" type="button" data-command="italic" aria-label="Italic"><em>I</em></button>
+          <button class="tool-button" type="button" data-command="underline" aria-label="Underline"><span class="underline">U</span></button>
+          <button class="tool-button" type="button" data-command="insertUnorderedList" aria-label="Bullet list">• List</button>
+          <button class="tool-button" type="button" data-command="insertOrderedList" aria-label="Numbered list">1. List</button>
+          <button class="tool-button" type="button" data-block="h2" aria-label="Heading">Heading</button>
+          <button class="tool-button" type="button" data-block="blockquote" aria-label="Quote">Quote</button>
+          <button class="tool-button" type="button" data-command="removeFormat" aria-label="Clear formatting">Reset</button>
+          <div class="color-picker-wrapper" id="color-picker-wrapper">
+            <button class="tool-button color-picker-trigger" type="button" id="color-picker-trigger" aria-label="Text color" aria-expanded="false" aria-haspopup="true">
+              <span class="color-button-a">A</span><span class="color-button-swatch" id="color-button-swatch"></span>
+            </button>
+            <div class="color-picker-dropdown" id="color-picker-dropdown" hidden role="dialog" aria-label="Text color"></div>
+          </div>
+          <button class="tool-button" type="button" id="insert-table-button" aria-label="Insert table">Table</button>
+          <button class="tool-button" type="button" id="insert-image-button" aria-label="Insert image">Image</button>
+        </div>
+        <input type="file" id="insert-image-file" accept="image/*" multiple hidden>
+
+        <div
+          id="note-editor"
+          class="note-editor"
+          contenteditable="true"
+          spellcheck="true"
+          role="textbox"
+          aria-multiline="true"
+          data-placeholder="Start writing sermon notes, study thoughts, or scripture reflections..."
+        ></div>
+
+        <div class="table-toolbar" id="table-toolbar" hidden aria-label="Table actions">
+          <span class="table-toolbar-label">Table</span>
+          <button class="ghost-button table-action-button" type="button" data-table-action="insert-row-above">Row above</button>
+          <button class="ghost-button table-action-button" type="button" data-table-action="insert-row-below">Row below</button>
+          <button class="ghost-button table-action-button" type="button" data-table-action="delete-row">Delete row</button>
+          <button class="ghost-button table-action-button" type="button" data-table-action="insert-column-left">Column left</button>
+          <button class="ghost-button table-action-button" type="button" data-table-action="insert-column-right">Column right</button>
+          <button class="ghost-button table-action-button" type="button" data-table-action="delete-column">Delete column</button>
+          <button class="ghost-button table-action-button" type="button" data-table-action="delete-table">Delete table</button>
+        </div>
+
+        <div class="panel-footer">
+          <p id="save-status" class="save-status"></p>
+        </div>
+      </section>
+
+      <div class="pane-divider" id="pane-divider" role="separator" aria-orientation="vertical" aria-label="Resize panels"></div>
+
+      <aside class="panel scripture-panel" aria-labelledby="scripture-panel-title">
+        <div class="panel-header">
+          <div>
+            <p class="panel-kicker">Scripture</p>
+            <h2 id="scripture-panel-title">Scriptures</h2>
+          </div>
+        </div>
+
+        <form class="verse-picker" id="verse-picker">
+          <label class="field">
+            <span>Translation</span>
+            <select id="translation-select" name="translation"></select>
+          </label>
+
+          <label class="field">
+            <span>Book</span>
+            <select id="book-select" name="book"></select>
+          </label>
+
+          <label class="field">
+            <span>Chapter</span>
+            <select id="chapter-select" name="chapter"></select>
+          </label>
+
+          <label class="field verse-search-field">
+            <span>Search</span>
+            <input type="search" id="scripture-search-input" placeholder="Scripture Search…" autocomplete="off">
+          </label>
+        </form>
+
+        <article class="verse-display" id="verse-display" aria-live="polite">
+          <p class="verse-reference" id="verse-reference"></p>
+          <div class="chapter-text" id="chapter-text"></div>
+          <p class="verse-translation" id="verse-translation"></p>
+        </article>
+
+        <div class="scripture-search-results is-hidden" id="scripture-search-results" aria-live="polite" aria-label="Scripture search results"></div>
+      </aside>
+    </main>
+  </div>
+
+  <dialog class="management-dialog" id="note-manager-dialog">
+    <form class="dialog-shell" method="dialog">
+      <div class="dialog-header">
+        <div>
+          <p class="panel-kicker">Library</p>
+          <h2>Entries</h2>
+        </div>
+        <button class="ghost-button" id="close-note-manager-button" type="submit">Close</button>
+      </div>
+
+      <div class="dialog-body">
+        <div class="note-browser-toolbar">
+          <label class="field compact-field note-browser-search">
+            <span>Filter</span>
+            <input id="note-browser-filter" type="search" placeholder="Search entries, details or content">
+          </label>
+          <label class="field compact-field note-browser-type">
+            <span>Type</span>
+            <select id="note-browser-type-filter" name="note-browser-type-filter"></select>
+          </label>
+          <label class="field compact-field note-browser-sort">
+            <span>Sort</span>
+            <select id="note-browser-sort" name="note-browser-sort">
+              <option value="updated-desc">Recently updated</option>
+              <option value="created-desc">Recently created</option>
+              <option value="title-asc">Title</option>
+            </select>
+          </label>
+        </div>
+        <div class="note-browser-layout">
+          <div class="note-manager-list" id="note-manager-list"></div>
+          <aside class="note-browser-details" id="note-browser-details"></aside>
+        </div>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="management-dialog compact-dialog" id="note-details-dialog">
+    <form class="dialog-shell compact-shell" method="dialog">
+      <div class="dialog-header">
+        <div>
+          <p class="panel-kicker">Entry Details</p>
+          <h2>Edit Entry Details</h2>
+        </div>
+        <button class="ghost-button" type="submit">Close</button>
+      </div>
+
+      <div class="dialog-body">
+        <div class="note-meta details-meta" id="note-meta-fields"></div>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="management-dialog compact-dialog" id="table-dialog">
+    <form class="dialog-shell compact-shell" method="dialog">
+      <div class="dialog-header">
+        <div>
+          <p class="panel-kicker">Editor</p>
+          <h2>Insert Table</h2>
+        </div>
+        <button class="ghost-button" type="submit">Close</button>
+      </div>
+
+      <div class="dialog-body">
+        <div class="table-insert-grid">
+          <label class="field">
+            <span>Rows</span>
+            <input id="table-rows-input" type="number" min="1" max="20" step="1" value="3">
+          </label>
+          <label class="field">
+            <span>Columns</span>
+            <input id="table-columns-input" type="number" min="1" max="12" step="1" value="3">
+          </label>
+        </div>
+        <div class="dialog-actions">
+          <button class="ghost-button primary-button" id="table-insert-confirm-button" type="button">Insert table</button>
+        </div>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="management-dialog" id="settings-dialog">
+    <form class="dialog-shell" method="dialog">
+      <div class="dialog-header">
+        <div>
+          <p class="panel-kicker">Settings</p>
+          <h2>Library Settings</h2>
+        </div>
+        <button class="ghost-button" id="close-settings-button" type="submit">Close</button>
+      </div>
+
+      <div class="dialog-body settings-layout">
+        <nav class="settings-tab-nav" id="settings-tab-nav" aria-label="Settings sections"></nav>
+
+        <section class="type-editor-panel settings-ui-panel" data-settings-panel="ui-settings" aria-labelledby="ui-settings-title">
+          <div class="note-switcher-header">
+            <h3 id="ui-settings-title">Display Settings</h3>
+          </div>
+          <p class="settings-copy">Control how Scriptoria looks and behaves.</p>
+          <div id="ui-settings-content"></div>
+        </section>
+
+        <section class="type-editor-panel settings-type-editor" data-settings-panel="note-types" aria-labelledby="type-editor-title">
+          <div class="note-switcher-header">
+            <h3 id="type-editor-title">Entry Types</h3>
+            <button class="ghost-button" id="add-type-button" type="button">Add type</button>
+          </div>
+
+          <div class="type-editor-empty" id="type-editor-empty">
+            <p>Select a type to edit its name and detail fields.</p>
+          </div>
+
+          <div class="type-editor-form" id="type-editor-form" hidden>
+            <label class="field">
+              <span>Selected Type</span>
+              <select id="type-select" name="type-select"></select>
+            </label>
+
+            <label class="field">
+              <span>Type Name</span>
+              <input id="type-name-input" name="type-name" type="text" placeholder="Bible Study">
+            </label>
+
+            <div class="display-field-editor">
+              <div class="note-switcher-header">
+                <h3>Entry Card Fields</h3>
+              </div>
+              <div class="display-field-grid">
+                <label class="field">
+                  <span>Library Title</span>
+                  <select id="card-title-field-select" name="card-title-field"></select>
+                </label>
+                <label class="field">
+                  <span>Library Subtitle</span>
+                  <select id="card-subtitle-field-select" name="card-subtitle-field"></select>
+                </label>
+              </div>
+            </div>
+
+            <div class="metadata-field-editor">
+              <div class="note-switcher-header">
+                <h3>Detail Fields</h3>
+                <button class="ghost-button" id="add-metadata-field-button" type="button">Add field</button>
+              </div>
+              <div class="metadata-field-list" id="metadata-field-list"></div>
+            </div>
+
+            <div class="dialog-actions">
+              <button class="ghost-button" id="delete-type-button" type="button">Delete type</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="type-editor-panel settings-alias-panel" data-settings-panel="scripture-aliases" aria-labelledby="alias-editor-title">
+          <div class="note-switcher-header">
+            <h3 id="alias-editor-title">Scripture Abbreviations</h3>
+          </div>
+          <p class="settings-copy">Add comma-separated aliases like `Jn, Jon` for each book. These are used when linking references in entries.</p>
+          <div class="alias-list" id="alias-list"></div>
+        </section>
+
+        <section class="type-editor-panel settings-cloud-panel" data-settings-panel="cloud-sync" aria-labelledby="cloud-sync-title">
+          <div class="note-switcher-header">
+            <h3 id="cloud-sync-title">Sync &amp; Backup</h3>
+          </div>
+          <p class="settings-copy">Configure where your data is stored in addition to your browser's local IndexedDB. Choose a cloud provider or a local folder on your system.</p>
+
+          <div class="type-editor-form">
+            <div class="display-field-grid">
+              <label class="field">
+                <span>Provider</span>
+                <select id="cloud-provider-select" name="cloud-provider">
+                  <option value="none">None</option>
+                  <option value="google-drive">Google Drive</option>
+                  <option value="local-drive">Local Drive</option>
+                  <option value="onedrive">OneDrive</option>
+                  <option value="dropbox" disabled>Dropbox (Later)</option>
+                  <option value="github" disabled>GitHub (Later)</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span>Check Interval</span>
+                <select id="cloud-poll-interval-select" name="cloud-poll-interval">
+                  <option value="30">30 seconds</option>
+                  <option value="60">1 minute</option>
+                  <option value="120">2 minutes</option>
+                  <option value="300">5 minutes</option>
+                </select>
+              </label>
+            </div>
+
+            <div id="provider-settings-container"></div>
+
+            <div class="display-field-grid">
+              <label class="field">
+                <span id="cloud-status-label">Connection Status</span>
+                <input id="cloud-status-input" name="cloud-status" type="text" readonly>
+              </label>
+
+              <label class="field">
+                <span>Last Sync</span>
+                <input id="cloud-last-sync-input" name="cloud-last-sync" type="text" readonly>
+              </label>
+            </div>
+
+            <div class="dialog-actions cloud-actions">
+              <button class="ghost-button" id="google-connect-button" type="button">Connect Google Drive</button>
+              <button class="ghost-button" id="google-disconnect-button" type="button">Disconnect</button>
+              <button class="ghost-button" id="google-sync-now-button" type="button">Sync Now</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="type-editor-panel settings-translations-panel" data-settings-panel="translations" aria-labelledby="translations-title">
+          <div class="note-switcher-header">
+            <h3 id="translations-title">Bible Translations</h3>
+          </div>
+          <p class="settings-copy">Manage custom Bible translation files. Drop a <code>.js</code> translation file anywhere on the page to import it, or enter a URL below to download one.</p>
+
+          <div class="data-management-section">
+            <h4 class="data-section-title">Built-in Translations</h4>
+            <ul class="translation-list" id="builtin-translation-list"></ul>
+          </div>
+
+          <div class="data-management-section" id="user-translations-section">
+            <h4 class="data-section-title">User-Added Translations</h4>
+            <p class="settings-copy" id="user-translations-empty-note">No custom translations have been added yet.</p>
+            <ul class="translation-list" id="user-translation-list"></ul>
+          </div>
+
+          <div class="data-management-section">
+            <h4 class="data-section-title">Import from URL</h4>
+            <p class="settings-copy">Enter the URL of a <code>.js</code> translation file to download and import it.</p>
+            <div class="display-field-grid">
+              <label class="field">
+                <span>URL</span>
+                <input id="translation-url-input" type="url" placeholder="https://example.com/translation.js">
+              </label>
+            </div>
+            <div class="dialog-actions data-actions">
+              <button class="ghost-button" id="import-translation-url-button" type="button">Import from URL</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="type-editor-panel settings-data-panel" data-settings-panel="data" aria-labelledby="data-title">
+          <div class="note-switcher-header">
+            <h3 id="data-title">Data Management</h3>
+          </div>
+          <p class="settings-copy">Back up your library to a file, restore from a previous backup, or reset the app to its default state.</p>
+
+          <div class="data-management-section">
+            <h4 class="data-section-title">Backup &amp; Restore</h4>
+            <p class="settings-copy">Download a snapshot of your entries, entry types, and preferences as a JSON file. You can restore it at any time.</p>
+            <div class="dialog-actions data-actions">
+              <button class="ghost-button" id="download-backup-button" type="button">Download Backup</button>
+              <button class="ghost-button" id="restore-backup-button" type="button">Restore from Backup…</button>
+              <input id="restore-backup-file" type="file" accept=".json" hidden aria-hidden="true">
+            </div>
+          </div>
+
+          <div class="data-management-section data-management-section--danger">
+            <h4 class="data-section-title">Reset</h4>
+            <p class="settings-copy">Permanently erase library data. Choose what to reset: data stored in this browser, data stored on your connected sync &amp; backup provider, or both. These actions cannot be undone.</p>
+            <div class="dialog-actions data-actions">
+              <button class="ghost-button ghost-button--danger" id="clear-local-button" type="button">Clear Local Library…</button>
+              <button class="ghost-button ghost-button--danger" id="clear-remote-button" type="button">Clear Remote Library…</button>
+              <button class="ghost-button ghost-button--danger" id="clear-all-button" type="button">Clear All Data…</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="type-editor-panel settings-about-panel" data-settings-panel="about" aria-labelledby="about-title">
+          <div class="note-switcher-header">
+            <h3 id="about-title">About Scriptoria</h3>
+          </div>
+          <p class="settings-copy">Scriptoria is a lightweight, privacy-friendly sermon and Bible-study note-taking tool that runs entirely in your browser.</p>
+          <div class="about-credits">
+            <p class="settings-copy">Created by <strong>Josh Penman</strong> (<a class="about-link" href="https://github.com/KiwiGeek" target="_blank" rel="noopener noreferrer">@KiwiGeek</a>).</p>
+            <p class="settings-copy about-version" id="about-version-info"></p>
+          </div>
+          <div class="about-links">
+            <button class="about-link about-link--block" id="open-onboarding-button" type="button">
+              Reopen onboarding tutorial
+            </button>
+            <a class="about-link about-link--block" href="https://github.com/KiwiGeek/ChurchScribe/" target="_blank" rel="noopener noreferrer">
+              <svg class="about-link-icon" aria-hidden="true" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82A7.65 7.65 0 0 1 8 4.07c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+              View on GitHub
+            </a>
+            <a class="about-link about-link--block" href="https://ko-fi.com/joshpenman" target="_blank" rel="noopener noreferrer">
+              <svg class="about-link-icon" aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.658-3.734 4.352.24 7.422-2.831 6.649-6.916zm-11.062 3.511c-1.246 1.453-4.011 3.976-4.011 3.976s-.121.119-.31.023c-.076-.057-.108-.09-.108-.09-.443-.441-3.368-3.049-4.034-3.954-.709-.965-1.041-2.7-.091-3.71.951-1.01 3.005-1.086 4.010.019zm6.557.093c-.93.799-2.519.756-2.519.756s-.282.035-.282-.282V7.108c0-.337.282-.283.282-.283h2.14c.917 0 1.665.942 1.665 1.666 0 .424-.165.814-.417 1.107a2.1 2.1 0 0 1-.869.954z"/></svg>
+              Buy me a coffee on Ko-fi
+            </a>
+          </div>
+        </section>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="management-dialog compact-dialog onboarding-dialog" id="onboarding-dialog">
+    <form class="dialog-shell compact-shell" method="dialog">
+      <div class="dialog-header">
+        <div>
+          <p class="panel-kicker" id="onboarding-step-kicker">Welcome</p>
+          <h2 id="onboarding-step-title">Welcome to Scriptoria</h2>
+        </div>
+        <button class="ghost-button" id="close-onboarding-button" type="submit">Close</button>
+      </div>
+
+      <div class="dialog-body onboarding-layout">
+        <div class="onboarding-hero-card">
+          <div class="onboarding-step-meta">
+            <div class="onboarding-step-counter" id="onboarding-step-counter" aria-live="polite"></div>
+            <div class="onboarding-step-dots" id="onboarding-step-dots" aria-hidden="true"></div>
+          </div>
+          <p class="settings-copy onboarding-copy" id="onboarding-step-copy"></p>
+        </div>
+
+        <div class="onboarding-content-grid">
+          <section class="onboarding-panel">
+            <p class="onboarding-section-label">In this step</p>
+            <ul class="onboarding-points" id="onboarding-step-points"></ul>
+          </section>
+
+          <aside class="onboarding-callout-card">
+            <p class="onboarding-section-label">Worth remembering</p>
+            <div class="onboarding-callout" id="onboarding-step-callout"></div>
+          </aside>
+        </div>
+      </div>
+
+      <div class="dialog-actions onboarding-actions">
+        <button class="ghost-button" id="onboarding-back-button" type="button">Back</button>
+        <div class="onboarding-progress" id="onboarding-progress" aria-live="polite"></div>
+        <button class="ghost-button" id="onboarding-next-button" type="button">Next</button>
+        <button class="ghost-button primary-button is-hidden" id="onboarding-finish-button" type="button">Start using Scriptoria</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="table-context-menu" id="table-context-menu" hidden role="menu" aria-label="Table actions">
+    <button class="table-context-menu-button" type="button" data-table-action="insert-row-above" role="menuitem">Insert row above</button>
+    <button class="table-context-menu-button" type="button" data-table-action="insert-row-below" role="menuitem">Insert row below</button>
+    <button class="table-context-menu-button" type="button" data-table-action="delete-row" role="menuitem">Delete row</button>
+    <button class="table-context-menu-button" type="button" data-table-action="insert-column-left" role="menuitem">Insert column left</button>
+    <button class="table-context-menu-button" type="button" data-table-action="insert-column-right" role="menuitem">Insert column right</button>
+    <button class="table-context-menu-button" type="button" data-table-action="delete-column" role="menuitem">Delete column</button>
+    <button class="table-context-menu-button is-destructive" type="button" data-table-action="delete-table" role="menuitem">Delete table</button>
+  </div>
+
+  <dialog class="management-dialog compact-dialog" id="sync-conflict-dialog">
+    <div class="dialog-shell compact-shell">
+      <div class="dialog-header">
+        <div>
+          <p class="panel-kicker">Sync &amp; Backup</p>
+          <h2 id="conflict-dialog-title">Sync Conflict Detected</h2>
+        </div>
+      </div>
+      <div class="dialog-body">
+        <p class="settings-copy" id="conflict-dialog-description">Your local data and the cloud copy have both been changed since the last sync. Choose which version to keep.</p>
+        <div class="conflict-versions">
+          <div class="conflict-version-card">
+            <p class="conflict-version-label">Local version</p>
+            <p class="conflict-version-time" id="conflict-local-time">—</p>
+          </div>
+          <div class="conflict-version-card">
+            <p class="conflict-version-label">Cloud version</p>
+            <p class="conflict-version-time" id="conflict-remote-time">—</p>
+          </div>
+        </div>
+        <p class="settings-copy conflict-warning">The version you do not choose will be permanently overwritten.</p>
+        <div class="dialog-actions conflict-actions">
+          <button class="ghost-button" id="conflict-keep-local-button" type="button">Keep local data</button>
+          <button class="ghost-button" id="conflict-use-cloud-button" type="button">Use cloud data</button>
+        </div>
+        <div class="first-sync-actions" id="first-sync-actions">
+          <button class="first-sync-option" id="first-sync-keep-local-button" type="button">
+            <strong class="first-sync-option-title">Upload My Library</strong>
+            <span class="first-sync-option-desc">Replace the cloud library with your local data. The existing cloud library will be permanently overwritten.</span>
+          </button>
+          <button class="first-sync-option" id="first-sync-use-cloud-button" type="button">
+            <strong class="first-sync-option-title">Download Cloud Library</strong>
+            <span class="first-sync-option-desc">Replace your local library with the data stored in the cloud. Your local library will be permanently overwritten.</span>
+          </button>
+          <button class="first-sync-option first-sync-option--cancel" id="first-sync-cancel-button" type="button">
+            <strong class="first-sync-option-title">Not Now</strong>
+            <span class="first-sync-option-desc">Keep both libraries unchanged. The external storage account will not be connected, and no syncing will occur. You can set this up later from Settings.</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="version.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@azure/msal-browser@2.39.0/lib/msal-browser.min.js" integrity="sha384-HtsDY8wVihpnviltxuJhKpX0ahqMUgvnzrXcW39KBNui4JooW+YJb1YxvQmNoFDZ" crossorigin="anonymous" async defer></script>
+  <script src="storage/nullprovider.js"></script>
+  <script src="storage/localdrive.js"></script>
+  <script src="storage/gdrive.js"></script>
+  <script src="storage/onedrive.js"></script>
+  <script src="embed/base.js"></script>
+  <script src="embed/youtube.js"></script>
+  <script src="embed/spotify.js"></script>
+  <script src="embed/pdf.js"></script>
+  <script src="embed/image.js"></script>
+  <script src="themes/default.js"></script>
+  <script src="themes/amber-warmth.js"></script>
+  <script src="themes/arctic-frost.js"></script>
+  <script src="themes/aurora-borealis.js"></script>
+  <script src="themes/autumn-harvest.js"></script>
+  <script src="themes/azure-sky.js"></script>
+  <script src="themes/blood-moon.js"></script>
+  <script src="themes/candlelight.js"></script>
+  <script src="themes/cherry-blossom.js"></script>
+  <script src="themes/cherry-noir.js"></script>
+  <script src="themes/coastal-breeze.js"></script>
+  <script src="themes/coffee-house.js"></script>
+  <script src="themes/copper-craft.js"></script>
+  <script src="themes/coral-reef.js"></script>
+  <script src="themes/crimson-faith.js"></script>
+  <script src="themes/cyberpunk.js"></script>
+  <script src="themes/deep-space.js"></script>
+  <script src="themes/desert-bloom.js"></script>
+  <script src="themes/ember-glow.js"></script>
+  <script src="themes/forest-vespers.js"></script>
+  <script src="themes/fuchsia-faith.js"></script>
+  <script src="themes/golden-hour.js"></script>
+  <script src="themes/graphite.js"></script>
+  <script src="themes/hot-pink.js"></script>
+  <script src="themes/indigo-depths.js"></script>
+  <script src="themes/ivory-grace.js"></script>
+  <script src="themes/lavender-grace.js"></script>
+  <script src="themes/linen-sunlit.js"></script>
+  <script src="themes/marigold.js"></script>
+  <script src="themes/midnight-cathedral.js"></script>
+  <script src="themes/mint-fresh.js"></script>
+  <script src="themes/monochrome.js"></script>
+  <script src="themes/morning-mist.js"></script>
+  <script src="themes/neon-sermon.js"></script>
+  <script src="themes/neon-tokyo.js"></script>
+  <script src="themes/northern-lights.js"></script>
+  <script src="themes/ocean-executive.js"></script>
+  <script src="themes/olive-grove.js"></script>
+  <script src="themes/papyrus-script.js"></script>
+  <script src="themes/peach-blossom.js"></script>
+  <script src="themes/pine-grove.js"></script>
+  <script src="themes/plum-twilight.js"></script>
+  <script src="themes/renaissance.js"></script>
+  <script src="themes/retro-arcade.js"></script>
+  <script src="themes/rose-garden.js"></script>
+  <script src="themes/royal-purple.js"></script>
+  <script src="themes/saffron-spice.js"></script>
+  <script src="themes/sage-chapel.js"></script>
+  <script src="themes/sand-dune.js"></script>
+  <script src="themes/sepia-memoir.js"></script>
+  <script src="themes/slate-clean.js"></script>
+  <script src="themes/solar-flare.js"></script>
+  <script src="themes/spring-meadow.js"></script>
+  <script src="themes/steel-resolve.js"></script>
+  <script src="themes/storm-grey.js"></script>
+  <script src="themes/sunset-revival.js"></script>
+  <script src="themes/tangerine-dream.js"></script>
+  <script src="themes/teal-modern.js"></script>
+  <script src="themes/terracotta-sun.js"></script>
+  <script src="themes/twilight-prayer.js"></script>
+  <script src="themes/velvet-night.js"></script>
+  <script src="themes/void-scripture.js"></script>
+  <script src="themes/volcanic-rock.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
+                               
