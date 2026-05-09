@@ -1,5 +1,5 @@
 /**
- * Google Drive cloud storage provider for ChurchScribe.
+ * Google Drive cloud storage provider for Scriptoria.
  *
  * Exposes window.GoogleDriveProvider, which implements the StorageProvider interface.
  * To add a new provider, create a new script that assigns an object with the same
@@ -77,7 +77,7 @@
  *     Returns the parsed data (null if no file exists yet) and the identifiers.
  *
  *   clearRemote(): Promise<void>
- *     Deletes all ChurchScribe files from the remote storage location.
+ *     Deletes all Scriptoria files from the remote storage location.
  *     Throws if no active session exists or if the deletion fails.
  *
  * ProviderSettings:

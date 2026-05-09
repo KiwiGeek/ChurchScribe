@@ -1,5 +1,5 @@
 /**
- * Null auxiliary storage provider for ChurchScribe.
+ * Null sync &amp; backup provider for Scriptoria.
  *
  * Exposes window.NullProvider, which implements the StorageProvider interface.
  * This provider performs no operations and is the default selection for users

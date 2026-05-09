@@ -1,5 +1,5 @@
 /**
- * Local Drive storage provider for ChurchScribe.
+ * Local Drive storage provider for Scriptoria.
  *
  * Exposes window.LocalDriveProvider, which implements the StorageProvider interface.
  * Uses the File System Access API to read/write a settings file plus one file per

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Notes</title>
+  <title>Scriptoria</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@400;500;600;700&family=Orbitron:wght@400;700&family=Cinzel:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
@@ -11,14 +11,14 @@
 </head>
 <body>
   <div class="mobile-warning" id="mobile-warning" role="alert">
-    <p class="mobile-warning-text">ChurchScribe is designed for desktops and tablets — it may not work well on a small screen.</p>
+    <p class="mobile-warning-text">Scriptoria is designed for desktops and tablets — it may not work well on a small screen.</p>
     <button class="mobile-warning-dismiss" id="mobile-warning-dismiss" type="button" aria-label="Dismiss warning">✕</button>
   </div>
 
   <div class="app-shell">
     <header class="app-header">
       <div>
-        <h1>ChurchScribe</h1>
+        <h1>Scriptoria</h1>
       </div>
       <div class="header-actions">
         <div class="header-controls">
@@ -33,21 +33,21 @@
       <section class="panel note-panel" aria-labelledby="active-note-title">
         <div class="panel-header">
           <div class="active-note-summary panel-note-summary">
-            <p class="active-note-label" id="active-note-label">Notes</p>
+            <p class="active-note-label" id="active-note-label">Entries</p>
             <div class="panel-note-title-row">
               <h2 class="active-note-title panel-note-title" id="active-note-title"></h2>
-              <button class="panel-note-edit-button" id="active-note-edit-button" type="button" aria-label="Edit note options" title="Edit note options">✎</button>
+              <button class="panel-note-edit-button" id="active-note-edit-button" type="button" aria-label="Edit entry details" title="Edit entry details">✎</button>
             </div>
             <p class="active-note-meta panel-note-meta" id="active-note-meta"></p>
           </div>
           <div class="note-actions">
-            <button class="ghost-button" id="note-details-button" type="button">Note options…</button>
+            <button class="ghost-button" id="note-details-button" type="button">Entry Details…</button>
             <details class="overflow-menu">
               <summary class="ghost-button">Actions ▾</summary>
               <div class="overflow-menu-panel">
                 <div id="new-note-actions"></div>
-                <button class="ghost-button overflow-action" id="manage-notes-button" type="button">Browse notes</button>
-                <button class="ghost-button overflow-action" id="delete-note-button" type="button">Delete note</button>
+                <button class="ghost-button overflow-action" id="manage-notes-button" type="button">Open Library</button>
+                <button class="ghost-button overflow-action" id="delete-note-button" type="button">Delete entry</button>
               </div>
             </details>
           </div>
@@ -84,7 +84,7 @@
           spellcheck="true"
           role="textbox"
           aria-multiline="true"
-          data-placeholder="Start typing notes, key points, or prayer requests..."
+          data-placeholder="Start writing sermon notes, study thoughts, or scripture reflections..."
         ></div>
 
         <div class="table-toolbar" id="table-toolbar" hidden aria-label="Table actions">
@@ -109,7 +109,7 @@
         <div class="panel-header">
           <div>
             <p class="panel-kicker">Scripture</p>
-            <h2 id="scripture-panel-title">Bible Verses</h2>
+            <h2 id="scripture-panel-title">Scriptures</h2>
           </div>
         </div>
 
@@ -131,7 +131,7 @@
 
           <label class="field verse-search-field">
             <span>Search</span>
-            <input type="search" id="scripture-search-input" placeholder="Search verses…" autocomplete="off">
+            <input type="search" id="scripture-search-input" placeholder="Scripture Search…" autocomplete="off">
           </label>
         </form>
 
@@ -151,7 +151,7 @@
       <div class="dialog-header">
         <div>
           <p class="panel-kicker">Library</p>
-          <h2>Notes</h2>
+          <h2>Entries</h2>
         </div>
         <button class="ghost-button" id="close-note-manager-button" type="submit">Close</button>
       </div>
@@ -160,7 +160,7 @@
         <div class="note-browser-toolbar">
           <label class="field compact-field note-browser-search">
             <span>Filter</span>
-            <input id="note-browser-filter" type="search" placeholder="Search title, details, or note text">
+            <input id="note-browser-filter" type="search" placeholder="Search entries, details or content">
           </label>
           <label class="field compact-field note-browser-type">
             <span>Type</span>
@@ -187,8 +187,8 @@
     <form class="dialog-shell compact-shell" method="dialog">
       <div class="dialog-header">
         <div>
-          <p class="panel-kicker">Note Options</p>
-          <h2>Edit Note Details</h2>
+          <p class="panel-kicker">Entry Details</p>
+          <h2>Edit Entry Details</h2>
         </div>
         <button class="ghost-button" type="submit">Close</button>
       </div>
@@ -232,7 +232,7 @@
       <div class="dialog-header">
         <div>
           <p class="panel-kicker">Settings</p>
-          <h2>Workspace Settings</h2>
+          <h2>Library Settings</h2>
         </div>
         <button class="ghost-button" id="close-settings-button" type="submit">Close</button>
       </div>
@@ -244,18 +244,18 @@
           <div class="note-switcher-header">
             <h3 id="ui-settings-title">Display Settings</h3>
           </div>
-          <p class="settings-copy">Control how ChurchScribe looks and behaves.</p>
+          <p class="settings-copy">Control how Scriptoria looks and behaves.</p>
           <div id="ui-settings-content"></div>
         </section>
 
         <section class="type-editor-panel settings-type-editor" data-settings-panel="note-types" aria-labelledby="type-editor-title">
           <div class="note-switcher-header">
-            <h3 id="type-editor-title">Note Types</h3>
+            <h3 id="type-editor-title">Entry Types</h3>
             <button class="ghost-button" id="add-type-button" type="button">Add type</button>
           </div>
 
           <div class="type-editor-empty" id="type-editor-empty">
-            <p>Select a type to edit its name and metadata fields.</p>
+            <p>Select a type to edit its name and detail fields.</p>
           </div>
 
           <div class="type-editor-form" id="type-editor-form" hidden>
@@ -271,15 +271,15 @@
 
             <div class="display-field-editor">
               <div class="note-switcher-header">
-                <h3>Note Card Fields</h3>
+                <h3>Entry Card Fields</h3>
               </div>
               <div class="display-field-grid">
                 <label class="field">
-                  <span>Primary Line</span>
+                  <span>Library Title</span>
                   <select id="card-title-field-select" name="card-title-field"></select>
                 </label>
                 <label class="field">
-                  <span>Secondary Line</span>
+                  <span>Library Subtitle</span>
                   <select id="card-subtitle-field-select" name="card-subtitle-field"></select>
                 </label>
               </div>
@@ -287,7 +287,7 @@
 
             <div class="metadata-field-editor">
               <div class="note-switcher-header">
-                <h3>Metadata Fields</h3>
+                <h3>Detail Fields</h3>
                 <button class="ghost-button" id="add-metadata-field-button" type="button">Add field</button>
               </div>
               <div class="metadata-field-list" id="metadata-field-list"></div>
@@ -303,13 +303,13 @@
           <div class="note-switcher-header">
             <h3 id="alias-editor-title">Scripture Abbreviations</h3>
           </div>
-          <p class="settings-copy">Add comma-separated aliases like `Jn, Jon` for each book. These are used when linking references in notes.</p>
+          <p class="settings-copy">Add comma-separated aliases like `Jn, Jon` for each book. These are used when linking references in entries.</p>
           <div class="alias-list" id="alias-list"></div>
         </section>
 
         <section class="type-editor-panel settings-cloud-panel" data-settings-panel="cloud-sync" aria-labelledby="cloud-sync-title">
           <div class="note-switcher-header">
-            <h3 id="cloud-sync-title">Auxiliary Storage</h3>
+            <h3 id="cloud-sync-title">Sync &amp; Backup</h3>
           </div>
           <p class="settings-copy">Configure where your data is stored in addition to your browser's local IndexedDB. Choose a cloud provider or a local folder on your system.</p>
 
@@ -396,11 +396,11 @@
           <div class="note-switcher-header">
             <h3 id="data-title">Data Management</h3>
           </div>
-          <p class="settings-copy">Back up your workspace to a file, restore from a previous backup, or reset the app to its default state.</p>
+          <p class="settings-copy">Back up your library to a file, restore from a previous backup, or reset the app to its default state.</p>
 
           <div class="data-management-section">
             <h4 class="data-section-title">Backup &amp; Restore</h4>
-            <p class="settings-copy">Download a snapshot of your notes, note types, and preferences as a JSON file. You can restore it at any time.</p>
+            <p class="settings-copy">Download a snapshot of your entries, entry types, and preferences as a JSON file. You can restore it at any time.</p>
             <div class="dialog-actions data-actions">
               <button class="ghost-button" id="download-backup-button" type="button">Download Backup</button>
               <button class="ghost-button" id="restore-backup-button" type="button">Restore from Backup…</button>
@@ -410,10 +410,10 @@
 
           <div class="data-management-section data-management-section--danger">
             <h4 class="data-section-title">Reset</h4>
-            <p class="settings-copy">Permanently erase workspace data. Choose what to reset: data stored in this browser, data stored on your connected auxiliary storage provider, or both. These actions cannot be undone.</p>
+            <p class="settings-copy">Permanently erase library data. Choose what to reset: data stored in this browser, data stored on your connected sync &amp; backup provider, or both. These actions cannot be undone.</p>
             <div class="dialog-actions data-actions">
-              <button class="ghost-button ghost-button--danger" id="clear-local-button" type="button">Clear Local Workspace…</button>
-              <button class="ghost-button ghost-button--danger" id="clear-remote-button" type="button">Clear Remote Workspace…</button>
+              <button class="ghost-button ghost-button--danger" id="clear-local-button" type="button">Clear Local Library…</button>
+              <button class="ghost-button ghost-button--danger" id="clear-remote-button" type="button">Clear Remote Library…</button>
               <button class="ghost-button ghost-button--danger" id="clear-all-button" type="button">Clear All Data…</button>
             </div>
           </div>
@@ -421,9 +421,9 @@
 
         <section class="type-editor-panel settings-about-panel" data-settings-panel="about" aria-labelledby="about-title">
           <div class="note-switcher-header">
-            <h3 id="about-title">About ChurchScribe</h3>
+            <h3 id="about-title">About Scriptoria</h3>
           </div>
-          <p class="settings-copy">ChurchScribe is a lightweight, privacy-friendly sermon and Bible-study note-taking tool that runs entirely in your browser.</p>
+          <p class="settings-copy">Scriptoria is a lightweight, privacy-friendly sermon and Bible-study note-taking tool that runs entirely in your browser.</p>
           <div class="about-credits">
             <p class="settings-copy">Created by <strong>Josh Penman</strong> (<a class="about-link" href="https://github.com/KiwiGeek" target="_blank" rel="noopener noreferrer">@KiwiGeek</a>).</p>
             <p class="settings-copy about-version" id="about-version-info"></p>
@@ -451,7 +451,7 @@
       <div class="dialog-header">
         <div>
           <p class="panel-kicker" id="onboarding-step-kicker">Welcome</p>
-          <h2 id="onboarding-step-title">Welcome to ChurchScribe</h2>
+          <h2 id="onboarding-step-title">Welcome to Scriptoria</h2>
         </div>
         <button class="ghost-button" id="close-onboarding-button" type="submit">Close</button>
       </div>
@@ -482,7 +482,7 @@
         <button class="ghost-button" id="onboarding-back-button" type="button">Back</button>
         <div class="onboarding-progress" id="onboarding-progress" aria-live="polite"></div>
         <button class="ghost-button" id="onboarding-next-button" type="button">Next</button>
-        <button class="ghost-button primary-button is-hidden" id="onboarding-finish-button" type="button">Start using ChurchScribe</button>
+        <button class="ghost-button primary-button is-hidden" id="onboarding-finish-button" type="button">Start using Scriptoria</button>
       </div>
     </form>
   </dialog>
@@ -501,7 +501,7 @@
     <div class="dialog-shell compact-shell">
       <div class="dialog-header">
         <div>
-          <p class="panel-kicker">Auxiliary Storage</p>
+          <p class="panel-kicker">Sync &amp; Backup</p>
           <h2 id="conflict-dialog-title">Sync Conflict Detected</h2>
         </div>
       </div>
@@ -524,16 +524,16 @@
         </div>
         <div class="first-sync-actions" id="first-sync-actions">
           <button class="first-sync-option" id="first-sync-keep-local-button" type="button">
-            <strong class="first-sync-option-title">Upload My Workspace</strong>
-            <span class="first-sync-option-desc">Replace the cloud workspace with your local data. The existing cloud workspace will be permanently overwritten.</span>
+            <strong class="first-sync-option-title">Upload My Library</strong>
+            <span class="first-sync-option-desc">Replace the cloud library with your local data. The existing cloud library will be permanently overwritten.</span>
           </button>
           <button class="first-sync-option" id="first-sync-use-cloud-button" type="button">
-            <strong class="first-sync-option-title">Download Cloud Workspace</strong>
-            <span class="first-sync-option-desc">Replace your local workspace with the data stored in the cloud. Your local workspace will be permanently overwritten.</span>
+            <strong class="first-sync-option-title">Download Cloud Library</strong>
+            <span class="first-sync-option-desc">Replace your local library with the data stored in the cloud. Your local library will be permanently overwritten.</span>
           </button>
           <button class="first-sync-option first-sync-option--cancel" id="first-sync-cancel-button" type="button">
             <strong class="first-sync-option-title">Not Now</strong>
-            <span class="first-sync-option-desc">Keep both workspaces unchanged. The external storage account will not be connected, and no syncing will occur. You can set this up later from Settings.</span>
+            <span class="first-sync-option-desc">Keep both libraries unchanged. The external storage account will not be connected, and no syncing will occur. You can set this up later from Settings.</span>
           </button>
         </div>
       </div>

@@ -131,7 +131,9 @@ const tableContextMenu = document.querySelector("#table-context-menu");
 const insertImageButton = document.querySelector("#insert-image-button");
 const insertImageFile = document.querySelector("#insert-image-file");
 
-const dbName = "churchscribe-db";
+// TODO: Remove legacyDbName migration after a future release when the old name can be retired.
+const legacyDbName = "churchscribe-db";
+const dbName = "scriptoria-db";
 const dbVersion = 1;
 const dbStoreName = "kv";
 const workspaceStorageKey = "service-notes-workspace";
@@ -266,7 +268,7 @@ const settingsTabs = [
   },
   {
     id: "note-types",
-    label: "Note Types"
+    label: "Entry Types"
   },
   {
     id: "scripture-aliases",
@@ -274,15 +276,15 @@ const settingsTabs = [
   },
   {
     id: "cloud-sync",
-    label: "Auxiliary Storage"
+    label: "Sync & Backup"
   },
   {
     id: "translations",
-    label: "Translations"
+    label: "Bible Translations"
   },
   {
     id: "data",
-    label: "Data Management"
+    label: "Backup & Reset"
   },
   {
     id: "about",
@@ -293,22 +295,22 @@ const settingsTabs = [
 const onboardingSteps = [
   {
     kicker: "Welcome",
-    title: "ChurchScribe keeps your notes on your device",
-    copy: "ChurchScribe is designed to feel lightweight and private. Your notes live in your browser on your own computer unless you explicitly connect an auxiliary storage provider.",
+    title: "Scriptoria keeps your entries on your device",
+    copy: "Scriptoria is designed to feel lightweight and private. Your entries live in your browser on your own computer unless you explicitly connect a sync & backup provider.",
     points: [
-      "Nothing is automatically sent to a server run by ChurchScribe.",
+      "Nothing is automatically sent to a server run by Scriptoria.",
       "You stay in control of when and where any backups or sync copies are created.",
-      "You can clear or export your workspace later from Settings if you ever need to."
+      "You can clear or export your library later from Settings if you ever need to."
     ],
     callout: "Good to know: the default experience is local-first and privacy-friendly."
   },
   {
     kicker: "Taking Notes",
     title: "The note editor works like a focused writing surface",
-    copy: "Each note is its own editable document. Use the toolbar for quick formatting, lists, headings, quotes, images, and tables while you capture sermon points, study notes, or prayer requests.",
+    copy: "Each entry is its own editable document. Use the toolbar for quick formatting, lists, headings, quotes, images, and tables while you capture sermon points, study entries, or prayer requests.",
     points: [
-      "The main note area saves locally as you type.",
-      "Use the notes browser to jump between notes when your library grows.",
+      "The main entry area saves locally as you type.",
+      "Use the library to jump between entries when your library grows.",
       "Formatting is intentionally simple so you can stay in the flow during live note-taking."
     ],
     callout: "Tip: the app is optimized for desktop and tablet use, especially during active note-taking."
@@ -316,35 +318,35 @@ const onboardingSteps = [
   {
     kicker: "Scripture Linking",
     title: "Verse references are matched automatically",
-    copy: "When you type a Bible reference in your notes, ChurchScribe tries to recognize it and turn it into a clickable scripture link automatically.",
+    copy: "When you type a Bible reference in your entries, Scriptoria tries to recognize it and turn it into a clickable scripture link automatically.",
     points: [
-      "Matched references can jump you straight to the passage in the Scripture pane.",
+      "Matched references can jump you straight to the passage in the Scripture Panel.",
       "Common abbreviations are supported, and you can fine-tune them in Settings.",
-      "Copying verses from the Scripture pane keeps useful formatting like emphasis where possible."
+      "Copying verses from the Scripture Panel keeps useful formatting like emphasis where possible."
     ],
     callout: "If a book abbreviation is unusual in your church context, check the Scripture Abbreviations section in Settings."
   },
   {
-    kicker: "Note Types",
-    title: "Note types shape the details attached to each note",
-    copy: "ChurchScribe lets you define note types such as sermon notes, Bible studies, Sabbath School, or anything else you need. Each type can have its own metadata fields.",
+    kicker: "Entry Types",
+    title: "Entry types shape the details attached to each entry",
+    copy: "Scriptoria lets you define entry types such as sermon notes, Bible studies, Sabbath School, or anything else you need. Each type can have its own detail fields.",
     points: [
-      "Use Settings → Note Types to add, rename, or adjust note types.",
-      "Metadata fields can be customized to match the information you track most often.",
-      "The note options dialog lets you switch a note to a different type when that actually matters."
+      "Use Settings → Entry Types to add, rename, or adjust entry types.",
+      "Detail fields can be customized to match the information you track most often.",
+      "The entry details dialog lets you switch an entry to a different type when that actually matters."
     ],
-    callout: "This is one of the app’s best customization points: shape the workspace around your ministry context."
+    callout: "This is one of the app’s best customization points: shape the library around your ministry context."
   },
   {
     kicker: "Make It Yours",
     title: "Explore themes and optional cloud sync next",
-    copy: "Once the basics feel comfortable, check out the color themes and display settings, then consider connecting auxiliary storage if you want another copy of your notes outside this device.",
+    copy: "Once the basics feel comfortable, check out the color themes and display settings, then consider connecting sync & backup if you want another copy of your entries outside this device.",
     points: [
       "Themes and layout settings can make the app feel much more personal.",
-      "Auxiliary storage is optional, but useful if you want backup or cross-device workflows.",
+      "Sync & Backup is optional, but useful if you want backup or cross-device workflows.",
       "You can reopen this tutorial any time from Settings → About."
     ],
-    callout: "Recommended next steps: try a different theme, review your note types, and then decide whether cloud sync is worth setting up."
+    callout: "Recommended next steps: try a different theme, review your entry types, and then decide whether cloud sync is worth setting up."
   }
 ];
 
@@ -427,6 +429,69 @@ const openDatabase = () => {
   }
 
   return dbPromise;
+};
+
+// Copies all records from the legacy churchscribe-db into scriptoria-db on first run.
+// Only runs when the new database has no workspace data yet.
+// TODO: Remove this migration after a future release when churchscribe-db can be retired.
+const migrateFromLegacyDatabase = async () => {
+  if (typeof window.indexedDB.databases !== "function") {
+    return;
+  }
+
+  const databases = await window.indexedDB.databases();
+
+  if (!databases.some((db) => db.name === legacyDbName)) {
+    return;
+  }
+
+  const legacyDb = await new Promise((resolve) => {
+    const req = window.indexedDB.open(legacyDbName);
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => resolve(null);
+  });
+
+  if (!legacyDb) {
+    return;
+  }
+
+  try {
+    if (!legacyDb.objectStoreNames.contains(dbStoreName)) {
+      return;
+    }
+
+    const records = await new Promise((resolve, reject) => {
+      const tx = legacyDb.transaction(dbStoreName, "readonly");
+      const req = tx.objectStore(dbStoreName).getAll();
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+
+    if (!records.length) {
+      return;
+    }
+
+    const hasNewData = (await readStoredValue(workspaceStorageKey)) !== undefined;
+
+    if (hasNewData) {
+      return;
+    }
+
+    const newDb = await openDatabase();
+    await new Promise((resolve, reject) => {
+      const tx = newDb.transaction(dbStoreName, "readwrite");
+      const store = tx.objectStore(dbStoreName);
+      records.forEach((record) => store.put(record));
+      tx.oncomplete = resolve;
+      tx.onerror = () => reject(tx.error);
+    });
+
+    console.info("[Migration] Migrated data from churchscribe-db to scriptoria-db.");
+  } catch (err) {
+    console.error("[Migration] Failed to migrate from legacy database:", err);
+  } finally {
+    legacyDb.close();
+  }
 };
 
 const readStoredValue = async (key) => {
@@ -835,7 +900,7 @@ const restoreCloudSyncSettings = async () => {
 
 const buildCloudStatusText = () => {
   if (activeProvider.id === "none") {
-    return "No auxiliary provider configured";
+    return "No sync & backup provider configured";
   }
 
   const isLocalDrive = activeProvider.id === "local-drive";
@@ -1414,7 +1479,7 @@ const restoreWorkspace = async () => {
     workspace.updatedAt = savedWorkspace.updatedAt ?? null;
   } else if (savedNotes || legacyNotes) {
     migrateLegacyNotes(savedNotes ?? null, legacyNotes);
-    updateSaveStatus("Converted your existing notes into typed notes.");
+    updateSaveStatus("Converted your existing entries into typed entries.");
   } else {
     const defaultType = createDefaultNoteType();
     workspace.noteTypes = [defaultType];
@@ -3408,7 +3473,7 @@ const renderNoteTypeOptions = () => {
     singleTypeButton.type = "button";
     singleTypeButton.className = "ghost-button overflow-action";
     singleTypeButton.dataset.newNoteType = workspace.noteTypes[0].id;
-    singleTypeButton.textContent = "New note";
+    singleTypeButton.textContent = "New entry";
     newNoteActions.append(singleTypeButton);
     return;
   }
@@ -3418,7 +3483,7 @@ const renderNoteTypeOptions = () => {
 
   const summary = document.createElement("summary");
   summary.className = "ghost-button overflow-action";
-  summary.textContent = "New note ▾";
+  summary.textContent = "New entry ▾";
 
   const panel = document.createElement("div");
   panel.className = "overflow-menu-panel inline-action-panel";
@@ -3484,7 +3549,7 @@ const renderNoteMetadataFields = () => {
     typeField.className = "field note-meta-primary-field";
 
     const typeLabel = document.createElement("span");
-    typeLabel.textContent = "Note type";
+    typeLabel.textContent = "Entry type";
 
     const typeSelect = document.createElement("select");
     typeSelect.name = "active-note-type";
@@ -3532,7 +3597,7 @@ const renderActiveNoteSummary = () => {
   }
 
   metaBits.push(`Updated ${formatNoteDate(activeNote.updatedAt)}`);
-  activeNoteLabel.textContent = type.name || "Notes";
+  activeNoteLabel.textContent = type.name || "Entries";
   activeNoteTitle.textContent = getNoteDisplayTitle(activeNote);
   activeNoteMeta.textContent = metaBits.join(" • ");
 };
@@ -3575,7 +3640,7 @@ const renderNoteManager = () => {
   noteBrowserTypeFilterSelect.innerHTML = "";
   const allOption = document.createElement("option");
   allOption.value = "all";
-  allOption.textContent = "All note types";
+  allOption.textContent = "All entry types";
   noteBrowserTypeFilterSelect.append(allOption);
   workspace.noteTypes.forEach((type) => {
     const option = document.createElement("option");
@@ -3593,8 +3658,8 @@ const renderNoteManager = () => {
     const emptyState = document.createElement("p");
     emptyState.className = "note-browser-empty";
     emptyState.textContent = noteBrowserFilter || noteBrowserTypeFilter !== "all"
-      ? "No notes match the current filter."
-      : "No notes available.";
+      ? "No entries match the current filter."
+      : "No entries available.";
     noteManagerList.append(emptyState);
     noteBrowserSelectedNoteId = null;
     return;
@@ -3621,7 +3686,7 @@ const renderNoteManager = () => {
 
       const count = document.createElement("span");
       count.className = "note-browser-group-count";
-      count.textContent = `${notes.length} note${notes.length === 1 ? "" : "s"}`;
+      count.textContent = `${notes.length} entr${notes.length === 1 ? "y" : "ies"}`;
 
       groupHeader.append(heading, count);
       group.append(groupHeader);
@@ -3677,7 +3742,7 @@ const renderNoteManager = () => {
         openButton.className = "ghost-button primary-button";
         openButton.dataset.noteAction = "open";
         openButton.dataset.noteId = selectedNote.id;
-        openButton.textContent = "Open note";
+        openButton.textContent = "Open";
 
   const duplicateButton = document.createElement("button");
   duplicateButton.type = "button";
@@ -3732,7 +3797,7 @@ const renderNoteManager = () => {
   } else {
     const emptyMetadata = document.createElement("p");
     emptyMetadata.className = "note-browser-empty";
-    emptyMetadata.textContent = "No note details added yet.";
+    emptyMetadata.textContent = "No entry details added yet.";
     metadataBlock.append(emptyMetadata);
   }
 
@@ -3745,7 +3810,7 @@ const renderNoteManager = () => {
 
   const preview = document.createElement("p");
   preview.className = "note-browser-detail-preview";
-  preview.textContent = previewText || "This note is still empty.";
+  preview.textContent = previewText || "This entry is still empty.";
 
   previewBlock.append(previewTitle, preview);
   noteBrowserDetails.append(detailHeader, actions, metadataBlock, previewBlock);
@@ -3920,7 +3985,7 @@ const renderUiSettings = (container) => {
 const downloadWorkspaceBackup = () => {
   const exportedAt = new Date().toISOString();
   const backup = {
-    type: "churchscribe-backup",
+    type: "scriptoria-backup",
     version: 1,
     exportedAt,
     workspace: {
@@ -3944,7 +4009,7 @@ const downloadWorkspaceBackup = () => {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = `churchscribe-backup-${exportedAt.split("T")[0]}.json`;
+  a.download = `scriptoria-backup-${exportedAt.split("T")[0]}.json`;
   document.body.append(a);
   a.click();
   a.remove();
@@ -3961,11 +4026,11 @@ const restoreWorkspaceFromBackup = async (file) => {
     }
 
     if (!backup.workspace || !Array.isArray(backup.notes)) {
-      throw new Error("The selected file does not appear to be a ChurchScribe backup.");
+      throw new Error("The selected file does not appear to be a Scriptoria backup.");
     }
 
     // eslint-disable-next-line no-alert
-    if (!window.confirm("This will replace your current workspace with the backup. Your existing data will be overwritten. Continue?")) {
+    if (!window.confirm("This will replace your current library with the backup. Your existing data will be overwritten. Continue?")) {
       return;
     }
 
@@ -4026,7 +4091,7 @@ const restoreWorkspaceFromBackup = async (file) => {
     buildBookAliasMap();
     renderWorkspace();
     persistWorkspace();
-    updateSaveStatus("Workspace restored from backup.");
+    updateSaveStatus("Library restored from backup.");
   } catch (error) {
     console.error("[Backup] Restore failed:", error);
     // eslint-disable-next-line no-alert
@@ -4036,7 +4101,7 @@ const restoreWorkspaceFromBackup = async (file) => {
 
 const clearLocalWorkspace = async () => {
   // eslint-disable-next-line no-alert
-  if (!window.confirm("This will permanently delete all local notes, note types, and settings. The app will reset to its default state. This cannot be undone.")) {
+  if (!window.confirm("This will permanently delete all local entries, entry types, and settings. The app will reset to its default state. This cannot be undone.")) {
     return;
   }
 
@@ -4069,12 +4134,12 @@ const clearLocalWorkspace = async () => {
 const clearRemoteWorkspace = async () => {
   if (!activeProvider.hasActiveSession()) {
     // eslint-disable-next-line no-alert
-    window.alert("No storage provider is connected. Connect a provider in Auxiliary Storage settings first.");
+    window.alert("No storage provider is connected. Connect a provider in Sync & Backup settings first.");
     return;
   }
 
   // eslint-disable-next-line no-alert
-  if (!window.confirm(`This will permanently delete all workspace data stored on ${activeProvider.displayName}. Your local workspace will not be affected. This cannot be undone.`)) {
+  if (!window.confirm(`This will permanently delete all library data stored on ${activeProvider.displayName}. Your local library will not be affected. This cannot be undone.`)) {
     return;
   }
 
@@ -4092,7 +4157,7 @@ const clearRemoteWorkspace = async () => {
   } catch (error) {
     console.error("[Data] Clear remote failed:", error);
     // eslint-disable-next-line no-alert
-    window.alert(`Failed to clear remote workspace: ${error.message}`);
+    window.alert(`Failed to clear remote library: ${error.message}`);
   }
 };
 
@@ -4494,7 +4559,7 @@ const deleteNoteById = (noteId) => {
     return;
   }
 
-  const confirmed = window.confirm(`Delete note "${getNoteDisplayTitle(note)}"? This cannot be undone.`);
+  const confirmed = window.confirm(`Delete entry "${getNoteDisplayTitle(note)}"? This cannot be undone.`);
 
   if (!confirmed) {
     return;
@@ -4669,12 +4734,12 @@ const deleteSelectedType = () => {
   const type = getSelectedTypeForManager();
 
   if (!type || workspace.noteTypes.length === 1) {
-    window.alert("At least one note type is required.");
+    window.alert("At least one entry type is required.");
     return;
   }
 
   const replacementType = workspace.noteTypes.find((entry) => entry.id !== type.id);
-  const confirmed = window.confirm(`Delete note type "${type.name}" and move its notes to "${replacementType.name}"?`);
+  const confirmed = window.confirm(`Delete entry type "${type.name}" and move its entries to "${replacementType.name}"?`);
 
   if (!confirmed) {
     return;
@@ -5476,7 +5541,7 @@ noteEditor.addEventListener("dragstart", (event) => {
 
   event.dataTransfer.effectAllowed = "move";
   event.dataTransfer.setData("text/html", embed.outerHTML);
-  event.dataTransfer.setData("application/x-churchscribe-embed", "true");
+  event.dataTransfer.setData("application/x-scriptoria-embed", "true");
   embed.dataset.embedDragging = "true";
 });
 
@@ -5489,7 +5554,10 @@ noteEditor.addEventListener("dragend", () => {
 noteEditor.addEventListener("dragover", (event) => {
   const types = [...event.dataTransfer.types];
 
-  if (types.includes("Files") || types.includes("application/x-churchscribe-embed")) {
+  // TODO: Remove application/x-churchscribe-embed fallback after a future release.
+  const isEmbedDrag = types.includes("application/x-scriptoria-embed") || types.includes("application/x-churchscribe-embed");
+
+  if (types.includes("Files") || isEmbedDrag) {
     event.preventDefault();
     event.dataTransfer.dropEffect = types.includes("Files") ? "copy" : "move";
   }
@@ -5520,7 +5588,8 @@ noteEditor.addEventListener("drop", (event) => {
   };
 
   // ── Embed-move drop ──────────────────────────────────────────────────────
-  if (types.includes("application/x-churchscribe-embed")) {
+  // TODO: Remove application/x-churchscribe-embed fallback after a future release.
+  if (types.includes("application/x-scriptoria-embed") || types.includes("application/x-churchscribe-embed")) {
     event.preventDefault();
 
     const embedHtml = event.dataTransfer.getData("text/html");
@@ -6537,6 +6606,7 @@ const buildBookAliasMap = () => {
 };
 
 const bootstrap = async () => {
+  await migrateFromLegacyDatabase();
   await loadCustomTranslations();
   populateTranslationSelect();
   applyThemeMode(await getPreferredTheme(), { rerender: false });

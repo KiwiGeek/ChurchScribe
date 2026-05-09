@@ -1,5 +1,5 @@
 /**
- * OneDrive cloud storage provider for ChurchScribe.
+ * OneDrive cloud storage provider for Scriptoria.
  *
  * Exposes window.OneDriveProvider, which implements the StorageProvider interface.
  * Uses MSAL.js (loaded from CDN) for OAuth 2.0 authentication with Microsoft
@@ -14,13 +14,13 @@
  *
  *  1. Visit https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade
  *  2. Click "New registration".
- *  3. Name: ChurchScribe (or any name you prefer).
+ *  3. Name: Scriptoria (or any name you prefer).
  *  4. Supported account types: choose
  *       "Accounts in any organizational directory (Any Azure AD directory –
  *        Multitenant) and personal Microsoft accounts (e.g. Skype, Xbox)"
  *     so that personal OneDrive accounts (Outlook.com / Hotmail / Live) work too.
  *  5. Redirect URI platform: "Single-page application (SPA)".
- *     Redirect URI value: the exact origin + path where ChurchScribe is hosted,
+ *     Redirect URI value: the exact origin + path where Scriptoria is hosted,
  *     e.g. https://yoursite.example.com/index.html  or  http://localhost/index.html
  *     (Add every URL you deploy to; you can add more later under
  *      Authentication → "Single-page application" → "Add URI".)
