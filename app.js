@@ -225,6 +225,40 @@ const knownTlds = [
   "media","mil","ministry","mobi","museum","name","net","news","online","org",
   "pro","shop","site","store","tech","travel","tv","wiki"
 ];
+
+// Memoised URL detection patterns.  These used to be rebuilt inside linkifyUrls()
+// on every keystroke (including a `[...knownTlds].sort()` and a fresh RegExp
+// compile for the bare-domain pattern); both knownTlds and the regexes are
+// constant for the life of the page, so we build them exactly once here.
+const URL_LINKIFY_PATTERNS = (() => {
+  const tldGroup = [...knownTlds].sort((a, b) => b.length - a.length).join("|");
+  return [
+    {
+      regex: /\b(https?|ftp|spotify):\/\/[^\s<>"'\)\]]+/gi,
+      type: "explicit"
+    },
+    {
+      regex: /\bgopher:\/\/([^\s<>"'\)\]]+)/gi,
+      type: "gopher"
+    },
+    {
+      regex: /\bwww\.[a-zA-Z0-9][a-zA-Z0-9\-]*(?:\.[a-zA-Z0-9][a-zA-Z0-9\-]*)+(?:\/[^\s<>"'\)\]]*)?/gi,
+      type: "www"
+    },
+    {
+      regex: /\b[a-zA-Z0-9_%+\-]+(?:\.[a-zA-Z0-9_%+\-]+)*@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/gi,
+      type: "email"
+    },
+    {
+      regex: new RegExp(
+        `\\b(?!www\\.)([a-zA-Z][a-zA-Z0-9\\-]*(?:\\.[a-zA-Z0-9][a-zA-Z0-9\\-]*)*\\.(?:${tldGroup}))(?:\\/[^\\s<>"'\\)\\]]*)?`,
+        "gi"
+      ),
+      type: "bare"
+    }
+  ];
+})();
+
 let explicitScriptureReferencePattern;
 let fullExplicitScriptureReferencePattern;
 let contextualScriptureReferencePattern;
@@ -824,9 +858,18 @@ const ensureWorkspaceConsistency = () => {
 };
 
 const persistWorkspace = () => {
-  ensureWorkspaceConsistency();
+  // Phase 3: ensureWorkspaceConsistency() used to run here on every keystroke,
+  // walking and rebuilding every note in the workspace.  It's idempotent and only
+  // matters when foreign data shapes enter the workspace; the load/import paths
+  // (restoreWorkspace, applyCloudPayload, migrateLegacyNotes) already invoke it.
+  // Removed from the typing hot path.
+  //
+  // structuredClone(workspace) used to snapshot the entire workspace before
+  // handing it to writeStoredValue.  IndexedDB.put performs a structured clone
+  // synchronously when invoked, so the value is captured before this function
+  // returns — the hand-rolled clone was redundant work.
   workspace.updatedAt = new Date().toISOString();
-  void writeStoredValue(workspaceStorageKey, structuredClone(workspace));
+  void writeStoredValue(workspaceStorageKey, workspace);
   scheduleAutoCloudSync();
 };
 
@@ -1000,6 +1043,9 @@ const buildCloudNotesPayload = (updatedAt = new Date().toISOString()) => ({
 });
 
 const buildCloudSyncPayload = () => {
+  // Make sure any debounced editor work is flushed so the active note's content
+  // reflects what the user has actually typed before we serialise for upload.
+  flushEditorWorkNow();
   const updatedAt = new Date().toISOString();
 
   return {
@@ -1052,7 +1098,9 @@ const applyCloudPayload = async (payload) => {
   ensureWorkspaceConsistency();
   buildBookAliasMap();
   renderWorkspace();
-  void writeStoredValue(workspaceStorageKey, structuredClone(workspace));
+  // IndexedDB.put structured-clones synchronously; the explicit pre-clone is
+  // redundant.
+  void writeStoredValue(workspaceStorageKey, workspace);
 };
 
 const hasLocalNoteData = () =>
@@ -2201,6 +2249,44 @@ const restoreCaretTextOffset = (root, targetOffset) => {
   selection.addRange(range);
 };
 
+// Return the top-level block under noteEditor that contains `node`, or null if
+// `node` is not within the editor.  Used to scope linkification to just the
+// paragraph the user is editing, instead of re-scanning the whole document.
+const getEditorBlockContaining = (node) => {
+  if (!node) {
+    return null;
+  }
+
+  let element = node.nodeType === Node.ELEMENT_NODE ? node : node.parentElement;
+
+  while (element && element.parentElement && element.parentElement !== noteEditor) {
+    element = element.parentElement;
+  }
+
+  if (!element || element === noteEditor || !noteEditor.contains(element)) {
+    return null;
+  }
+
+  return element.parentElement === noteEditor ? element : null;
+};
+
+// The block currently containing the caret, or null.
+const getCaretBlock = () => {
+  const selection = window.getSelection();
+
+  if (!selection || !selection.rangeCount) {
+    return null;
+  }
+
+  const range = selection.getRangeAt(0);
+
+  if (!noteEditor.contains(range.startContainer)) {
+    return null;
+  }
+
+  return getEditorBlockContaining(range.startContainer);
+};
+
 const isValidScriptureReference = (canonicalBook, chapter, verseStart = null, verseEnd = null) => {
   const scriptureLibrary = getCurrentScriptureLibrary();
   const bookChapters = scriptureLibrary[canonicalBook];
@@ -2605,19 +2691,47 @@ const jumpToScripture = (referenceText) => {
   jumpToResolvedScripture(parseScriptureReference(referenceText));
 };
 
-const unwrapAutoScriptureLinks = () => {
-  noteEditor.querySelectorAll("a[data-auto-scripture-link='true']").forEach((link) => {
+const unwrapAutoScriptureLinks = (root = noteEditor) => {
+  root.querySelectorAll("a[data-auto-scripture-link='true']").forEach((link) => {
     link.replaceWith(document.createTextNode(link.textContent));
   });
 
-  noteEditor.normalize();
+  root.normalize();
 };
 
-const linkifyScriptureReferences = ({ jumpToCaretReference = false } = {}) => {
-  const caretOffset = getCaretTextOffset(noteEditor);
-  unwrapAutoScriptureLinks();
+// Find the most recent scripture reference (in document order) BEFORE `scope`.
+// Used to seed `currentContext` when linkification is restricted to a single
+// block — a contextual reference like "v3" in the current paragraph still needs
+// to know the most recent book/chapter from earlier paragraphs.
+const findScriptureContextBefore = (scope) => {
+  if (!scope) {
+    return null;
+  }
+
+  const allLinks = noteEditor.querySelectorAll("a[data-scripture-ref]");
+
+  for (let i = allLinks.length - 1; i >= 0; i--) {
+    const link = allLinks[i];
+    const cmp = scope.compareDocumentPosition(link);
+
+    // PRECEDING set means `link` comes before `scope` in document order.
+    if ((cmp & Node.DOCUMENT_POSITION_PRECEDING) && !(cmp & Node.DOCUMENT_POSITION_CONTAINED_BY)) {
+      const parsed = parseScriptureReference(link.dataset.scriptureRef);
+      if (parsed) {
+        return getReferenceContext(parsed);
+      }
+    }
+  }
+
+  return null;
+};
+
+const linkifyScriptureReferences = ({ jumpToCaretReference = false, scope = null } = {}) => {
+  const root = (scope && noteEditor.contains(scope)) ? scope : noteEditor;
+  const caretOffset = getCaretTextOffset(root);
+  unwrapAutoScriptureLinks(root);
   const walker = document.createTreeWalker(
-    noteEditor,
+    root,
     NodeFilter.SHOW_TEXT,
     {
       acceptNode(node) {
@@ -2636,7 +2750,9 @@ const linkifyScriptureReferences = ({ jumpToCaretReference = false } = {}) => {
 
   const textNodes = [];
   let currentNode;
-  let currentContext = null;
+  // When scoped to a single block, seed currentContext from the latest scripture
+  // reference in earlier blocks so contextual matches like "v5" still resolve.
+  let currentContext = root === noteEditor ? null : findScriptureContextBefore(root);
   let traversedOffset = 0;
   let lastReferenceBeforeCaret = null;
 
@@ -2714,19 +2830,19 @@ const linkifyScriptureReferences = ({ jumpToCaretReference = false } = {}) => {
     traversedOffset += sourceText.length;
   });
 
-  restoreCaretTextOffset(noteEditor, caretOffset);
+  restoreCaretTextOffset(root, caretOffset);
 
   if (jumpToCaretReference && lastReferenceBeforeCaret) {
     jumpToResolvedScripture(lastReferenceBeforeCaret);
   }
 };
 
-const unwrapAutoUrlLinks = () => {
-  noteEditor.querySelectorAll("a[data-auto-url-link='true']").forEach((link) => {
+const unwrapAutoUrlLinks = (root = noteEditor) => {
+  root.querySelectorAll("a[data-auto-url-link='true']").forEach((link) => {
     link.replaceWith(document.createTextNode(link.textContent));
   });
 
-  noteEditor.normalize();
+  root.normalize();
 };
 
 // Unified embed selector — derived at runtime from the registered embed classes so
@@ -3123,41 +3239,19 @@ const validateDomainWithDoh = async (domain) => {
   }
 };
 
-const linkifyUrls = ({ suppressAtCaret = false } = {}) => {
-  const tldGroup = [...knownTlds].sort((a, b) => b.length - a.length).join("|");
-  const urlPatterns = [
-    {
-      regex: /\b(https?|ftp|spotify):\/\/[^\s<>"'\)\]]+/gi,
-      type: "explicit"
-    },
-    {
-      regex: /\bgopher:\/\/([^\s<>"'\)\]]+)/gi,
-      type: "gopher"
-    },
-    {
-      regex: /\bwww\.[a-zA-Z0-9][a-zA-Z0-9\-]*(?:\.[a-zA-Z0-9][a-zA-Z0-9\-]*)+(?:\/[^\s<>"'\)\]]*)?/gi,
-      type: "www"
-    },
-    {
-      regex: /\b[a-zA-Z0-9_%+\-]+(?:\.[a-zA-Z0-9_%+\-]+)*@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/gi,
-      type: "email"
-    },
-    {
-      regex: new RegExp(
-        `\\b(?!www\\.)([a-zA-Z][a-zA-Z0-9\\-]*(?:\\.[a-zA-Z0-9][a-zA-Z0-9\\-]*)*\\.(?:${tldGroup}))(?:\\/[^\\s<>"'\\)\\]]*)?`,
-        "gi"
-      ),
-      type: "bare"
-    }
-  ];
+const linkifyUrls = ({ suppressAtCaret = false, scope = null } = {}) => {
+  // urlPatterns is a module-level constant (URL_LINKIFY_PATTERNS) — recompiled
+  // exactly once at startup, not on every keystroke.
+  const urlPatterns = URL_LINKIFY_PATTERNS;
+  const root = (scope && noteEditor.contains(scope)) ? scope : noteEditor;
 
-  const caretOffset = getCaretTextOffset(noteEditor);
-  unwrapAutoUrlLinks();
+  const caretOffset = getCaretTextOffset(root);
+  unwrapAutoUrlLinks(root);
 
   const globalOffsets = new Map();
 
   if (suppressAtCaret && caretOffset !== null) {
-    const allTextWalker = document.createTreeWalker(noteEditor, NodeFilter.SHOW_TEXT);
+    const allTextWalker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
     let offset = 0;
     let n;
 
@@ -3168,7 +3262,7 @@ const linkifyUrls = ({ suppressAtCaret = false } = {}) => {
   }
 
   const walker = document.createTreeWalker(
-    noteEditor,
+    root,
     NodeFilter.SHOW_TEXT,
     {
       acceptNode(node) {
@@ -3294,7 +3388,7 @@ const linkifyUrls = ({ suppressAtCaret = false } = {}) => {
     textNode.parentNode.replaceChild(fragment, textNode);
   });
 
-  restoreCaretTextOffset(noteEditor, caretOffset);
+  restoreCaretTextOffset(root, caretOffset);
 };
 
 const getPreviousNodeFromCaret = (root, node) => {
@@ -4478,34 +4572,146 @@ const saveActiveNote = () => {
     return;
   }
 
-  // Produce a clean copy of the editor content:
-  // • remove empty ghost paragraphs (they only exist for keyboard navigation)
-  // • strip the ghost marker from non-empty paragraphs (user typed there)
-  // • strip the drag-state marker so it is never persisted
-  const editorClone = noteEditor.cloneNode(true);
+  // Hot-path optimisation: cloneNode(true) on the whole editor + a follow-up innerHTML
+  // serialisation is the most expensive thing this function does.  When typing, the
+  // editor almost never contains [data-embed-ghost] (only present while keyboard-
+  // navigating around an embed) or [data-embed-dragging] (only during drag).  In the
+  // common case we can skip the clone entirely and read innerHTML directly.
+  const hasMutationMarkers = noteEditor.querySelector(
+    "[data-embed-ghost], [data-embed-dragging]"
+  ) !== null;
 
-  editorClone.querySelectorAll("[data-embed-ghost]").forEach((ghost) => {
-    const empty = !ghost.textContent && (!ghost.innerHTML || ghost.innerHTML === "<br>");
+  let serializedContent;
 
-    if (empty) {
-      ghost.remove();
-    } else {
-      ghost.removeAttribute("data-embed-ghost");
-    }
-  });
+  if (hasMutationMarkers) {
+    // Produce a clean copy of the editor content:
+    // • remove empty ghost paragraphs (they only exist for keyboard navigation)
+    // • strip the ghost marker from non-empty paragraphs (user typed there)
+    // • strip the drag-state marker so it is never persisted
+    const editorClone = noteEditor.cloneNode(true);
 
-  editorClone.querySelectorAll("[data-embed-dragging]").forEach((el) => {
-    el.removeAttribute("data-embed-dragging");
-  });
+    editorClone.querySelectorAll("[data-embed-ghost]").forEach((ghost) => {
+      const empty = !ghost.textContent && (!ghost.innerHTML || ghost.innerHTML === "<br>");
 
-  activeNote.content = editorClone.innerHTML;
+      if (empty) {
+        ghost.remove();
+      } else {
+        ghost.removeAttribute("data-embed-ghost");
+      }
+    });
+
+    editorClone.querySelectorAll("[data-embed-dragging]").forEach((el) => {
+      el.removeAttribute("data-embed-dragging");
+    });
+
+    serializedContent = editorClone.innerHTML;
+  } else {
+    serializedContent = noteEditor.innerHTML;
+  }
+
+  activeNote.content = serializedContent;
   noteMetaFields.querySelectorAll("[data-field-id]").forEach((input) => {
     activeNote.metadata[input.dataset.fieldId] = input.value;
   });
   touchNote(activeNote);
   persistWorkspace();
-  refreshNoteSurfaces();
+  // Phase 3: refreshNoteSurfaces() rebuilds the active note summary, the
+  // new-note-type selector, and the metadata summary.  None of those depend on
+  // editor *content* (they're driven by metadata + types), so we no longer
+  // refresh them on every editor save.  The metadata-fields input handler
+  // (noteMetaFields "input" listener) is responsible for refreshing surfaces
+  // when metadata actually changes.
   refreshSaveStatus();
+};
+
+// ── Editor work scheduler ─────────────────────────────────────────────────────
+// Every keystroke in noteEditor used to synchronously run the full set of:
+//   • linkifyScriptureReferences (full-document tree walk + giant alias regex)
+//   • linkifyUrls                (full-document tree walk + 5 regex patterns)
+//   • processUrlEmbeds           (auto-link → embed conversion)
+//   • saveActiveNote             (cloneNode + innerHTML + persistWorkspace)
+// In a long note the cumulative cost dwarfs the actual character insert and
+// produces visible lag.  We coalesce all of that work into a trailing-debounced
+// pass that runs ~150 ms after the user stops typing.  Anything that needs to
+// see the latest content immediately (note switching, manual sync, beforeunload)
+// calls flushEditorWorkNow() to drain the pending pass synchronously.
+let pendingEditorWorkTimer = null;
+let pendingEditorInputType = null;
+let pendingEditorWorkDirty = false;
+const editorWorkDebounceMs = 150;
+
+const runPendingEditorWork = () => {
+  pendingEditorWorkTimer = null;
+
+  if (!pendingEditorWorkDirty) {
+    return;
+  }
+
+  pendingEditorWorkDirty = false;
+  const inputType = pendingEditorInputType;
+  pendingEditorInputType = null;
+
+  // Phase 2: scope the heavy regex/text-node walks to just the block currently
+  // containing the caret.  When the user is typing in one paragraph there's no
+  // need to re-scan the rest of the document.  Paste is the exception — pasted
+  // content can span multiple blocks, so fall back to a full scan.
+  const caretBlock = inputType === "insertFromPaste" ? null : getCaretBlock();
+
+  linkifyScriptureReferences({ jumpToCaretReference: true, scope: caretBlock });
+  linkifyUrls({
+    suppressAtCaret: inputType !== "insertFromPaste",
+    scope: caretBlock
+  });
+  processUrlEmbeds();
+
+  // If the cursor was orphaned because an embed replaced its containing block
+  // (e.g. user pressed Space after a lone URL), move it to the trailing empty
+  // paragraph.  Same logic that used to live inline at the end of the input
+  // handler — kept here so it runs after the (now-deferred) embed pass.
+  const sel = window.getSelection();
+  const container = sel.rangeCount ? sel.getRangeAt(0).startContainer : null;
+
+  if (container && (!noteEditor.contains(container) || container === noteEditor)) {
+    const emptyPara = [...noteEditor.querySelectorAll("p")]
+      .findLast((p) => !p.textContent.trim());
+
+    if (emptyPara) {
+      const r = document.createRange();
+      r.setStart(emptyPara, 0);
+      r.collapse(true);
+      sel.removeAllRanges();
+      sel.addRange(r);
+    }
+  }
+
+  saveActiveNote();
+};
+
+const scheduleEditorWork = (inputType) => {
+  pendingEditorWorkDirty = true;
+  // If a paste is mixed with subsequent typing, "insertFromPaste" must win so the
+  // pasted URL is not treated as caret-adjacent and suppressed.  Otherwise keep
+  // the most recent inputType.
+  if (inputType === "insertFromPaste" || pendingEditorInputType !== "insertFromPaste") {
+    pendingEditorInputType = inputType;
+  }
+
+  if (pendingEditorWorkTimer) {
+    window.clearTimeout(pendingEditorWorkTimer);
+  }
+
+  pendingEditorWorkTimer = window.setTimeout(runPendingEditorWork, editorWorkDebounceMs);
+};
+
+const flushEditorWorkNow = () => {
+  if (pendingEditorWorkTimer) {
+    window.clearTimeout(pendingEditorWorkTimer);
+    pendingEditorWorkTimer = null;
+  }
+
+  if (pendingEditorWorkDirty) {
+    runPendingEditorWork();
+  }
 };
 
 const createNote = (typeId = workspace.selectedNewNoteTypeId) => {
@@ -4550,6 +4756,10 @@ const switchNote = (noteId) => {
     return;
   }
 
+  // Drain any pending debounced linkify/save for the *outgoing* note before we
+  // overwrite activeNoteId — otherwise the deferred saveActiveNote() would
+  // attribute the previous note's content to the new one.
+  flushEditorWorkNow();
   saveActiveNote();
   workspace.activeNoteId = noteId;
   persistWorkspace();
@@ -5124,7 +5334,9 @@ noteEditor.addEventListener("input", (event) => {
       }
     }
 
-    saveActiveNote();
+    // Pool the save with any follow-up typing.  flushEditorWorkNow() on note-switch
+    // / sync / unload guarantees this debounced save still lands in time.
+    scheduleEditorWork(event.inputType);
     return;
   }
 
@@ -5140,34 +5352,11 @@ noteEditor.addEventListener("input", (event) => {
     p.innerHTML = "<br>";
     noteEditor.appendChild(p);
   }
-  linkifyScriptureReferences({ jumpToCaretReference: true });
-  linkifyUrls({ suppressAtCaret: event.inputType !== "insertFromPaste" });
-  processUrlEmbeds();
-
-  // If the cursor was orphaned because an embed replaced its containing block
-  // (e.g. user pressed Space after a lone URL), move it to the trailing empty paragraph.
-  // This also handles the case where Chrome updates the selection to point at noteEditor
-  // itself (rather than a detached node) when the host <p> is replaced by the embed.
-  {
-    const sel = window.getSelection();
-    const container = sel.rangeCount ? sel.getRangeAt(0).startContainer : null;
-
-    if (container && (!noteEditor.contains(container) || container === noteEditor)) {
-      const emptyPara = [...noteEditor.querySelectorAll("p")]
-        .findLast((p) => !p.textContent.trim());
-
-      if (emptyPara) {
-        const r = document.createRange();
-        r.setStart(emptyPara, 0);
-        r.collapse(true);
-        sel.removeAllRanges();
-        sel.addRange(r);
-      }
-    }
-  }
 
   updateNoteEditorPlaceholderState();
-  saveActiveNote();
+  // Heavy work (linkification, embed materialization, autosave) is debounced.
+  // See runPendingEditorWork() for the deferred steps.
+  scheduleEditorWork(event.inputType);
 });
 
 noteEditor.addEventListener("keydown", (event) => {
