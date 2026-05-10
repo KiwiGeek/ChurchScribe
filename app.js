@@ -1,37 +1,4 @@
-const translationLibrary = {
-  KJV: {
-    label: "King James Version",
-    language: "en",
-    copyright: "Public Domain",
-    version: 1,
-    scriptSrc: "translations\\kjv.js",
-    books: null
-  },
-  NKJV: {
-    label: "New King James Version",
-    language: "en",
-    copyright: "Copyright \u00a9 1982 by Thomas Nelson, Inc.",
-    version: 1,
-    scriptSrc: "translations\\nkjv.js",
-    books: null
-  },
-  ASV: {
-    label: "American Standard Version",
-    language: "en",
-    copyright: "Public Domain",
-    version: 1,
-    scriptSrc: "translations\\asv.js",
-    books: null
-  },
-  WEB: {
-    label: "World English Bible",
-    language: "en",
-    copyright: "Public Domain",
-    version: 1,
-    scriptSrc: "translations\\web.js",
-    books: null
-  }
-};
+const translationLibrary = {};
 
 const noteEditor = document.querySelector("#note-editor");
 const saveStatus = document.querySelector("#save-status");
@@ -87,6 +54,10 @@ const googleDisconnectButton = document.querySelector("#google-disconnect-button
 const googleSyncNowButton = document.querySelector("#google-sync-now-button");
 const downloadAllTranslationsButton = document.querySelector("#download-all-translations-button");
 const downloadAllTranslationsStatus = document.querySelector("#download-all-translations-status");
+const officialTranslationLanguageSearch = document.querySelector("#official-translation-language-search");
+const officialTranslationLanguageFilter = document.querySelector("#official-translation-language-filter");
+const clearOfficialLanguageFiltersButton = document.querySelector("#clear-official-language-filters-button");
+const officialTranslationList = document.querySelector("#official-translation-list");
 const downloadBackupButton = document.querySelector("#download-backup-button");
 const restoreBackupButton = document.querySelector("#restore-backup-button");
 const restoreBackupFile = document.querySelector("#restore-backup-file");
@@ -146,12 +117,12 @@ const themeMirrorStorageKey = "service-notes-theme-mirror";
 const paneOrderStorageKey = "service-notes-pane-order";
 const paneSplitStorageKey = "service-notes-pane-split";
 const translationStorageKey = "service-notes-translation";
+const translationRegistryStorageKey = "service-notes-translation-registry";
 const cloudSyncStorageKey = "service-notes-cloud-sync";
 const colorThemeStorageKey = "service-notes-color-theme";
 const colorThemeMirrorStorageKey = "service-notes-color-theme-mirror";
 const lastBookChapterStorageKey = "service-notes-last-book-chapter";
 const onboardingStorageKey = "service-notes-onboarding-seen";
-const customTranslationsStorageKey = "service-notes-custom-translations";
 const autoCloudSyncDelayMs = 10000;
 
 // noOpProvider — defensive fallback used as the initial value of activeProvider
@@ -212,7 +183,6 @@ let noteBrowserTypeFilter = "all";
 let noteBrowserSort = "updated-desc";
 let noteBrowserSelectedNoteId = null;
 let dbPromise;
-let userTranslations = [];
 // systemThemeMediaQuery moved into theme/controller.js (only consumer was the
 // theme code).
 
@@ -750,6 +720,10 @@ const viewerApi = window.ScriptoriaModules.createScriptureViewer({
   isTranslationOfflineAvailable: (code) =>
     !!translationsManagerApiRef
     && translationsManagerApiRef.offlineAvailableTranslations.has(code),
+  handleTranslationSelection: (...args) =>
+    translationsManagerApiRef.handleTranslationSelection(...args),
+  getFallbackTranslationId: () =>
+    translationsManagerApiRef ? translationsManagerApiRef.getDefaultTranslationId() : "en:KJV",
   buildBookAliasMap: () => aliasesApi.buildBookAliasMap(),
   performScriptureSearch: (query) => {
     if (scriptureSearchApiRef) {
@@ -1175,6 +1149,8 @@ syncPayloadApi = window.ScriptoriaModules.createSyncPayloads({
   getCurrentPaneSplit: () => paneLayoutApi.getCurrentPaneSplit(),
   getCurrentTranslationCode: () => viewerApi.getCurrentTranslationCode(),
   getCurrentColorThemeId: () => themeApi.getCurrentColorThemeId(),
+  getTranslationStateForSync: () =>
+    translationsManagerApiRef ? translationsManagerApiRef.getTranslationStateForSync() : { installedOfficialIds: [] },
   flushEditorWorkNow: () => flushEditorWorkNow(),
   applyThemeMode,
   normalizeThemeMode,
@@ -1188,6 +1164,8 @@ syncPayloadApi = window.ScriptoriaModules.createSyncPayloads({
   translationStorageKey,
   applyColorTheme,
   colorThemeStorageKey,
+  applySyncedTranslationState: (...args) =>
+    translationsManagerApiRef ? translationsManagerApiRef.applySyncedTranslationState(...args) : Promise.resolve(),
   ensureWorkspaceConsistency,
   buildBookAliasMap: () => buildBookAliasMap(),
   renderWorkspace: () => renderWorkspace(),
@@ -1430,31 +1408,69 @@ settingsTabNav.addEventListener("click", (event) => {
   renderSettings();
 });
 
-const translationUrlInput = document.querySelector("#translation-url-input");
-const importTranslationUrlButton = document.querySelector("#import-translation-url-button");
+const translationFileInput = document.querySelector("#translation-file-input");
+const importTranslationFileButton = document.querySelector("#import-translation-file-button");
 const userTranslationList = document.querySelector("#user-translation-list");
 
-importTranslationUrlButton.addEventListener("click", () => {
-  const url = translationUrlInput.value.trim();
+importTranslationFileButton.addEventListener("click", () => {
+  translationFileInput.click();
+});
 
-  if (!url) {
+translationFileInput.addEventListener("change", () => {
+  const [file] = translationFileInput.files ?? [];
+
+  if (!file) {
     return;
   }
 
-  importTranslationUrlButton.disabled = true;
-  importTranslationUrlButton.textContent = "Importing…";
+  importTranslationFileButton.disabled = true;
+  importTranslationFileButton.textContent = "Importing…";
 
-  importTranslationFromUrl(url).then((code) => {
-    translationUrlInput.value = "";
-    renderTranslationsPanel();
-    updateSaveStatus(`Translation "${code}" imported successfully.`);
+  importTranslationFromFile(file).then((translationId) => {
+    translationFileInput.value = "";
+    updateSaveStatus(`Translation "${translationId}" imported successfully.`);
     setTimeout(() => refreshSaveStatus(), 4000);
   }).catch((err) => {
-    // eslint-disable-next-line no-alert
     window.alert(`Import failed: ${err.message}`);
   }).finally(() => {
-    importTranslationUrlButton.disabled = false;
-    importTranslationUrlButton.textContent = "Import from URL";
+    importTranslationFileButton.disabled = false;
+    importTranslationFileButton.textContent = "Import Translation JSON…";
+  });
+});
+
+officialTranslationLanguageSearch.addEventListener("input", () => {
+  translationsManagerApiRef.setOfficialLanguageSearch(officialTranslationLanguageSearch.value);
+  void renderTranslationsPanel();
+});
+
+officialTranslationLanguageFilter.addEventListener("change", () => {
+  const selected = [...officialTranslationLanguageFilter.selectedOptions].map((option) => option.value);
+  void translationsManagerApiRef.setOfficialLanguageFilters(selected);
+});
+
+clearOfficialLanguageFiltersButton.addEventListener("click", () => {
+  officialTranslationLanguageFilter.selectedIndex = -1;
+  officialTranslationLanguageSearch.value = "";
+  translationsManagerApiRef.setOfficialLanguageSearch("");
+  void translationsManagerApiRef.clearOfficialLanguageFilters();
+});
+
+officialTranslationList.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-install-official-translation]");
+
+  if (!button) {
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "Adding…";
+  const translationId = button.dataset.installOfficialTranslation;
+
+  void translationsManagerApiRef.installOfficialTranslation(translationId).then(() => {
+    updateSaveStatus(`Translation "${translationId}" added successfully.`);
+    setTimeout(() => refreshSaveStatus(), 4000);
+  }).catch((err) => {
+    window.alert(`Couldn't add translation: ${err.message}`);
   });
 });
 
@@ -1465,14 +1481,14 @@ userTranslationList.addEventListener("click", (event) => {
     return;
   }
 
-  const code = btn.dataset.deleteTranslation;
+  const translationId = btn.dataset.deleteTranslation;
 
   // eslint-disable-next-line no-alert
-  if (!window.confirm(`Delete the "${code}" translation? This cannot be undone.`)) {
+  if (!window.confirm(`Delete the "${translationId}" translation? This cannot be undone.`)) {
     return;
   }
 
-  void deleteCustomTranslation(code).then(() => renderTranslationsPanel());
+  void deleteCustomTranslation(translationId).then(() => renderTranslationsPanel());
 });
 
 
@@ -1663,24 +1679,26 @@ addTypeButton.addEventListener("click", addNoteType);
 addMetadataFieldButton.addEventListener("click", addMetadataFieldToSelectedType);
 deleteTypeButton.addEventListener("click", deleteSelectedType);
 
-// ── Custom translation import ──────────────────────────────────────────────
+// ── Translation catalog / user import wiring ───────────────────────────────
 
 const translationsManagerApi = window.ScriptoriaModules.createTranslationsManager({
   translationLibrary,
   readStoredValue,
   writeStoredValue,
-  customTranslationsStorageKey,
+  deleteStoredValue,
+  translationRegistryStorageKey,
   translationStorageKey,
   translationSelect,
   downloadAllTranslationsButton,
   downloadAllTranslationsStatus,
   getCurrentTranslationCode: () => viewerApi.getCurrentTranslationCode(),
-  getUserTranslations: () => userTranslations,
-  setUserTranslations: (value) => {
-    userTranslations = value;
-  },
   applyTranslation: (...args) => applyTranslation(...args),
-  isTranslationsSettingsOpen: () => settingsDialog.open && activeSettingsTabId === "translations"
+  openOfficialTranslationsSettings: () => {
+    activeSettingsTabId = "translations";
+    renderSettings();
+    openDialog(settingsDialog);
+    window.setTimeout(() => officialTranslationLanguageSearch?.focus(), 0);
+  }
 });
 
 // Hand the live translations module to the scripture viewer so its thunks for
@@ -1691,17 +1709,13 @@ const translationsManagerApi = window.ScriptoriaModules.createTranslationsManage
 translationsManagerApiRef = translationsManagerApi;
 
 const {
-  BUILTIN_TRANSLATION_CODES,
   offlineAvailableTranslations,
-  parseTranslationJs,
+  initializeTranslations,
   refreshOfflineTranslationAvailability,
   ensureTranslationLoaded,
   validateTranslationData,
   populateTranslationSelect,
-  registerCustomTranslation,
-  loadCustomTranslations,
   importTranslationFromFile,
-  importTranslationFromUrl,
   deleteCustomTranslation,
   refreshDownloadAllTranslationsUi,
   renderTranslationsPanel
@@ -1759,15 +1773,9 @@ const {
   clearAllData
 } = window.ScriptoriaModules.createSettingsBackupRestore({
   workspace,
-  getUserTranslations: () => userTranslations,
-  setUserTranslations: (value) => {
-    userTranslations = value;
-  },
-  translationLibrary,
-  BUILTIN_TRANSLATION_CODES,
-  validateTranslationData,
-  populateTranslationSelect,
-  customTranslationsStorageKey,
+  getTranslationStateForBackup: () => translationsManagerApi.getTranslationStateForBackup(),
+  restoreTranslationState: (...args) => translationsManagerApi.restoreTranslationState(...args),
+  clearTranslationState: (...args) => translationsManagerApi.clearTranslationState(...args),
   writeStoredValue,
   getCurrentThemeMode: () => themeApi.getCurrentThemeMode(),
   paneGrid,
@@ -1798,6 +1806,7 @@ const {
   lastBookChapterStorageKey,
   onboardingStorageKey,
   notesStorageKey,
+  translationRegistryStorageKey,
   clearThemePreferenceMirrors,
   cloudSyncSettings,
   persistCloudSyncSettings,
@@ -1828,7 +1837,7 @@ const {
   onboardingStorageKey
 }));
 
-// ── Document-level drag-and-drop for .js translation files ────────────────
+// ── Document-level drag-and-drop for .json translation files ──────────────
 
 document.addEventListener("dragover", (event) => {
   if ([...event.dataTransfer.types].includes("Files")) {
@@ -1842,9 +1851,9 @@ document.addEventListener("drop", (event) => {
     return;
   }
 
-  const jsFiles = [...event.dataTransfer.files].filter((f) => f.name.endsWith(".js"));
+  const jsonFiles = [...event.dataTransfer.files].filter((f) => f.name.endsWith(".json"));
 
-  if (jsFiles.length === 0) {
+  if (jsonFiles.length === 0) {
     // Not a translation file — prevent browser from navigating to it, but do nothing else.
     event.preventDefault();
     return;
@@ -1852,9 +1861,9 @@ document.addEventListener("drop", (event) => {
 
   event.preventDefault();
 
-  jsFiles.forEach((file) => {
-    importTranslationFromFile(file).then((code) => {
-      updateSaveStatus(`Translation "${code}" imported successfully.`);
+  jsonFiles.forEach((file) => {
+    importTranslationFromFile(file).then((translationId) => {
+      updateSaveStatus(`Translation "${translationId}" imported successfully.`);
       setTimeout(() => refreshSaveStatus(), 4000);
 
       if (settingsDialog.open && activeSettingsTabId === "translations") {
@@ -1873,7 +1882,7 @@ document.addEventListener("drop", (event) => {
 
 const bootstrap = async () => {
   await migrateFromLegacyDatabase();
-  await loadCustomTranslations();
+  await initializeTranslations();
   // Inspect IndexedDB for which built-in translations are already cached so the
   // picker can correctly mark un-cached ones as unavailable when offline.  Must
   // happen before populateTranslationSelect so the initial render is accurate.
@@ -2058,4 +2067,3 @@ window.ScriptoriaModules.createConnectivityWatcher({
     });
   }
 }
-

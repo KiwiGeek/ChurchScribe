@@ -1,0 +1,68 @@
+﻿{
+  "schemaVersion": 1,
+  "languageTag": "en",
+  "displayName": "English",
+  "catalogVersion": "2026-05-10T18:58:11.4029747\u002B00:00",
+  "translations": [
+    {
+      "translationId": "en:ASV",
+      "code": "ASV",
+      "label": "American Standard Version",
+      "sourceType": "builtin",
+      "languageTag": "en",
+      "languageCode3": "eng",
+      "version": 20,
+      "copyright": "",
+      "downloadSizeBytes": 2993881,
+      "manifestUrl": "/bibles/catalog/translations/en/ASV.json"
+    },
+    {
+      "translationId": "en:KJV",
+      "code": "KJV",
+      "label": "King James Version",
+      "sourceType": "builtin",
+      "languageTag": "en",
+      "languageCode3": "eng",
+      "version": 25,
+      "copyright": "Rights in the Authorized (King James) Version in the United Kingdom are vested in the Crown. Published by permission of the Crown\u2019s patentee, Cambridge University Press.",
+      "downloadSizeBytes": 3153775,
+      "manifestUrl": "/bibles/catalog/translations/en/KJV.json"
+    },
+    {
+      "translationId": "en:NIV11",
+      "code": "NIV11",
+      "label": "New International Version",
+      "sourceType": "official",
+      "languageTag": "en",
+      "languageCode3": "eng",
+      "version": 29,
+      "copyright": "The Holy Bible, New International Version\u00AE NIV\u00AE\nCopyright \u00A9 1973, 1978, 1984, 2011 by Biblica, Inc.\u00AE\nUsed by Permission of Biblica, Inc.\u00AE All rights reserved worldwide.",
+      "downloadSizeBytes": 3460914,
+      "manifestUrl": "/bibles/catalog/translations/en/NIV11.json"
+    },
+    {
+      "translationId": "en:NKJV",
+      "code": "NKJV",
+      "label": "New King James Version",
+      "sourceType": "builtin",
+      "languageTag": "en",
+      "languageCode3": "eng",
+      "version": 17,
+      "copyright": "The Holy Bible, New King James Version, Copyright \u00A9 1982 Thomas Nelson. All rights reserved.",
+      "downloadSizeBytes": 3934821,
+      "manifestUrl": "/bibles/catalog/translations/en/NKJV.json"
+    },
+    {
+      "translationId": "en:WEBBE",
+      "code": "WEBBE",
+      "label": "World English Bible British Edition",
+      "sourceType": "builtin",
+      "languageTag": "en",
+      "languageCode3": "eng",
+      "version": 59,
+      "copyright": "PUBLIC DOMAIN. \u0022World English Bible\u0022 is trademark of eBible.org.",
+      "downloadSizeBytes": 5021633,
+      "manifestUrl": "/bibles/catalog/translations/en/WEBBE.json"
+    }
+  ]
+}

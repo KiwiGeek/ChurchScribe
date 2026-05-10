@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "languageTag": "fr",
+  "displayName": "French",
+  "catalogVersion": "2026-05-10T18:58:11.4031139\u002B00:00",
+  "translations": [
+    {
+      "translationId": "fr:LSG",
+      "code": "LSG",
+      "label": "La Sainte Bible par Louis Segond 1910",
+      "sourceType": "builtin",
+      "languageTag": "fr",
+      "languageCode3": "fra",
+      "version": 8,
+      "copyright": "",
+      "downloadSizeBytes": 4008787,
+      "manifestUrl": "/bibles/catalog/translations/fr/LSG.json"
+    }
+  ]
+}

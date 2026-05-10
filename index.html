@@ -396,7 +396,7 @@
           <div class="note-switcher-header">
             <h3 id="translations-title">Bible Translations</h3>
           </div>
-          <p class="settings-copy">Manage custom Bible translation files. Drop a <code>.js</code> translation file anywhere on the page to import it, or enter a URL below to download one.</p>
+          <p class="settings-copy">Manage built-in, official, and user-added Bible translations. Drop a <code>.json</code> translation package anywhere on the page to import it, or use the import button below.</p>
 
           <div class="data-management-section">
             <h4 class="data-section-title">Built-in Translations</h4>
@@ -408,23 +408,40 @@
             <ul class="translation-list" id="builtin-translation-list"></ul>
           </div>
 
+          <div class="data-management-section">
+            <div class="note-switcher-header translation-discovery-header">
+              <h4 class="data-section-title">Official Translations</h4>
+            </div>
+            <p class="settings-copy">Browse the licensed catalog and add translations for offline use. Use the language filter to narrow the list before adding.</p>
+            <div class="translation-discovery-controls">
+              <label class="field">
+                <span>Filter Languages</span>
+                <input id="official-translation-language-search" type="search" placeholder="Search languages">
+              </label>
+              <label class="field">
+                <span>Selected Languages</span>
+                <select id="official-translation-language-filter" multiple size="8" aria-label="Official translation language filter"></select>
+              </label>
+            </div>
+            <div class="dialog-actions data-actions">
+              <button class="ghost-button" id="clear-official-language-filters-button" type="button">Clear Language Filters</button>
+            </div>
+            <p class="settings-copy translation-list-empty-note" id="official-translations-empty-note" hidden>No official translations match the current language filter.</p>
+            <ul class="translation-list" id="official-translation-list"></ul>
+          </div>
+
           <div class="data-management-section" id="user-translations-section">
             <h4 class="data-section-title">User-Added Translations</h4>
-            <p class="settings-copy" id="user-translations-empty-note">No custom translations have been added yet.</p>
+            <p class="settings-copy" id="user-translations-empty-note">No user-added translations have been added yet.</p>
             <ul class="translation-list" id="user-translation-list"></ul>
           </div>
 
           <div class="data-management-section">
-            <h4 class="data-section-title">Import from URL</h4>
-            <p class="settings-copy">Enter the URL of a <code>.js</code> translation file to download and import it.</p>
-            <div class="display-field-grid">
-              <label class="field">
-                <span>URL</span>
-                <input id="translation-url-input" type="url" placeholder="https://example.com/translation.js">
-              </label>
-            </div>
+            <h4 class="data-section-title">Import User Translation</h4>
+            <p class="settings-copy">Import a user-defined translation package in JSON format. The package will be stored locally and backed up with your library.</p>
             <div class="dialog-actions data-actions">
-              <button class="ghost-button" id="import-translation-url-button" type="button">Import from URL</button>
+              <button class="ghost-button" id="import-translation-file-button" type="button">Import Translation JSON…</button>
+              <input id="translation-file-input" type="file" accept=".json,application/json" hidden aria-hidden="true">
             </div>
           </div>
         </section>

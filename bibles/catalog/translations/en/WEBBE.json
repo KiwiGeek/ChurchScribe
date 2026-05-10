@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:WEBBE",
+  "code": "WEBBE",
+  "label": "World English Bible British Edition",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "builtin",
+  "version": 59,
+  "contentUrl": "/bibles/content/en/WEBBE/v59.json",
+  "contentHash": "sha256-ce7541a874a4fc55663d04087d21b82276bb6d10533bfb7d54f2048080b2325c",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T16:00:33.1897567Z"
+}

@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:KJV",
+  "code": "KJV",
+  "label": "King James Version",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "builtin",
+  "version": 25,
+  "contentUrl": "/bibles/content/en/KJV/v25.json",
+  "contentHash": "sha256-5716d78d4400bbfa9c0ba91bed2bfbcca427c980af99f2abf86d15ce46713661",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T16:00:30.1171177Z"
+}

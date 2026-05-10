@@ -9,6 +9,7 @@ window.ScriptoriaModules.createSyncPayloads = (deps) => {
     getCurrentPaneSplit,
     getCurrentTranslationCode,
     getCurrentColorThemeId,
+    getTranslationStateForSync,
     flushEditorWorkNow,
     applyThemeMode,
     normalizeThemeMode,
@@ -22,6 +23,7 @@ window.ScriptoriaModules.createSyncPayloads = (deps) => {
     translationStorageKey,
     applyColorTheme,
     colorThemeStorageKey,
+    applySyncedTranslationState,
     ensureWorkspaceConsistency,
     buildBookAliasMap,
     renderWorkspace
@@ -44,6 +46,7 @@ window.ScriptoriaModules.createSyncPayloads = (deps) => {
       translation: getCurrentTranslationCode(),
       colorTheme: getCurrentColorThemeId()
     },
+    translationState: getTranslationStateForSync ? getTranslationStateForSync() : undefined,
     syncSettings: {
       provider: cloudSyncSettings.provider,
       pollIntervalSeconds: cloudSyncSettings.pollIntervalSeconds
@@ -105,6 +108,10 @@ window.ScriptoriaModules.createSyncPayloads = (deps) => {
         applyColorTheme(payload.preferences.colorTheme);
         void writeStoredValue(colorThemeStorageKey, payload.preferences.colorTheme);
       }
+    }
+
+    if (payload.translationState && typeof applySyncedTranslationState === "function") {
+      await applySyncedTranslationState(payload.translationState);
     }
 
     ensureWorkspaceConsistency();

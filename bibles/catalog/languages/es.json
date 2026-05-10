@@ -1,0 +1,32 @@
+﻿{
+  "schemaVersion": 1,
+  "languageTag": "es",
+  "displayName": "Spanish",
+  "catalogVersion": "2026-05-10T18:58:11.4031107\u002B00:00",
+  "translations": [
+    {
+      "translationId": "es:RVR1960",
+      "code": "RVR1960",
+      "label": "Biblia Reina Valera 1960",
+      "sourceType": "builtin",
+      "languageTag": "es",
+      "languageCode3": "spa",
+      "version": 18,
+      "copyright": "Texto b\u00EDblico Reina-Valera 1960\u00AE \u00A9 Sociedades B\u00EDblicas en Am\u00E9rica Latina, 1960. Derechos renovados 1988, Sociedades B\u00EDblicas Unidas.",
+      "downloadSizeBytes": 3480128,
+      "manifestUrl": "/bibles/catalog/translations/es/RVR1960.json"
+    },
+    {
+      "translationId": "es:NTV",
+      "code": "NTV",
+      "label": "Nueva Traducci\u00F3n Viviente",
+      "sourceType": "official",
+      "languageTag": "es",
+      "languageCode3": "spa",
+      "version": 14,
+      "copyright": "Santa Biblia, Nueva Traducci\u00F3n Viviente, copyright \u00A9 2010 by Tyndale House Foundation. Used by permission of Tyndale House Publishers, a Division of Tyndale House Ministries, Carol Stream, Illinois 60188. All rights reserved.",
+      "downloadSizeBytes": 3840281,
+      "manifestUrl": "/bibles/catalog/translations/es/NTV.json"
+    }
+  ]
+}

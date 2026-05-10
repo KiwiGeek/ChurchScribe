@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:NIV11",
+  "code": "NIV11",
+  "label": "New International Version",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 29,
+  "contentUrl": "/bibles/content/en/NIV11/v29.json",
+  "contentHash": "sha256-4b40c563177a36d51961b084ac4e3ab69eadb7a55e38939ba6a33aa7e615cdef",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T16:00:31.3030646Z"
+}

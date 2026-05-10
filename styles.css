@@ -1864,6 +1864,30 @@ h1 {
   line-height: 1;
 }
 
+.translation-discovery-controls {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(260px, 1.2fr);
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+#official-translation-language-filter {
+  min-height: 180px;
+}
+
+.translation-list-empty-note {
+  margin-top: 8px;
+}
+
+.translation-list-item--actionable {
+  gap: 12px;
+}
+
+.translation-list-item--actionable .translation-list-item-info {
+  width: auto;
+  flex: 1;
+}
+
 .ghost-button--small {
   padding: 0.3rem 0.65rem;
   font-size: 0.82rem;
@@ -1889,6 +1913,17 @@ h1 {
   color: var(--muted);
   font-size: 0.92rem;
   line-height: 1.45;
+}
+
+@media (max-width: 900px) {
+  .translation-list-item,
+  #user-translation-list .translation-list-item {
+    width: 100%;
+  }
+
+  .translation-discovery-controls {
+    grid-template-columns: 1fr;
+  }
 }
 
 .about-credits {

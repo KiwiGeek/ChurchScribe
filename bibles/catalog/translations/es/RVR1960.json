@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "es:RVR1960",
+  "code": "RVR1960",
+  "label": "Biblia Reina Valera 1960",
+  "languageTag": "es",
+  "languageCode3": "spa",
+  "sourceType": "builtin",
+  "version": 18,
+  "contentUrl": "/bibles/content/es/RVR1960/v18.json",
+  "contentHash": "sha256-51c9c145f72ae418a46cd35bd38def620ef59075203dd7e0b3abec3d741ed635",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T16:02:32.6613814Z"
+}

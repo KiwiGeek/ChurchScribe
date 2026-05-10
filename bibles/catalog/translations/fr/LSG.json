@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "fr:LSG",
+  "code": "LSG",
+  "label": "La Sainte Bible par Louis Segond 1910",
+  "languageTag": "fr",
+  "languageCode3": "fra",
+  "sourceType": "builtin",
+  "version": 8,
+  "contentUrl": "/bibles/content/fr/LSG/v8.json",
+  "contentHash": "sha256-0063ad654e1d7abbbc5b77fb2ed76b33f22b688c604084c68062a5163f6fd2c9",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T16:01:39.5010271Z"
+}

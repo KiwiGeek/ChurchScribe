@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:ASV",
+  "code": "ASV",
+  "label": "American Standard Version",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "builtin",
+  "version": 20,
+  "contentUrl": "/bibles/content/en/ASV/v20.json",
+  "contentHash": "sha256-d191177553758a2804d9c2f23033e508567ea7a93f052bf545aededefc6648fa",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T16:00:27.8776419Z"
+}

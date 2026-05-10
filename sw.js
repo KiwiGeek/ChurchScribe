@@ -48,10 +48,10 @@ const CACHE_NAME = APP_VERSION
 const FONTS_CACHE = "scriptoria-fonts-v1";
 
 // ── Precache list ────────────────────────────────────────────────────────────
-// Same-origin assets the page loads at startup (and the four built-in
-// translations app.js fetches on demand).  Themes are precached too — they're
-// small and folding them into the install means the user can switch themes
-// while offline.
+// Same-origin assets the page loads at startup plus the generated translation
+// catalog and curated built-in JSON payloads.  Themes are precached too —
+// they're small and folding them into the install means the user can switch
+// themes while offline.
 const PRECACHE_URLS = [
   "./",
   "index.html",
@@ -92,6 +92,26 @@ const PRECACHE_URLS = [
   "sync/status.js",
   "theme/controller.js",
   "translations/manager.js",
+  "bibles/catalog/index.json",
+  "bibles/catalog/languages/en.json",
+  "bibles/catalog/languages/es.json",
+  "bibles/catalog/languages/fr.json",
+  "bibles/catalog/languages/pt.json",
+  "bibles/catalog/translations/en/ASV.json",
+  "bibles/catalog/translations/en/KJV.json",
+  "bibles/catalog/translations/en/NIV11.json",
+  "bibles/catalog/translations/en/NKJV.json",
+  "bibles/catalog/translations/en/WEBBE.json",
+  "bibles/catalog/translations/es/NTV.json",
+  "bibles/catalog/translations/es/RVR1960.json",
+  "bibles/catalog/translations/fr/LSG.json",
+  "bibles/catalog/translations/pt/A21.json",
+  "bibles/content/en/ASV/v20.json",
+  "bibles/content/en/KJV/v25.json",
+  "bibles/content/en/NKJV/v17.json",
+  "bibles/content/en/WEBBE/v59.json",
+  "bibles/content/es/RVR1960/v18.json",
+  "bibles/content/fr/LSG/v8.json",
 
   // Themes (62 of them, but each is small)
   "themes/default.js",

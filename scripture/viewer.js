@@ -34,6 +34,8 @@ window.ScriptoriaModules.createScriptureViewer = (deps) => {
     // Translation manager
     ensureTranslationLoaded,
     isTranslationOfflineAvailable,
+    handleTranslationSelection,
+    getFallbackTranslationId,
     // Aliases module
     buildBookAliasMap,
     // Late-bound (search module is created after viewer)
@@ -44,7 +46,7 @@ window.ScriptoriaModules.createScriptureViewer = (deps) => {
     scheduleAutoCloudSync
   } = deps;
 
-  let currentTranslationCode = "KJV";
+  let currentTranslationCode = "en:KJV";
   let activeScriptureFocus = null;
 
   const getCurrentTranslation = () => translationLibrary[currentTranslationCode];
@@ -54,7 +56,10 @@ window.ScriptoriaModules.createScriptureViewer = (deps) => {
     // Goes through migrateLegacyPreference so users coming from the pre-IDB
     // localStorage build still pick up their saved translation on first load.
     const saved = await migrateLegacyPreference(translationStorageKey);
-    return translationLibrary[saved] ? saved : "KJV";
+    const fallbackTranslationId = typeof getFallbackTranslationId === "function"
+      ? getFallbackTranslationId()
+      : "en:KJV";
+    return translationLibrary[saved] ? saved : fallbackTranslationId;
   };
 
   const saveLastBookChapter = () => {
@@ -308,6 +313,14 @@ window.ScriptoriaModules.createScriptureViewer = (deps) => {
   // ── Listeners ──────────────────────────────────────────────────────────────
 
   translationSelect.addEventListener("change", async () => {
+    if (typeof handleTranslationSelection === "function") {
+      const shouldContinue = await handleTranslationSelection(translationSelect.value);
+
+      if (!shouldContinue) {
+        return;
+      }
+    }
+
     activeScriptureFocus = null;
     void writeStoredValue(translationStorageKey, translationSelect.value);
     await applyTranslation(translationSelect.value);

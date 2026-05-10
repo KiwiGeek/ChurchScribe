@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "languageTag": "pt",
+  "displayName": "Portuguese (Brazil)",
+  "catalogVersion": "2026-05-10T18:58:11.4031150\u002B00:00",
+  "translations": [
+    {
+      "translationId": "pt:A21",
+      "code": "A21",
+      "label": "Biblia Almeida S\u00E9culo 21",
+      "sourceType": "official",
+      "languageTag": "pt",
+      "languageCode3": "por",
+      "version": 1,
+      "copyright": "B\u00EDblia Almeida S\u00E9culo 21, Copyright \u00A9 2008 Edi\u00E7\u00F5es Vida Nova",
+      "downloadSizeBytes": 4266633,
+      "manifestUrl": "/bibles/catalog/translations/pt/A21.json"
+    }
+  ]
+}
