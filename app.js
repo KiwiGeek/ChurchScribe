@@ -203,7 +203,11 @@ if (aboutVersionInfo) {
 
 let activeProvider = noOpProvider;
 
-const bookAliasMap = new Map();
+// bookAliasMap, normalizeBookName, the BOOK_ALIASES table, and the explicit/
+// contextual scripture-reference regexes have moved to scripture/aliases.js;
+// scripture parsing helpers have moved to scripture/references.js.  The bindings
+// destructured from those modules (further down in this file) keep the same
+// names, so existing callers continue to work without a search-and-replace.
 const domainValidationCache = new Map();
 const MIN_EMBED_WIDTH = 240;
 const EDITOR_HORIZONTAL_PADDING = 40;
@@ -263,11 +267,9 @@ const URL_LINKIFY_PATTERNS = (() => {
   ];
 })();
 
-let explicitScriptureReferencePattern;
-let fullExplicitScriptureReferencePattern;
-let contextualScriptureReferencePattern;
-let activeScriptureFocus = null;
-let currentTranslationCode = "KJV";
+// Scripture-related state (translation code, focus, search query) lives inside
+// the scripture/* modules now.  Other modules read it via accessor calls on
+// viewerApi / searchApi.
 let activeSettingsTabId = "ui-settings";
 let currentColorThemeId = "default";
 let currentThemeMode = "system";
@@ -276,7 +278,6 @@ let noteBrowserFilter = "";
 let noteBrowserTypeFilter = "all";
 let noteBrowserSort = "updated-desc";
 let noteBrowserSelectedNoteId = null;
-let scriptureSearchQuery = "";
 let savedSelectionForTableInsert = null;
 let activeTableCell = null;
 let contextMenuTableCell = null;
@@ -389,8 +390,8 @@ const reconnectCloud = (...args) => syncCloudApi.reconnectCloud(...args);
 const clearPendingAutoSync = (...args) => syncCloudApi.clearPendingAutoSync(...args);
 const consumeQueuedCloudSync = (...args) => syncCloudApi.consumeQueuedCloudSync(...args);
 
-const getCurrentTranslation = () => translationLibrary[currentTranslationCode];
-const getCurrentScriptureLibrary = () => getCurrentTranslation().books;
+// getCurrentTranslation / getCurrentScriptureLibrary moved to scripture/viewer.js;
+// they're destructured back into this scope where viewerApi is created.
 const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const debounce = (callback, delayMs) => {
   let timerId = null;
@@ -586,18 +587,8 @@ const clearThemePreferenceMirrors = () => {
   writeMirroredPreference(colorThemeMirrorStorageKey, null);
 };
 
-const normalizeBookName = (value) =>
-  value.toLowerCase().replace(/\./g, "").replace(/\s+/g, " ").trim();
-
+// normalizeBookName + addBookAlias moved to scripture/aliases.js.
 const normalizeFieldLabel = (value) => value.trim().toLowerCase();
-
-const addBookAlias = (alias, canonicalBook) => {
-  const normalizedAlias = normalizeBookName(alias);
-
-  if (normalizedAlias) {
-    bookAliasMap.set(normalizedAlias, canonicalBook);
-  }
-};
 
 let getNoteDisplayTitle = () => "";
 let getNoteDisplayMeta = () => "";
@@ -677,106 +668,125 @@ const {
   windowObject: window
 });
 
-const BOOK_ALIASES = {
-  "Genesis":         ["Gen", "Ge", "Gn"],
-  "Exodus":          ["Exo", "Ex"],
-  "Leviticus":       ["Lev", "Le", "Lv"],
-  "Numbers":         ["Num", "Nu", "Nm", "Nb"],
-  "Deuteronomy":     ["Deut", "Dt", "De", "Deu"],
-  "Joshua":          ["Josh", "Jos", "Jsh"],
-  "Judges":          ["Judg", "Jdg", "Jg", "Jdgs"],
-  "Ruth":            ["Rth", "Ru", "Rut"],
-  "1 Samuel":        ["I Samuel", "I Sam", "1 Sam", "1 Sm", "1 Sa", "1 S", "1Sam", "1Sm", "1Sa", "1S"],
-  "2 Samuel":        ["II Samuel", "II Sam", "2 Sam", "2 Sm", "2 Sa", "2 S", "2Sam", "2Sm", "2Sa", "2S"],
-  "1 Kings":         ["I Kings", "I Kgs", "1 Kgs", "1 Kin", "1 Ki", "1 K", "1Kgs", "1Kin", "1Ki", "1K"],
-  "2 Kings":         ["II Kings", "II Kgs", "2 Kgs", "2 Kin", "2 Ki", "2 K", "2Kgs", "2Kin", "2Ki", "2K"],
-  "1 Chronicles":    ["I Chronicles", "I Chr", "1 Chr", "1 Ch", "1 Chron", "1Ch", "1Chr", "1Chron"],
-  "2 Chronicles":    ["II Chronicles", "II Chr", "2 Chr", "2 Ch", "2 Chron", "2Ch", "2Chr", "2Chron"],
-  "Ezra":            ["Ezr", "Ez"],
-  "Nehemiah":        ["Neh", "Ne"],
-  "Esther":          ["Esth", "Est", "Es"],
-  "Job":             ["Jb"],
-  "Psalms":          ["Psalm", "Ps", "Pslm", "Psa", "Psm"],
-  "Proverbs":        ["Prov", "Prv", "Pr", "Pro"],
-  "Ecclesiastes":    ["Eccles", "Eccle", "Ecc", "Ec"],
-  "Song of Solomon": ["Song", "Sng", "Song of Songs", "SOS"],
-  "Isaiah":          ["Isa", "Is"],
-  "Jeremiah":        ["Jer", "Je", "Jr"],
-  "Lamentations":    ["Lam", "La"],
-  "Ezekiel":         ["Ezek", "Eze", "Ezk"],
-  "Daniel":          ["Dan", "Da", "Dn"],
-  "Hosea":           ["Hos", "Ho"],
-  "Joel":            ["Jl", "Jol"],
-  "Amos":            ["Am", "Amo"],
-  "Obadiah":         ["Oba", "Obd"],
-  "Jonah":           ["Jon"],
-  "Micah":           ["Mic", "Mc"],
-  "Nahum":           ["Nah", "Na", "Nam"],
-  "Habakkuk":        ["Hab"],
-  "Zephaniah":       ["Zeph", "Zep", "Zp"],
-  "Haggai":          ["Hag", "Hg"],
-  "Zechariah":       ["Zech", "Zec", "Zc"],
-  "Malachi":         ["Mal", "Ml"],
-  "Matthew":         ["Matt", "Mat", "Mt"],
-  "Mark":            ["Mk", "Mrk"],
-  "Luke":            ["Luk", "Lk"],
-  "John":            ["Jhn", "Jn"],
-  "Acts":            ["Act"],
-  "Romans":          ["Rom", "Ro", "Rm"],
-  "1 Corinthians":   ["I Corinthians", "I Cor", "1 Cor", "1Cor", "1 Co", "1Co"],
-  "2 Corinthians":   ["II Corinthians", "II Cor", "2 Cor", "2Cor", "2 Co", "2Co"],
-  "Galatians":       ["Gal", "Ga"],
-  "Ephesians":       ["Eph", "Ephes"],
-  "Philippians":     ["Phil", "Php", "Pp"],
-  "Colossians":      ["Col"],
-  "1 Thessalonians": ["I Thessalonians", "I Thess", "1 Thess", "1Thess", "1 Thes", "1Thes", "1 Th", "1Th"],
-  "2 Thessalonians": ["II Thessalonians", "II Thess", "2 Thess", "2Thess", "2 Thes", "2Thes", "2 Th", "2Th"],
-  "1 Timothy":       ["I Timothy", "I Tim", "1 Tim", "1 Ti", "1Tim", "1Ti"],
-  "2 Timothy":       ["II Timothy", "II Tim", "2 Tim", "2 Ti", "2Tim", "2Ti"],
-  "Titus":           ["Tit", "Ti"],
-  "Philemon":        ["Philem", "Phm", "Pm"],
-  "Hebrews":         ["Heb"],
-  "James":           ["Jas", "Jm"],
-  "1 Peter":         ["I Peter", "I Pet", "1 Pet", "1 Pe", "1 Pt", "1 P", "1Pet", "1Pe", "1Pt", "1P"],
-  "2 Peter":         ["II Peter", "II Pet", "2 Pet", "2 Pe", "2 Pt", "2 P", "2Pet", "2Pe", "2Pt", "2P"],
-  "1 John":          ["I John", "I Jn", "1 Jn", "1 Jhn", "1 J", "1Jn", "1Jhn", "1J"],
-  "2 John":          ["II John", "II Jn", "2 Jn", "2 Jhn", "2 J", "2Jn", "2Jhn", "2J"],
-  "3 John":          ["III John", "III Jn", "3 Jn", "3 Jhn", "3 J", "3Jn", "3Jhn", "3J"],
-  "Jude":            ["Jud", "Jd"],
-  "Revelation":      ["Rev", "Rv"],
-};
+// ── Scripture modules ──────────────────────────────────────────────────────
+// Four modules cooperate to handle everything in the right pane plus the
+// scripture-aware features in the editor:
+//
+//   aliases    → owns the book-alias table, the bookAliasMap, and the three
+//                regex patterns derived from the alias inventory.
+//   references → pure parsing/formatting of scripture references; reads
+//                aliases for its regex inputs.
+//   viewer     → owns the right-pane DOM, the active translation code, and
+//                the scripture-focus state; uses references when jumping to
+//                a typed reference; calls into search to re-rank an active
+//                query when the user switches translation.
+//   search     → owns the search input + results list; delegates to the
+//                viewer to actually navigate to a clicked verse.
+//
+// The translations-manager / sync / settings-ui modules are created later in
+// this file and have circular dependencies with the scripture modules
+// (translations needs applyTranslation, viewer needs ensureTranslationLoaded,
+// etc.).  We break the cycles with thunk-based late binding: a few `let`
+// placeholders below get assigned once translationsManagerApi exists, and
+// every cross-module call goes through a thunk that re-resolves at call time.
+let translationsManagerApiRef = null;
+let scriptureSearchApiRef = null;
 
-const getBuiltInAliasesForBook = (book) => {
-  const aliases = new Set([book, book.replace(/\s+/g, "")]);
+const aliasesApi = window.ScriptoriaModules.createScriptureAliases({
+  workspace,
+  escapeRegExp,
+  getCurrentTranslation: () => viewerApi.getCurrentTranslation()
+});
 
-  if (Object.prototype.hasOwnProperty.call(BOOK_ALIASES, book)) {
-    BOOK_ALIASES[book].forEach((alias) => aliases.add(alias));
-    return [...aliases];
-  }
+const {
+  bookAliasMap,
+  normalizeBookName,
+  getEffectiveAliasesForBook
+} = aliasesApi;
 
-  const numberedMatch = book.match(/^([1-3])\s+(.+)$/);
+const buildBookAliasMap = () => aliasesApi.buildBookAliasMap();
 
-  if (numberedMatch) {
-    const [, number, rest] = numberedMatch;
-    const abbreviation = rest.slice(0, Math.min(rest.length, 4));
-    aliases.add(`${number} ${abbreviation}`);
-    aliases.add(`${number}${abbreviation}`);
-    aliases.add(`${number} ${rest}`);
-    aliases.add(`${number}${rest}`);
-  } else if (!book.includes(" ") && book.length > 4) {
-    aliases.add(book.slice(0, 4));
-  }
+const referencesApi = window.ScriptoriaModules.createScriptureReferences({
+  bookAliasMap: aliasesApi.bookAliasMap,
+  normalizeBookName: aliasesApi.normalizeBookName,
+  getFullExplicitPattern: () => aliasesApi.getFullExplicitPattern(),
+  getCurrentScriptureLibrary: () => viewerApi.getCurrentScriptureLibrary()
+});
 
-  return [...aliases];
-};
+const {
+  parseScriptureReference,
+  parseExplicitReferenceParts,
+  parseContextualScriptureReference,
+  formatResolvedReference,
+  getReferenceContext
+} = referencesApi;
 
-const getEffectiveAliasesForBook = (book) => {
-  if (Object.prototype.hasOwnProperty.call(workspace.customBookAliases, book)) {
-    return workspace.customBookAliases[book];
-  }
+const viewerApi = window.ScriptoriaModules.createScriptureViewer({
+  bookSelect,
+  chapterSelect,
+  chapterText,
+  verseReference,
+  verseTranslation,
+  translationSelect,
+  translationLibrary,
+  readStoredValue: (...args) => readStoredValue(...args),
+  writeStoredValue: (...args) => writeStoredValue(...args),
+  migrateLegacyPreference: (...args) => migrateLegacyPreference(...args),
+  lastBookChapterStorageKey,
+  translationStorageKey,
+  ensureTranslationLoaded: (...args) =>
+    translationsManagerApiRef.ensureTranslationLoaded(...args),
+  isTranslationOfflineAvailable: (code) =>
+    !!translationsManagerApiRef
+    && translationsManagerApiRef.offlineAvailableTranslations.has(code),
+  buildBookAliasMap: () => aliasesApi.buildBookAliasMap(),
+  performScriptureSearch: (query) => {
+    if (scriptureSearchApiRef) {
+      scriptureSearchApiRef.performScriptureSearch(query);
+    }
+  },
+  getScriptureSearchQuery: () =>
+    scriptureSearchApiRef ? scriptureSearchApiRef.getQuery() : "",
+  markLocalSettingsUpdated: (...args) => markLocalSettingsUpdated(...args),
+  scheduleAutoCloudSync: (...args) => scheduleAutoCloudSync(...args)
+});
 
-  return getBuiltInAliasesForBook(book);
-};
+const {
+  applyTranslation,
+  jumpToResolvedScripture,
+  navigateToVerse,
+  populateBookOptions,
+  populateChapterOptions,
+  renderChapter,
+  saveLastBookChapter,
+  restoreLastBookChapter,
+  getCurrentTranslation,
+  getCurrentScriptureLibrary,
+  getPreferredTranslation
+} = viewerApi;
+
+const jumpToScripture = (referenceText) =>
+  viewerApi.jumpToResolvedScripture(parseScriptureReference(referenceText));
+
+const searchApi = window.ScriptoriaModules.createScriptureSearch({
+  scriptureSearchInput,
+  scriptureSearchResults,
+  verseDisplay,
+  getCurrentScriptureLibrary: () => viewerApi.getCurrentScriptureLibrary(),
+  navigateToVerse: (book, chapter, verse) =>
+    viewerApi.navigateToVerse(book, chapter, verse),
+  escapeRegExp,
+  debounce
+});
+scriptureSearchApiRef = searchApi;
+
+const performScriptureSearch = (...args) =>
+  searchApi.performScriptureSearch(...args);
+
+// BOOK_ALIASES table + getBuiltInAliasesForBook + getEffectiveAliasesForBook
+// have moved to scripture/aliases.js.  getEffectiveAliasesForBook is
+// destructured back into this scope above via aliasesApi for the few callers
+// (settings UI, sync payloads) that still reach for it through app.js.
 
 const ensureWorkspaceConsistency = () => {
   if (!Array.isArray(workspace.noteTypes) || !workspace.noteTypes.length) {
@@ -980,43 +990,9 @@ const getPreferredSplit = async () => {
   return typeof saved === "number" && saved >= 0.2 && saved <= 0.8 ? saved : 0.6;
 };
 
-const getPreferredTranslation = async () => {
-  const savedTranslation = await migrateLegacyPreference(translationStorageKey);
-  return translationLibrary[savedTranslation] ? savedTranslation : "KJV";
-};
-
-const saveLastBookChapter = () => {
-  void writeStoredValue(lastBookChapterStorageKey, { book: bookSelect.value, chapter: chapterSelect.value });
-};
-
-const restoreLastBookChapter = async () => {
-  const saved = await readStoredValue(lastBookChapterStorageKey);
-
-  if (!saved?.book) {
-    return;
-  }
-
-  const scriptureLibrary = getCurrentScriptureLibrary();
-
-  if (!scriptureLibrary[saved.book]) {
-    return;
-  }
-
-  if (saved.chapter == null) {
-    return;
-  }
-
-  const chapterIndex = Number(saved.chapter);
-
-  if (isNaN(chapterIndex) || chapterIndex < 0 || chapterIndex >= scriptureLibrary[saved.book].length) {
-    return;
-  }
-
-  bookSelect.value = saved.book;
-  populateChapterOptions(saved.book);
-  chapterSelect.value = String(chapterIndex);
-  renderChapter();
-};
+// getPreferredTranslation, saveLastBookChapter, and restoreLastBookChapter
+// have moved to scripture/viewer.js and are destructured back into this scope
+// from viewerApi above.
 
 const getResolvedThemeForMode = (mode = currentThemeMode, themeId = currentColorThemeId) => {
   const normalizedMode = normalizeThemeMode(mode);
@@ -1143,338 +1119,13 @@ const applyColorTheme = (themeId) => {
   syncThemePreferenceMirrors();
 };
 
-const populateBookOptions = () => {
-  const scriptureLibrary = getCurrentScriptureLibrary();
-  bookSelect.innerHTML = "";
+// populateBookOptions / populateChapterOptions / renderChapter / applyTranslation
+// have moved to scripture/viewer.js.
 
-  Object.keys(scriptureLibrary).forEach((book) => {
-    const option = document.createElement("option");
-    option.value = book;
-    option.textContent = book;
-    bookSelect.append(option);
-  });
-};
 
-const populateChapterOptions = (book) => {
-  const scriptureLibrary = getCurrentScriptureLibrary();
-  chapterSelect.innerHTML = "";
 
-  scriptureLibrary[book].forEach((chapter, index) => {
-    const option = document.createElement("option");
-    option.value = String(index);
-    option.textContent = `Chapter ${chapter.chapter}`;
-    chapterSelect.append(option);
-  });
-};
-
-const renderChapter = () => {
-  const scriptureLibrary = getCurrentScriptureLibrary();
-  const selectedBook = bookSelect.value;
-  const selectedIndex = Number(chapterSelect.value);
-  const chapter = scriptureLibrary[selectedBook][selectedIndex];
-  const highlightedVerses = new Set(
-    activeScriptureFocus &&
-    activeScriptureFocus.book === selectedBook &&
-    activeScriptureFocus.chapter === chapter.chapter
-      ? activeScriptureFocus.verses
-      : []
-  );
-
-  verseReference.textContent = `${selectedBook} ${chapter.chapter}`;
-  chapterText.innerHTML = "";
-
-  if (chapter.heading) {
-    const headingEl = document.createElement("h3");
-    headingEl.className = "chapter-section-heading";
-    headingEl.textContent = chapter.heading;
-    chapterText.append(headingEl);
-  }
-
-  if (chapter.subheading) {
-    const subEl = document.createElement("h4");
-    subEl.className = "chapter-subheading";
-    subEl.textContent = chapter.subheading;
-    chapterText.append(subEl);
-  }
-
-  if (chapter.superscription) {
-    const supEl = document.createElement("p");
-    supEl.className = "chapter-superscription";
-    supEl.textContent = chapter.superscription;
-    chapterText.append(supEl);
-  }
-
-  chapter.verses.forEach((verse) => {
-    if (verse.heading) {
-      const headingEl = document.createElement("h3");
-      headingEl.className = "chapter-section-heading";
-      headingEl.textContent = verse.heading;
-      chapterText.append(headingEl);
-    }
-
-    if (verse.subheading) {
-      const subEl = document.createElement("h4");
-      subEl.className = "chapter-subheading";
-      subEl.textContent = verse.subheading;
-      chapterText.append(subEl);
-    }
-
-    const line = document.createElement("p");
-    line.className = "chapter-verse";
-    line.dataset.verse = String(verse.verse);
-
-    if (highlightedVerses.has(verse.verse)) {
-      line.classList.add("is-highlighted");
-    }
-
-    const number = document.createElement("span");
-    number.className = "chapter-verse-number";
-    number.textContent = verse.verse;
-
-    const text = document.createElement("span");
-    text.className = "chapter-verse-text";
-
-    if (typeof verse.html === "string") {
-      text.innerHTML = verse.html;
-    } else {
-      text.textContent = verse.text;
-    }
-
-    line.append(number, text);
-    chapterText.append(line);
-  });
-
-  verseTranslation.textContent = `${getCurrentTranslation().label} • ${chapter.verses.length} verses`;
-
-  if (activeScriptureFocus && activeScriptureFocus.book === selectedBook && activeScriptureFocus.chapter === chapter.chapter) {
-    const targetVerse = chapterText.querySelector(`[data-verse="${activeScriptureFocus.firstVerse}"]`);
-
-    if (targetVerse) {
-      targetVerse.scrollIntoView({ block: "start", behavior: "smooth" });
-    }
-  }
-};
-
-const applyTranslation = async (translationCode) => {
-  if (!translationLibrary[translationCode]) {
-    return;
-  }
-
-  // Offline + not yet cached → can't load this one.  Revert the picker to
-  // whatever's currently active so the UI doesn't sit on an unloadable choice,
-  // and surface a status message via the chapter pane.  We don't throw here
-  // because the user clicking a disabled-looking option is recoverable, not an
-  // error worth alarm.
-  const entry = translationLibrary[translationCode];
-  const alreadyInMemory = !!entry.books;
-  if (!alreadyInMemory && !navigator.onLine && !offlineAvailableTranslations.has(translationCode)) {
-    translationSelect.value = currentTranslationCode || translationSelect.value;
-    if (chapterText) {
-      chapterText.textContent = `"${entry.label ?? translationCode}" hasn't been downloaded yet, and you're currently offline. Connect to the internet and select it again to download.`;
-    }
-    return;
-  }
-
-  try {
-    await ensureTranslationLoaded(translationCode);
-  } catch (err) {
-    // Fetch failed at runtime (offline race, server hiccup, etc.).  Roll the
-    // picker back and keep the previous translation active rather than wedging
-    // the app in a half-loaded state.
-    console.warn(`[Translation] Failed to load "${translationCode}":`, err);
-    translationSelect.value = currentTranslationCode || translationSelect.value;
-    if (chapterText) {
-      chapterText.textContent = `Couldn't load "${entry.label ?? translationCode}". Check your connection and try again.`;
-    }
-    return;
-  }
-
-  currentTranslationCode = translationCode;
-  translationSelect.value = translationCode;
-
-  const scriptureLibrary = getCurrentScriptureLibrary();
-  const currentBook = scriptureLibrary[bookSelect.value] ? bookSelect.value : Object.keys(scriptureLibrary)[0];
-  const requestedChapterNumber = Number(chapterSelect.selectedOptions[0]?.textContent.replace("Chapter ", "") ?? 1);
-  const chapterIndex = scriptureLibrary[currentBook].findIndex((chapter) => chapter.chapter === requestedChapterNumber);
-
-  populateBookOptions();
-  bookSelect.value = currentBook;
-  populateChapterOptions(currentBook);
-  chapterSelect.value = String(chapterIndex >= 0 ? chapterIndex : 0);
-  renderChapter();
-
-  if (scriptureSearchQuery) {
-    performScriptureSearch(scriptureSearchQuery);
-  }
-};
-
-const MAX_SCRIPTURE_SEARCH_RESULTS = 100;
-
-// Parse a search query into bare-word terms and quoted phrases.
-// e.g. `"Lord God" grace` → { terms: ["grace"], phrases: ["lord god"] }
-const parseSearchQuery = (query) => {
-  const terms = [];
-  const phrases = [];
-  // Auto-close an unclosed " anywhere in the string by appending one at the end.
-  let lower = query.trim().toLowerCase();
-  if ((lower.match(/"/g) ?? []).length % 2 !== 0) {
-    lower += '"';
-  }
-  const regex = /"([^"]+)"|(\S+)/g;
-
-  for (const match of lower.matchAll(regex)) {
-    if (match[1]) {
-      phrases.push(match[1].trim());
-    } else if (match[2]) {
-      terms.push(match[2]);
-    }
-  }
-
-  return { terms, phrases };
-};
-
-const buildHighlightedTextContent = (text, patterns) => {
-  if (!patterns.length) {
-    return document.createTextNode(text);
-  }
-
-  // Phrases before bare words so the longer match wins in regex alternation.
-  const pattern = new RegExp(`(${patterns.map(escapeRegExp).join("|")})`, "gi");
-  const fragment = document.createDocumentFragment();
-  let lastIndex = 0;
-
-  for (const match of text.matchAll(pattern)) {
-    if (match.index > lastIndex) {
-      fragment.append(document.createTextNode(text.slice(lastIndex, match.index)));
-    }
-
-    const mark = document.createElement("mark");
-    mark.textContent = match[0];
-    fragment.append(mark);
-    lastIndex = match.index + match[0].length;
-  }
-
-  if (lastIndex < text.length) {
-    fragment.append(document.createTextNode(text.slice(lastIndex)));
-  }
-
-  return fragment;
-};
-
-const renderScriptureSearchResults = (results, terms) => {
-  scriptureSearchResults.innerHTML = "";
-
-  if (!results.length) {
-    const empty = document.createElement("p");
-    empty.className = "scripture-search-empty";
-    empty.textContent = "No verses found. Try different search words.";
-    scriptureSearchResults.append(empty);
-    return;
-  }
-
-  const count = document.createElement("p");
-  count.className = "scripture-search-count";
-  count.textContent = results.length === MAX_SCRIPTURE_SEARCH_RESULTS
-    ? `Showing first ${MAX_SCRIPTURE_SEARCH_RESULTS} results`
-    : `${results.length} ${results.length === 1 ? "verse" : "verses"} found`;
-  scriptureSearchResults.append(count);
-
-  results.forEach(({ book, chapter, verse, text }) => {
-    const item = document.createElement("div");
-    item.className = "scripture-search-result";
-    item.setAttribute("role", "button");
-    item.setAttribute("tabindex", "0");
-
-    const ref = document.createElement("p");
-    ref.className = "scripture-search-result-ref";
-    ref.textContent = `${book} ${chapter}:${verse}`;
-
-    const body = document.createElement("p");
-    body.className = "scripture-search-result-text";
-    body.append(buildHighlightedTextContent(text, terms));
-
-    item.append(ref, body);
-
-    const navigate = () => {
-      const scriptureLibrary = getCurrentScriptureLibrary();
-      const chapterIndex = scriptureLibrary[book].findIndex((c) => c.chapter === chapter);
-
-      if (chapterIndex === -1) {
-        return;
-      }
-
-      activeScriptureFocus = { book, chapter, firstVerse: verse, verses: [verse] };
-      bookSelect.value = book;
-      populateChapterOptions(book);
-      chapterSelect.value = String(chapterIndex);
-      renderChapter();
-      saveLastBookChapter();
-
-      scriptureSearchInput.value = "";
-      scriptureSearchQuery = "";
-      scriptureSearchResults.classList.add("is-hidden");
-      verseDisplay.classList.remove("is-hidden");
-    };
-
-    item.addEventListener("click", navigate);
-    item.addEventListener("keydown", (event) => {
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        navigate();
-      }
-    });
-
-    scriptureSearchResults.append(item);
-  });
-};
-
-const performScriptureSearch = (query) => {
-  scriptureSearchQuery = query.trim().toLowerCase();
-
-  if (!scriptureSearchQuery) {
-    scriptureSearchResults.classList.add("is-hidden");
-    verseDisplay.classList.remove("is-hidden");
-    return;
-  }
-
-  const { terms, phrases } = parseSearchQuery(query);
-  const scriptureLibrary = getCurrentScriptureLibrary();
-  const results = [];
-
-  for (const [bookName, chapters] of Object.entries(scriptureLibrary)) {
-    if (results.length >= MAX_SCRIPTURE_SEARCH_RESULTS) {
-      break;
-    }
-
-    for (const chapter of chapters) {
-      if (results.length >= MAX_SCRIPTURE_SEARCH_RESULTS) {
-        break;
-      }
-
-      for (const verse of chapter.verses) {
-        if (results.length >= MAX_SCRIPTURE_SEARCH_RESULTS) {
-          break;
-        }
-
-        const verseText = verse.text ?? "";
-        const verseTextLower = verseText.toLowerCase();
-
-        const matchesAll =
-          phrases.every((phrase) => verseTextLower.includes(phrase)) &&
-          terms.every((term) => verseTextLower.includes(term));
-
-        if (matchesAll) {
-          results.push({ book: bookName, chapter: chapter.chapter, verse: verse.verse, text: verseText });
-        }
-      }
-    }
-  }
-
-  verseDisplay.classList.add("is-hidden");
-  scriptureSearchResults.classList.remove("is-hidden");
-  // Phrases first so longer patterns take priority in regex alternation during highlighting.
-  renderScriptureSearchResults(results, [...phrases, ...terms]);
-};
+// parseSearchQuery / buildHighlightedTextContent / renderScriptureSearchResults
+// / performScriptureSearch have moved to scripture/search.js.
 
 const applyCommand = (command) => {
   noteEditor.focus();
@@ -1737,410 +1388,13 @@ const getCaretBlock = () => {
   return getEditorBlockContaining(range.startContainer);
 };
 
-const isValidScriptureReference = (canonicalBook, chapter, verseStart = null, verseEnd = null) => {
-  const scriptureLibrary = getCurrentScriptureLibrary();
-  const bookChapters = scriptureLibrary[canonicalBook];
-
-  if (!bookChapters) {
-    return false;
-  }
-
-  const chapterData = bookChapters.find((c) => c.chapter === chapter);
-
-  if (!chapterData) {
-    return false;
-  }
-
-  if (verseStart === null) {
-    return true;
-  }
-
-  const maxVerse = chapterData.verses[chapterData.verses.length - 1]?.verse ?? 0;
-  const effectiveVerseEnd = verseEnd ?? verseStart;
-
-  return verseStart >= 1 && effectiveVerseEnd <= maxVerse;
-};
-
-const isSingleChapterBook = (canonicalBook) => {
-  const scriptureLibrary = getCurrentScriptureLibrary();
-  return (scriptureLibrary[canonicalBook]?.length ?? 0) === 1;
-};
-
-const parseScriptureReference = (referenceText) => {
-  const match = referenceText.match(fullExplicitScriptureReferencePattern);
-
-  if (!match) {
-    return null;
-  }
-
-  const canonicalBook = bookAliasMap.get(normalizeBookName(match[1]));
-  const referenceBody = match[2];
-
-  if (!canonicalBook) {
-    return null;
-  }
-
-  const segments = referenceBody.split(/\s*,\s*/);
-  const chapterHighlights = new Map();
-  let currentChapter = null;
-  let firstVerse = null;
-
-  for (const segment of segments) {
-    const fullChapterSegment = segment.match(/^(\d+)(?::(\d+)(?:-(\d+))?)?$/);
-    const crossChapterSegment = segment.match(/^(\d+):(\d+)(?:-(\d+))?$/);
-    const verseOnlySegment = segment.match(/^(\d+)(?:-(\d+))?$/);
-
-    if (!fullChapterSegment) {
-      return null;
-    }
-
-    if (crossChapterSegment) {
-      currentChapter = Number(crossChapterSegment[1]);
-      const verseStart = Number(crossChapterSegment[2]);
-      const verseEnd = Number(crossChapterSegment[3] ?? crossChapterSegment[2]);
-
-      if (!isValidScriptureReference(canonicalBook, currentChapter, verseStart, verseEnd)) {
-        return null;
-      }
-
-      const verses = chapterHighlights.get(currentChapter) ?? new Set();
-
-      for (let verse = verseStart; verse <= verseEnd; verse += 1) {
-        verses.add(verse);
-      }
-
-      chapterHighlights.set(currentChapter, verses);
-
-      if (firstVerse === null) {
-        firstVerse = verseStart;
-      }
-
-      continue;
-    }
-
-    if (segment.includes(":")) {
-      currentChapter = Number(fullChapterSegment[1]);
-      const verseStart = Number(fullChapterSegment[2]);
-      const verseEnd = Number(fullChapterSegment[3] ?? fullChapterSegment[2]);
-
-      if (!isValidScriptureReference(canonicalBook, currentChapter, verseStart, verseEnd)) {
-        return null;
-      }
-
-      const verses = chapterHighlights.get(currentChapter) ?? new Set();
-
-      for (let verse = verseStart; verse <= verseEnd; verse += 1) {
-        verses.add(verse);
-      }
-
-      chapterHighlights.set(currentChapter, verses);
-
-      if (firstVerse === null) {
-        firstVerse = verseStart;
-      }
-
-      continue;
-    }
-
-    if (currentChapter === null) {
-      const parsedNum = Number(fullChapterSegment[1]);
-
-      if (!isValidScriptureReference(canonicalBook, parsedNum)) {
-        if (!isSingleChapterBook(canonicalBook) || !isValidScriptureReference(canonicalBook, 1, parsedNum)) {
-          return null;
-        }
-
-        currentChapter = 1;
-        const singleChapterVerses = chapterHighlights.get(1) ?? new Set();
-        singleChapterVerses.add(parsedNum);
-        chapterHighlights.set(1, singleChapterVerses);
-
-        if (firstVerse === null) {
-          firstVerse = parsedNum;
-        }
-
-        continue;
-      }
-
-      currentChapter = parsedNum;
-      continue;
-    }
-
-    if (!verseOnlySegment) {
-      return null;
-    }
-
-    const verseStart = Number(verseOnlySegment[1]);
-    const verseEnd = Number(verseOnlySegment[2] ?? verseOnlySegment[1]);
-
-    if (!isValidScriptureReference(canonicalBook, currentChapter, verseStart, verseEnd)) {
-      return null;
-    }
-
-    const verses = chapterHighlights.get(currentChapter) ?? new Set();
-
-    for (let verse = verseStart; verse <= verseEnd; verse += 1) {
-      verses.add(verse);
-    }
-
-    chapterHighlights.set(currentChapter, verses);
-
-    if (firstVerse === null) {
-      firstVerse = verseStart;
-    }
-  }
-
-  return {
-    book: canonicalBook,
-    chapter: currentChapter,
-    firstVerse,
-    chapterHighlights
-  };
-};
-
-const resolveReferenceSegment = (canonicalBook, segment, currentChapter) => {
-  const chapterVerseMatch = segment.match(/^(\d+):(\d+)(?:-(\d+))?$/);
-  const verseOnlyMatch = segment.match(/^(\d+)(?:-(\d+))?$/);
-
-  if (chapterVerseMatch) {
-    const chapter = Number(chapterVerseMatch[1]);
-    const verseStart = Number(chapterVerseMatch[2]);
-    const verseEnd = Number(chapterVerseMatch[3] ?? chapterVerseMatch[2]);
-
-    if (!isValidScriptureReference(canonicalBook, chapter, verseStart, verseEnd)) {
-      return null;
-    }
-
-    const verses = new Set();
-
-    for (let verse = verseStart; verse <= verseEnd; verse += 1) {
-      verses.add(verse);
-    }
-
-    return {
-      parsedReference: {
-        book: canonicalBook,
-        chapter,
-        firstVerse: verseStart,
-        chapterHighlights: new Map([[chapter, verses]])
-      },
-      currentChapter: chapter
-    };
-  }
-
-  if (!verseOnlyMatch) {
-    return null;
-  }
-
-  if (segment.includes(":")) {
-    return null;
-  }
-
-  if (currentChapter === null) {
-    const parsedNum = Number(verseOnlyMatch[1]);
-
-    if (!isValidScriptureReference(canonicalBook, parsedNum)) {
-      if (!isSingleChapterBook(canonicalBook) || !isValidScriptureReference(canonicalBook, 1, parsedNum)) {
-        return null;
-      }
-
-      const verseSet = new Set([parsedNum]);
-      return {
-        parsedReference: {
-          book: canonicalBook,
-          chapter: 1,
-          firstVerse: parsedNum,
-          chapterHighlights: new Map([[1, verseSet]])
-        },
-        currentChapter: 1
-      };
-    }
-
-    return {
-      parsedReference: {
-        book: canonicalBook,
-        chapter: parsedNum,
-        firstVerse: null,
-        chapterHighlights: new Map()
-      },
-      currentChapter: parsedNum
-    };
-  }
-
-  const verseStart = Number(verseOnlyMatch[1]);
-  const verseEnd = Number(verseOnlyMatch[2] ?? verseOnlyMatch[1]);
-
-  if (!isValidScriptureReference(canonicalBook, currentChapter, verseStart, verseEnd)) {
-    return null;
-  }
-
-  const verses = new Set();
-
-  for (let verse = verseStart; verse <= verseEnd; verse += 1) {
-    verses.add(verse);
-  }
-
-  return {
-    parsedReference: {
-      book: canonicalBook,
-      chapter: currentChapter,
-      firstVerse: verseStart,
-      chapterHighlights: new Map([[currentChapter, verses]])
-    },
-    currentChapter
-  };
-};
-
-const parseExplicitReferenceParts = (referenceText) => {
-  const match = referenceText.match(fullExplicitScriptureReferencePattern);
-
-  if (!match) {
-    return [];
-  }
-
-  const originalBookText = match[1];
-  const canonicalBook = bookAliasMap.get(normalizeBookName(originalBookText));
-  const referenceBody = match[2];
-
-  if (!canonicalBook) {
-    return [];
-  }
-
-  const segments = referenceBody.split(/(,\s*)/);
-  const parts = [];
-  let currentChapter = null;
-  let pendingDelimiter = "";
-
-  segments.forEach((segment, index) => {
-    if (!segment) {
-      return;
-    }
-
-    if (index % 2 === 1) {
-      pendingDelimiter = segment;
-      return;
-    }
-
-    const resolved = resolveReferenceSegment(canonicalBook, segment.trim(), currentChapter);
-
-    if (!resolved) {
-      pendingDelimiter = "";
-      return;
-    }
-
-    currentChapter = resolved.currentChapter;
-    const displayText = parts.length === 0
-      ? `${originalBookText} ${segment.trim()}`
-      : `${pendingDelimiter}${segment.trim()}`;
-
-    parts.push({
-      text: displayText,
-      parsedReference: resolved.parsedReference
-    });
-
-    pendingDelimiter = "";
-  });
-
-  return parts;
-};
-
-const parseContextualScriptureReference = (referenceText, context) => {
-  if (!context?.book || !context?.chapter) {
-    return null;
-  }
-
-  const match = referenceText.match(/^v(?:erse)?\.?\s*(\d+)(?:-(\d+))?$/i);
-
-  if (!match) {
-    return null;
-  }
-
-  const verseStart = Number(match[1]);
-  const verseEnd = Number(match[2] ?? match[1]);
-
-  if (!isValidScriptureReference(context.book, context.chapter, verseStart, verseEnd)) {
-    return null;
-  }
-
-  const verses = new Set();
-
-  for (let verse = verseStart; verse <= verseEnd; verse += 1) {
-    verses.add(verse);
-  }
-
-  return {
-    book: context.book,
-    chapter: context.chapter,
-    firstVerse: verseStart,
-    chapterHighlights: new Map([[context.chapter, verses]])
-  };
-};
-
-const formatResolvedReference = (parsedReference) => {
-  const verses = [...(parsedReference.chapterHighlights.get(parsedReference.chapter) ?? [])];
-
-  if (!verses.length) {
-    return `${parsedReference.book} ${parsedReference.chapter}`;
-  }
-
-  const ranges = [];
-  let rangeStart = verses[0];
-  let previousVerse = verses[0];
-
-  for (let index = 1; index < verses.length; index += 1) {
-    const verse = verses[index];
-
-    if (verse === previousVerse + 1) {
-      previousVerse = verse;
-      continue;
-    }
-
-    ranges.push(rangeStart === previousVerse ? `${rangeStart}` : `${rangeStart}-${previousVerse}`);
-    rangeStart = verse;
-    previousVerse = verse;
-  }
-
-  ranges.push(rangeStart === previousVerse ? `${rangeStart}` : `${rangeStart}-${previousVerse}`);
-  return `${parsedReference.book} ${parsedReference.chapter}:${ranges.join(", ")}`;
-};
-
-const getReferenceContext = (parsedReference) => ({
-  book: parsedReference.book,
-  chapter: parsedReference.chapter
-});
-
-const jumpToResolvedScripture = (parsedReference) => {
-  if (!parsedReference) {
-    return;
-  }
-
-  const scriptureLibrary = getCurrentScriptureLibrary();
-  const chapterIndex = scriptureLibrary[parsedReference.book].findIndex(
-    (chapter) => chapter.chapter === parsedReference.chapter
-  );
-
-  if (chapterIndex === -1) {
-    return;
-  }
-
-  activeScriptureFocus = {
-    book: parsedReference.book,
-    chapter: parsedReference.chapter,
-    firstVerse: parsedReference.firstVerse,
-    verses: [...(parsedReference.chapterHighlights.get(parsedReference.chapter) ?? [])]
-  };
-
-  bookSelect.value = parsedReference.book;
-  populateChapterOptions(parsedReference.book);
-  chapterSelect.value = String(chapterIndex);
-  renderChapter();
-  saveLastBookChapter();
-};
-
-const jumpToScripture = (referenceText) => {
-  jumpToResolvedScripture(parseScriptureReference(referenceText));
-};
-
+// ─── BEGIN scripture-functions-removed-block ──────────────────────────────
+// Everything from isValidScriptureReference through jumpToScripture has moved
+// to scripture/references.js (parsing/formatting) and scripture/viewer.js
+// (jumpTo*).  The original definitions used to live here; the destructured
+// bindings near the top of this file (referencesApi / viewerApi) re-export
+// the same names back into the app.js scope so the linkify code below
+// continues to work without per-call changes.
 const unwrapAutoScriptureLinks = (root = noteEditor) => {
   root.querySelectorAll("a[data-auto-scripture-link='true']").forEach((link) => {
     link.replaceWith(document.createTextNode(link.textContent));
@@ -2180,6 +1434,12 @@ const linkifyScriptureReferences = ({ jumpToCaretReference = false, scope = null
   const root = (scope && noteEditor.contains(scope)) ? scope : noteEditor;
   const caretOffset = getCaretTextOffset(root);
   unwrapAutoScriptureLinks(root);
+  // Read regex patterns through the alias-module getters: they're rebuilt
+  // whenever buildBookAliasMap runs (translation switch / alias edit), so
+  // capturing them via a stale local would silently miss references after a
+  // rebuild.
+  const explicitPattern = aliasesApi.getExplicitPattern();
+  const contextualPattern = aliasesApi.getContextualPattern();
   const walker = document.createTreeWalker(
     root,
     NodeFilter.SHOW_TEXT,
@@ -2212,10 +1472,10 @@ const linkifyScriptureReferences = ({ jumpToCaretReference = false, scope = null
 
   textNodes.forEach((textNode) => {
     const sourceText = textNode.nodeValue;
-    explicitScriptureReferencePattern.lastIndex = 0;
-    contextualScriptureReferencePattern.lastIndex = 0;
-    const explicitMatches = [...sourceText.matchAll(explicitScriptureReferencePattern)];
-    const contextualMatches = [...sourceText.matchAll(contextualScriptureReferencePattern)];
+    explicitPattern.lastIndex = 0;
+    contextualPattern.lastIndex = 0;
+    const explicitMatches = [...sourceText.matchAll(explicitPattern)];
+    const contextualMatches = [...sourceText.matchAll(contextualPattern)];
     const matches = [...explicitMatches, ...contextualMatches]
       .sort((left, right) => left.index - right.index);
 
@@ -3193,7 +2453,7 @@ syncPayloadApi = window.ScriptoriaModules.createSyncPayloads({
   paneGrid,
   getCurrentThemeMode: () => currentThemeMode,
   getCurrentPaneSplit: () => currentPaneSplit,
-  getCurrentTranslationCode: () => currentTranslationCode,
+  getCurrentTranslationCode: () => viewerApi.getCurrentTranslationCode(),
   getCurrentColorThemeId: () => currentColorThemeId,
   flushEditorWorkNow: () => flushEditorWorkNow(),
   applyThemeMode,
@@ -3531,9 +2791,8 @@ const debouncedRenderNoteManager = debounce(() => {
   renderNoteManager();
 }, 120);
 
-const debouncedPerformScriptureSearch = debounce((query) => {
-  performScriptureSearch(query);
-}, 180);
+// debouncedPerformScriptureSearch + the scripture-search input listener live
+// inside scripture/search.js now.
 
 noteBrowserFilterInput.addEventListener("input", () => {
   noteBrowserFilter = noteBrowserFilterInput.value;
@@ -4447,36 +3706,13 @@ noteEditor.addEventListener("mousedown", (event) => {
   document.addEventListener("mouseup", onMouseUp);
 });
 
-translationSelect.addEventListener("change", async () => {
-  activeScriptureFocus = null;
-  void writeStoredValue(translationStorageKey, translationSelect.value);
-  await applyTranslation(translationSelect.value);
-  markLocalSettingsUpdated();
-  scheduleAutoCloudSync();
-});
-
-scriptureSearchInput.addEventListener("input", () => {
-  debouncedPerformScriptureSearch(scriptureSearchInput.value);
-});
+// translationSelect / bookSelect / chapterSelect / scriptureSearchInput
+// listeners now live inside scripture/viewer.js and scripture/search.js.
 
 systemThemeMediaQuery.addEventListener("change", () => {
   if (currentThemeMode === "system") {
     applyThemeMode("system", { rerender: true });
   }
-});
-
-bookSelect.addEventListener("change", () => {
-  activeScriptureFocus = null;
-  populateChapterOptions(bookSelect.value);
-  chapterSelect.value = "0";
-  renderChapter();
-  saveLastBookChapter();
-});
-
-chapterSelect.addEventListener("change", () => {
-  activeScriptureFocus = null;
-  renderChapter();
-  saveLastBookChapter();
 });
 
 noteManagerList.addEventListener("click", (event) => {
@@ -4809,6 +4045,31 @@ insertImageFile.addEventListener("change", () => {
 
 // ── Custom translation import ──────────────────────────────────────────────
 
+const translationsManagerApi = window.ScriptoriaModules.createTranslationsManager({
+  translationLibrary,
+  readStoredValue,
+  writeStoredValue,
+  customTranslationsStorageKey,
+  translationStorageKey,
+  translationSelect,
+  downloadAllTranslationsButton,
+  downloadAllTranslationsStatus,
+  getCurrentTranslationCode: () => viewerApi.getCurrentTranslationCode(),
+  getUserTranslations: () => userTranslations,
+  setUserTranslations: (value) => {
+    userTranslations = value;
+  },
+  applyTranslation: (...args) => applyTranslation(...args),
+  isTranslationsSettingsOpen: () => settingsDialog.open && activeSettingsTabId === "translations"
+});
+
+// Hand the live translations module to the scripture viewer so its thunks for
+// ensureTranslationLoaded / offlineAvailableTranslations resolve to real
+// implementations.  Until this assignment runs, viewer's thunks are no-ops —
+// safe because they're only invoked from event handlers / bootstrap, both of
+// which fire after this point.
+translationsManagerApiRef = translationsManagerApi;
+
 const {
   BUILTIN_TRANSLATION_CODES,
   offlineAvailableTranslations,
@@ -4824,23 +4085,7 @@ const {
   deleteCustomTranslation,
   refreshDownloadAllTranslationsUi,
   renderTranslationsPanel
-} = window.ScriptoriaModules.createTranslationsManager({
-  translationLibrary,
-  readStoredValue,
-  writeStoredValue,
-  customTranslationsStorageKey,
-  translationStorageKey,
-  translationSelect,
-  downloadAllTranslationsButton,
-  downloadAllTranslationsStatus,
-  getCurrentTranslationCode: () => currentTranslationCode,
-  getUserTranslations: () => userTranslations,
-  setUserTranslations: (value) => {
-    userTranslations = value;
-  },
-  applyTranslation: (...args) => applyTranslation(...args),
-  isTranslationsSettingsOpen: () => settingsDialog.open && activeSettingsTabId === "translations"
-});
+} = translationsManagerApi;
 
 ({ renderSettings } = window.ScriptoriaModules.createSettingsUi({
   settingsTabNav,
@@ -4907,7 +4152,7 @@ const {
   getCurrentThemeMode: () => currentThemeMode,
   paneGrid,
   getCurrentPaneSplit: () => currentPaneSplit,
-  getCurrentTranslationCode: () => currentTranslationCode,
+  getCurrentTranslationCode: () => viewerApi.getCurrentTranslationCode(),
   getCurrentColorThemeId: () => currentColorThemeId,
   applyThemeMode,
   normalizeThemeMode,
@@ -5003,35 +4248,8 @@ document.addEventListener("drop", (event) => {
 });
 
 
-const buildBookAliasMap = () => {
-  const currentBooks = getCurrentTranslation()?.books;
-
-  if (!currentBooks) {
-    return;
-  }
-
-  bookAliasMap.clear();
-  Object.keys(currentBooks).forEach((book) => {
-    getEffectiveAliasesForBook(book).forEach((alias) => {
-      addBookAlias(alias, book);
-    });
-  });
-
-  const aliasPattern = [...bookAliasMap.keys()]
-    .sort((left, right) => right.length - left.length)
-    .map((alias) => escapeRegExp(alias))
-    .join("|");
-
-  explicitScriptureReferencePattern = new RegExp(
-    `\\b(${aliasPattern})\\s+(\\d+)(?::\\d+(?:-\\d+)?)?(?:\\s*,\\s*(?:(?:\\d+:)?\\d+(?:-\\d+)?))*`,
-    "gi"
-  );
-  fullExplicitScriptureReferencePattern = new RegExp(
-    `^(${aliasPattern})\\s+((?:\\d+)(?::\\d+(?:-\\d+)?)?(?:\\s*,\\s*(?:(?:\\d+:)?\\d+(?:-\\d+)?))*)$`,
-    "i"
-  );
-  contextualScriptureReferencePattern = /\b(v(?:erse)?\.?\s*\d+(?:-\d+)?)\b/gi;
-};
+// buildBookAliasMap has moved to scripture/aliases.js (and is re-exposed via
+// the buildBookAliasMap thunk near the top of this file).
 
 const bootstrap = async () => {
   await migrateFromLegacyDatabase();
@@ -5286,3 +4504,4 @@ window.addEventListener("online", () => {
     });
   }
 }
+

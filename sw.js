@@ -59,37 +59,30 @@ const PRECACHE_URLS = [
   "version.js",
   "app.js",
   "manifest.json",
+  "embed/base.js",
+  "embed/image.js",
+  "embed/pdf.js",
+  "embed/spotify.js",
+  "embed/youtube.js",
+  "notes/browser.js",
   "notes/model.js",
   "notes/render.js",
-  "notes/browser.js",
-  "settings/ui.js",
+  "scripture/aliases.js",
+  "scripture/references.js",
+  "scripture/viewer.js",
+  "scripture/search.js",
   "settings/backup-restore.js",
+  "settings/note-types.js",
   "settings/onboarding.js",
-  "sync/status.js",
-  "sync/payloads.js",
-  "sync/cloud-sync.js",
-  "translations/manager.js",
-
-  // Cloud-storage providers (loaded by index.html before app.js)
-  "storage/nullprovider.js",
-  "storage/localdrive.js",
+  "settings/ui.js",
   "storage/gdrive.js",
+  "storage/localdrive.js",
+  "storage/nullprovider.js",
   "storage/onedrive.js",
-
-  // Embed handlers
-  "embed/base.js",
-  "embed/youtube.js",
-  "embed/spotify.js",
-  "embed/pdf.js",
-  "embed/image.js",
-
-  // NOTE: built-in Bible translations (translations/*.js) are intentionally NOT
-  // precached.  Each one is several MB and most users only ever read one; baking
-  // all four into the install would balloon the first-visit download from a few
-  // hundred KB to several MB.  Instead, the cache-first fetch handler caches
-  // each translation file the first time it's actually loaded — and the page
-  // itself disables uncached translations in the picker when offline so users
-  // can see what is and isn't available.
+  "sync/cloud-sync.js",
+  "sync/payloads.js",
+  "sync/status.js",
+  "translations/manager.js",
 
   // Themes (62 of them, but each is small)
   "themes/default.js",
