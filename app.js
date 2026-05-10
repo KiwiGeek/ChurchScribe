@@ -268,7 +268,6 @@ let fullExplicitScriptureReferencePattern;
 let contextualScriptureReferencePattern;
 let activeScriptureFocus = null;
 let currentTranslationCode = "KJV";
-let activeTypeEditorId = null;
 let activeSettingsTabId = "ui-settings";
 let currentColorThemeId = "default";
 let currentThemeMode = "system";
@@ -649,7 +648,34 @@ const {
   getNoteDisplayTitle: (note) => getNoteDisplayTitle(note)
 });
 
-const getSelectedTypeForManager = () => workspace.noteTypes.find((type) => type.id === activeTypeEditorId) ?? null;
+const {
+  ensureSelectedTypeForManager,
+  getSelectedTypeForManager,
+  setSelectedTypeForManager,
+  addNoteType,
+  updateSelectedTypeName,
+  updateSelectedTypeCardFields,
+  addMetadataFieldToSelectedType,
+  updateMetadataField,
+  removeMetadataField,
+  updateCustomAliases,
+  deleteSelectedType
+} = window.ScriptoriaModules.createSettingsNoteTypes({
+  workspace,
+  createId,
+  createMetadataField,
+  buildMetadataForType,
+  getSuggestedCardTitleFieldId,
+  getDefaultCardSubtitleFieldId,
+  touchNote,
+  persistWorkspace: () => persistWorkspace(),
+  renderWorkspace: () => renderWorkspace(),
+  refreshSaveStatus: () => refreshSaveStatus(),
+  buildBookAliasMap: () => buildBookAliasMap(),
+  getSelectedCardTitleFieldId: () => cardTitleFieldSelect.value,
+  getSelectedCardSubtitleFieldId: () => cardSubtitleFieldSelect.value,
+  windowObject: window
+});
 
 const BOOK_ALIASES = {
   "Genesis":         ["Gen", "Ge", "Gn"],
@@ -813,9 +839,7 @@ const ensureWorkspaceConsistency = () => {
     workspace.selectedNewNoteTypeId = getActiveNote().typeId;
   }
 
-  if (!workspace.noteTypes.some((type) => type.id === activeTypeEditorId)) {
-    activeTypeEditorId = workspace.noteTypes[0].id;
-  }
+  ensureSelectedTypeForManager();
 
   workspace.customBookAliases = typeof workspace.customBookAliases === "object" && workspace.customBookAliases
     ? Object.fromEntries(
@@ -3223,164 +3247,6 @@ syncCloudApi = window.ScriptoriaModules.createCloudSync({
   isSettingsOpen: () => settingsDialog.open
 });
 
-const addNoteType = () => {
-  const type = {
-    id: createId("type"),
-    name: "New Type",
-    fields: [createMetadataField("Title", "Optional title")]
-  };
-
-  workspace.noteTypes.push(type);
-  activeTypeEditorId = type.id;
-  workspace.selectedNewNoteTypeId = type.id;
-  persistWorkspace();
-  renderWorkspace();
-  refreshSaveStatus();
-};
-
-const syncNotesForType = (type) => {
-  workspace.notes.forEach((note) => {
-    if (note.typeId === type.id) {
-      note.metadata = buildMetadataForType(type, note.metadata);
-    }
-  });
-};
-
-const updateSelectedTypeName = (name) => {
-  const type = getSelectedTypeForManager();
-
-  if (!type) {
-    return;
-  }
-
-  type.name = name.trim() || "Untitled Type";
-  persistWorkspace();
-  renderWorkspace();
-};
-
-const updateSelectedTypeCardFields = () => {
-  const type = getSelectedTypeForManager();
-
-  if (!type) {
-    return;
-  }
-
-  type.cardTitleFieldId = cardTitleFieldSelect.value;
-  type.cardSubtitleFieldId = cardSubtitleFieldSelect.value || "";
-  persistWorkspace();
-  renderWorkspace();
-};
-
-const addMetadataFieldToSelectedType = () => {
-  const type = getSelectedTypeForManager();
-
-  if (!type) {
-    return;
-  }
-
-  type.fields.push(createMetadataField("New Field", ""));
-  syncNotesForType(type);
-  persistWorkspace();
-  renderWorkspace();
-  refreshSaveStatus();
-};
-
-const updateMetadataField = (fieldId, prop, value) => {
-  const type = getSelectedTypeForManager();
-
-  if (!type) {
-    return;
-  }
-
-  const field = type.fields.find((entry) => entry.id === fieldId);
-
-  if (!field) {
-    return;
-  }
-
-  field[prop] = prop === "label" ? value.trim() || "Field" : value;
-  syncNotesForType(type);
-  persistWorkspace();
-  renderWorkspace();
-};
-
-const removeMetadataField = (fieldId) => {
-  const type = getSelectedTypeForManager();
-
-  if (!type) {
-    return;
-  }
-
-  const field = type.fields.find((entry) => entry.id === fieldId);
-
-  if (!field) {
-    return;
-  }
-
-  const confirmed = window.confirm(`Remove metadata field "${field.label}" from ${type.name}? Existing values for that field will be removed.`);
-
-  if (!confirmed) {
-    return;
-  }
-
-  type.fields = type.fields.filter((entry) => entry.id !== fieldId);
-  if (type.cardTitleFieldId === fieldId) {
-    type.cardTitleFieldId = getSuggestedCardTitleFieldId(type);
-  }
-
-  if (type.cardSubtitleFieldId === fieldId) {
-    type.cardSubtitleFieldId = getDefaultCardSubtitleFieldId(type);
-  }
-  syncNotesForType(type);
-  persistWorkspace();
-  renderWorkspace();
-  refreshSaveStatus();
-};
-
-const updateCustomAliases = (book, inputValue) => {
-  const aliases = inputValue
-    .split(",")
-    .map((alias) => alias.trim())
-    .filter(Boolean)
-    .filter((alias, index, allAliases) => allAliases.indexOf(alias) === index);
-
-  workspace.customBookAliases[book] = aliases;
-  persistWorkspace();
-  buildBookAliasMap();
-  refreshSaveStatus();
-};
-
-const deleteSelectedType = () => {
-  const type = getSelectedTypeForManager();
-
-  if (!type || workspace.noteTypes.length === 1) {
-    window.alert("At least one entry type is required.");
-    return;
-  }
-
-  const replacementType = workspace.noteTypes.find((entry) => entry.id !== type.id);
-  const confirmed = window.confirm(`Delete entry type "${type.name}" and move its entries to "${replacementType.name}"?`);
-
-  if (!confirmed) {
-    return;
-  }
-
-  workspace.notes.forEach((note) => {
-    if (note.typeId === type.id) {
-      note.typeId = replacementType.id;
-      note.metadata = buildMetadataForType(replacementType, note.metadata, type);
-      touchNote(note);
-    }
-  });
-
-  workspace.noteTypes = workspace.noteTypes.filter((entry) => entry.id !== type.id);
-  activeTypeEditorId = replacementType.id;
-  workspace.selectedNewNoteTypeId = replacementType.id;
-  persistWorkspace();
-  renderWorkspace();
-  refreshSaveStatus();
-};
-
 const openDialog = (dialog) => {
   if (typeof dialog.showModal === "function") {
     const handleBackdropClick = (e) => {
@@ -4655,7 +4521,7 @@ noteBrowserDetails.addEventListener("click", (event) => {
 });
 
 typeSelect.addEventListener("change", () => {
-  activeTypeEditorId = typeSelect.value;
+  setSelectedTypeForManager(typeSelect.value);
   renderSettings();
 });
 
