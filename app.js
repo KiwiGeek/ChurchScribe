@@ -234,19 +234,19 @@ const settingsTabs = [
   },
   {
     id: "scripture-aliases",
-    label: "Scripture Abbreviations"
+    label: "Abbreviations"
   },
   {
     id: "cloud-sync",
-    label: "Sync & Backup"
+    label: "Synchronization"
   },
   {
     id: "translations",
-    label: "Bible Translations"
+    label: "Translations"
   },
   {
     id: "data",
-    label: "Backup & Reset"
+    label: "Data Management"
   },
   {
     id: "about",

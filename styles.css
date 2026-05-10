@@ -1809,6 +1809,14 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  width: 100%;
+}
+
+.translation-list-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
 
 .translation-list-item-code {
@@ -1823,8 +1831,9 @@ h1 {
 
 .translation-list-item-tag {
   display: inline-block;
-  margin-top: 4px;
+  margin-top: 0;
   padding: 2px 8px;
+  white-space: nowrap;
   font-size: 0.72rem;
   border-radius: 999px;
   align-self: flex-start;
@@ -1839,9 +1848,16 @@ h1 {
   background: transparent;
 }
 
-.download-all-translations-status {
-  margin-left: 12px;
-  align-self: center;
+.translation-download-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.translation-download-actions .download-all-translations-status {
+  margin: 0;
+  line-height: 1;
 }
 
 .ghost-button--small {

@@ -376,7 +376,12 @@ window.ScriptoriaModules.createTranslationsManager = (deps) => {
           tag.dataset.state = "missing";
         }
 
-        info.append(codeEl, labelEl, tag);
+        const header = document.createElement("span");
+        header.className = "translation-list-item-header";
+
+        header.append(codeEl, tag);
+
+        info.append(header, labelEl);
         li.append(info);
         builtinList.append(li);
       });
