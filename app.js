@@ -2018,6 +2018,45 @@ betaBannerDismiss.addEventListener("click", () => {
   betaBanner.classList.add("is-hidden");
 });
 
+// ── Header clock ─────────────────────────────────────────────────────────────
+// Shown only when the page is in fullscreen mode (CSS gates visibility via
+// @media (display-mode: fullscreen)).  The element is updated regardless of
+// whether it's visible — the cost of writing two text nodes on a minute
+// boundary is trivially small, and not gating it on fullscreen state avoids
+// wiring up fullscreenchange listeners.
+//
+// We render hours, separator, and minutes as three sibling spans so the
+// stylesheet can colour the colon in --accent without touching the digits.
+{
+  const clock = document.querySelector("#header-clock");
+
+  if (clock) {
+    const hoursEl = document.createElement("span");
+    const sepEl = document.createElement("span");
+    const minutesEl = document.createElement("span");
+    //sepEl.className = "header-clock-sep";
+    sepEl.textContent = ":";
+    clock.replaceChildren(hoursEl, sepEl, minutesEl);
+
+    const tick = () => {
+      const now = new Date();
+      hoursEl.textContent = String(now.getHours()).padStart(2, "0");
+      minutesEl.textContent = String(now.getMinutes()).padStart(2, "0");
+    };
+
+    tick();
+
+    // Align the first re-tick to the next minute boundary so the displayed
+    // time flips to the new minute on the second it actually changes; after
+    // that, a plain 60s interval keeps it accurate.
+    const msToNextMinute = 60_000 - (Date.now() % 60_000);
+    window.setTimeout(() => {
+      tick();
+      window.setInterval(tick, 60_000);
+    }, msToNextMinute);
+  }
+}
+
 // ── Online / offline awareness ───────────────────────────────────────────────
 // Cloud sync is the only thing that genuinely needs network connectivity —
 // everything else (notes, translations, themes, embeds-in-cache) keeps working

@@ -131,6 +131,7 @@ body::before {
   gap: 20px;
   align-items: center;
   margin-bottom: 12px;
+  user-select: none;
 }
 
 .header-actions {
@@ -144,7 +145,42 @@ body::before {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
+  align-items: center;
   gap: 12px;
+}
+
+/*
+ * Header clock — only visible when the browser/OS reports the document is in
+ * fullscreen mode.  F11 fullscreen in Chromium/Firefox triggers the
+ * (display-mode: fullscreen) media query, as does programmatic
+ * Element.requestFullscreen().  The element stays in the DOM either way and
+ * gets a live time tick from app.js; the media query is just a visibility
+ * gate, so toggling fullscreen is a pure CSS state change.
+ */
+.header-clock {
+  display: none;
+  align-items: baseline;
+  font-family: var(--font-heading);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  user-select: none;
+}
+
+/* Accent only the colon so the clock reads as "themed" without colouring the
+ * whole digit run — a tiny brand-touched detail rather than a loud one. */
+.header-clock-sep {
+  color: var(--accent);
+  margin: 0 0.05em;
+  font-weight: 700;
+}
+
+@media (display-mode: fullscreen) {
+  .header-clock {
+    display: inline-flex;
+  }
 }
 
 .eyebrow,
@@ -276,6 +312,7 @@ h1 {
   align-items: start;
   justify-content: space-between;
   gap: 20px;
+  user-select: none;
   padding: 18px 20px 10px;
 }
 
@@ -409,6 +446,7 @@ h1 {
   cursor: pointer;
   font-size: 0.9rem;
   transition: transform 180ms ease, background 180ms ease;
+  user-select: none;
 }
 
 .primary-button {
@@ -515,6 +553,7 @@ h1 {
   min-width: 0;
   display: grid;
   gap: 6px;
+  user-select: none;
 }
 
 .panel-note-summary {
@@ -688,6 +727,7 @@ h1 {
   background: var(--surface-accent);
   color: var(--accent-strong);
   font-size: 0.9rem;
+  user-select: none;
   cursor: pointer;
   transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
 }
@@ -1140,6 +1180,7 @@ h1 {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  user-select: none;
   gap: 0.35rem;
 }
 
@@ -1248,6 +1289,7 @@ h1 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
   padding: 0 20px 12px;
+  user-select: none;
 }
 
 .verse-search-field {
@@ -1484,6 +1526,7 @@ h1 {
 
 .verse-translation {
   margin: 12px 0 0;
+  user-select: none;
   font-size: 0.88rem;
 }
 
@@ -1547,6 +1590,7 @@ h1 {
   gap: 16px;
   align-items: start;
   padding: 18px 20px 12px;
+  user-select: none;
   border-bottom: 1px solid var(--border);
 }
 
@@ -1557,6 +1601,7 @@ h1 {
 .dialog-body {
   flex: 1;
   min-height: 0;
+  user-select: none;
   padding: 18px 20px 20px;
   overflow: auto;
 }
@@ -2915,6 +2960,7 @@ body.is-pane-dragging {
     color: var(--surface-strong);
     position: fixed;
     top: 0;
+    user-select: none;
     left: 0;
     right: 0;
     z-index: 1000;
@@ -2959,6 +3005,7 @@ body.is-pane-dragging {
   align-items: center;
   gap: 10px;
   padding: 10px 16px;
+  user-select: none;
   background: var(--accent);
   color: var(--surface-strong);
   flex-shrink: 0;

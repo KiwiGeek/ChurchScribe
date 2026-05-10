@@ -50,6 +50,7 @@
       </div>
       <div class="header-actions">
         <div class="header-controls">
+            <span class="header-clock" id="header-clock" aria-hidden="true"></span>
             <button class="theme-toggle" id="settings-button" type="button">
               <span class="theme-toggle-label">Settings…</span>
           </button>
@@ -136,7 +137,6 @@
       <aside class="panel scripture-panel" aria-labelledby="scripture-panel-title">
         <div class="panel-header">
           <div>
-            <p class="panel-kicker">Scripture</p>
             <h2 id="scripture-panel-title">Scriptures</h2>
           </div>
         </div>
@@ -158,8 +158,7 @@
           </label>
 
           <label class="field verse-search-field">
-            <span>Search</span>
-            <input type="search" id="scripture-search-input" placeholder="Scripture Search…" autocomplete="off">
+            <input type="search" id="scripture-search-input" placeholder="Scripture Search…" aria-label="Scripture search" autocomplete="off">
           </label>
         </form>
 
