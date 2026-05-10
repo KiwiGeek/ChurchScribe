@@ -88,6 +88,7 @@ const PRECACHE_URLS = [
   "sync/cloud-sync.js",
   "sync/payloads.js",
   "sync/status.js",
+  "theme/controller.js",
   "translations/manager.js",
 
   // Themes (62 of them, but each is small)

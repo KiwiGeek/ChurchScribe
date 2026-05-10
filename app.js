@@ -203,8 +203,8 @@ let activeProvider = noOpProvider;
 // the scripture/* modules now.  Other modules read it via accessor calls on
 // viewerApi / searchApi.
 let activeSettingsTabId = "ui-settings";
-let currentColorThemeId = "default";
-let currentThemeMode = "system";
+// currentThemeMode + currentColorThemeId moved to theme/controller.js.  Read
+// via themeApi.getCurrentThemeMode() / getCurrentColorThemeId().
 let currentPaneSplit = 0.6;
 let noteBrowserFilter = "";
 let noteBrowserTypeFilter = "all";
@@ -212,7 +212,8 @@ let noteBrowserSort = "updated-desc";
 let noteBrowserSelectedNoteId = null;
 let dbPromise;
 let userTranslations = [];
-const systemThemeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+// systemThemeMediaQuery moved into theme/controller.js (only consumer was the
+// theme code).
 
 const workspace = {
   noteTypes: [],
@@ -336,8 +337,10 @@ const debounce = (callback, delayMs) => {
 };
 const createId = (prefix) => `${prefix}-${crypto.randomUUID()}`;
 const formatSyncTimestamp = (value) => value ? new Date(value).toLocaleString() : "Not synced yet";
-const normalizeThemeMode = (value) => ["light", "dark", "system"].includes(value) ? value : "system";
-const getSystemTheme = () => systemThemeMediaQuery.matches ? "dark" : "light";
+// normalizeThemeMode + getSystemTheme moved to theme/controller.js.
+// normalizeThemeMode is re-exported from themeApi (re-bound below) so callers
+// like sync/payloads.js and settings/backup-restore.js still receive it
+// through their existing dep wiring.
 
 const openDatabase = () => {
   if (!("indexedDB" in window)) {
@@ -506,15 +509,50 @@ const writeMirroredPreference = (key, value) => {
   }
 };
 
-const syncThemePreferenceMirrors = () => {
-  writeMirroredPreference(themeMirrorStorageKey, normalizeThemeMode(currentThemeMode));
-  writeMirroredPreference(colorThemeMirrorStorageKey, currentColorThemeId || "default");
-};
+// syncThemePreferenceMirrors / clearThemePreferenceMirrors moved to
+// theme/controller.js.  Both are re-exported on themeApi and rebound below.
 
-const clearThemePreferenceMirrors = () => {
-  writeMirroredPreference(themeMirrorStorageKey, null);
-  writeMirroredPreference(colorThemeMirrorStorageKey, null);
-};
+// ── Theme controller ──────────────────────────────────────────────────────
+// Owns light/dark mode + colour theme + the localStorage mirror that lets the
+// inline boot script in index.html avoid a flash of the wrong theme.
+// applyThemeMode / applyColorTheme / etc. used to live inline in this file;
+// the names below are destructured from the module so existing callers
+// (sync/payloads, settings/ui, settings/backup-restore, bootstrap) keep
+// working without per-call changes.
+const themeApi = window.ScriptoriaModules.createThemeController({
+  documentObject: document,
+  windowObject: window,
+  colorThemes,
+  readStoredValue,
+  writeStoredValue,
+  migrateLegacyPreference,
+  readMirroredPreference,
+  writeMirroredPreference,
+  themeStorageKey,
+  themeMirrorStorageKey,
+  colorThemeStorageKey,
+  colorThemeMirrorStorageKey,
+  // sync hooks — late-bound through the syncCloudApi thunks declared above
+  // so they no-op safely until the sync module is wired up later in this file.
+  markLocalSettingsUpdated: (...args) => markLocalSettingsUpdated(...args),
+  scheduleAutoCloudSync: (...args) => scheduleAutoCloudSync(...args),
+  // Settings rerender — late-bound because renderSettings is a `let`
+  // placeholder that gets its real value when settings/ui.js is created.
+  isSettingsOpen: () => settingsDialog.open,
+  renderSettings: () => renderSettings()
+});
+
+const {
+  applyThemeMode,
+  applyColorTheme,
+  getResolvedThemeForMode,
+  syncThemeModeControl,
+  getPreferredTheme,
+  getPreferredColorTheme,
+  syncThemePreferenceMirrors,
+  clearThemePreferenceMirrors,
+  normalizeThemeMode
+} = themeApi;
 
 // normalizeBookName + addBookAlias moved to scripture/aliases.js.
 const normalizeFieldLabel = (value) => value.trim().toLowerCase();
@@ -937,11 +975,7 @@ const restoreWorkspace = async () => {
   }
 };
 
-const getPreferredTheme = async () => {
-  const savedTheme = await migrateLegacyPreference(themeStorageKey);
-
-  return normalizeThemeMode(savedTheme ?? readMirroredPreference(themeMirrorStorageKey));
-};
+// getPreferredTheme moved to theme/controller.js (re-exported on themeApi).
 
 const getPreferredPaneOrder = async () => {
   const savedOrder = await migrateLegacyPreference(paneOrderStorageKey);
@@ -957,51 +991,8 @@ const getPreferredSplit = async () => {
 // have moved to scripture/viewer.js and are destructured back into this scope
 // from viewerApi above.
 
-const getResolvedThemeForMode = (mode = currentThemeMode, themeId = currentColorThemeId) => {
-  const normalizedMode = normalizeThemeMode(mode);
-  const requestedTheme = normalizedMode === "system" ? getSystemTheme() : normalizedMode;
-  const themeDef = colorThemes.find((theme) => theme.id === themeId);
-
-  if (themeDef?.supports === "light") {
-    return "light";
-  }
-
-  if (themeDef?.supports === "dark") {
-    return "dark";
-  }
-
-  return requestedTheme;
-};
-
-const syncThemeModeControl = (mode = currentThemeMode) => {
-  const select = document.querySelector("#ui-theme-mode-select");
-
-  if (select) {
-    select.value = normalizeThemeMode(mode);
-  }
-};
-
-const applyThemeMode = (mode, { persist = false, markChange = false, rerender = true } = {}) => {
-  currentThemeMode = normalizeThemeMode(mode);
-  document.documentElement.dataset.theme = getResolvedThemeForMode(currentThemeMode);
-  syncThemeModeControl(currentThemeMode);
-  syncThemePreferenceMirrors();
-
-  if (persist) {
-    void writeStoredValue(themeStorageKey, currentThemeMode);
-  }
-
-  if (markChange) {
-    markLocalSettingsUpdated();
-    scheduleAutoCloudSync();
-  }
-
-  if (rerender) {
-    if (settingsDialog.open) {
-      renderSettings();
-    }
-  }
-};
+// getResolvedThemeForMode / syncThemeModeControl / applyThemeMode moved to
+// theme/controller.js.
 
 const syncPaneOrderToggle = (order) => {
   const scriptureFirst = order === "scripture-first";
@@ -1043,44 +1034,7 @@ const togglePaneOrder = () => {
   scheduleAutoCloudSync();
 };
 
-const getPreferredColorTheme = async () => {
-  const saved = await readStoredValue(colorThemeStorageKey);
-  const mirrored = readMirroredPreference(colorThemeMirrorStorageKey);
-  const validIds = colorThemes.map((t) => t.id);
-  if (validIds.includes(saved)) {
-    return saved;
-  }
-
-  return validIds.includes(mirrored) ? mirrored : "default";
-};
-
-const applyColorTheme = (themeId) => {
-  currentColorThemeId = themeId;
-
-  if (themeId === "default") {
-    document.documentElement.removeAttribute("data-color-theme");
-  } else {
-    document.documentElement.dataset.colorTheme = themeId;
-  }
-
-  const themeDef = colorThemes.find((t) => t.id === themeId);
-
-  if (themeDef) {
-    if (themeDef.supports === "light" && currentThemeMode === "dark") {
-      applyThemeMode("light", { persist: true, rerender: false });
-    } else if (themeDef.supports === "dark" && currentThemeMode === "light") {
-      applyThemeMode("dark", { persist: true, rerender: false });
-    } else {
-      document.documentElement.dataset.theme = getResolvedThemeForMode(currentThemeMode, themeId);
-    }
-  }
-
-  if (settingsDialog.open) {
-    renderSettings();
-  }
-
-  syncThemePreferenceMirrors();
-};
+// getPreferredColorTheme / applyColorTheme moved to theme/controller.js.
 
 // populateBookOptions / populateChapterOptions / renderChapter / applyTranslation
 // have moved to scripture/viewer.js.
@@ -1231,10 +1185,10 @@ syncPayloadApi = window.ScriptoriaModules.createSyncPayloads({
   workspace,
   cloudSyncSettings,
   paneGrid,
-  getCurrentThemeMode: () => currentThemeMode,
+  getCurrentThemeMode: () => themeApi.getCurrentThemeMode(),
   getCurrentPaneSplit: () => currentPaneSplit,
   getCurrentTranslationCode: () => viewerApi.getCurrentTranslationCode(),
-  getCurrentColorThemeId: () => currentColorThemeId,
+  getCurrentColorThemeId: () => themeApi.getCurrentColorThemeId(),
   flushEditorWorkNow: () => flushEditorWorkNow(),
   applyThemeMode,
   normalizeThemeMode,
@@ -1431,12 +1385,7 @@ noteMetaFields.addEventListener("change", (event) => {
 
 // translationSelect / bookSelect / chapterSelect / scriptureSearchInput
 // listeners now live inside scripture/viewer.js and scripture/search.js.
-
-systemThemeMediaQuery.addEventListener("change", () => {
-  if (currentThemeMode === "system") {
-    applyThemeMode("system", { rerender: true });
-  }
-});
+// The systemThemeMediaQuery "change" listener moved into theme/controller.js.
 
 noteManagerList.addEventListener("click", (event) => {
   const selectionButton = event.target.closest("[data-note-select]");
@@ -1804,11 +1753,11 @@ const {
   getCurrentTranslation: () => getCurrentTranslation(),
   getEffectiveAliasesForBook,
   applyThemeMode,
-  getCurrentThemeMode: () => currentThemeMode,
+  getCurrentThemeMode: () => themeApi.getCurrentThemeMode(),
   paneGrid,
   togglePaneOrder,
   colorThemes,
-  getCurrentColorThemeId: () => currentColorThemeId,
+  getCurrentColorThemeId: () => themeApi.getCurrentColorThemeId(),
   writeStoredValue,
   colorThemeStorageKey,
   applyColorTheme,
@@ -1834,11 +1783,11 @@ const {
   populateTranslationSelect,
   customTranslationsStorageKey,
   writeStoredValue,
-  getCurrentThemeMode: () => currentThemeMode,
+  getCurrentThemeMode: () => themeApi.getCurrentThemeMode(),
   paneGrid,
   getCurrentPaneSplit: () => currentPaneSplit,
   getCurrentTranslationCode: () => viewerApi.getCurrentTranslationCode(),
-  getCurrentColorThemeId: () => currentColorThemeId,
+  getCurrentColorThemeId: () => themeApi.getCurrentColorThemeId(),
   applyThemeMode,
   normalizeThemeMode,
   themeStorageKey,
