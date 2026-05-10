@@ -82,6 +82,7 @@ const PRECACHE_URLS = [
   "settings/ui.js",
   "storage/gdrive.js",
   "storage/localdrive.js",
+  "storage/noopprovider.js",
   "storage/nullprovider.js",
   "storage/onedrive.js",
   "sync/cloud-sync.js",

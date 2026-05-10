@@ -154,24 +154,11 @@ const onboardingStorageKey = "service-notes-onboarding-seen";
 const customTranslationsStorageKey = "service-notes-custom-translations";
 const autoCloudSyncDelayMs = 10000;
 
-const noOpProvider = {
-  id: "none",
-  displayName: "Storage",
-  isAvailable: () => false,
-  hasActiveSession: () => false,
-  ensureTokenClient: () => {},
-  waitForReady: () => {},
-  connect: () => Promise.reject(new Error("No storage provider configured.")),
-  disconnect: () => {},
-  attemptSilentReconnect: () => Promise.reject(new Error("No storage provider configured.")),
-  getSettingsFields: () => [],
-  getSettingsValues: () => ({}),
-  applySettingChange: () => ({}),
-  getLocationLabel: () => "",
-  upload: () => Promise.reject(new Error("No storage provider configured.")),
-  download: () => Promise.reject(new Error("No storage provider configured.")),
-  clearRemote: () => Promise.resolve()
-};
+// noOpProvider — defensive fallback used as the initial value of activeProvider
+// and whenever providerRegistry lookup misses.  Lives in storage/noopprovider.js
+// alongside the other (real) provider implementations; we just alias the global
+// here so the rest of this file keeps the short name.
+const noOpProvider = window.NoOpProvider;
 
 const providerRegistry = {};
 
