@@ -208,64 +208,9 @@ let activeProvider = noOpProvider;
 // scripture parsing helpers have moved to scripture/references.js.  The bindings
 // destructured from those modules (further down in this file) keep the same
 // names, so existing callers continue to work without a search-and-replace.
-const domainValidationCache = new Map();
-const MIN_EMBED_WIDTH = 240;
-const EDITOR_HORIZONTAL_PADDING = 40;
-const BLOCK_LEVEL_ELEMENTS = "p, h2, h3, h4, h5, h6, li, blockquote";
-const knownTlds = [
-  "ac","ad","ae","af","ag","ai","al","am","ao","ar","as","at","au","aw","az",
-  "ba","bb","bd","be","bf","bg","bh","bi","bj","bm","bn","bo","br","bs","bt","bw","by","bz",
-  "ca","cc","cd","cf","cg","ch","ci","ck","cl","cm","cn","co","cr","cu","cv","cw","cx","cy","cz",
-  "de","dj","dk","dm","do","dz","ec","ee","eg","er","es","et","eu",
-  "fi","fj","fk","fm","fo","fr","ga","gb","gd","ge","gf","gg","gh","gi","gl","gm","gn","gp","gq",
-  "gr","gs","gt","gu","gw","gy","hk","hn","hr","ht","hu",
-  "id","ie","il","im","in","io","iq","ir","is","it","je","jm","jo","jp",
-  "ke","kg","kh","ki","km","kn","kr","kw","ky","kz","la","lb","lc","li","lk","lr","ls","lt","lu","lv","ly",
-  "ma","mc","md","me","mg","mh","mk","ml","mm","mn","mo","mp","mq","mr","ms","mt","mu","mv","mw","mx","my","mz",
-  "na","nc","ne","nf","ng","ni","nl","no","np","nr","nu","nz",
-  "om","pa","pe","pf","pg","ph","pk","pl","pm","pn","pr","ps","pt","pw","py",
-  "qa","re","ro","rs","ru","rw","sa","sb","sc","sd","se","sg","sh","si","sk","sl","sm","sn","so",
-  "sr","ss","st","sv","sx","sy","sz","tc","td","tf","tg","th","tj","tk","tl","tm","tn","to","tr","tt","tv","tz",
-  "ua","ug","us","uy","uz","va","vc","ve","vg","vi","vn","vu","wf","ws",
-  "ye","yt","za","zm","zw",
-  "com","aero","app","asia","bible","biz","blog","cat","church","cloud","coop","dev",
-  "digital","edu","faith","global","gov","health","info","int","io","live",
-  "media","mil","ministry","mobi","museum","name","net","news","online","org",
-  "pro","shop","site","store","tech","travel","tv","wiki"
-];
-
-// Memoised URL detection patterns.  These used to be rebuilt inside linkifyUrls()
-// on every keystroke (including a `[...knownTlds].sort()` and a fresh RegExp
-// compile for the bare-domain pattern); both knownTlds and the regexes are
-// constant for the life of the page, so we build them exactly once here.
-const URL_LINKIFY_PATTERNS = (() => {
-  const tldGroup = [...knownTlds].sort((a, b) => b.length - a.length).join("|");
-  return [
-    {
-      regex: /\b(https?|ftp|spotify):\/\/[^\s<>"'\)\]]+/gi,
-      type: "explicit"
-    },
-    {
-      regex: /\bgopher:\/\/([^\s<>"'\)\]]+)/gi,
-      type: "gopher"
-    },
-    {
-      regex: /\bwww\.[a-zA-Z0-9][a-zA-Z0-9\-]*(?:\.[a-zA-Z0-9][a-zA-Z0-9\-]*)+(?:\/[^\s<>"'\)\]]*)?/gi,
-      type: "www"
-    },
-    {
-      regex: /\b[a-zA-Z0-9_%+\-]+(?:\.[a-zA-Z0-9_%+\-]+)*@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/gi,
-      type: "email"
-    },
-    {
-      regex: new RegExp(
-        `\\b(?!www\\.)([a-zA-Z][a-zA-Z0-9\\-]*(?:\\.[a-zA-Z0-9][a-zA-Z0-9\\-]*)*\\.(?:${tldGroup}))(?:\\/[^\\s<>"'\\)\\]]*)?`,
-        "gi"
-      ),
-      type: "bare"
-    }
-  ];
-})();
+// Editor-only constants — domainValidationCache, knownTlds, URL_LINKIFY_PATTERNS,
+// MIN_EMBED_WIDTH, EDITOR_HORIZONTAL_PADDING, BLOCK_LEVEL_ELEMENTS — have moved
+// into the editor/* modules that consume them (links.js, media.js, controller.js).
 
 // Scripture-related state (translation code, focus, search query) lives inside
 // the scripture/* modules now.  Other modules read it via accessor calls on
@@ -735,6 +680,7 @@ const viewerApi = window.ScriptoriaModules.createScriptureViewer({
   verseReference,
   verseTranslation,
   translationSelect,
+  verseDisplay,
   translationLibrary,
   readStoredValue: (...args) => readStoredValue(...args),
   writeStoredValue: (...args) => writeStoredValue(...args),
@@ -800,8 +746,6 @@ const editorLinksApi = window.ScriptoriaModules.createEditorLinks({
   formatResolvedReference,
   getReferenceContext,
   jumpToResolvedScripture,
-  domainValidationCache,
-  urlLinkifyPatterns: URL_LINKIFY_PATTERNS,
   windowObject: window
 });
 
@@ -814,7 +758,6 @@ const {
   ensureLeadingParagraph,
   findAutoLinkAtCaret
 } = editorLinksApi;
-const EMBED_SELECTOR = EmbedBase.selector;
 
 // BOOK_ALIASES table + getBuiltInAliasesForBook + getEffectiveAliasesForBook
 // have moved to scripture/aliases.js.  getEffectiveAliasesForBook is
@@ -1159,10 +1102,8 @@ const applyColorTheme = (themeId) => {
 
 // parseSearchQuery / buildHighlightedTextContent / renderScriptureSearchResults
 // / performScriptureSearch have moved to scripture/search.js.
-const colorPickerWrapper = document.querySelector("#color-picker-wrapper");
-const colorPickerTrigger = document.querySelector("#color-picker-trigger");
-const colorPickerDropdown = document.querySelector("#color-picker-dropdown");
-const colorButtonSwatch = document.querySelector("#color-button-swatch");
+// The four colour-picker DOM refs (wrapper, trigger, dropdown, swatch) are
+// queried inside editor/controller.js now, since they were only consumed there.
 
 const editorTablesApi = window.ScriptoriaModules.createEditorTables({
   noteEditor,
@@ -1197,7 +1138,6 @@ const {
 
 window.ScriptoriaModules.createEditorNavigation({
   noteEditor,
-  embedSelector: EMBED_SELECTOR,
   ensureTrailingParagraph,
   saveActiveNote: () => saveActiveNote(),
   findAutoLinkAtCaret,
@@ -1213,11 +1153,6 @@ editorControllerApi = window.ScriptoriaModules.createEditorController({
   tableInsertConfirmButton,
   tableToolbar,
   tableContextMenu,
-  colorPickerWrapper,
-  colorPickerTrigger,
-  colorPickerDropdown,
-  colorButtonSwatch,
-  blockLevelElements: BLOCK_LEVEL_ELEMENTS,
   getActiveNote,
   touchNote,
   persistWorkspace: () => persistWorkspace(),
@@ -1246,9 +1181,6 @@ window.ScriptoriaModules.createEditorMedia({
   noteEditor,
   insertImageButton,
   insertImageFile,
-  embedSelector: EMBED_SELECTOR,
-  minEmbedWidth: MIN_EMBED_WIDTH,
-  editorHorizontalPadding: EDITOR_HORIZONTAL_PADDING,
   ensureTrailingParagraph,
   saveActiveNote: () => saveActiveNote(),
   saveEditorSelection,
@@ -2053,55 +1985,8 @@ void bootstrap();
 
 const paneDivider = document.querySelector("#pane-divider");
 
-verseDisplay.addEventListener("copy", (event) => {
-  const selection = window.getSelection();
-
-  if (!selection || selection.rangeCount === 0 || selection.isCollapsed) {
-    return;
-  }
-
-  const fragment = selection.getRangeAt(0).cloneContents();
-  const wrapper = document.createElement("div");
-  wrapper.appendChild(fragment);
-
-  wrapper.querySelectorAll("*").forEach((el) => {
-    el.classList.remove("is-highlighted");
-    el.style.removeProperty("background");
-    el.style.removeProperty("background-color");
-  });
-
-  // Convert .verse-red-letter CSS-class color to an inline style so the notes
-  // editor's "Automatic" button (which walks el.style.color) can clear it.
-  const liveRedLetterEl = chapterText.querySelector(".verse-red-letter");
-  const redLetterColor = liveRedLetterEl ? getComputedStyle(liveRedLetterEl).color : "";
-  wrapper.querySelectorAll(".verse-red-letter").forEach((el) => {
-    if (redLetterColor) {
-      el.style.color = redLetterColor;
-    }
-    el.classList.remove("verse-red-letter");
-  });
-
-  // Convert .verse-added-words CSS-class italic to a plain <em> element so the
-  // notes editor's italic button can toggle it off.
-  // Note: this runs after the red-letter loop so el.style.color may already be
-  // set on combined red-letter+added-words spans — carry it over to the <em>.
-  wrapper.querySelectorAll(".verse-added-words").forEach((el) => {
-    const em = document.createElement("em");
-    if (el.style.color) {
-      em.style.color = el.style.color;
-    }
-    em.append(...el.childNodes);
-    el.replaceWith(em);
-  });
-
-  wrapper.querySelectorAll(".chapter-verse-number").forEach((numEl) => {
-    numEl.replaceWith(`[${numEl.textContent.trim()}] `);
-  });
-
-  event.clipboardData.setData("text/html", wrapper.innerHTML);
-  event.clipboardData.setData("text/plain", selection.toString());
-  event.preventDefault();
-});
+// The verseDisplay "copy" listener (which rewrites selected chapter HTML for a
+// clean paste into the notes editor) lives inside scripture/viewer.js now.
 
 paneDivider.addEventListener("mousedown", (startEvent) => {
   startEvent.preventDefault();
@@ -2270,3 +2155,4 @@ window.addEventListener("online", () => {
     });
   }
 }
+

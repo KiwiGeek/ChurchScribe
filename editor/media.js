@@ -1,13 +1,18 @@
 window.ScriptoriaModules = window.ScriptoriaModules || {};
 
+// Layout constants for embedded media.  MIN_EMBED_WIDTH is the lower bound for
+// resizing an embed (anything narrower stops behaving like a block-level
+// figure); EDITOR_HORIZONTAL_PADDING is the inset between the editor's content
+// box and its inner padding edge, used when computing how wide an embed can
+// grow before bumping the edge.  Both are consumed only by this module.
+const MIN_EMBED_WIDTH = 240;
+const EDITOR_HORIZONTAL_PADDING = 40;
+
 window.ScriptoriaModules.createEditorMedia = (deps) => {
   const {
     noteEditor,
     insertImageButton,
     insertImageFile,
-    embedSelector,
-    minEmbedWidth,
-    editorHorizontalPadding,
     ensureTrailingParagraph,
     saveActiveNote,
     saveEditorSelection,
@@ -22,6 +27,11 @@ window.ScriptoriaModules.createEditorMedia = (deps) => {
     windowObject,
     documentObject
   } = deps;
+
+  // Embed CSS selector is derived from the embedBaseClass dep (which is the
+  // EmbedBase constructor exposed by embed/base.js) so we don't duplicate the
+  // selector string anywhere.
+  const embedSelector = embedBaseClass.selector;
 
   let savedSelectionForImageInsert = null;
 
@@ -527,7 +537,7 @@ window.ScriptoriaModules.createEditorMedia = (deps) => {
 
     const startX = event.clientX;
     const startWidth = wrapper.offsetWidth;
-    const maxWidth = noteEditor.clientWidth - editorHorizontalPadding;
+    const maxWidth = noteEditor.clientWidth - EDITOR_HORIZONTAL_PADDING;
 
     if (mediaEl) {
       mediaEl.style.pointerEvents = "none";
@@ -538,7 +548,7 @@ window.ScriptoriaModules.createEditorMedia = (deps) => {
     const onMouseMove = (moveEvent) => {
       const newWidth = Math.min(
         maxWidth,
-        Math.max(minEmbedWidth, startWidth + (moveEvent.clientX - startX))
+        Math.max(MIN_EMBED_WIDTH, startWidth + (moveEvent.clientX - startX))
       );
       wrapper.style.width = `${newWidth}px`;
     };

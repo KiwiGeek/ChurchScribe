@@ -23,6 +23,7 @@ window.ScriptoriaModules.createScriptureViewer = (deps) => {
     verseReference,
     verseTranslation,
     translationSelect,
+    verseDisplay,
     // Data + storage
     translationLibrary,
     readStoredValue,
@@ -326,6 +327,68 @@ window.ScriptoriaModules.createScriptureViewer = (deps) => {
     activeScriptureFocus = null;
     renderChapter();
     saveLastBookChapter();
+  });
+
+  // Copy handler: when the user selects text in the verse display and copies
+  // it, we rewrite the clipboard fragment so it pastes cleanly into the notes
+  // editor.  Three transformations:
+  //   • drop the .is-highlighted class + any inline background colour, so the
+  //     bright "you jumped here" highlight doesn't follow into the note;
+  //   • replace .verse-red-letter (a class-styled colour) with an inline
+  //     style.color value, since the editor's colour-picker reads from the
+  //     style attribute, not class names;
+  //   • replace .verse-added-words (italic-via-class) with an actual <em>
+  //     element so the editor's italic toggle can turn it off;
+  //   • turn the chapter-verse-number spans into bracketed numbers like
+  //     `[5] ` inline with the verse text.
+  verseDisplay.addEventListener("copy", (event) => {
+    const selection = window.getSelection();
+
+    if (!selection || selection.rangeCount === 0 || selection.isCollapsed) {
+      return;
+    }
+
+    const fragment = selection.getRangeAt(0).cloneContents();
+    const wrapper = document.createElement("div");
+    wrapper.appendChild(fragment);
+
+    wrapper.querySelectorAll("*").forEach((el) => {
+      el.classList.remove("is-highlighted");
+      el.style.removeProperty("background");
+      el.style.removeProperty("background-color");
+    });
+
+    // Convert .verse-red-letter CSS-class color to an inline style so the notes
+    // editor's "Automatic" button (which walks el.style.color) can clear it.
+    const liveRedLetterEl = chapterText.querySelector(".verse-red-letter");
+    const redLetterColor = liveRedLetterEl ? getComputedStyle(liveRedLetterEl).color : "";
+    wrapper.querySelectorAll(".verse-red-letter").forEach((el) => {
+      if (redLetterColor) {
+        el.style.color = redLetterColor;
+      }
+      el.classList.remove("verse-red-letter");
+    });
+
+    // Convert .verse-added-words CSS-class italic to a plain <em> element so the
+    // notes editor's italic button can toggle it off.
+    // Note: this runs after the red-letter loop so el.style.color may already be
+    // set on combined red-letter+added-words spans — carry it over to the <em>.
+    wrapper.querySelectorAll(".verse-added-words").forEach((el) => {
+      const em = document.createElement("em");
+      if (el.style.color) {
+        em.style.color = el.style.color;
+      }
+      em.append(...el.childNodes);
+      el.replaceWith(em);
+    });
+
+    wrapper.querySelectorAll(".chapter-verse-number").forEach((numEl) => {
+      numEl.replaceWith(`[${numEl.textContent.trim()}] `);
+    });
+
+    event.clipboardData.setData("text/html", wrapper.innerHTML);
+    event.clipboardData.setData("text/plain", selection.toString());
+    event.preventDefault();
   });
 
   return {

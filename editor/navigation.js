@@ -3,13 +3,16 @@ window.ScriptoriaModules = window.ScriptoriaModules || {};
 window.ScriptoriaModules.createEditorNavigation = (deps) => {
   const {
     noteEditor,
-    embedSelector,
     ensureTrailingParagraph,
     saveActiveNote,
     findAutoLinkAtCaret,
     windowObject,
     documentObject
   } = deps;
+
+  // Embed CSS selector lives on the EmbedBase class registered globally by
+  // embed/base.js — we read it once at construction since it's a static value.
+  const embedSelector = window.EmbedBase.selector;
 
   const getEditorBlock = (node) => {
     let el = node.nodeType === Node.TEXT_NODE ? node.parentElement : node;

@@ -1,5 +1,10 @@
 window.ScriptoriaModules = window.ScriptoriaModules || {};
 
+// CSS selector matching the block-level elements that contenteditable lets the
+// user toggle between (paragraph, heading, list-item, blockquote).  The "Block"
+// toolbar button uses this when figuring out which element the caret is in.
+const BLOCK_LEVEL_ELEMENTS = "p, h2, h3, h4, h5, h6, li, blockquote";
+
 window.ScriptoriaModules.createEditorController = (deps) => {
   const {
     noteEditor,
@@ -9,11 +14,6 @@ window.ScriptoriaModules.createEditorController = (deps) => {
     tableInsertConfirmButton,
     tableToolbar,
     tableContextMenu,
-    colorPickerWrapper,
-    colorPickerTrigger,
-    colorPickerDropdown,
-    colorButtonSwatch,
-    blockLevelElements,
     getActiveNote,
     touchNote,
     persistWorkspace,
@@ -36,6 +36,14 @@ window.ScriptoriaModules.createEditorController = (deps) => {
     windowObject,
     documentObject
   } = deps;
+
+  // Color-picker DOM refs are queried here rather than passed in via deps —
+  // they're consumed only by this module's color-picker logic, so there's no
+  // value in surfacing them at the bootstrap call site.
+  const colorPickerWrapper = documentObject.querySelector("#color-picker-wrapper");
+  const colorPickerTrigger = documentObject.querySelector("#color-picker-trigger");
+  const colorPickerDropdown = documentObject.querySelector("#color-picker-dropdown");
+  const colorButtonSwatch = documentObject.querySelector("#color-button-swatch");
 
   const colorPalette = [
     { label: "Black", hex: "#000000" },
@@ -94,7 +102,7 @@ window.ScriptoriaModules.createEditorController = (deps) => {
     noteEditor.focus();
     const range = getEditorRange();
     const currentBlock = range
-      ? getClosestEditorElement(range.commonAncestorContainer, blockLevelElements)
+      ? getClosestEditorElement(range.commonAncestorContainer, BLOCK_LEVEL_ELEMENTS)
       : null;
     const isActive = currentBlock?.tagName.toLowerCase() === block.toLowerCase();
     documentObject.execCommand("formatBlock", false, isActive ? "p" : block);

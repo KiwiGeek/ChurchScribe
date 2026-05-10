@@ -1,5 +1,70 @@
 window.ScriptoriaModules = window.ScriptoriaModules || {};
 
+// ── Module-private constants ─────────────────────────────────────────────────
+// knownTlds, the compiled URL regex patterns, and the domain-validation cache
+// used to live in app.js as constants passed in via deps.  They're consumed
+// only by this module, so they live here now and stay invisible to the rest
+// of the app.
+const knownTlds = [
+  "ac","ad","ae","af","ag","ai","al","am","ao","ar","as","at","au","aw","az",
+  "ba","bb","bd","be","bf","bg","bh","bi","bj","bm","bn","bo","br","bs","bt","bw","by","bz",
+  "ca","cc","cd","cf","cg","ch","ci","ck","cl","cm","cn","co","cr","cu","cv","cw","cx","cy","cz",
+  "de","dj","dk","dm","do","dz","ec","ee","eg","er","es","et","eu",
+  "fi","fj","fk","fm","fo","fr","ga","gb","gd","ge","gf","gg","gh","gi","gl","gm","gn","gp","gq",
+  "gr","gs","gt","gu","gw","gy","hk","hn","hr","ht","hu",
+  "id","ie","il","im","in","io","iq","ir","is","it","je","jm","jo","jp",
+  "ke","kg","kh","ki","km","kn","kr","kw","ky","kz","la","lb","lc","li","lk","lr","ls","lt","lu","lv","ly",
+  "ma","mc","md","me","mg","mh","mk","ml","mm","mn","mo","mp","mq","mr","ms","mt","mu","mv","mw","mx","my","mz",
+  "na","nc","ne","nf","ng","ni","nl","no","np","nr","nu","nz",
+  "om","pa","pe","pf","pg","ph","pk","pl","pm","pn","pr","ps","pt","pw","py",
+  "qa","re","ro","rs","ru","rw","sa","sb","sc","sd","se","sg","sh","si","sk","sl","sm","sn","so",
+  "sr","ss","st","sv","sx","sy","sz","tc","td","tf","tg","th","tj","tk","tl","tm","tn","to","tr","tt","tv","tz",
+  "ua","ug","us","uy","uz","va","vc","ve","vg","vi","vn","vu","wf","ws",
+  "ye","yt","za","zm","zw",
+  "com","aero","app","asia","bible","biz","blog","cat","church","cloud","coop","dev",
+  "digital","edu","faith","global","gov","health","info","int","io","live",
+  "media","mil","ministry","mobi","museum","name","net","news","online","org",
+  "pro","shop","site","store","tech","travel","tv","wiki"
+];
+
+// Memoised URL detection patterns.  These used to be rebuilt inside linkifyUrls()
+// on every keystroke (including a `[...knownTlds].sort()` and a fresh RegExp
+// compile for the bare-domain pattern); both knownTlds and the regexes are
+// constant for the life of the page, so we build them exactly once here.
+const URL_LINKIFY_PATTERNS = (() => {
+  const tldGroup = [...knownTlds].sort((a, b) => b.length - a.length).join("|");
+  return [
+    {
+      regex: /\b(https?|ftp|spotify):\/\/[^\s<>"'\)\]]+/gi,
+      type: "explicit"
+    },
+    {
+      regex: /\bgopher:\/\/([^\s<>"'\)\]]+)/gi,
+      type: "gopher"
+    },
+    {
+      regex: /\bwww\.[a-zA-Z0-9][a-zA-Z0-9\-]*(?:\.[a-zA-Z0-9][a-zA-Z0-9\-]*)+(?:\/[^\s<>"'\)\]]*)?/gi,
+      type: "www"
+    },
+    {
+      regex: /\b[a-zA-Z0-9_%+\-]+(?:\.[a-zA-Z0-9_%+\-]+)*@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/gi,
+      type: "email"
+    },
+    {
+      regex: new RegExp(
+        `\\b(?!www\\.)([a-zA-Z][a-zA-Z0-9\\-]*(?:\\.[a-zA-Z0-9][a-zA-Z0-9\\-]*)*\\.(?:${tldGroup}))(?:\\/[^\\s<>"'\\)\\]]*)?`,
+        "gi"
+      ),
+      type: "bare"
+    }
+  ];
+})();
+
+// Cached verdicts from validateDomainWithDoh — keyed by hostname.  Survives
+// across linkifyUrls calls so we don't re-query Cloudflare DoH on every
+// keystroke for the same domain.  Not shared with anything outside this module.
+const domainValidationCache = new Map();
+
 window.ScriptoriaModules.createEditorLinks = (deps) => {
   const {
     noteEditor,
@@ -11,8 +76,6 @@ window.ScriptoriaModules.createEditorLinks = (deps) => {
     formatResolvedReference,
     getReferenceContext,
     jumpToResolvedScripture,
-    domainValidationCache,
-    urlLinkifyPatterns,
     windowObject
   } = deps;
 
@@ -381,7 +444,7 @@ window.ScriptoriaModules.createEditorLinks = (deps) => {
       const nodeGlobalStart = globalOffsets.get(textNode) ?? 0;
       const allMatches = [];
 
-      for (const { regex, type } of urlLinkifyPatterns) {
+      for (const { regex, type } of URL_LINKIFY_PATTERNS) {
         regex.lastIndex = 0;
 
         for (const match of sourceText.matchAll(regex)) {
