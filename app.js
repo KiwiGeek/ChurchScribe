@@ -281,7 +281,6 @@ let scriptureSearchQuery = "";
 let savedSelectionForTableInsert = null;
 let activeTableCell = null;
 let contextMenuTableCell = null;
-let activeOnboardingStepIndex = 0;
 let dbPromise;
 let userTranslations = [];
 const systemThemeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
@@ -323,64 +322,6 @@ const settingsTabs = [
   {
     id: "about",
     label: "About"
-  }
-];
-
-const onboardingSteps = [
-  {
-    kicker: "Welcome",
-    title: "Scriptoria keeps your entries on your device",
-    copy: "Scriptoria is designed to feel lightweight and private. Your entries live in your browser on your own computer unless you explicitly connect a sync & backup provider.",
-    points: [
-      "Nothing is automatically sent to a server run by Scriptoria.",
-      "You stay in control of when and where any backups or sync copies are created.",
-      "You can clear or export your library later from Settings if you ever need to."
-    ],
-    callout: "Good to know: the default experience is local-first and privacy-friendly."
-  },
-  {
-    kicker: "Taking Notes",
-    title: "The note editor works like a focused writing surface",
-    copy: "Each entry is its own editable document. Use the toolbar for quick formatting, lists, headings, quotes, images, and tables while you capture sermon points, study entries, or prayer requests.",
-    points: [
-      "The main entry area saves locally as you type.",
-      "Use the library to jump between entries when your library grows.",
-      "Formatting is intentionally simple so you can stay in the flow during live note-taking."
-    ],
-    callout: "Tip: the app is optimized for desktop and tablet use, especially during active note-taking."
-  },
-  {
-    kicker: "Scripture Linking",
-    title: "Verse references are matched automatically",
-    copy: "When you type a Bible reference in your entries, Scriptoria tries to recognize it and turn it into a clickable scripture link automatically.",
-    points: [
-      "Matched references can jump you straight to the passage in the Scripture Panel.",
-      "Common abbreviations are supported, and you can fine-tune them in Settings.",
-      "Copying verses from the Scripture Panel keeps useful formatting like emphasis where possible."
-    ],
-    callout: "If a book abbreviation is unusual in your church context, check the Scripture Abbreviations section in Settings."
-  },
-  {
-    kicker: "Entry Types",
-    title: "Entry types shape the details attached to each entry",
-    copy: "Scriptoria lets you define entry types such as sermon notes, Bible studies, Sabbath School, or anything else you need. Each type can have its own detail fields.",
-    points: [
-      "Use Settings → Entry Types to add, rename, or adjust entry types.",
-      "Detail fields can be customized to match the information you track most often.",
-      "The entry details dialog lets you switch an entry to a different type when that actually matters."
-    ],
-    callout: "This is one of the app’s best customization points: shape the library around your ministry context."
-  },
-  {
-    kicker: "Make It Yours",
-    title: "Explore themes and optional cloud sync next",
-    copy: "Once the basics feel comfortable, check out the color themes and display settings, then consider connecting sync & backup if you want another copy of your entries outside this device.",
-    points: [
-      "Themes and layout settings can make the app feel much more personal.",
-      "Sync & Backup is optional, but useful if you want backup or cross-device workflows.",
-      "You can reopen this tutorial any time from Settings → About."
-    ],
-    callout: "Recommended next steps: try a different theme, review your entry types, and then decide whether cloud sync is worth setting up."
   }
 ];
 
@@ -666,6 +607,16 @@ let renderNoteMetadataFields = () => {};
 let renderWorkspace = () => {};
 let renderNoteManager = () => {};
 let openNotesBrowser = () => {};
+let renderSettings = () => {};
+let downloadWorkspaceBackup = () => {};
+let restoreWorkspaceFromBackup = async () => {};
+let clearLocalWorkspace = async () => {};
+let clearRemoteWorkspace = async () => {};
+let clearAllData = async () => {};
+let openOnboarding = () => {};
+let goToPreviousOnboardingStep = () => {};
+let goToNextOnboardingStep = () => {};
+let finishOnboarding = () => {};
 
 const {
   createMetadataField,
@@ -1083,10 +1034,8 @@ const applyThemeMode = (mode, { persist = false, markChange = false, rerender = 
   }
 
   if (rerender) {
-    const uiContent = document.querySelector("#ui-settings-content");
-
-    if (uiContent) {
-      renderUiSettings(uiContent);
+    if (settingsDialog.open) {
+      renderSettings();
     }
   }
 };
@@ -1163,10 +1112,8 @@ const applyColorTheme = (themeId) => {
     }
   }
 
-  const uiContent = document.querySelector("#ui-settings-content");
-
-  if (uiContent) {
-    renderUiSettings(uiContent);
+  if (settingsDialog.open) {
+    renderSettings();
   }
 
   syncThemePreferenceMirrors();
@@ -2991,614 +2938,6 @@ let refreshNoteSurfaces = () => {};
   renderSettings: () => renderSettings()
 }));
 
-const renderProviderSettings = () => {
-  providerSettingsContainer.innerHTML = "";
-  const fields = activeProvider.getSettingsFields();
-
-  if (!fields.length) {
-    return;
-  }
-
-  const currentValues = cloudSyncSettings.providerSettings[activeProvider.id] ?? {};
-  const grid = document.createElement("div");
-  grid.className = "display-field-grid";
-
-  fields.forEach((field) => {
-    const label = document.createElement("label");
-
-    const span = document.createElement("span");
-    span.textContent = field.label;
-
-    if (field.type === "checkbox") {
-      label.className = "field checkbox-field";
-      const input = document.createElement("input");
-      input.type = "checkbox";
-      input.dataset.providerSettingKey = field.key;
-      input.checked = Boolean(currentValues[field.key] ?? false);
-      label.append(span, input);
-    } else if (field.type === "select") {
-      label.className = "field";
-      const select = document.createElement("select");
-      select.dataset.providerSettingKey = field.key;
-      (field.options ?? []).forEach((option) => {
-        const opt = document.createElement("option");
-        opt.value = option.value;
-        opt.textContent = option.label;
-        select.append(opt);
-      });
-      select.value = String(currentValues[field.key] ?? "");
-      label.append(span, select);
-    } else {
-      label.className = "field";
-      const input = document.createElement("input");
-      input.type = "text";
-      input.dataset.providerSettingKey = field.key;
-      input.value = String(currentValues[field.key] ?? "");
-      label.append(span, input);
-    }
-
-    if (field.helpText) {
-      const help = document.createElement("p");
-      help.className = "settings-copy";
-      help.textContent = field.helpText;
-      label.append(help);
-    }
-
-    grid.append(label);
-  });
-
-  providerSettingsContainer.append(grid);
-};
-
-const renderUiSettings = (container) => {
-  container.innerHTML = "";
-
-  const toggleSection = document.createElement("div");
-  toggleSection.className = "ui-settings-section";
-
-  const toggleTitle = document.createElement("p");
-  toggleTitle.className = "ui-settings-section-title";
-  toggleTitle.textContent = "Layout & Mode";
-  toggleSection.append(toggleTitle);
-
-  const toggleRow = document.createElement("div");
-  toggleRow.className = "ui-toggle-row";
-
-  const themeModeField = document.createElement("label");
-  themeModeField.className = "ui-inline-select";
-
-  const themeModeLabel = document.createElement("span");
-  themeModeLabel.textContent = "Theme mode";
-
-  const themeModeSelect = document.createElement("select");
-  themeModeSelect.id = "ui-theme-mode-select";
-  [
-    { value: "system", label: "System" },
-    { value: "light", label: "Light" },
-    { value: "dark", label: "Dark" }
-  ].forEach((option) => {
-    const opt = document.createElement("option");
-    opt.value = option.value;
-    opt.textContent = option.label;
-    themeModeSelect.append(opt);
-  });
-  themeModeSelect.value = currentThemeMode;
-  themeModeSelect.addEventListener("change", () => {
-    applyThemeMode(themeModeSelect.value, { persist: true, markChange: true });
-  });
-  themeModeField.append(themeModeLabel, themeModeSelect);
-  toggleRow.append(themeModeField);
-
-  const currentOrder = paneGrid.dataset.order === "scripture-first" ? "scripture-first" : "notes-first";
-  const paneBtn = document.createElement("button");
-  paneBtn.type = "button";
-  paneBtn.id = "ui-scripture-left-toggle";
-  paneBtn.className = "ui-toggle-button";
-  paneBtn.setAttribute("aria-pressed", String(currentOrder === "scripture-first"));
-  paneBtn.innerHTML = `<span>Scripture left</span><span class="ui-toggle-state">${currentOrder === "scripture-first" ? "On" : "Off"}</span>`;
-  paneBtn.addEventListener("click", () => {
-    togglePaneOrder();
-  });
-  toggleRow.append(paneBtn);
-  toggleSection.append(toggleRow);
-  container.append(toggleSection);
-
-  const themeSection = document.createElement("div");
-  themeSection.className = "ui-settings-section";
-
-  const themeTitle = document.createElement("p");
-  themeTitle.className = "ui-settings-section-title";
-  themeTitle.textContent = "Color Theme";
-  themeSection.append(themeTitle);
-
-  const themeGrid = document.createElement("div");
-  themeGrid.className = "theme-grid";
-
-  colorThemes.forEach((theme) => {
-    const card = document.createElement("button");
-    card.type = "button";
-    card.className = `theme-card${theme.id === currentColorThemeId ? " is-active" : ""}`;
-    card.dataset.themeId = theme.id;
-
-    const swatch = document.createElement("div");
-    swatch.className = "theme-swatch";
-    theme.swatches.forEach((color) => {
-      const dot = document.createElement("div");
-      dot.className = "theme-swatch-color";
-      dot.style.background = color;
-      swatch.append(dot);
-    });
-
-    const name = document.createElement("p");
-    name.className = "theme-card-name";
-    name.textContent = theme.name;
-
-    const meta = document.createElement("p");
-    meta.className = "theme-card-meta";
-    const modeLabel = theme.supports === "both" ? "Light & dark" : theme.supports === "dark" ? "Dark only" : "Light only";
-    meta.textContent = modeLabel;
-
-    const check = document.createElement("span");
-    check.className = "theme-card-check";
-    check.setAttribute("aria-hidden", "true");
-    check.textContent = "✓";
-
-    card.append(swatch, name, meta, check);
-    card.addEventListener("click", () => {
-      void writeStoredValue(colorThemeStorageKey, theme.id);
-      applyColorTheme(theme.id);
-      markLocalSettingsUpdated();
-      scheduleAutoCloudSync();
-    });
-    themeGrid.append(card);
-  });
-
-  themeSection.append(themeGrid);
-  container.append(themeSection);
-};
-
-const downloadWorkspaceBackup = () => {
-  const exportedAt = new Date().toISOString();
-  const backup = {
-    type: "scriptoria-backup",
-    version: 1,
-    exportedAt,
-    workspace: {
-      noteTypes: structuredClone(workspace.noteTypes),
-      customBookAliases: structuredClone(workspace.customBookAliases),
-      activeNoteId: workspace.activeNoteId,
-      selectedNewNoteTypeId: workspace.selectedNewNoteTypeId
-    },
-    notes: structuredClone(workspace.notes),
-    customTranslations: structuredClone(userTranslations),
-    preferences: {
-      theme: currentThemeMode,
-      paneOrder: paneGrid.dataset.order === "scripture-first" ? "scripture-first" : "notes-first",
-      paneSplit: currentPaneSplit,
-      translation: currentTranslationCode,
-      colorTheme: currentColorThemeId
-    }
-  };
-  const json = JSON.stringify(backup, null, 2);
-  const blob = new Blob([json], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `scriptoria-backup-${exportedAt.split("T")[0]}.json`;
-  document.body.append(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-};
-
-const restoreWorkspaceFromBackup = async (file) => {
-  try {
-    const text = await file.text();
-    const backup = JSON.parse(text);
-
-    if (!backup || typeof backup !== "object") {
-      throw new Error("Invalid backup file: not a valid JSON object.");
-    }
-
-    if (!backup.workspace || !Array.isArray(backup.notes)) {
-      throw new Error("The selected file does not appear to be a Scriptoria backup.");
-    }
-
-    // eslint-disable-next-line no-alert
-    if (!window.confirm("This will replace your current library with the backup. Your existing data will be overwritten. Continue?")) {
-      return;
-    }
-
-    workspace.noteTypes = backup.workspace.noteTypes ?? workspace.noteTypes;
-    workspace.customBookAliases = backup.workspace.customBookAliases ?? {};
-    workspace.activeNoteId = backup.workspace.activeNoteId ?? workspace.activeNoteId;
-    workspace.selectedNewNoteTypeId = backup.workspace.selectedNewNoteTypeId ?? workspace.selectedNewNoteTypeId;
-    workspace.notes = backup.notes;
-
-    if (Array.isArray(backup.customTranslations)) {
-      userTranslations.forEach(({ code }) => {
-        if (!BUILTIN_TRANSLATION_CODES.has(code)) {
-          delete translationLibrary[code];
-        }
-      });
-      userTranslations = [];
-
-      backup.customTranslations.forEach(({ code, label, language, copyright, data }) => {
-        if (code && label && !BUILTIN_TRANSLATION_CODES.has(code) && validateTranslationData(data)) {
-          translationLibrary[code] = { label, language: language ?? null, copyright: copyright ?? null, books: data };
-          userTranslations.push({ code, label, language: language ?? null, copyright: copyright ?? null, data });
-        }
-      });
-
-      void writeStoredValue(customTranslationsStorageKey, userTranslations);
-      populateTranslationSelect();
-    }
-
-    if (backup.preferences) {
-      const { preferences } = backup;
-
-      if (preferences.theme) {
-        applyThemeMode(preferences.theme, { rerender: false });
-        void writeStoredValue(themeStorageKey, normalizeThemeMode(preferences.theme));
-      }
-
-      if (preferences.paneOrder) {
-        applyPaneOrder(preferences.paneOrder);
-        void writeStoredValue(paneOrderStorageKey, preferences.paneOrder);
-      }
-
-      if (typeof preferences.paneSplit === "number") {
-        applySplit(preferences.paneSplit);
-        void writeStoredValue(paneSplitStorageKey, currentPaneSplit);
-      }
-
-      if (preferences.translation) {
-        await applyTranslation(preferences.translation);
-        void writeStoredValue(translationStorageKey, preferences.translation);
-      }
-
-      if (preferences.colorTheme) {
-        applyColorTheme(preferences.colorTheme);
-        void writeStoredValue(colorThemeStorageKey, preferences.colorTheme);
-      }
-    }
-
-    buildBookAliasMap();
-    renderWorkspace();
-    persistWorkspace();
-    updateSaveStatus("Library restored from backup.");
-  } catch (error) {
-    console.error("[Backup] Restore failed:", error);
-    // eslint-disable-next-line no-alert
-    window.alert(`Failed to restore backup: ${error.message}`);
-  }
-};
-
-const clearLocalWorkspace = async () => {
-  // eslint-disable-next-line no-alert
-  if (!window.confirm("This will permanently delete all local entries, entry types, and settings. The app will reset to its default state. This cannot be undone.")) {
-    return;
-  }
-
-  stopCloudPolling();
-  clearPendingAutoSync();
-
-  activeProvider.disconnect();
-
-  await Promise.all([
-    deleteStoredValue(workspaceStorageKey),
-    deleteStoredValue(cloudSyncStorageKey),
-    deleteStoredValue(themeStorageKey),
-    deleteStoredValue(paneOrderStorageKey),
-    deleteStoredValue(paneSplitStorageKey),
-    deleteStoredValue(translationStorageKey),
-    deleteStoredValue(colorThemeStorageKey),
-    deleteStoredValue(lastBookChapterStorageKey),
-    deleteStoredValue(onboardingStorageKey),
-    deleteStoredValue(notesStorageKey),
-    deleteStoredValue(customTranslationsStorageKey)
-  ]);
-  clearThemePreferenceMirrors();
-
-  window.location.reload();
-};
-
-const clearRemoteWorkspace = async () => {
-  if (!activeProvider.hasActiveSession()) {
-    // eslint-disable-next-line no-alert
-    window.alert("No storage provider is connected. Connect a provider in Sync & Backup settings first.");
-    return;
-  }
-
-  // eslint-disable-next-line no-alert
-  if (!window.confirm(`This will permanently delete all library data stored on ${activeProvider.displayName}. Your local library will not be affected. This cannot be undone.`)) {
-    return;
-  }
-
-  try {
-    await activeProvider.clearRemote();
-
-    cloudSyncSettings.remoteSettingsFileId = "";
-    cloudSyncSettings.remoteNoteFileIds = {};
-    cloudSyncSettings.remoteWorkspaceFileId = "";
-    cloudSyncSettings.remoteWorkspaceParentId = "";
-    cloudSyncSettings.lastSyncAt = null;
-    persistCloudSyncSettings();
-    renderSettings();
-    refreshSaveStatus();
-  } catch (error) {
-    console.error("[Data] Clear remote failed:", error);
-    // eslint-disable-next-line no-alert
-    window.alert(`Failed to clear remote library: ${error.message}`);
-  }
-};
-
-const clearAllData = async () => {
-  const hasSession = activeProvider.hasActiveSession();
-  const remoteLabel = hasSession ? ` and all data stored on ${activeProvider.displayName}` : "";
-
-  // eslint-disable-next-line no-alert
-  if (!window.confirm(`This will permanently delete all your local notes and settings${remoteLabel}. This cannot be undone.`)) {
-    return;
-  }
-
-  if (hasSession) {
-    try {
-      await activeProvider.clearRemote();
-    } catch (error) {
-      console.error("[Data] Clear remote failed during clear-all:", error);
-    }
-  }
-
-  stopCloudPolling();
-  clearPendingAutoSync();
-
-  activeProvider.disconnect();
-
-  await Promise.all([
-    deleteStoredValue(workspaceStorageKey),
-    deleteStoredValue(cloudSyncStorageKey),
-    deleteStoredValue(themeStorageKey),
-    deleteStoredValue(paneOrderStorageKey),
-    deleteStoredValue(paneSplitStorageKey),
-    deleteStoredValue(translationStorageKey),
-    deleteStoredValue(colorThemeStorageKey),
-    deleteStoredValue(lastBookChapterStorageKey),
-    deleteStoredValue(onboardingStorageKey),
-    deleteStoredValue(notesStorageKey),
-    deleteStoredValue(customTranslationsStorageKey)
-  ]);
-  clearThemePreferenceMirrors();
-
-  window.location.reload();
-};
-
-const renderSettings = () => {
-  settingsTabNav.innerHTML = "";
-  settingsTabs.forEach((tab) => {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = `settings-tab-button${tab.id === activeSettingsTabId ? " is-active" : ""}`;
-    button.dataset.settingsTab = tab.id;
-    button.textContent = tab.label;
-    settingsTabNav.append(button);
-  });
-
-  settingsPanels.forEach((panel) => {
-    panel.classList.toggle("is-active", panel.dataset.settingsPanel === activeSettingsTabId);
-  });
-
-  const uiContent = document.querySelector("#ui-settings-content");
-
-  if (uiContent) {
-    renderUiSettings(uiContent);
-  }
-
-  renderTranslationsPanel();
-
-  cloudProviderSelect.value = cloudSyncSettings.provider;
-  cloudPollIntervalSelect.value = String(cloudSyncSettings.pollIntervalSeconds);
-  renderProviderSettings();
-  const isNullProvider = activeProvider.id === "none";
-  const isLocalDrive = activeProvider.id === "local-drive";
-  cloudStatusLabel.textContent = isLocalDrive ? "Folder" : "Connection Status";
-  cloudStatusInput.value = buildCloudStatusText();
-  cloudLastSyncInput.value = formatSyncTimestamp(cloudSyncSettings.lastSyncAt);
-  const hasActiveStorageSession = activeProvider.hasActiveSession();
-
-  if (isNullProvider) {
-    googleConnectButton.classList.add("is-hidden");
-    googleConnectButton.disabled = true;
-    googleDisconnectButton.classList.add("is-hidden");
-    googleDisconnectButton.disabled = true;
-    googleSyncNowButton.classList.add("is-hidden");
-    googleSyncNowButton.disabled = true;
-  } else if (isLocalDrive) {
-    googleConnectButton.textContent = hasActiveStorageSession ? "Change Folder" : "Choose Folder";
-    googleConnectButton.classList.remove("is-hidden");
-    googleConnectButton.disabled = !activeProvider.isAvailable();
-    googleDisconnectButton.classList.add("is-hidden");
-    googleDisconnectButton.disabled = true;
-    googleSyncNowButton.classList.toggle("is-hidden", !hasActiveStorageSession);
-    googleSyncNowButton.disabled = !hasActiveStorageSession;
-  } else {
-    googleConnectButton.textContent = `Connect ${activeProvider.displayName}`;
-    googleConnectButton.classList.toggle("is-hidden", hasActiveStorageSession);
-    googleDisconnectButton.classList.toggle("is-hidden", !hasActiveStorageSession);
-    googleSyncNowButton.classList.toggle("is-hidden", !hasActiveStorageSession);
-    googleConnectButton.disabled = !activeProvider.isAvailable() || hasActiveStorageSession;
-    googleDisconnectButton.disabled = !hasActiveStorageSession;
-    googleSyncNowButton.disabled = !hasActiveStorageSession;
-  }
-
-  const selectedType = getSelectedTypeForManager();
-
-  if (!selectedType) {
-    typeEditorEmpty.hidden = false;
-    typeEditorForm.hidden = true;
-    return;
-  }
-
-  typeEditorEmpty.hidden = true;
-  typeEditorForm.hidden = false;
-  typeSelect.innerHTML = "";
-  workspace.noteTypes.forEach((type) => {
-    const option = document.createElement("option");
-    option.value = type.id;
-    option.textContent = type.name;
-    typeSelect.append(option);
-  });
-  typeSelect.value = selectedType.id;
-  typeNameInput.value = selectedType.name;
-  metadataFieldList.innerHTML = "";
-  cardTitleFieldSelect.innerHTML = "";
-  cardSubtitleFieldSelect.innerHTML = "";
-
-  const noPrimaryOption = document.createElement("option");
-  noPrimaryOption.value = "";
-  noPrimaryOption.textContent = "None (use date)";
-  cardTitleFieldSelect.append(noPrimaryOption);
-
-  const noneOption = document.createElement("option");
-  noneOption.value = "";
-  noneOption.textContent = "None";
-  cardSubtitleFieldSelect.append(noneOption);
-
-  selectedType.fields.forEach((field) => {
-    const titleOption = document.createElement("option");
-    titleOption.value = field.id;
-    titleOption.textContent = field.label;
-    cardTitleFieldSelect.append(titleOption);
-
-    const subtitleOption = document.createElement("option");
-    subtitleOption.value = field.id;
-    subtitleOption.textContent = field.label;
-    cardSubtitleFieldSelect.append(subtitleOption);
-  });
-
-  cardTitleFieldSelect.value = selectedType.cardTitleFieldId ?? "";
-  cardSubtitleFieldSelect.value = selectedType.cardSubtitleFieldId ?? "";
-
-  selectedType.fields.forEach((field) => {
-    const row = document.createElement("div");
-    row.className = "metadata-field-row";
-    row.dataset.fieldId = field.id;
-
-    const labelField = document.createElement("label");
-    labelField.className = "field";
-
-    const labelTitle = document.createElement("span");
-    labelTitle.textContent = "Label";
-
-    const labelInput = document.createElement("input");
-    labelInput.type = "text";
-    labelInput.value = field.label;
-    labelInput.dataset.fieldProp = "label";
-    labelInput.dataset.fieldId = field.id;
-
-    labelField.append(labelTitle, labelInput);
-
-    const placeholderField = document.createElement("label");
-    placeholderField.className = "field";
-
-    const placeholderTitle = document.createElement("span");
-    placeholderTitle.textContent = "Placeholder";
-
-    const placeholderInput = document.createElement("input");
-    placeholderInput.type = "text";
-    placeholderInput.value = field.placeholder;
-    placeholderInput.dataset.fieldProp = "placeholder";
-    placeholderInput.dataset.fieldId = field.id;
-
-    placeholderField.append(placeholderTitle, placeholderInput);
-
-    const removeButton = document.createElement("button");
-    removeButton.type = "button";
-    removeButton.className = "ghost-button";
-    removeButton.dataset.removeField = field.id;
-    removeButton.textContent = "Remove";
-
-    row.append(labelField, placeholderField, removeButton);
-    metadataFieldList.append(row);
-  });
-
-  aliasList.innerHTML = "";
-
-  Object.keys(getCurrentTranslation()?.books ?? {}).forEach((book) => {
-    const row = document.createElement("div");
-    row.className = "alias-row";
-
-    const bookName = document.createElement("p");
-    bookName.className = "alias-book";
-    bookName.textContent = book;
-
-    const aliasField = document.createElement("label");
-    aliasField.className = "field";
-
-    const aliasLabel = document.createElement("span");
-    aliasLabel.textContent = "Aliases";
-
-    const aliasInput = document.createElement("input");
-    aliasInput.type = "text";
-    aliasInput.dataset.aliasBook = book;
-    aliasInput.placeholder = "Jn, Jon";
-    aliasInput.value = getEffectiveAliasesForBook(book).join(", ");
-
-    aliasField.append(aliasLabel, aliasInput);
-    row.append(bookName, aliasField);
-    aliasList.append(row);
-  });
-};
-
-const renderOnboardingStep = () => {
-  const step = onboardingSteps[activeOnboardingStepIndex];
-
-  onboardingStepKicker.textContent = step.kicker;
-  onboardingStepTitle.textContent = step.title;
-  onboardingStepCopy.textContent = step.copy;
-  onboardingStepCallout.textContent = step.callout;
-  onboardingStepCounter.textContent = `Step ${activeOnboardingStepIndex + 1}`;
-  onboardingStepPoints.innerHTML = "";
-  onboardingStepDots.innerHTML = "";
-
-  step.points.forEach((point, index) => {
-    const item = document.createElement("li");
-    const badge = document.createElement("span");
-    badge.className = "onboarding-point-badge";
-    badge.textContent = `${index + 1}`;
-
-    const text = document.createElement("span");
-    text.className = "onboarding-point-text";
-    text.textContent = point;
-
-    item.append(badge, text);
-    onboardingStepPoints.append(item);
-  });
-
-  onboardingSteps.forEach((_, index) => {
-    const dot = document.createElement("span");
-    dot.className = "onboarding-step-dot";
-    dot.classList.toggle("is-active", index === activeOnboardingStepIndex);
-    dot.classList.toggle("is-complete", index < activeOnboardingStepIndex);
-    onboardingStepDots.append(dot);
-  });
-
-  onboardingProgress.textContent = `${activeOnboardingStepIndex + 1} of ${onboardingSteps.length}`;
-  onboardingBackButton.disabled = activeOnboardingStepIndex === 0;
-  onboardingNextButton.classList.toggle("is-hidden", activeOnboardingStepIndex === onboardingSteps.length - 1);
-  onboardingFinishButton.classList.toggle("is-hidden", activeOnboardingStepIndex !== onboardingSteps.length - 1);
-};
-
-const openOnboarding = ({ markSeen = false, startAt = 0 } = {}) => {
-  activeOnboardingStepIndex = Math.max(0, Math.min(startAt, onboardingSteps.length - 1));
-  renderOnboardingStep();
-  openDialog(onboardingDialog);
-
-  if (markSeen) {
-    void writeStoredValue(onboardingStorageKey, true);
-  }
-};
-
 const saveActiveNote = () => {
   const activeNote = getActiveNote();
 
@@ -5383,26 +4722,15 @@ openOnboardingButton.addEventListener("click", () => {
 });
 
 onboardingBackButton.addEventListener("click", () => {
-  if (activeOnboardingStepIndex === 0) {
-    return;
-  }
-
-  activeOnboardingStepIndex -= 1;
-  renderOnboardingStep();
+  goToPreviousOnboardingStep();
 });
 
 onboardingNextButton.addEventListener("click", () => {
-  if (activeOnboardingStepIndex >= onboardingSteps.length - 1) {
-    return;
-  }
-
-  activeOnboardingStepIndex += 1;
-  renderOnboardingStep();
+  goToNextOnboardingStep();
 });
 
 onboardingFinishButton.addEventListener("click", () => {
-  onboardingDialog.close();
-  void writeStoredValue(onboardingStorageKey, true);
+  finishOnboarding();
 });
 
 typeNameInput.addEventListener("change", () => {
@@ -5542,7 +4870,9 @@ googleSyncNowButton.addEventListener("click", async () => {
   await syncWorkspaceToCloud({ reason: "manual" });
 });
 
-downloadBackupButton.addEventListener("click", downloadWorkspaceBackup);
+downloadBackupButton.addEventListener("click", () => {
+  downloadWorkspaceBackup();
+});
 
 restoreBackupButton.addEventListener("click", () => {
   restoreBackupFile.value = "";
@@ -5645,6 +4975,127 @@ const {
   applyTranslation: (...args) => applyTranslation(...args),
   isTranslationsSettingsOpen: () => settingsDialog.open && activeSettingsTabId === "translations"
 });
+
+({ renderSettings } = window.ScriptoriaModules.createSettingsUi({
+  settingsTabNav,
+  settingsTabs,
+  settingsPanels,
+  getActiveSettingsTabId: () => activeSettingsTabId,
+  renderTranslationsPanel: () => renderTranslationsPanel(),
+  cloudProviderSelect,
+  cloudPollIntervalSelect,
+  providerSettingsContainer,
+  getActiveProvider: () => activeProvider,
+  cloudSyncSettings,
+  buildCloudStatusText: () => buildCloudStatusText(),
+  formatSyncTimestamp,
+  cloudStatusLabel,
+  cloudStatusInput,
+  cloudLastSyncInput,
+  googleConnectButton,
+  googleDisconnectButton,
+  googleSyncNowButton,
+  typeEditorEmpty,
+  typeEditorForm,
+  typeSelect,
+  typeNameInput,
+  metadataFieldList,
+  cardTitleFieldSelect,
+  cardSubtitleFieldSelect,
+  aliasList,
+  getSelectedTypeForManager,
+  workspace,
+  getCurrentTranslation: () => getCurrentTranslation(),
+  getEffectiveAliasesForBook,
+  applyThemeMode,
+  getCurrentThemeMode: () => currentThemeMode,
+  paneGrid,
+  togglePaneOrder,
+  colorThemes,
+  getCurrentColorThemeId: () => currentColorThemeId,
+  writeStoredValue,
+  colorThemeStorageKey,
+  applyColorTheme,
+  markLocalSettingsUpdated,
+  scheduleAutoCloudSync
+}));
+
+({
+  downloadWorkspaceBackup,
+  restoreWorkspaceFromBackup,
+  clearLocalWorkspace,
+  clearRemoteWorkspace,
+  clearAllData
+} = window.ScriptoriaModules.createSettingsBackupRestore({
+  workspace,
+  getUserTranslations: () => userTranslations,
+  setUserTranslations: (value) => {
+    userTranslations = value;
+  },
+  translationLibrary,
+  BUILTIN_TRANSLATION_CODES,
+  validateTranslationData,
+  populateTranslationSelect,
+  customTranslationsStorageKey,
+  writeStoredValue,
+  getCurrentThemeMode: () => currentThemeMode,
+  paneGrid,
+  getCurrentPaneSplit: () => currentPaneSplit,
+  getCurrentTranslationCode: () => currentTranslationCode,
+  getCurrentColorThemeId: () => currentColorThemeId,
+  applyThemeMode,
+  normalizeThemeMode,
+  themeStorageKey,
+  applyPaneOrder,
+  paneOrderStorageKey,
+  applySplit,
+  paneSplitStorageKey,
+  applyTranslation,
+  translationStorageKey,
+  applyColorTheme,
+  colorThemeStorageKey,
+  buildBookAliasMap: () => buildBookAliasMap(),
+  renderWorkspace: () => renderWorkspace(),
+  persistWorkspace: () => persistWorkspace(),
+  updateSaveStatus,
+  stopCloudPolling,
+  clearPendingAutoSync,
+  getActiveProvider: () => activeProvider,
+  deleteStoredValue,
+  workspaceStorageKey,
+  cloudSyncStorageKey,
+  lastBookChapterStorageKey,
+  onboardingStorageKey,
+  notesStorageKey,
+  clearThemePreferenceMirrors,
+  cloudSyncSettings,
+  persistCloudSyncSettings,
+  renderSettings: () => renderSettings(),
+  refreshSaveStatus: () => refreshSaveStatus()
+}));
+
+({
+  openOnboarding,
+  goToPreviousOnboardingStep,
+  goToNextOnboardingStep,
+  finishOnboarding
+} = window.ScriptoriaModules.createOnboarding({
+  onboardingDialog,
+  onboardingStepKicker,
+  onboardingStepTitle,
+  onboardingStepCopy,
+  onboardingStepPoints,
+  onboardingStepCallout,
+  onboardingStepCounter,
+  onboardingStepDots,
+  onboardingProgress,
+  onboardingBackButton,
+  onboardingNextButton,
+  onboardingFinishButton,
+  openDialog,
+  writeStoredValue,
+  onboardingStorageKey
+}));
 
 // ── Document-level drag-and-drop for .js translation files ────────────────
 
