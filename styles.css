@@ -271,6 +271,10 @@ h1 {
 
 .pane-divider {
   cursor: col-resize;
+  /* Prevent the browser from claiming touch gestures on the divider for its
+   * own scrolling/panning — without this, dragging the divider on an iPad
+   * scrolls the page instead of resizing the panes. */
+  touch-action: none;
 }
 
 .pane-grid[data-order="scripture-first"] .note-panel {

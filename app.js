@@ -205,7 +205,8 @@ let activeProvider = noOpProvider;
 let activeSettingsTabId = "ui-settings";
 // currentThemeMode + currentColorThemeId moved to theme/controller.js.  Read
 // via themeApi.getCurrentThemeMode() / getCurrentColorThemeId().
-let currentPaneSplit = 0.6;
+// currentPaneSplit moved to layout/panes.js.  Read via
+// paneLayoutApi.getCurrentPaneSplit().
 let noteBrowserFilter = "";
 let noteBrowserTypeFilter = "all";
 let noteBrowserSort = "updated-desc";
@@ -553,6 +554,38 @@ const {
   clearThemePreferenceMirrors,
   normalizeThemeMode
 } = themeApi;
+
+// ── Pane layout ───────────────────────────────────────────────────────────
+// Owns the split-pane layout (notes-first vs scripture-first ordering, plus
+// the divider-drag resize behaviour).  The pane-divider DOM ref is queried
+// here only to thread it into the module — nothing else in app.js touches
+// it.  Names are destructured back into local scope to match how
+// applyPaneOrder / applySplit / togglePaneOrder are passed as deps to other
+// modules (settings/ui, sync/payloads, settings/backup-restore).
+const paneDivider = document.querySelector("#pane-divider");
+
+const paneLayoutApi = window.ScriptoriaModules.createPaneLayout({
+  paneGrid,
+  paneDivider,
+  documentObject: document,
+  readStoredValue,
+  writeStoredValue,
+  migrateLegacyPreference,
+  paneOrderStorageKey,
+  paneSplitStorageKey,
+  // Late-bound through the syncCloudApi thunks declared above so they no-op
+  // safely until the sync module is wired up later in this file.
+  markLocalSettingsUpdated: (...args) => markLocalSettingsUpdated(...args),
+  scheduleAutoCloudSync: (...args) => scheduleAutoCloudSync(...args)
+});
+
+const {
+  applySplit,
+  applyPaneOrder,
+  togglePaneOrder,
+  getPreferredPaneOrder,
+  getPreferredSplit
+} = paneLayoutApi;
 
 // normalizeBookName + addBookAlias moved to scripture/aliases.js.
 const normalizeFieldLabel = (value) => value.trim().toLowerCase();
@@ -977,16 +1010,6 @@ const restoreWorkspace = async () => {
 
 // getPreferredTheme moved to theme/controller.js (re-exported on themeApi).
 
-const getPreferredPaneOrder = async () => {
-  const savedOrder = await migrateLegacyPreference(paneOrderStorageKey);
-  return savedOrder === "scripture-first" ? "scripture-first" : "notes-first";
-};
-
-const getPreferredSplit = async () => {
-  const saved = await readStoredValue(paneSplitStorageKey);
-  return typeof saved === "number" && saved >= 0.2 && saved <= 0.8 ? saved : 0.6;
-};
-
 // getPreferredTranslation, saveLastBookChapter, and restoreLastBookChapter
 // have moved to scripture/viewer.js and are destructured back into this scope
 // from viewerApi above.
@@ -994,45 +1017,8 @@ const getPreferredSplit = async () => {
 // getResolvedThemeForMode / syncThemeModeControl / applyThemeMode moved to
 // theme/controller.js.
 
-const syncPaneOrderToggle = (order) => {
-  const scriptureFirst = order === "scripture-first";
-  const btn = document.querySelector("#ui-scripture-left-toggle");
-
-  if (btn) {
-    btn.setAttribute("aria-pressed", String(scriptureFirst));
-    const state = btn.querySelector(".ui-toggle-state");
-
-    if (state) {
-      state.textContent = scriptureFirst ? "On" : "Off";
-    }
-  }
-};
-
-const applySplit = (fraction) => {
-  currentPaneSplit = Math.max(0.2, Math.min(0.8, fraction));
-  const isScriptureFirst = paneGrid.dataset.order === "scripture-first";
-
-  if (isScriptureFirst) {
-    paneGrid.style.gridTemplateColumns = `minmax(0, ${1 - currentPaneSplit}fr) 20px minmax(320px, ${currentPaneSplit}fr)`;
-  } else {
-    paneGrid.style.gridTemplateColumns = `minmax(0, ${currentPaneSplit}fr) 20px minmax(320px, ${1 - currentPaneSplit}fr)`;
-  }
-};
-
-const applyPaneOrder = (order) => {
-  paneGrid.dataset.order = order;
-  syncPaneOrderToggle(order);
-  applySplit(currentPaneSplit);
-};
-
-const togglePaneOrder = () => {
-  const currentOrder = paneGrid.dataset.order === "scripture-first" ? "scripture-first" : "notes-first";
-  const nextOrder = currentOrder === "scripture-first" ? "notes-first" : "scripture-first";
-  void writeStoredValue(paneOrderStorageKey, nextOrder);
-  applyPaneOrder(nextOrder);
-  markLocalSettingsUpdated();
-  scheduleAutoCloudSync();
-};
+// getPreferredPaneOrder / getPreferredSplit / syncPaneOrderToggle / applySplit
+// / applyPaneOrder / togglePaneOrder moved to layout/panes.js.
 
 // getPreferredColorTheme / applyColorTheme moved to theme/controller.js.
 
@@ -1186,7 +1172,7 @@ syncPayloadApi = window.ScriptoriaModules.createSyncPayloads({
   cloudSyncSettings,
   paneGrid,
   getCurrentThemeMode: () => themeApi.getCurrentThemeMode(),
-  getCurrentPaneSplit: () => currentPaneSplit,
+  getCurrentPaneSplit: () => paneLayoutApi.getCurrentPaneSplit(),
   getCurrentTranslationCode: () => viewerApi.getCurrentTranslationCode(),
   getCurrentColorThemeId: () => themeApi.getCurrentColorThemeId(),
   flushEditorWorkNow: () => flushEditorWorkNow(),
@@ -1785,7 +1771,7 @@ const {
   writeStoredValue,
   getCurrentThemeMode: () => themeApi.getCurrentThemeMode(),
   paneGrid,
-  getCurrentPaneSplit: () => currentPaneSplit,
+  getCurrentPaneSplit: () => paneLayoutApi.getCurrentPaneSplit(),
   getCurrentTranslationCode: () => viewerApi.getCurrentTranslationCode(),
   getCurrentColorThemeId: () => themeApi.getCurrentColorThemeId(),
   applyThemeMode,
@@ -1919,37 +1905,9 @@ const bootstrap = async () => {
 
 void bootstrap();
 
-const paneDivider = document.querySelector("#pane-divider");
-
-// The verseDisplay "copy" listener (which rewrites selected chapter HTML for a
-// clean paste into the notes editor) lives inside scripture/viewer.js now.
-
-paneDivider.addEventListener("mousedown", (startEvent) => {
-  startEvent.preventDefault();
-  document.body.classList.add("is-pane-dragging");
-
-  const gridRect = paneGrid.getBoundingClientRect();
-  const availableWidth = gridRect.width - 20;
-
-  const onMouseMove = (moveEvent) => {
-    const rawFraction = (moveEvent.clientX - gridRect.left) / availableWidth;
-    const isScriptureFirst = paneGrid.dataset.order === "scripture-first";
-    const noteFraction = isScriptureFirst ? 1 - rawFraction : rawFraction;
-    applySplit(noteFraction);
-  };
-
-  const onMouseUp = () => {
-    document.removeEventListener("mousemove", onMouseMove);
-    document.removeEventListener("mouseup", onMouseUp);
-    document.body.classList.remove("is-pane-dragging");
-    void writeStoredValue(paneSplitStorageKey, currentPaneSplit);
-    markLocalSettingsUpdated();
-    scheduleAutoCloudSync();
-  };
-
-  document.addEventListener("mousemove", onMouseMove);
-  document.addEventListener("mouseup", onMouseUp);
-});
+// The verseDisplay "copy" listener lives inside scripture/viewer.js now.
+// The pane-divider mousedown listener moved into layout/panes.js (it's wired
+// up at module construction time).
 
 if (sessionStorage.getItem("mobile-warning-dismissed")) {
   mobileWarning.classList.add("is-hidden");

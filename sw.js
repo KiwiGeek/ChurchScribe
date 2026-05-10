@@ -69,6 +69,7 @@ const PRECACHE_URLS = [
   "editor/media.js",
   "editor/navigation.js",
   "editor/tables.js",
+  "layout/panes.js",
   "notes/browser.js",
   "notes/model.js",
   "notes/render.js",
