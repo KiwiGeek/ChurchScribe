@@ -1964,50 +1964,20 @@ betaBannerDismiss.addEventListener("click", () => {
   }
 }
 
-// ── Online / offline awareness ───────────────────────────────────────────────
-// Cloud sync is the only thing that genuinely needs network connectivity —
-// everything else (notes, translations, themes, embeds-in-cache) keeps working
-// from the SW cache.  The handlers below:
-//   • refresh the save-status indicator so the user can see when sync is paused;
-//   • replay any sync that was queued while offline as soon as we're back;
-//   • update visible cloud-sync UI in Settings if it's open.
-
-window.addEventListener("offline", () => {
-  refreshSaveStatus();
-  // Refresh the translation picker so any not-yet-downloaded translations get
-  // greyed out with a "not downloaded" suffix.
-  populateTranslationSelect();
-  refreshDownloadAllTranslationsUi();
-  if (typeof renderSettings === "function" && settingsDialog && settingsDialog.open) {
-    renderSettings();
-  }
-});
-
-window.addEventListener("online", () => {
-  refreshSaveStatus();
-  // Re-enable previously-disabled translation options now that fetches will
-  // succeed again.
-  populateTranslationSelect();
-  refreshDownloadAllTranslationsUi();
-  if (typeof renderSettings === "function" && settingsDialog && settingsDialog.open) {
-    renderSettings();
-  }
-
-  // Replay any sync work that was deferred while offline.  scheduleAutoCloudSync
-  // also covers the case where unsaved-but-not-yet-synced edits exist — it
-  // resets the auto-sync timer so the next idle window picks them up.
-  if (consumeQueuedCloudSync()) {
-    if (activeProvider.hasActiveSession()) {
-      console.log("[CloudSync] Connectivity restored — replaying queued sync.");
-      // Match the auto-sync behaviour: pull first to surface any remote
-      // changes, then upload.  Errors are already handled inside each call.
-      void (async () => {
-        await pullFromCloud();
-        await syncWorkspaceToCloud({ reason: "online-resume" });
-      })();
-    }
-  }
-});
+// Online/offline window listeners and the post-reconnect cloud-sync replay
+// live inside core/connectivity.js now.
+window.ScriptoriaModules.createConnectivityWatcher({
+  windowObject: window,
+  refreshSaveStatus: () => refreshSaveStatus(),
+  populateTranslationSelect: () => populateTranslationSelect(),
+  refreshDownloadAllTranslationsUi: () => refreshDownloadAllTranslationsUi(),
+  isSettingsOpen: () => settingsDialog.open,
+  renderSettings: () => renderSettings(),
+  consumeQueuedCloudSync: () => consumeQueuedCloudSync(),
+  hasActiveCloudSession: () => activeProvider.hasActiveSession(),
+  pullFromCloud: () => pullFromCloud(),
+  syncWorkspaceToCloud: (...args) => syncWorkspaceToCloud(...args)
+}).attach();
 
 // ── Service Worker registration ──────────────────────────────────────────────
 // Registers sw.js (the offline cache + asset shell).  Two URL flags are

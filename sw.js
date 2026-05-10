@@ -64,6 +64,7 @@ const PRECACHE_URLS = [
   "embed/pdf.js",
   "embed/spotify.js",
   "embed/youtube.js",
+  "core/connectivity.js",
   "editor/controller.js",
   "editor/links.js",
   "editor/media.js",
