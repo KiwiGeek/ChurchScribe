@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:AFV",
+  "code": "AFV",
+  "label": "A Faithful Version",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 2,
+  "contentUrl": "/bibles/content/en/AFV/v2.json",
+  "contentHash": "sha256-05ac770a5df5ea8a6a5d04fcfb92e60d423826ea6def5b2a9bf7c85e3c0d124f",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:49.9999340Z"
+}

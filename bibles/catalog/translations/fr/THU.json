@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "fr:THU",
+  "code": "THU",
+  "label": "Saint Maitthieu 1864 (Frainc-Comtou - Thuriet)",
+  "languageTag": "fr",
+  "languageCode3": "fra",
+  "sourceType": "official",
+  "version": 4,
+  "contentUrl": "/bibles/content/fr/THU/v4.json",
+  "contentHash": "sha256-dde83eb6d882319cd93f831f63f9fa07394aff5f97422df53637cb73cba0d11b",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:54:29.6324085Z"
+}

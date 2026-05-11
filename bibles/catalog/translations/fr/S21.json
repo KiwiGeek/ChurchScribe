@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "fr:S21",
+  "code": "S21",
+  "label": "La Bible Segond 21",
+  "languageTag": "fr",
+  "languageCode3": "fra",
+  "sourceType": "builtin",
+  "version": 10,
+  "contentUrl": "/bibles/content/fr/S21/v10.json",
+  "contentHash": "sha256-b98343b96a6793076c8a8dee48fad069b1c178159570b579c6d419446571b20f",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:54:29.4973090Z"
+}

@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:CSB",
+  "code": "CSB",
+  "label": "Christian Standard Bible",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "builtin",
+  "version": 36,
+  "contentUrl": "/bibles/content/en/CSB/v36.json",
+  "contentHash": "sha256-274d53b95c7c4716b2691432e57aea34ceb22a3aa200c0727a94090a43d01b19",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:51.0199607Z"
+}

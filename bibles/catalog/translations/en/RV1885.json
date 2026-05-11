@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:RV1885",
+  "code": "RV1885",
+  "label": "Revised Version 1885",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 10,
+  "contentUrl": "/bibles/content/en/RV1885/v10.json",
+  "contentHash": "sha256-5d40121ba73189d02db5ec5c31fe9519c4ef699e37d58c7f0f186f719dd26c7e",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:55.5145396Z"
+}

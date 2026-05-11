@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "es:DHH23ST",
+  "code": "DHH23ST",
+  "label": "Dios habla hoy 4ta. edici\u00F3n. Est\u00E1ndar.",
+  "languageTag": "es",
+  "languageCode3": "spa",
+  "sourceType": "official",
+  "version": 4,
+  "contentUrl": "/bibles/content/es/DHH23ST/v4.json",
+  "contentHash": "sha256-7cf4925a814cdd7c66859038a62d3d7d3f75c02dcabf8b8a3c1f5c6b16943f3a",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:54:25.6957916Z"
+}

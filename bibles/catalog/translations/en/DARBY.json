@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:DARBY",
+  "code": "DARBY",
+  "label": "Darby\u0027s Translation 1890",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 7,
+  "contentUrl": "/bibles/content/en/DARBY/v7.json",
+  "contentHash": "sha256-0affc588ab776a54be5ecddadb3204324be0d92d493557b3f731fec625f215eb",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:51.1921016Z"
+}

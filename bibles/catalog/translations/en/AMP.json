@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:AMP",
+  "code": "AMP",
+  "label": "Amplified Bible",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 11,
+  "contentUrl": "/bibles/content/en/AMP/v11.json",
+  "contentHash": "sha256-b50f9e8023067cf54a9de31e9e191c94a471066e8440a20fbee68d794ca41d23",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:50.0956149Z"
+}

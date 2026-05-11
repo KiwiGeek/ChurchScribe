@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:YALL",
+  "code": "YALL",
+  "label": "Y\u0027all Version Bible",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 10,
+  "contentUrl": "/bibles/content/en/YALL/v10.json",
+  "contentHash": "sha256-a9dbcba1e3865a85bb7b7fcea484c41832a023c9d6a5a77b6a302a751340e9cc",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:56.6125029Z"
+}

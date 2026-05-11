@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "fr:JND",
+  "code": "JND",
+  "label": "Bible J.N. Darby",
+  "languageTag": "fr",
+  "languageCode3": "fra",
+  "sourceType": "official",
+  "version": 9,
+  "contentUrl": "/bibles/content/fr/JND/v9.json",
+  "contentHash": "sha256-b924d8bd4bf744ff90780ef33c6534ba3b4be2bd444be52748f92899ddecadee",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:54:28.5917621Z"
+}

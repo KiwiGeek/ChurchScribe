@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "fr:NEG79",
+  "code": "NEG79",
+  "label": "Nouvelle Edition de Gen\u00E8ve 1979",
+  "languageTag": "fr",
+  "languageCode3": "fra",
+  "sourceType": "official",
+  "version": 8,
+  "contentUrl": "/bibles/content/fr/NEG79/v8.json",
+  "contentHash": "sha256-2f3a24b05de62d7bf3734e181fd39fedc36eb8b1ad23f0f9ac00f68e979271ee",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:54:29.0541055Z"
+}

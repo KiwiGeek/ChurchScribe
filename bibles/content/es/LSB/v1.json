@@ -1,0 +1,30 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "es:LSB",
+  "version": 1,
+  "books": {
+    "1 Chronicles": [
+      {
+        "chapter": 1,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Ad\u00E1n, Set, En\u00F3s,"
+          },
+          {
+            "verse": 2,
+            "text": "Cain\u00E1n, Mahalaleel, Jared,"
+          },
+          {
+            "verse": 3,
+            "text": "Enoc, Matusal\u00E9n, Lamec,"
+          },
+          {
+            "verse": 4,
+            "text": "No\u00E9, Sem, Cam y Jafet."
+          }
+        ]
+      }
+    ]
+  }
+}

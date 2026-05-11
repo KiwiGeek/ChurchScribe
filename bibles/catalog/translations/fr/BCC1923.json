@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "fr:BCC1923",
+  "code": "BCC1923",
+  "label": "Bible catholique Crampon 1923",
+  "languageTag": "fr",
+  "languageCode3": "fra",
+  "sourceType": "official",
+  "version": 9,
+  "contentUrl": "/bibles/content/fr/BCC1923/v9.json",
+  "contentHash": "sha256-37d71c3d8df5f1fa9fd09a15c3516c96cb063bed24aff30c17bba32305eb069a",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:54:28.1258728Z"
+}

@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "fr:BEX",
+  "code": "BEX",
+  "label": "La Bible expliqu\u00E9e",
+  "languageTag": "fr",
+  "languageCode3": "fra",
+  "sourceType": "official",
+  "version": 5,
+  "contentUrl": "/bibles/content/fr/BEX/v5.json",
+  "contentHash": "sha256-c1db83554c58c788dc2d47b0b9c9d606316b67e344229a3c8480b2265ad2d03f",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:54:28.3619772Z"
+}

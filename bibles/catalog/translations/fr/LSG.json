@@ -6,9 +6,9 @@
   "languageTag": "fr",
   "languageCode3": "fra",
   "sourceType": "builtin",
-  "version": 8,
-  "contentUrl": "/bibles/content/fr/LSG/v8.json",
-  "contentHash": "sha256-0063ad654e1d7abbbc5b77fb2ed76b33f22b688c604084c68062a5163f6fd2c9",
+  "version": 12,
+  "contentUrl": "/bibles/content/fr/LSG/v12.json",
+  "contentHash": "sha256-96b591680a15c06331c01daaef22e0cf452f28afd0e574da38303509897717f5",
   "bookOrder": "protestant-66",
   "features": {
     "headings": false,
@@ -16,5 +16,5 @@
     "superscriptions": false,
     "html": false
   },
-  "updatedAt": "2026-05-10T16:01:39.5010271Z"
+  "updatedAt": "2026-05-10T23:54:28.7172834Z"
 }

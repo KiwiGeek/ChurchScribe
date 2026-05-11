@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:AMPC",
+  "code": "AMPC",
+  "label": "Amplified Bible, Classic Edition",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 12,
+  "contentUrl": "/bibles/content/en/AMPC/v12.json",
+  "contentHash": "sha256-287643fc1fa1d790f36f85aed53d3557bc4b953b54fab3c237eb1fd68e74028b",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:50.1755672Z"
+}

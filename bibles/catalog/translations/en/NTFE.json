@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:NTFE",
+  "code": "NTFE",
+  "label": "The New Testament for Everyone",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 2,
+  "contentUrl": "/bibles/content/en/NTFE/v2.json",
+  "contentHash": "sha256-dc2f46a3d66dd88e5cf27d42b99b350135ed4f17945eaa4ab8006e322467a790",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:54.9366965Z"
+}

@@ -1,0 +1,3597 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "fr:JXLFR",
+  "version": 3,
+  "books": {
+    "Mark": [
+      {
+        "chapter": 1,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "\u1F00\u03C1\u03C7\u1F74"
+          },
+          {
+            "verse": 2,
+            "text": "\u03BA\u03B1\u03B8\u1F7C\u03C2 \u03B3\u03AD\u03B3\u03C1\u03B1\u03C0\u03C4\u03B1\u03B9"
+          },
+          {
+            "verse": 3,
+            "text": "\u03C6\u03C9\u03BD\u1F74 \u03B2\u03BF\u1FF6\u03BD\u03C4\u03BF\u03C2"
+          },
+          {
+            "verse": 4,
+            "text": "\u1F38\u03C9\u03AC\u03BD\u03BD\u03B7\u03C2 \u1F41 \u03B2\u03B1\u03C0\u03C4\u03AF\u03B6\u03C9\u03BD \u1F10\u03B3\u03AD\u03BD\u03B5\u03C4\u03BF"
+          },
+          {
+            "verse": 5,
+            "text": "\u03BA\u03B1\u1F76 \u03C0\u1FB6\u03C3\u03B1 \u1F21 \u03C7\u03CE\u03C1\u03B1 \u1F38\u03BF\u03C5\u03B4\u03B1\u03AF\u03B1"
+          },
+          {
+            "verse": 6,
+            "text": "\u03BA\u03B1\u1F76 \u1F41 \u1F38\u03C9\u03AC\u03BD\u03BD\u03B7\u03C2"
+          },
+          {
+            "verse": 7,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03BA\u03AE\u03C1\u03C5\u03C3\u03C3\u03B5\u03BD \u03BB\u03AD\u03B3\u03C9\u03BD"
+          },
+          {
+            "verse": 8,
+            "text": "\u1F10\u03B3\u1F7C \u1F10\u03B2\u03AC\u03C0\u03C4\u03B9\u03C3\u03B1 \u1F51\u03BC\u1FB6\u03C2"
+          },
+          {
+            "verse": 9,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03B3\u03AD\u03BD\u03B5\u03C4\u03BF"
+          },
+          {
+            "verse": 10,
+            "text": "\u03BA\u03B1\u1F76 \u03B5\u1F50\u03B8\u1F7A\u03C2 \u1F00\u03BD\u03B1\u03B2\u03B1\u03AF\u03BD\u03C9\u03BD"
+          },
+          {
+            "verse": 11,
+            "text": "\u03BA\u03B1\u1F76 \u03C6\u03C9\u03BD\u1F74 \u1F10\u03B3\u03AD\u03BD\u03B5\u03C4\u03BF"
+          },
+          {
+            "verse": 12,
+            "text": "\u03BA\u03B1\u1F76 \u03B5\u1F50\u03B8\u1F7A\u03C2"
+          },
+          {
+            "verse": 13,
+            "text": "\u03BA\u03B1\u1F76 \u1F26\u03BD"
+          },
+          {
+            "verse": 16,
+            "text": "\u03BA\u03B1\u1F76 \u03C0\u03B1\u03C1\u03AC\u03B3\u03C9\u03BD"
+          },
+          {
+            "verse": 17,
+            "text": "\u03BA\u03B1\u1F76 \u1F41 \u1F38\u03B7\u03C3\u03BF\u1FE6\u03C2 \u03B5\u1F36\u03C0\u03B5\u03BD \u03B1\u1F50\u03C4\u03BF\u1FD6\u03C2"
+          },
+          {
+            "verse": 18,
+            "text": "\u03BA\u03B1\u1F76 \u03B5\u1F50\u03B8\u03AD\u03C9\u03C2"
+          },
+          {
+            "verse": 19,
+            "text": "\u03BA\u03B1\u1F76 \u03C0\u03C1\u03BF\u03B2\u1F70\u03C2 \u1F40\u03BB\u03AF\u03B3\u03BF\u03BD"
+          },
+          {
+            "verse": 20,
+            "text": "\u03BA\u03B1\u1F76 \u03B5\u1F50\u03B8\u1F7A\u03C2"
+          },
+          {
+            "verse": 21,
+            "text": "\u03BA\u03B1\u1F76 \u03B5\u1F30\u03C3\u03C0\u03BF\u03C1\u03B5\u03CD\u03BF\u03BD\u03C4\u03B1\u03B9"
+          },
+          {
+            "verse": 22,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03BE\u03B5\u03C0\u03BB\u03AE\u03C3\u03C3\u03BF\u03BD\u03C4\u03BF"
+          },
+          {
+            "verse": 25,
+            "text": "\u03BA\u03B1\u1F76 \u1F41 \u1F38\u03B7\u03C3\u03BF\u1FE6\u03C2"
+          },
+          {
+            "verse": 26,
+            "text": "\u03BA\u03B1\u1F76 \u03C3\u03C0\u03B1\u03C1\u03AC\u03BE\u03B1\u03BD \u03B1\u1F50\u03C4\u1F78\u03BD"
+          },
+          {
+            "verse": 27,
+            "text": "\u03BA\u03B1\u1F76 \u1F05\u03C0\u03B1\u03BD\u03C4\u03B5\u03C2 \u1F10\u03B8\u03B1\u03BC\u03B2\u03AE\u03B8\u03B7\u03C3\u03B1\u03BD"
+          },
+          {
+            "verse": 28,
+            "text": "\u03BA\u03B1\u1F76 \u03B5\u1F50\u03B8\u1F7A\u03C2"
+          },
+          {
+            "verse": 29,
+            "text": "\u03BA\u03B1\u1F76 \u03B5\u1F50\u03B8\u1F7A\u03C2"
+          },
+          {
+            "verse": 30,
+            "text": "\u03B4\u1F72 \u1F21 \u03C0\u03B5\u03BD\u03B8\u03B5\u03C1\u1F70 \u03A3\u03AF\u03BC\u03C9\u03BD\u03BF\u03C2"
+          },
+          {
+            "verse": 31,
+            "text": "\u03BA\u03B1\u1F76 \u03C0\u03C1\u03BF\u03C3\u03B5\u03BB\u03B8\u1F7C\u03BD"
+          },
+          {
+            "verse": 32,
+            "text": "\u03B4\u1F72 \u1F40\u03C8\u03AF\u03B1\u03C2 \u03B3\u03B5\u03BD\u03BF\u03BC\u03AD\u03BD\u03B7\u03C2"
+          },
+          {
+            "verse": 33,
+            "text": "\u03BA\u03B1\u1F76 \u1F45\u03BB\u03B7 \u1F21 \u03C0\u03CC\u03BB\u03B9\u03C2"
+          },
+          {
+            "verse": 34,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03B8\u03B5\u03C1\u03AC\u03C0\u03B5\u03C5\u03C3\u03B5\u03BD"
+          },
+          {
+            "verse": 35,
+            "text": "\u03BA\u03B1\u1F76 \u03C0\u03C1\u03C9\u1FD2"
+          },
+          {
+            "verse": 38,
+            "text": "\u03BA\u03B1\u1F76 \u03BB\u03AD\u03B3\u03B5\u03B9 \u03B1\u1F50\u03C4\u03BF\u1FD6\u03C2"
+          },
+          {
+            "verse": 39,
+            "text": "\u03BA\u03B1\u1F76 \u1F26\u03BB\u03B8\u03B5\u03BD"
+          },
+          {
+            "verse": 40,
+            "text": "\u03BA\u03B1\u1F76 \u03BB\u03B5\u03C0\u03C1\u1F78\u03C2 \u1F14\u03C1\u03C7\u03B5\u03C4\u03B1\u03B9"
+          },
+          {
+            "verse": 41,
+            "text": "\u03BA\u03B1\u1F76 \u03C3\u03C0\u03BB\u03B1\u03B3\u03C7\u03BD\u03B9\u03C3\u03B8\u03B5\u1F76\u03C2"
+          },
+          {
+            "verse": 42,
+            "text": "\u03BA\u03B1\u1F76 \u03B5\u1F50\u03B8\u1F7A\u03C2"
+          },
+          {
+            "verse": 45,
+            "text": "\u03B4\u1F72 \u1F41 \u1F10\u03BE\u03B5\u03BB\u03B8\u1F7C\u03BD"
+          }
+        ]
+      },
+      {
+        "chapter": 2,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "\u03BA\u03B1\u1F76 \u03B4\u03B9\u2019 \u1F21\u03BC\u03B5\u03C1\u1FF6\u03BD"
+          },
+          {
+            "verse": 2,
+            "text": "\u03BA\u03B1\u1F76 \u03C0\u03BF\u03BB\u03BB\u03BF\u1F76 \u03C3\u03C5\u03BD\u03AE\u03C7\u03B8\u03B7\u03C3\u03B1\u03BD"
+          },
+          {
+            "verse": 3,
+            "text": "\u03BA\u03B1\u1F76 \u1F14\u03C1\u03C7\u03BF\u03BD\u03C4\u03B1\u03B9"
+          },
+          {
+            "verse": 4,
+            "text": "\u03BA\u03B1\u1F76"
+          },
+          {
+            "verse": 5,
+            "text": "\u03BA\u03B1\u1F76 \u1F41 \u1F38\u03B7\u03C3\u03BF\u1FE6\u03C2"
+          },
+          {
+            "verse": 8,
+            "text": "\u03BA\u03B1\u1F76 \u03B5\u1F50\u03B8\u1F7A\u03C2"
+          },
+          {
+            "verse": 9,
+            "text": "\u03C4\u03AF \u1F10\u03C3\u03C4\u03B9\u03BD"
+          },
+          {
+            "verse": 12,
+            "text": "\u03BA\u03B1\u1F76 \u1F20\u03B3\u03AD\u03C1\u03B8\u03B7"
+          },
+          {
+            "verse": 13,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03BE\u1FC6\u03BB\u03B8\u03B5\u03BD \u03C0\u03AC\u03BB\u03B9\u03BD"
+          },
+          {
+            "verse": 14,
+            "text": "\u03BA\u03B1\u1F76 \u03C0\u03B1\u03C1\u03AC\u03B3\u03C9\u03BD"
+          },
+          {
+            "verse": 15,
+            "text": "\u03BA\u03B1\u1F76 \u03B3\u03AF\u03BD\u03B5\u03C4\u03B1\u03B9"
+          },
+          {
+            "verse": 16,
+            "text": "\u03BA\u03B1\u1F76 \u03BF\u1F31 \u03B3\u03C1\u03B1\u03BC\u03BC\u03B1\u03C4\u03B5\u1FD6\u03C2 \u03C4\u1FF6\u03BD \u03A6\u03B1\u03C1\u03B9\u03C3\u03B1\u03AF\u03C9\u03BD"
+          },
+          {
+            "verse": 17,
+            "text": "\u03BA\u03B1\u1F76 \u1F00\u03BA\u03BF\u03CD\u03C3\u03B1\u03C2"
+          },
+          {
+            "verse": 18,
+            "text": "\u03BA\u03B1\u1F76 \u03BF\u1F31 \u03BC\u03B1\u03B8\u03B7\u03C4\u03B1\u1F76 \u1F38\u03C9\u03AC\u03BD\u03BD\u03BF\u03C5"
+          },
+          {
+            "verse": 19,
+            "text": "\u03BA\u03B1\u1F76 \u1F41 \u1F38\u03B7\u03C3\u03BF\u1FE6\u03C2 \u03B5\u1F36\u03C0\u03B5\u03BD \u03B1\u1F50\u03C4\u03BF\u1FD6\u03C2"
+          },
+          {
+            "verse": 20,
+            "text": "\u03B4\u1F72 \u1F21\u03BC\u03AD\u03C1\u03B1\u03B9 \u1F10\u03BB\u03B5\u03CD\u03C3\u03BF\u03BD\u03C4\u03B1\u03B9"
+          },
+          {
+            "verse": 21,
+            "text": "\u03BF\u1F50\u03B4\u03B5\u1F76\u03C2 \u1F10\u03C0\u03B9\u03C1\u03AC\u03C0\u03C4\u03B5\u03B9"
+          },
+          {
+            "verse": 22,
+            "text": "\u03BA\u03B1\u1F76"
+          },
+          {
+            "verse": 23,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03B3\u03AD\u03BD\u03B5\u03C4\u03BF"
+          },
+          {
+            "verse": 24,
+            "text": "\u03BA\u03B1\u1F76 \u03BF\u1F31 \u03A6\u03B1\u03C1\u03B9\u03C3\u03B1\u1FD6\u03BF\u03B9"
+          },
+          {
+            "verse": 25,
+            "text": "\u03BA\u03B1\u1F76 \u03BB\u03AD\u03B3\u03B5\u03B9 \u03B1\u1F50\u03C4\u03BF\u1FD6\u03C2"
+          },
+          {
+            "verse": 26,
+            "text": "\u03C0\u1FF6\u03C2 \u03B5\u1F30\u03C3\u1FC6\u03BB\u03B8\u03B5\u03BD"
+          },
+          {
+            "verse": 27,
+            "text": "\u03BA\u03B1\u1F76 \u1F14\u03BB\u03B5\u03B3\u03B5\u03BD \u03B1\u1F50\u03C4\u03BF\u1FD6\u03C2"
+          },
+          {
+            "verse": 28,
+            "text": "\u1F65\u03C3\u03C4\u03B5"
+          }
+        ]
+      },
+      {
+        "chapter": 3,
+        "verses": [
+          {
+            "verse": 3,
+            "text": "\u03BA\u03B1\u1F76 \u03BB\u03AD\u03B3\u03B5\u03B9 \u03C4\u1FF7 \u1F00\u03BD\u03B8\u03C1\u03CE\u03C0\u1FF3"
+          },
+          {
+            "verse": 4,
+            "text": "\u03BA\u03B1\u1F76 \u03BB\u03AD\u03B3\u03B5\u03B9 \u03B1\u1F50\u03C4\u03BF\u1FD6\u03C2"
+          },
+          {
+            "verse": 5,
+            "text": "\u03BA\u03B1\u1F76 \u03C0\u03B5\u03C1\u03B9\u03B2\u03BB\u03B5\u03C8\u03AC\u03BC\u03B5\u03BD\u03BF\u03C2"
+          },
+          {
+            "verse": 6,
+            "text": "\u03BA\u03B1\u1F76 \u03B5\u1F50\u03B8\u1F7A\u03C2"
+          },
+          {
+            "verse": 9,
+            "text": "\u03BA\u03B1\u1F76 \u03B5\u1F36\u03C0\u03B5\u03BD"
+          },
+          {
+            "verse": 10,
+            "text": "\u03B3\u1F70\u03C1 \u1F10\u03B8\u03B5\u03C1\u03AC\u03C0\u03B5\u03C5\u03C3\u03B5\u03BD \u03C0\u03BF\u03BB\u03BB\u03BF\u1F7A\u03C2"
+          },
+          {
+            "verse": 11,
+            "text": "\u03BA\u03B1\u1F76 \u03C4\u1F70 \u03C0\u03BD\u03B5\u03CD\u03BC\u03B1\u03C4\u03B1 \u03C4\u1F70 \u1F00\u03BA\u03AC\u03B8\u03B1\u03C1\u03C4\u03B1"
+          },
+          {
+            "verse": 12,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03C0\u03B5\u03C4\u03AF\u03BC\u03B1 \u03B1\u1F50\u03C4\u03BF\u1FD6\u03C2 \u03C0\u03BF\u03BB\u03BB\u1F70"
+          },
+          {
+            "verse": 13,
+            "text": "\u03BA\u03B1\u1F76 \u1F00\u03BD\u03B1\u03B2\u03B1\u03AF\u03BD\u03B5\u03B9"
+          },
+          {
+            "verse": 20,
+            "text": "\u03BA\u03B1\u1F76 \u1F14\u03C1\u03C7\u03B5\u03C4\u03B1\u03B9"
+          },
+          {
+            "verse": 21,
+            "text": "\u03BA\u03B1\u1F76 \u1F00\u03BA\u03BF\u03CD\u03C3\u03B1\u03BD\u03C4\u03B5\u03C2"
+          },
+          {
+            "verse": 22,
+            "text": "\u03BA\u03B1\u1F76 \u03BF\u1F31 \u03B3\u03C1\u03B1\u03BC\u03BC\u03B1\u03C4\u03B5\u1FD6\u03C2"
+          },
+          {
+            "verse": 23,
+            "text": "\u03BA\u03B1\u1F76 \u03C0\u03C1\u03BF\u03C3\u03BA\u03B1\u03BB\u03B5\u03C3\u03AC\u03BC\u03B5\u03BD\u03BF\u03C2 \u03B1\u1F50\u03C4\u03BF\u1F7A\u03C2"
+          },
+          {
+            "verse": 24,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u1F70\u03BD \u03B2\u03B1\u03C3\u03B9\u03BB\u03B5\u03AF\u03B1 \u03BC\u03B5\u03C1\u03B9\u03C3\u03B8\u1FC7"
+          },
+          {
+            "verse": 25,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u1F70\u03BD \u03BF\u1F30\u03BA\u03AF\u03B1 \u03BC\u03B5\u03C1\u03B9\u03C3\u03B8\u1FC7"
+          },
+          {
+            "verse": 26,
+            "text": "\u03BA\u03B1\u1F76 \u03B5\u1F30"
+          },
+          {
+            "verse": 27,
+            "text": "\u1F00\u03BB\u03BB\u2019 \u03BF\u1F50\u03B4\u03B5\u1F76\u03C2"
+          },
+          {
+            "verse": 28,
+            "text": "\u1F00\u03BC\u1F74\u03BD \u03BB\u03AD\u03B3\u03C9 \u1F51\u03BC\u1FD6\u03BD"
+          },
+          {
+            "verse": 31,
+            "text": "\u03BA\u03B1\u1F76 \u1F21 \u03BC\u03AE\u03C4\u03B7\u03C1 \u03B1\u1F50\u03C4\u03BF\u1FE6"
+          },
+          {
+            "verse": 32,
+            "text": "\u03BA\u03B1\u1F76 \u1F44\u03C7\u03BB\u03BF\u03C2 \u1F10\u03BA\u03AC\u03B8\u03B7\u03C4\u03BF"
+          },
+          {
+            "verse": 33,
+            "text": "\u03BA\u03B1\u1F76 \u1F00\u03C0\u03BF\u03BA\u03C1\u03B9\u03B8\u03B5\u1F76\u03C2 \u03B1\u1F50\u03C4\u03BF\u1FD6\u03C2"
+          },
+          {
+            "verse": 34,
+            "text": "\u03BA\u03B1\u1F76 \u03C0\u03B5\u03C1\u03B9\u03B2\u03BB\u03B5\u03C8\u03AC\u03BC\u03B5\u03BD\u03BF\u03C2"
+          },
+          {
+            "verse": 35,
+            "text": "\u03B3\u1F70\u03C1 \u1F43\u03C2"
+          }
+        ]
+      },
+      {
+        "chapter": 4,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "\u03BA\u03B1\u1F76 \u1F24\u03C1\u03BE\u03B1\u03C4\u03BF \u03C0\u03AC\u03BB\u03B9\u03BD"
+          },
+          {
+            "verse": 4,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03B3\u03AD\u03BD\u03B5\u03C4\u03BF"
+          },
+          {
+            "verse": 7,
+            "text": "\u03BA\u03B1\u1F76 \u1F04\u03BB\u03BB\u03BF \u1F14\u03C0\u03B5\u03C3\u03B5\u03BD"
+          },
+          {
+            "verse": 8,
+            "text": "\u03BA\u03B1\u1F76 \u1F04\u03BB\u03BB\u03B1 \u1F14\u03C0\u03B5\u03C3\u03B5\u03BD"
+          },
+          {
+            "verse": 9,
+            "text": "\u03BA\u03B1\u1F76 \u1F14\u03BB\u03B5\u03B3\u03B5\u03BD"
+          },
+          {
+            "verse": 10,
+            "text": "\u03BA\u03B1\u1F76 \u1F45\u03C4\u03B5 \u1F10\u03B3\u03AD\u03BD\u03B5\u03C4\u03BF"
+          },
+          {
+            "verse": 13,
+            "text": "\u03BA\u03B1\u1F76 \u03BB\u03AD\u03B3\u03B5\u03B9 \u03B1\u1F50\u03C4\u03BF\u1FD6\u03C2"
+          },
+          {
+            "verse": 14,
+            "text": "\u1F41 \u03C3\u03C0\u03B5\u03AF\u03C1\u03C9\u03BD"
+          },
+          {
+            "verse": 15,
+            "text": "\u03B4\u03AD \u03BF\u1F57\u03C4\u03BF\u03B9 \u03B5\u1F30\u03C3\u03B9\u03BD"
+          },
+          {
+            "verse": 20,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03BA\u03B5\u1FD6\u03BD\u03BF\u03AF \u03B5\u1F30\u03C3\u03B9\u03BD"
+          },
+          {
+            "verse": 21,
+            "text": "\u03BA\u03B1\u1F76 \u1F14\u03BB\u03B5\u03B3\u03B5\u03BD \u03B1\u1F50\u03C4\u03BF\u1FD6\u03C2"
+          },
+          {
+            "verse": 22,
+            "text": "\u03B3\u03AC\u03C1"
+          },
+          {
+            "verse": 23,
+            "text": "\u03B5\u1F34 \u03C4\u03B9\u03C2 \u1F14\u03C7\u03B5\u03B9"
+          },
+          {
+            "verse": 24,
+            "text": "\u03BA\u03B1\u1F76 \u1F14\u03BB\u03B5\u03B3\u03B5\u03BD \u03B1\u1F50\u03C4\u03BF\u1FD6\u03C2"
+          },
+          {
+            "verse": 25,
+            "text": "\u03B3\u1F70\u03C1 \u1F43\u03C2 \u1F14\u03C7\u03B5\u03B9"
+          },
+          {
+            "verse": 28,
+            "text": "\u1F21 \u03B3\u1FC6"
+          },
+          {
+            "verse": 29,
+            "text": "\u03B4\u1F72 \u1F45\u03C4\u03B1\u03BD"
+          },
+          {
+            "verse": 30,
+            "text": "\u03BA\u03B1\u1F76 \u1F14\u03BB\u03B5\u03B3\u03B5\u03BD"
+          },
+          {
+            "verse": 35,
+            "text": "\u03BA\u03B1\u1F76 \u03BB\u03AD\u03B3\u03B5\u03B9 \u03B1\u1F50\u03C4\u03BF\u1FD6\u03C2"
+          },
+          {
+            "verse": 36,
+            "text": "\u03BA\u03B1\u1F76 \u1F00\u03C6\u03AD\u03BD\u03C4\u03B5\u03C2 \u03C4\u1F78\u03BD \u1F44\u03C7\u03BB\u03BF\u03BD"
+          },
+          {
+            "verse": 37,
+            "text": "\u03BA\u03B1\u1F76 \u03B3\u03AF\u03BD\u03B5\u03C4\u03B1\u03B9 \u03BC\u03B5\u03B3\u03AC\u03BB\u03B7 \u03BB\u03B1\u1FD6\u03BB\u03B1\u03C8 \u1F00\u03BD\u03AD\u03BC\u03BF\u03C5"
+          },
+          {
+            "verse": 38,
+            "text": "\u03BA\u03B1\u1F76 \u03B1\u1F50\u03C4\u1F78\u03C2 \u1F26\u03BD"
+          },
+          {
+            "verse": 39,
+            "text": "\u03BA\u03B1\u1F76 \u03B4\u03B9\u03B5\u03B3\u03B5\u03C1\u03B8\u03B5\u1F76\u03C2"
+          },
+          {
+            "verse": 40,
+            "text": "\u03BA\u03B1\u1F76 \u03B5\u1F36\u03C0\u03B5\u03BD \u03B1\u1F50\u03C4\u03BF\u1FD6\u03C2"
+          },
+          {
+            "verse": 41,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03C6\u03BF\u03B2\u03AE\u03B8\u03B7\u03C3\u03B1\u03BD"
+          }
+        ]
+      },
+      {
+        "chapter": 5,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "\u03BA\u03B1\u1F76 \u1F26\u03BB\u03B8\u03BF\u03BD"
+          },
+          {
+            "verse": 5,
+            "text": "\u03BA\u03B1\u1F76 \u03B4\u03B9\u1F70 \u03C0\u03B1\u03BD\u03C4\u1F78\u03C2 \u03BD\u03C5\u03BA\u03C4\u1F78\u03C2 \u03BA\u03B1\u1F76 \u1F21\u03BC\u03AD\u03C1\u03B1\u03C2"
+          },
+          {
+            "verse": 8,
+            "text": "\u03B3\u1F70\u03C1 \u1F14\u03BB\u03B5\u03B3\u03B5\u03BD \u03B1\u1F50\u03C4\u1FF7"
+          },
+          {
+            "verse": 9,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03C0\u03B7\u03C1\u03CE\u03C4\u03B1 \u03B1\u1F50\u03C4\u03CC\u03BD"
+          },
+          {
+            "verse": 10,
+            "text": "\u03BA\u03B1\u1F76 \u03C0\u03B1\u03C1\u03B5\u03BA\u03AC\u03BB\u03B5\u03B9 \u03C0\u03BF\u03BB\u03BB\u1F70 \u03B1\u1F50\u03C4\u1F78\u03BD"
+          },
+          {
+            "verse": 13,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03C0\u03AD\u03C4\u03C1\u03B5\u03C8\u03B5\u03BD"
+          },
+          {
+            "verse": 14,
+            "text": "\u03BA\u03B1\u1F76 \u03BF\u1F31 \u03B2\u03CC\u03C3\u03BA\u03BF\u03BD\u03C4\u03B5\u03C2 \u03B1\u1F50\u03C4\u03BF\u1F7A\u03C2"
+          },
+          {
+            "verse": 15,
+            "text": "\u03BA\u03B1\u1F76 \u1F14\u03C1\u03C7\u03BF\u03BD\u03C4\u03B1\u03B9"
+          },
+          {
+            "verse": 16,
+            "text": "\u03BA\u03B1\u1F76 \u03BF\u1F31 \u1F30\u03B4\u03CC\u03BD\u03C4\u03B5\u03C2"
+          },
+          {
+            "verse": 17,
+            "text": "\u03BA\u03B1\u1F76 \u1F24\u03C1\u03BE\u03B1\u03BD\u03C4\u03BF \u03C0\u03B1\u03C1\u03B1\u03BA\u03B1\u03BB\u03B5\u1FD6\u03BD \u03B1\u1F50\u03C4\u1F78\u03BD"
+          },
+          {
+            "verse": 18,
+            "text": "\u03BA\u03B1\u1F76 \u03B1\u1F50\u03C4\u03BF\u1FE6 \u1F10\u03BC\u03B2\u03B1\u03AF\u03BD\u03BF\u03BD\u03C4\u03BF\u03C2"
+          },
+          {
+            "verse": 19,
+            "text": "\u03BA\u03B1\u1F76"
+          },
+          {
+            "verse": 20,
+            "text": "\u03BA\u03B1\u1F76 \u1F00\u03C0\u1FC6\u03BB\u03B8\u03B5\u03BD"
+          },
+          {
+            "verse": 21,
+            "text": "\u03BA\u03B1\u1F76 \u03C4\u03BF\u1FE6 \u1F38\u03B7\u03C3\u03BF\u1FE6 \u03B4\u03B9\u03B1\u03C0\u03B5\u03C1\u03AC\u03C3\u03B1\u03BD\u03C4\u03BF\u03C2"
+          },
+          {
+            "verse": 24,
+            "text": "\u03BA\u03B1\u1F76 \u1F00\u03C0\u1FC6\u03BB\u03B8\u03B5\u03BD"
+          },
+          {
+            "verse": 28,
+            "text": "\u03B3\u1F70\u03C1 \u1F14\u03BB\u03B5\u03B3\u03B5\u03BD \u1F45\u03C4\u03B9"
+          },
+          {
+            "verse": 29,
+            "text": "\u03BA\u03B1\u1F76 \u03B5\u1F50\u03B8\u1F7A\u03C2"
+          },
+          {
+            "verse": 30,
+            "text": "\u03BA\u03B1\u1F76 \u03B5\u1F50\u03B8\u1F7A\u03C2 \u1F41 \u1F38\u03B7\u03C3\u03BF\u1FE6\u03C2"
+          },
+          {
+            "verse": 31,
+            "text": "\u03BA\u03B1\u1F76 \u03BF\u1F31 \u03BC\u03B1\u03B8\u03B7\u03C4\u03B1\u1F76 \u03B1\u1F50\u03C4\u03BF\u1FE6"
+          },
+          {
+            "verse": 32,
+            "text": "\u03BA\u03B1\u1F76 \u03C0\u03B5\u03C1\u03B9\u03B5\u03B2\u03BB\u03AD\u03C0\u03B5\u03C4\u03BF"
+          },
+          {
+            "verse": 33,
+            "text": "\u03B4\u1F72 \u1F21 \u03B3\u03C5\u03BD\u1F74 \u03C6\u03BF\u03B2\u03B7\u03B8\u03B5\u1FD6\u03C3\u03B1"
+          },
+          {
+            "verse": 34,
+            "text": "\u03B4\u1F72 \u1F41 \u03B5\u1F36\u03C0\u03B5\u03BD \u03B1\u1F50\u03C4\u1FC7"
+          },
+          {
+            "verse": 35,
+            "text": "\u1F14\u03C4\u03B9 \u03B1\u1F50\u03C4\u03BF\u1FE6 \u03BB\u03B1\u03BB\u03BF\u1FE6\u03BD\u03C4\u03BF\u03C2"
+          },
+          {
+            "verse": 36,
+            "text": "\u03B4\u1F72 \u1F41 \u1F38\u03B7\u03C3\u03BF\u1FE6\u03C2"
+          },
+          {
+            "verse": 37,
+            "text": "\u03BA\u03B1\u1F76"
+          },
+          {
+            "verse": 38,
+            "text": "\u03BA\u03B1\u1F76 \u1F14\u03C1\u03C7\u03BF\u03BD\u03C4\u03B1\u03B9"
+          },
+          {
+            "verse": 39,
+            "text": "\u03BA\u03B1\u1F76 \u03B5\u1F30\u03C3\u03B5\u03BB\u03B8\u1F7C\u03BD"
+          },
+          {
+            "verse": 40,
+            "text": "\u03BA\u03B1\u1F76 \u03BA\u03B1\u03C4\u03B5\u03B3\u03AD\u03BB\u03C9\u03BD"
+          },
+          {
+            "verse": 41,
+            "text": "\u03BA\u03B1\u1F76 \u03BA\u03C1\u03B1\u03C4\u03AE\u03C3\u03B1\u03C2"
+          },
+          {
+            "verse": 42,
+            "text": "\u03BA\u03B1\u1F76 \u03B5\u1F50\u03B8\u1F7A\u03C2"
+          },
+          {
+            "verse": 43,
+            "text": "\u03BA\u03B1\u1F76 \u03B4\u03B9\u03B5\u03C3\u03C4\u03B5\u03AF\u03BB\u03B1\u03C4\u03BF \u03C0\u03BF\u03BB\u03BB\u1F70 \u03B1\u1F50\u03C4\u03BF\u1FD6\u03C2"
+          }
+        ]
+      },
+      {
+        "chapter": 6,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03BE\u1FC6\u03BB\u03B8\u03B5\u03BD \u1F10\u03BA\u03B5\u1FD6\u03B8\u03B5\u03BD"
+          },
+          {
+            "verse": 2,
+            "text": "\u03BA\u03B1\u1F76 \u03A3\u03B1\u03B2\u03B2\u03AC\u03C4\u03BF\u03C5 \u03B3\u03B5\u03BD\u03BF\u03BC\u03AD\u03BD\u03BF\u03C5"
+          },
+          {
+            "verse": 3,
+            "text": "\u03BF\u1F57\u03C4\u03CC\u03C2"
+          },
+          {
+            "verse": 4,
+            "text": "\u03BA\u03B1\u1F76 \u1F41 \u1F38\u03B7\u03C3\u03BF\u1FE6\u03C2 \u1F14\u03BB\u03B5\u03B3\u03B5\u03BD"
+          },
+          {
+            "verse": 5,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03BA\u03B5\u1FD6"
+          },
+          {
+            "verse": 6,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03B8\u03B1\u03CD\u03BC\u03B1\u03C3\u03B5\u03BD"
+          },
+          {
+            "verse": 7,
+            "text": "\u03BA\u03B1\u1F76 \u03C0\u03C1\u03BF\u03C3\u03BA\u03B1\u03BB\u03B5\u1FD6\u03C4\u03B1\u03B9 \u03C4\u03BF\u1F7A\u03C2 \u03B4\u03CE\u03B4\u03B5\u03BA\u03B1"
+          },
+          {
+            "verse": 10,
+            "text": "\u03BA\u03B1\u1F76 \u1F14\u03BB\u03B5\u03B3\u03B5\u03BD \u03B1\u1F50\u03C4\u03BF\u1FD6\u03C2"
+          },
+          {
+            "verse": 11,
+            "text": "\u03BA\u03B1\u1F76 \u1F02\u03BD \u03C4\u03CC\u03C0\u03BF\u03C2"
+          },
+          {
+            "verse": 12,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03BE\u03B5\u03BB\u03B8\u03CC\u03BD\u03C4\u03B5\u03C2"
+          },
+          {
+            "verse": 13,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03BE\u03AD\u03B2\u03B1\u03BB\u03BB\u03BF\u03BD"
+          },
+          {
+            "verse": 14,
+            "text": "\u03BA\u03B1\u1F76 \u1F41 \u03B2\u03B1\u03C3\u03B9\u03BB\u03B5\u1F7A\u03C2 \u1F29\u03C1\u1FF4\u03B4\u03B7\u03C2"
+          },
+          {
+            "verse": 15,
+            "text": "\u03B4\u1F72 \u1F04\u03BB\u03BB\u03BF\u03B9 \u1F14\u03BB\u03B5\u03B3\u03BF\u03BD \u1F45\u03C4\u03B9"
+          },
+          {
+            "verse": 16,
+            "text": "\u03B4\u1F72 \u1F00\u03BA\u03BF\u03CD\u03C3\u03B1\u03C2"
+          },
+          {
+            "verse": 17,
+            "text": "\u03B3\u1F70\u03C1 \u1F41 \u1F29\u03C1\u1FF4\u03B4\u03B7\u03C2 \u03B1\u1F50\u03C4\u1F78\u03C2"
+          },
+          {
+            "verse": 18,
+            "text": "\u03B3\u1F70\u03C1 \u1F41 \u1F38\u03C9\u03AC\u03BD\u03BD\u03B7\u03C2 \u1F14\u03BB\u03B5\u03B3\u03B5\u03BD"
+          },
+          {
+            "verse": 21,
+            "text": "\u03BA\u03B1\u1F76 \u1F21\u03BC\u03AD\u03C1\u03B1\u03C2 \u03B5\u1F50\u03BA\u03B1\u03AF\u03C1\u03BF\u03C5 \u03B3\u03B5\u03BD\u03BF\u03BC\u03AD\u03BD\u03B7\u03C2"
+          },
+          {
+            "verse": 22,
+            "text": "\u03BA\u03B1\u1F76 \u1F29\u03C1\u1FF3\u03B4\u03B9\u03AC\u03B4\u03BF\u03C2"
+          },
+          {
+            "verse": 23,
+            "text": "\u03BA\u03B1\u1F76 \u1F64\u03BC\u03BF\u03C3\u03B5\u03BD \u03B1\u1F50\u03C4\u1FC7 \u1F45\u03C4\u03B9"
+          },
+          {
+            "verse": 24,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03BE\u03B5\u03BB\u03B8\u03BF\u1FE6\u03C3\u03B1"
+          },
+          {
+            "verse": 25,
+            "text": "\u03BA\u03B1\u1F76 \u03B5\u1F30\u03C3\u03B5\u03BB\u03B8\u03BF\u1FE6\u03C3\u03B1 \u03B5\u1F50\u03B8\u1F7A\u03C2"
+          },
+          {
+            "verse": 26,
+            "text": "\u03BA\u03B1\u1F76 \u1F41 \u03B2\u03B1\u03C3\u03B9\u03BB\u03B5\u1F7A\u03C2 \u03B3\u03B5\u03BD\u03CC\u03BC\u03B5\u03BD\u03BF\u03C2 \u03C0\u03B5\u03C1\u03AF\u03BB\u03C5\u03C0\u03BF\u03C2"
+          },
+          {
+            "verse": 29,
+            "text": "\u03BA\u03B1\u1F76 \u03BF\u1F31 \u03BC\u03B1\u03B8\u03B7\u03C4\u03B1\u1F76 \u03B1\u1F50\u03C4\u03BF\u1FE6"
+          },
+          {
+            "verse": 30,
+            "text": "\u03BA\u03B1\u1F76 \u03BF\u1F31 \u1F00\u03C0\u03CC\u03C3\u03C4\u03BF\u03BB\u03BF\u03B9 \u03C3\u03C5\u03BD\u03AC\u03B3\u03BF\u03BD\u03C4\u03B1\u03B9"
+          },
+          {
+            "verse": 31,
+            "text": "\u03BA\u03B1\u1F76 \u03BB\u03AD\u03B3\u03B5\u03B9 \u03B1\u1F50\u03C4\u03BF\u1FD6\u03C2"
+          },
+          {
+            "verse": 32,
+            "text": "\u03BA\u03B1\u1F76 \u1F00\u03C0\u1FC6\u03BB\u03B8\u03BF\u03BD"
+          },
+          {
+            "verse": 33,
+            "text": "\u03BA\u03B1\u1F76 \u03C0\u03BF\u03BB\u03BB\u03BF\u03AF \u03B5\u1F36\u03B4\u03BF\u03BD \u03B1\u1F50\u03C4\u03BF\u1F7A\u03C2"
+          },
+          {
+            "verse": 34,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03BE\u03B5\u03BB\u03B8\u1F7C\u03BD"
+          },
+          {
+            "verse": 37,
+            "text": "\u03B4\u1F72 \u1F41 \u1F00\u03C0\u03BF\u03BA\u03C1\u03B9\u03B8\u03B5\u1F76\u03C2"
+          },
+          {
+            "verse": 38,
+            "text": "\u03B4\u1F72 \u1F41 \u03BB\u03AD\u03B3\u03B5\u03B9 \u03B1\u1F50\u03C4\u03BF\u1FD6\u03C2"
+          },
+          {
+            "verse": 39,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03C0\u03AD\u03C4\u03B1\u03BE\u03B5\u03BD \u03B1\u1F50\u03C4\u03BF\u1FD6\u03C2"
+          },
+          {
+            "verse": 40,
+            "text": "\u03BA\u03B1\u1F76 \u1F00\u03BD\u03AD\u03C0\u03B5\u03C3\u03B1\u03BD"
+          },
+          {
+            "verse": 41,
+            "text": "\u03BA\u03B1\u1F76 \u03BB\u03B1\u03B2\u1F7C\u03BD"
+          },
+          {
+            "verse": 42,
+            "text": "\u03BA\u03B1\u1F76 \u03C0\u03AC\u03BD\u03C4\u03B5\u03C2 \u1F14\u03C6\u03B1\u03B3\u03BF\u03BD"
+          },
+          {
+            "verse": 43,
+            "text": "\u03BA\u03B1\u1F76 \u1F26\u03C1\u03B1\u03BD \u03BA\u03BB\u03AC\u03C3\u03BC\u03B1\u03C4\u03B1"
+          },
+          {
+            "verse": 44,
+            "text": "\u03BA\u03B1\u1F76 \u03BF\u1F31 \u03C6\u03B1\u03B3\u03CC\u03BD\u03C4\u03B5\u03C2"
+          },
+          {
+            "verse": 45,
+            "text": "\u03BA\u03B1\u1F76 \u03B5\u1F50\u03B8\u1F7A\u03C2"
+          },
+          {
+            "verse": 46,
+            "text": "\u03BA\u03B1\u1F76 \u1F00\u03C0\u03BF\u03C4\u03B1\u03BE\u03AC\u03BC\u03B5\u03BD\u03BF\u03C2 \u03B1\u1F50\u03C4\u03BF\u1FD6\u03C2"
+          },
+          {
+            "verse": 47,
+            "text": "\u03BA\u03B1\u1F76 \u1F40\u03C8\u03AF\u03B1\u03C2 \u03B3\u03B5\u03BD\u03BF\u03BC\u03AD\u03BD\u03B7\u03C2"
+          },
+          {
+            "verse": 48,
+            "text": "\u03BA\u03B1\u1F76 \u1F30\u03B4\u1F7C\u03BD \u03B1\u1F50\u03C4\u03BF\u1F7A\u03C2 \u03B2\u03B1\u03C3\u03B1\u03BD\u03B9\u03B6\u03BF\u03BC\u03AD\u03BD\u03BF\u03C5\u03C2"
+          },
+          {
+            "verse": 49,
+            "text": "\u03B4\u1F72 \u03BF\u1F31 \u1F30\u03B4\u03CC\u03BD\u03C4\u03B5\u03C2 \u03B1\u1F50\u03C4\u1F78\u03BD"
+          },
+          {
+            "verse": 50,
+            "text": "\u03B3\u1F70\u03C1 \u03C0\u03AC\u03BD\u03C4\u03B5\u03C2 \u03B5\u1F36\u03B4\u03BF\u03BD \u03B1\u1F50\u03C4\u1F78\u03BD"
+          },
+          {
+            "verse": 53,
+            "text": "\u03BA\u03B1\u1F76 \u03B4\u03B9\u03B1\u03C0\u03B5\u03C1\u03AC\u03C3\u03B1\u03BD\u03C4\u03B5\u03C2"
+          },
+          {
+            "verse": 56,
+            "text": "\u03BA\u03B1\u1F76 \u1F02\u03BD \u1F45\u03C0\u03BF\u03C5 \u03B5\u1F30\u03C3\u03B5\u03C0\u03BF\u03C1\u03B5\u03CD\u03B5\u03C4\u03BF"
+          }
+        ]
+      },
+      {
+        "chapter": 7,
+        "verses": [
+          {
+            "verse": 5,
+            "text": "\u03BA\u03B1\u1F76 \u03BF\u1F31 \u03A6\u03B1\u03C1\u03B9\u03C3\u03B1\u1FD6\u03BF\u03B9"
+          },
+          {
+            "verse": 6,
+            "text": "\u03B4\u1F72 \u1F41 \u1F00\u03C0\u03BF\u03BA\u03C1\u03B9\u03B8\u03B5\u1F76\u03C2"
+          },
+          {
+            "verse": 7,
+            "text": "\u03B4\u1F72 \u03C3\u03AD\u03B2\u03BF\u03BD\u03C4\u03B1\u03AF \u03BC\u03B5 \u03BC\u03AC\u03C4\u03B7\u03BD"
+          },
+          {
+            "verse": 8,
+            "text": "\u1F00\u03C6\u03AD\u03BD\u03C4\u03B5\u03C2"
+          },
+          {
+            "verse": 9,
+            "text": "\u03BA\u03B1\u1F76 \u1F14\u03BB\u03B5\u03B3\u03B5\u03BD \u03B1\u1F50\u03C4\u03BF\u1FD6\u03C2"
+          },
+          {
+            "verse": 10,
+            "text": "\u03B3\u1F70\u03C1 \u039C\u03C9\u03CB\u03C3\u1FC6\u03C2 \u03B5\u1F36\u03C0\u03B5\u03BD"
+          },
+          {
+            "verse": 16,
+            "text": "\u0395\u1F34 \u03C4\u03B9\u03C2 \u1F14\u03C7\u03B5\u03B9"
+          },
+          {
+            "verse": 17,
+            "text": "\u03BA\u03B1\u1F76 \u1F45\u03C4\u03B5 \u03B5\u1F30\u03C3\u1FC6\u03BB\u03B8\u03B5\u03BD"
+          },
+          {
+            "verse": 20,
+            "text": "\u03B4\u1F72 \u1F14\u03BB\u03B5\u03B3\u03B5\u03BD \u1F45\u03C4\u03B9"
+          },
+          {
+            "verse": 23,
+            "text": "\u03C0\u03AC\u03BD\u03C4\u03B1"
+          },
+          {
+            "verse": 24,
+            "text": "\u03B4\u1F72 \u1F00\u03BD\u03B1\u03C3\u03C4\u1F70\u03C2 \u1F10\u03BA\u03B5\u1FD6\u03B8\u03B5\u03BD"
+          },
+          {
+            "verse": 25,
+            "text": "\u1F00\u03BB\u03BB\u2019 \u03B5\u1F50\u03B8\u1F7A\u03C2"
+          },
+          {
+            "verse": 26,
+            "text": "\u03B4\u1F72 \u1F21 \u03B3\u03C5\u03BD\u1F74 \u1F26\u03BD \u1F19\u03BB\u03BB\u03B7\u03BD\u03AF\u03C2"
+          },
+          {
+            "verse": 27,
+            "text": "\u03BA\u03B1\u1F76 \u1F14\u03BB\u03B5\u03B3\u03B5\u03BD \u03B1\u1F50\u03C4\u1FC7"
+          },
+          {
+            "verse": 28,
+            "text": "\u03B4\u1F72 \u1F21 \u1F00\u03C0\u03B5\u03BA\u03C1\u03AF\u03B8\u03B7"
+          },
+          {
+            "verse": 29,
+            "text": "\u03BA\u03B1\u1F76 \u03B5\u1F36\u03C0\u03B5\u03BD \u03B1\u1F50\u03C4\u1FC7"
+          },
+          {
+            "verse": 30,
+            "text": "\u03BA\u03B1\u1F76 \u1F00\u03C0\u03B5\u03BB\u03B8\u03BF\u1FE6\u03C3\u03B1"
+          },
+          {
+            "verse": 31,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03BE\u03B5\u03BB\u03B8\u1F7C\u03BD \u03C0\u03AC\u03BB\u03B9\u03BD"
+          },
+          {
+            "verse": 32,
+            "text": "\u03BA\u03B1\u1F76 \u03C6\u03AD\u03C1\u03BF\u03C5\u03C3\u03B9\u03BD \u03B1\u1F50\u03C4\u1FF7"
+          },
+          {
+            "verse": 35,
+            "text": "\u03BA\u03B1\u1F76 \u03B1\u1F31 \u1F00\u03BA\u03BF\u03B1\u03AF \u03B1\u1F50\u03C4\u03BF\u1FE6"
+          },
+          {
+            "verse": 36,
+            "text": "\u03BA\u03B1\u1F76 \u03B4\u03B9\u03B5\u03C3\u03C4\u03B5\u03AF\u03BB\u03B1\u03C4\u03BF \u03B1\u1F50\u03C4\u03BF\u1FD6\u03C2"
+          },
+          {
+            "verse": 37,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03BE\u03B5\u03C0\u03BB\u03AE\u03C3\u03C3\u03BF\u03BD\u03C4\u03BF \u1F51\u03C0\u03AD\u03C1\u03C0\u03B5\u03C1\u03B9\u03C3\u03C3\u1FF6\u03C2"
+          }
+        ]
+      },
+      {
+        "chapter": 8,
+        "verses": [
+          {
+            "verse": 3,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u1F70\u03BD \u1F00\u03C0\u03BF\u03BB\u03CD\u03C3\u03C9 \u03B1\u1F50\u03C4\u03BF\u1F7A\u03C2"
+          },
+          {
+            "verse": 4,
+            "text": "\u03BA\u03B1\u1F76"
+          },
+          {
+            "verse": 5,
+            "text": "\u03BA\u03B1\u1F76 \u1F20\u03C1\u03CE\u03C4\u03B1 \u03B1\u1F50\u03C4\u03BF\u03CD\u03C2"
+          },
+          {
+            "verse": 6,
+            "text": "\u03BA\u03B1\u1F76 \u03C0\u03B1\u03C1\u03B1\u03B3\u03B3\u03AD\u03BB\u03BB\u03B5\u03B9"
+          },
+          {
+            "verse": 7,
+            "text": "\u03BA\u03B1\u1F76 \u03B5\u1F36\u03C7\u03B1\u03BD"
+          },
+          {
+            "verse": 8,
+            "text": "\u03BA\u03B1\u1F76 \u1F14\u03C6\u03B1\u03B3\u03BF\u03BD"
+          },
+          {
+            "verse": 9,
+            "text": "\u03B4\u1F72 \u1F26\u03C3\u03B1\u03BD"
+          },
+          {
+            "verse": 10,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03BC\u03B2\u1F70\u03C2 \u03B5\u1F50\u03B8\u1F7A\u03C2"
+          },
+          {
+            "verse": 11,
+            "text": "\u03BA\u03B1\u1F76 \u03BF\u1F31 \u03A6\u03B1\u03C1\u03B9\u03C3\u03B1\u1FD6\u03BF\u03B9 \u1F10\u03BE\u1FC6\u03BB\u03B8\u03BF\u03BD"
+          },
+          {
+            "verse": 12,
+            "text": "\u03BA\u03B1\u1F76 \u1F00\u03BD\u03B1\u03C3\u03C4\u03B5\u03BD\u03AC\u03BE\u03B1\u03C2"
+          },
+          {
+            "verse": 13,
+            "text": "\u03BA\u03B1\u1F76 \u1F00\u03C6\u03B5\u1F76\u03C2 \u03B1\u1F50\u03C4\u03BF\u1F7A\u03C2"
+          },
+          {
+            "verse": 14,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03C0\u03B5\u03BB\u03AC\u03B8\u03BF\u03BD\u03C4\u03BF \u03BB\u03B1\u03B2\u03B5\u1FD6\u03BD \u1F04\u03C1\u03C4\u03BF\u03C5\u03C2"
+          },
+          {
+            "verse": 15,
+            "text": "\u03BA\u03B1\u1F76 \u03B4\u03B9\u03B5\u03C3\u03C4\u03AD\u03BB\u03BB\u03B5\u03C4\u03BF \u03B1\u1F50\u03C4\u03BF\u1FD6\u03C2 \u03BB\u03AD\u03B3\u03C9\u03BD"
+          },
+          {
+            "verse": 16,
+            "text": "\u03BA\u03B1\u1F76 \u03B4\u03B9\u03B5\u03BB\u03BF\u03B3\u03AF\u03B6\u03BF\u03BD\u03C4\u03BF"
+          },
+          {
+            "verse": 17,
+            "text": "\u03BA\u03B1\u1F76 \u03B3\u03BD\u03BF\u1F7A\u03C2"
+          },
+          {
+            "verse": 18,
+            "text": "\u1F14\u03C7\u03BF\u03BD\u03C4\u03B5\u03C2 \u1F40\u03C6\u03B8\u03B1\u03BB\u03BC\u03BF\u1F7A\u03C2"
+          },
+          {
+            "verse": 19,
+            "text": "\u1F45\u03C4\u03B5 \u1F14\u03BA\u03BB\u03B1\u03C3\u03B1"
+          },
+          {
+            "verse": 20,
+            "text": "\u03BA\u03B1\u1F76 \u1F45\u03C4\u03B5"
+          },
+          {
+            "verse": 21,
+            "text": "\u03BA\u03B1\u1F76 \u1F14\u03BB\u03B5\u03B3\u03B5\u03BD \u03B1\u1F50\u03C4\u03BF\u1FD6\u03C2"
+          },
+          {
+            "verse": 22,
+            "text": "\u03BA\u03B1\u1F76 \u1F14\u03C1\u03C7\u03BF\u03BD\u03C4\u03B1\u03B9"
+          },
+          {
+            "verse": 23,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03C0\u03B9\u03BB\u03B1\u03B2\u03CC\u03BC\u03B5\u03BD\u03BF\u03C2"
+          },
+          {
+            "verse": 24,
+            "text": "\u03BA\u03B1\u1F76 \u1F00\u03BD\u03B1\u03B2\u03BB\u03AD\u03C8\u03B1\u03C2 \u1F14\u03BB\u03B5\u03B3\u03B5\u03BD"
+          },
+          {
+            "verse": 25,
+            "text": "\u03B5\u1F36\u03C4\u03B1"
+          },
+          {
+            "verse": 26,
+            "text": "\u03BA\u03B1\u1F76 \u1F00\u03C0\u03AD\u03C3\u03C4\u03B5\u03B9\u03BB\u03B5\u03BD \u03B1\u1F50\u03C4\u1F78\u03BD"
+          },
+          {
+            "verse": 27,
+            "text": "\u03BA\u03B1\u1F76 \u1F41 \u1F38\u03B7\u03C3\u03BF\u1FE6\u03C2 \u1F10\u03BE\u1FC6\u03BB\u03B8\u03B5\u03BD"
+          },
+          {
+            "verse": 28,
+            "text": "\u03B4\u1F72 \u03BF\u1F31 \u03B5\u1F36\u03C0\u03B1\u03BD \u03B1\u1F50\u03C4\u1FF7"
+          },
+          {
+            "verse": 29,
+            "text": "\u03BA\u03B1\u1F76 \u03B1\u1F50\u03C4\u1F78\u03C2 \u1F10\u03C0\u03B7\u03C1\u03CE\u03C4\u03B1 \u03B1\u1F50\u03C4\u03BF\u03CD\u03C2"
+          },
+          {
+            "verse": 30,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03C0\u03B5\u03C4\u03AF\u03BC\u03B7\u03C3\u03B5\u03BD \u03B1\u1F50\u03C4\u03BF\u1FD6\u03C2"
+          },
+          {
+            "verse": 31,
+            "text": "\u03BA\u03B1\u1F76 \u1F24\u03C1\u03BE\u03B1\u03C4\u03BF"
+          },
+          {
+            "verse": 32,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03BB\u03AC\u03BB\u03B5\u03B9 \u03C4\u1F78\u03BD \u03BB\u03CC\u03B3\u03BF\u03BD"
+          },
+          {
+            "verse": 33,
+            "text": "\u03B4\u1F72 \u1F41 \u1F10\u03C0\u03B9\u03C3\u03C4\u03C1\u03B1\u03C6\u03B5\u1F76\u03C2"
+          },
+          {
+            "verse": 34,
+            "text": "\u03BA\u03B1\u1F76 \u03C0\u03C1\u03BF\u03C3\u03BA\u03B1\u03BB\u03B5\u03C3\u03AC\u03BC\u03B5\u03BD\u03BF\u03C2 \u03C4\u1F78\u03BD \u1F44\u03C7\u03BB\u03BF\u03BD"
+          },
+          {
+            "verse": 35,
+            "text": "\u03B3\u1F70\u03C1 \u1F43\u03C2 \u1F10\u1F70\u03BD \u03B8\u03AD\u03BB\u1FC3 \u03C3\u1FF6\u03C3\u03B1\u03B9"
+          },
+          {
+            "verse": 36,
+            "text": "\u03B3\u1F70\u03C1 \u03C4\u03AF \u1F60\u03C6\u03B5\u03BB\u03B5\u1FD6 \u1F04\u03BD\u03B8\u03C1\u03C9\u03C0\u03BF\u03BD"
+          },
+          {
+            "verse": 37,
+            "text": "\u03B3\u1F70\u03C1 \u03C4\u03AF \u03B4\u03BF\u1FD6 \u1F04\u03BD\u03B8\u03C1\u03C9\u03C0\u03BF\u03C2"
+          },
+          {
+            "verse": 38,
+            "text": "\u03B3\u1F70\u03C1 \u1F43\u03C2 \u1F10\u1F70\u03BD \u1F10\u03C0\u03B1\u03B9\u03C3\u03C7\u03C5\u03BD\u03B8\u1FC7 \u03BC\u03B5"
+          }
+        ]
+      },
+      {
+        "chapter": 9,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "\u03BA\u03B1\u1F76 \u1F14\u03BB\u03B5\u03B3\u03B5\u03BD \u03B1\u1F50\u03C4\u03BF\u1FD6\u03C2"
+          },
+          {
+            "verse": 4,
+            "text": "\u03BA\u03B1\u1F76 \u1F28\u03BB\u03B5\u03AF\u03B1\u03C2"
+          },
+          {
+            "verse": 5,
+            "text": "\u03BA\u03B1\u1F76 \u1F00\u03C0\u03BF\u03BA\u03C1\u03B9\u03B8\u03B5\u1F76\u03C2"
+          },
+          {
+            "verse": 6,
+            "text": "\u03B3\u1F70\u03C1"
+          },
+          {
+            "verse": 7,
+            "text": "\u03BA\u03B1\u1F76 \u03BD\u03B5\u03C6\u03AD\u03BB\u03B7 \u1F10\u03B3\u03AD\u03BD\u03B5\u03C4\u03BF"
+          },
+          {
+            "verse": 8,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03BE\u03AC\u03C0\u03B9\u03BD\u03B1"
+          },
+          {
+            "verse": 9,
+            "text": "\u03BA\u03B1\u1F76 \u03B1\u1F50\u03C4\u1FF6\u03BD \u03BA\u03B1\u03C4\u03B1\u03B2\u03B1\u03B9\u03BD\u03CC\u03BD\u03C4\u03C9\u03BD"
+          },
+          {
+            "verse": 10,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03BA\u03C1\u03AC\u03C4\u03B7\u03C3\u03B1\u03BD \u03C4\u1F78\u03BD \u03BB\u03CC\u03B3\u03BF\u03BD"
+          },
+          {
+            "verse": 11,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03C0\u03B7\u03C1\u03CE\u03C4\u03C9\u03BD \u03B1\u1F50\u03C4\u1F78\u03BD"
+          },
+          {
+            "verse": 12,
+            "text": "\u03B4\u1F72 \u1F41 \u1F14\u03C6\u03B7 \u03B1\u1F50\u03C4\u03BF\u1FD6\u03C2"
+          },
+          {
+            "verse": 13,
+            "text": "\u1F00\u03BB\u03BB\u1F70 \u03BB\u03AD\u03B3\u03C9 \u1F51\u03BC\u1FD6\u03BD \u1F45\u03C4\u03B9"
+          },
+          {
+            "verse": 14,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03BB\u03B8\u03CC\u03BD\u03C4\u03B5\u03C2"
+          },
+          {
+            "verse": 15,
+            "text": "\u03BA\u03B1\u1F76 \u03B5\u1F50\u03B8\u1F7A\u03C2"
+          },
+          {
+            "verse": 16,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03C0\u03B7\u03C1\u03CE\u03C4\u03B7\u03C3\u03B5\u03BD \u03B1\u1F50\u03C4\u03BF\u03CD\u03C2"
+          },
+          {
+            "verse": 19,
+            "text": "\u03B4\u1F72 \u1F41 \u1F00\u03C0\u03BF\u03BA\u03C1\u03B9\u03B8\u03B5\u1F76\u03C2"
+          },
+          {
+            "verse": 20,
+            "text": "\u03BA\u03B1\u1F76 \u1F24\u03BD\u03B5\u03B3\u03BA\u03B1\u03BD \u03B1\u1F50\u03C4\u1F78\u03BD"
+          },
+          {
+            "verse": 21,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03C0\u03B7\u03C1\u03CE\u03C4\u03B7\u03C3\u03B5\u03BD"
+          },
+          {
+            "verse": 22,
+            "text": "\u03BA\u03B1\u1F76 \u03C0\u03BF\u03BB\u03BB\u03AC\u03BA\u03B9\u03C2"
+          },
+          {
+            "verse": 23,
+            "text": "\u03B4\u1F72 \u1F41 \u1F38\u03B7\u03C3\u03BF\u1FE6\u03C2 \u03B5\u1F36\u03C0\u03B5\u03BD \u03B1\u1F50\u03C4\u1FF7"
+          },
+          {
+            "verse": 24,
+            "text": "\u03BA\u03B1\u1F76 \u03B5\u1F50\u03B8\u1F7A\u03C2"
+          },
+          {
+            "verse": 25,
+            "text": "\u03B4\u1F72 \u1F41 \u1F38\u03B7\u03C3\u03BF\u1FE6\u03C2 \u1F30\u03B4\u1F7C\u03BD \u1F45\u03C4\u03B9"
+          },
+          {
+            "verse": 26,
+            "text": "\u03BA\u03B1\u1F76 \u03BA\u03C1\u03AC\u03BE\u03B1\u03C2"
+          },
+          {
+            "verse": 27,
+            "text": "\u03B4\u1F72 \u1F41 \u1F38\u03B7\u03C3\u03BF\u1FE6\u03C2 \u03BA\u03C1\u03B1\u03C4\u03AE\u03C3\u03B1\u03C2"
+          },
+          {
+            "verse": 28,
+            "text": "\u03BA\u03B1\u1F76 \u03B1\u1F50\u03C4\u03BF\u1FE6 \u03B5\u1F30\u03C3\u03B5\u03BB\u03B8\u03CC\u03BD\u03C4\u03BF\u03C2"
+          },
+          {
+            "verse": 29,
+            "text": "\u03BA\u03B1\u1F76 \u03B5\u1F36\u03C0\u03B5\u03BD \u03B1\u1F50\u03C4\u03BF\u1FD6\u03C2"
+          },
+          {
+            "verse": 32,
+            "text": "\u03B4\u1F72"
+          },
+          {
+            "verse": 33,
+            "text": "\u03BA\u03B1\u1F76 \u1F26\u03BB\u03B8\u03BF\u03BD"
+          },
+          {
+            "verse": 34,
+            "text": "\u03B4\u1F72 \u03BF\u1F31 \u1F10\u03C3\u03B9\u03CE\u03C0\u03C9\u03BD"
+          },
+          {
+            "verse": 35,
+            "text": "\u03BA\u03B1\u1F76 \u03BA\u03B1\u03B8\u03AF\u03C3\u03B1\u03C2"
+          },
+          {
+            "verse": 38,
+            "text": "\u1F41 \u1F38\u03C9\u03AC\u03BD\u03BD\u03B7\u03C2 \u1F14\u03C6\u03B7 \u03B1\u1F50\u03C4\u1FF7"
+          },
+          {
+            "verse": 39,
+            "text": "\u03B4\u1F72 \u1F41 \u1F38\u03B7\u03C3\u03BF\u1FE6\u03C2 \u03B5\u1F36\u03C0\u03B5\u03BD"
+          },
+          {
+            "verse": 40,
+            "text": "\u03B3\u1F70\u03C1 \u1F43\u03C2"
+          },
+          {
+            "verse": 41,
+            "text": "\u03B3\u1F70\u03C1 \u1F43\u03C2 \u1F02\u03BD \u03C0\u03BF\u03C4\u03AF\u03C3\u1FC3"
+          },
+          {
+            "verse": 42,
+            "text": "\u03BA\u03B1\u1F76 \u1F43\u03C2 \u1F02\u03BD \u03C3\u03BA\u03B1\u03BD\u03B4\u03B1\u03BB\u03AF\u03C3\u1FC3"
+          },
+          {
+            "verse": 43,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u1F70\u03BD \u1F21 \u03C7\u03B5\u03AF\u03C1 \u03C3\u03BF\u03C5"
+          },
+          {
+            "verse": 44,
+            "text": "\u1F45\u03C0\u03BF\u03C5 \u1F41 \u03C3\u03BA\u03CE\u03BB\u03B7\u03BE \u03B1\u1F50\u03C4\u1FF6\u03BD"
+          },
+          {
+            "verse": 45,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u1F70\u03BD \u1F41 \u03C0\u03BF\u03CD\u03C2 \u03C3\u03BF\u03C5"
+          },
+          {
+            "verse": 46,
+            "text": "\u1F45\u03C0\u03BF\u03C5 \u1F41 \u03C3\u03BA\u03CE\u03BB\u03B7\u03BE \u03B1\u1F50\u03C4\u1FF6\u03BD"
+          },
+          {
+            "verse": 49,
+            "text": "\u03B3\u1F70\u03C1 \u03C0\u1FB6\u03C2"
+          },
+          {
+            "verse": 50,
+            "text": "\u03C4\u1F78 \u1F05\u03BB\u03B1\u03C2 \u03BA\u03B1\u03BB\u1F78\u03BD"
+          }
+        ]
+      },
+      {
+        "chapter": 10,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03BA\u03B5\u1FD6\u03B8\u03B5\u03BD \u1F00\u03BD\u03B1\u03C3\u03C4\u1F70\u03C2"
+          },
+          {
+            "verse": 2,
+            "text": "\u03BA\u03B1\u1F76 \u03C0\u03C1\u03BF\u03C3\u03B5\u03BB\u03B8\u03CC\u03BD\u03C4\u03B5\u03C2"
+          },
+          {
+            "verse": 3,
+            "text": "\u03B4\u1F72 \u1F41 \u1F00\u03C0\u03BF\u03BA\u03C1\u03B9\u03B8\u03B5\u1F76\u03C2"
+          },
+          {
+            "verse": 4,
+            "text": "\u03B4\u1F72 \u03BF\u1F31 \u03B5\u1F36\u03C0\u03B1\u03BD"
+          },
+          {
+            "verse": 9,
+            "text": "\u03BF\u1F56\u03BD"
+          },
+          {
+            "verse": 10,
+            "text": "\u03BA\u03B1\u1F76 \u03C0\u03AC\u03BB\u03B9\u03BD \u03B5\u1F30\u03C2 \u03C4\u1F74\u03BD \u03BF\u1F30\u03BA\u03AF\u03B1\u03BD"
+          },
+          {
+            "verse": 11,
+            "text": "\u03BA\u03B1\u1F76 \u03BB\u03AD\u03B3\u03B5\u03B9 \u03B1\u1F50\u03C4\u03BF\u1FD6\u03C2"
+          },
+          {
+            "verse": 12,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u1F70\u03BD \u03B1\u1F50\u03C4\u1F74 \u1F00\u03C0\u03BF\u03BB\u03CD\u03C3\u03B1\u03C3\u03B1"
+          },
+          {
+            "verse": 13,
+            "text": "\u03BA\u03B1\u1F76 \u03C0\u03C1\u03BF\u03C3\u03AD\u03C6\u03B5\u03C1\u03BF\u03BD \u03B1\u1F50\u03C4\u1FF7"
+          },
+          {
+            "verse": 14,
+            "text": "\u03B4\u1F72 \u1F30\u03B4\u1F7C\u03BD"
+          },
+          {
+            "verse": 15,
+            "text": "\u1F00\u03BC\u1F74\u03BD"
+          },
+          {
+            "verse": 16,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03BD\u03B1\u03B3\u03BA\u03B1\u03BB\u03B9\u03C3\u03AC\u03BC\u03B5\u03BD\u03BF\u03C2 \u03B1\u1F50\u03C4\u1F70"
+          },
+          {
+            "verse": 17,
+            "text": "\u03BA\u03B1\u1F76 \u03B1\u1F50\u03C4\u03BF\u1FE6 \u1F10\u03BA\u03C0\u03BF\u03C1\u03B5\u03C5\u03BF\u03BC\u03AD\u03BD\u03BF\u03C5"
+          },
+          {
+            "verse": 18,
+            "text": "\u03B4\u1F72 \u1F41 \u1F38\u03B7\u03C3\u03BF\u1FE6\u03C2 \u03B5\u1F36\u03C0\u03B5\u03BD \u03B1\u1F50\u03C4\u1FF7"
+          },
+          {
+            "verse": 19,
+            "text": "\u03BF\u1F36\u03B4\u03B1\u03C2 \u03C4\u1F70\u03C2 \u1F10\u03BD\u03C4\u03BF\u03BB\u1F70\u03C2"
+          },
+          {
+            "verse": 20,
+            "text": "\u03B4\u1F72 \u1F41 \u1F14\u03C6\u03B7 \u03B1\u1F50\u03C4\u1FF7"
+          },
+          {
+            "verse": 21,
+            "text": "\u03B4\u1F72 \u1F41 \u1F38\u03B7\u03C3\u03BF\u1FE6\u03C2"
+          },
+          {
+            "verse": 22,
+            "text": "\u03B4\u1F72 \u1F41 \u03C3\u03C4\u03C5\u03B3\u03BD\u03AC\u03C3\u03B1\u03C2"
+          },
+          {
+            "verse": 23,
+            "text": "\u03BA\u03B1\u1F76 \u03C0\u03B5\u03C1\u03B9\u03B2\u03BB\u03B5\u03C8\u03AC\u03BC\u03B5\u03BD\u03BF\u03C2"
+          },
+          {
+            "verse": 26,
+            "text": "\u03B4\u1F72 \u03BF\u1F31 \u1F10\u03BE\u03B5\u03C0\u03BB\u03AE\u03C3\u03C3\u03BF\u03BD\u03C4\u03BF \u03C0\u03B5\u03C1\u03B9\u03C3\u03C3\u1FF6\u03C2"
+          },
+          {
+            "verse": 27,
+            "text": "\u1F10\u03BC\u03B2\u03BB\u03AD\u03C8\u03B1\u03C2 \u03B1\u1F50\u03C4\u03BF\u1FD6\u03C2"
+          },
+          {
+            "verse": 28,
+            "text": "\u1F41 \u03A0\u03AD\u03C4\u03C1\u03BF\u03C2 \u1F24\u03C1\u03BE\u03B1\u03C4\u03BF"
+          },
+          {
+            "verse": 31,
+            "text": "\u03B4\u1F72 \u03C0\u03BF\u03BB\u03BB\u03BF\u1F76 \u03C0\u03C1\u1FF6\u03C4\u03BF\u03B9"
+          },
+          {
+            "verse": 34,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03BC\u03C0\u03B1\u03AF\u03BE\u03BF\u03C5\u03C3\u03B9\u03BD \u03B1\u1F50\u03C4\u1FF7"
+          },
+          {
+            "verse": 35,
+            "text": "\u03BA\u03B1\u1F76 \u1F38\u03AC\u03BA\u03C9\u03B2\u03BF\u03C2 \u03BA\u03B1\u1F76 \u1F38\u03C9\u03AC\u03BD\u03BD\u03B7\u03C2"
+          },
+          {
+            "verse": 36,
+            "text": "\u03B4\u1F72 \u1F41 \u03B5\u1F36\u03C0\u03B5\u03BD \u03B1\u1F50\u03C4\u03BF\u1FD6\u03C2"
+          },
+          {
+            "verse": 37,
+            "text": "\u03B4\u1F72 \u03BF\u1F31 \u03B5\u1F36\u03C0\u03B1\u03BD \u03B1\u1F50\u03C4\u1FF7"
+          },
+          {
+            "verse": 38,
+            "text": "\u03B4\u1F72 \u1F41 \u1F38\u03B7\u03C3\u03BF\u1FE6\u03C2"
+          },
+          {
+            "verse": 41,
+            "text": "\u03BA\u03B1\u1F76 \u1F00\u03BA\u03BF\u03CD\u03C3\u03B1\u03BD\u03C4\u03B5\u03C2"
+          },
+          {
+            "verse": 42,
+            "text": "\u03BA\u03B1\u1F76 \u03C0\u03C1\u03BF\u03C3\u03BA\u03B1\u03BB\u03B5\u03C3\u03AC\u03BC\u03B5\u03BD\u03BF\u03C2 \u03B1\u1F50\u03C4\u03BF\u1F7A\u03C2"
+          },
+          {
+            "verse": 45,
+            "text": "\u03BA\u03B1\u1F76 \u03B3\u1F70\u03C1"
+          },
+          {
+            "verse": 46,
+            "text": "\u03BA\u03B1\u1F76 \u1F14\u03C1\u03C7\u03BF\u03BD\u03C4\u03B1\u03B9"
+          },
+          {
+            "verse": 47,
+            "text": "\u03BA\u03B1\u1F76 \u1F00\u03BA\u03BF\u03CD\u03C3\u03B1\u03C2 \u1F45\u03C4\u03B9"
+          },
+          {
+            "verse": 48,
+            "text": "\u03BA\u03B1\u1F76 \u03C0\u03BF\u03BB\u03BB\u03BF\u1F76"
+          },
+          {
+            "verse": 49,
+            "text": "\u03BA\u03B1\u1F76 \u03C3\u03C4\u1F70\u03C2"
+          },
+          {
+            "verse": 50,
+            "text": "\u03B4\u1F72 \u1F41 \u1F00\u03C0\u03BF\u03B2\u03B1\u03BB\u1F7C\u03BD"
+          },
+          {
+            "verse": 51,
+            "text": "\u03BA\u03B1\u1F76 \u1F41 \u1F38\u03B7\u03C3\u03BF\u1FE6\u03C2 \u1F00\u03C0\u03BF\u03BA\u03C1\u03B9\u03B8\u03B5\u1F76\u03C2"
+          },
+          {
+            "verse": 52,
+            "text": "\u03B4\u1F72 \u1F41 \u1F38\u03B7\u03C3\u03BF\u1FE6\u03C2 \u03B5\u1F36\u03C0\u03B5\u03BD \u03B1\u1F50\u03C4\u1FF7"
+          }
+        ]
+      },
+      {
+        "chapter": 11,
+        "verses": [
+          {
+            "verse": 3,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03AC\u03BD \u03C4\u03B9\u03C2"
+          },
+          {
+            "verse": 4,
+            "text": "\u03BA\u03B1\u1F76 \u1F00\u03C0\u1FC6\u03BB\u03B8\u03BF\u03BD"
+          },
+          {
+            "verse": 5,
+            "text": "\u03BA\u03B1\u03AF \u03C4\u03B9\u03BD\u03B5\u03C2"
+          },
+          {
+            "verse": 6,
+            "text": "\u03B4\u1F72 \u03BF\u1F31 \u03B5\u1F36\u03C0\u03BF\u03BD \u03B1\u1F50\u03C4\u03BF\u1FD6\u03C2"
+          },
+          {
+            "verse": 7,
+            "text": "\u03BA\u03B1\u1F76 \u1F24\u03B3\u03B1\u03B3\u03BF\u03BD"
+          },
+          {
+            "verse": 8,
+            "text": "\u03BA\u03B1\u1F76 \u03C0\u03BF\u03BB\u03BB\u03BF\u1F76 \u1F14\u03C3\u03C4\u03C1\u03C9\u03C3\u03B1\u03BD"
+          },
+          {
+            "verse": 9,
+            "text": "\u03BA\u03B1\u1F76 \u03BF\u1F31 \u03C0\u03C1\u03BF\u03AC\u03B3\u03BF\u03BD\u03C4\u03B5\u03C2"
+          },
+          {
+            "verse": 10,
+            "text": "\u03B5\u1F50\u03BB\u03BF\u03B3\u03B7\u03BC\u03AD\u03BD\u03B7"
+          },
+          {
+            "verse": 11,
+            "text": "\u03BA\u03B1\u1F76 \u03B5\u1F30\u03C3\u1FC6\u03BB\u03B8\u03B5\u03BD"
+          },
+          {
+            "verse": 12,
+            "text": "\u03BA\u03B1\u1F76 \u03C4\u1FC7 \u1F10\u03C0\u03B1\u03CD\u03C1\u03B9\u03BF\u03BD"
+          },
+          {
+            "verse": 13,
+            "text": "\u03BA\u03B1\u1F76 \u1F30\u03B4\u1F7C\u03BD \u03C3\u03C5\u03BA\u1FC6\u03BD"
+          },
+          {
+            "verse": 14,
+            "text": "\u03BA\u03B1\u1F76 \u1F00\u03C0\u03BF\u03BA\u03C1\u03B9\u03B8\u03B5\u1F76\u03C2"
+          },
+          {
+            "verse": 15,
+            "text": "\u03BA\u03B1\u1F76 \u1F14\u03C1\u03C7\u03BF\u03BD\u03C4\u03B1\u03B9"
+          },
+          {
+            "verse": 16,
+            "text": "\u03BA\u03B1\u1F76"
+          },
+          {
+            "verse": 17,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03B4\u03AF\u03B4\u03B1\u03C3\u03BA\u03B5\u03BD"
+          },
+          {
+            "verse": 18,
+            "text": "\u03BA\u03B1\u1F76 \u03BF\u1F31 \u1F00\u03C1\u03C7\u03B9\u03B5\u03C1\u03B5\u1FD6\u03C2"
+          },
+          {
+            "verse": 19,
+            "text": "\u03BA\u03B1\u1F76 \u1F45\u03C4\u03B1\u03BD \u1F10\u03B3\u03AD\u03BD\u03B5\u03C4\u03BF \u1F40\u03C8\u1F72"
+          },
+          {
+            "verse": 20,
+            "text": "\u03BA\u03B1\u1F76 \u03C0\u03C1\u03C9\u1FD2 \u03C0\u03B1\u03C1\u03B1\u03C0\u03BF\u03C1\u03B5\u03C5\u03CC\u03BC\u03B5\u03BD\u03BF\u03B9"
+          },
+          {
+            "verse": 21,
+            "text": "\u03BA\u03B1\u1F76 \u1F41 \u03A0\u03AD\u03C4\u03C1\u03BF\u03C2 \u1F00\u03BD\u03B1\u03BC\u03BD\u03B7\u03C3\u03B8\u03B5\u1F76\u03C2"
+          },
+          {
+            "verse": 22,
+            "text": "\u03BA\u03B1\u1F76 \u1F41 \u1F38\u03B7\u03C3\u03BF\u1FE6\u03C2 \u1F00\u03C0\u03BF\u03BA\u03C1\u03B9\u03B8\u03B5\u1F76\u03C2"
+          },
+          {
+            "verse": 23,
+            "text": "\u1F00\u03BC\u1F74\u03BD"
+          },
+          {
+            "verse": 24,
+            "text": "\u03B4\u03B9\u1F70 \u03C4\u03BF\u1FE6\u03C4\u03BF"
+          },
+          {
+            "verse": 25,
+            "text": "\u03BA\u03B1\u1F76 \u1F45\u03C4\u03B1\u03BD"
+          },
+          {
+            "verse": 26,
+            "text": "\u03B4\u1F72 \u0395\u1F30 \u1F51\u03BC\u03B5\u1FD6\u03C2"
+          },
+          {
+            "verse": 27,
+            "text": "\u03BA\u03B1\u1F76 \u1F14\u03C1\u03C7\u03BF\u03BD\u03C4\u03B1\u03B9 \u03C0\u03AC\u03BB\u03B9\u03BD"
+          },
+          {
+            "verse": 28,
+            "text": "\u03BA\u03B1\u1F76 \u1F14\u03BB\u03B5\u03B3\u03BF\u03BD \u03B1\u1F50\u03C4\u1FF7"
+          },
+          {
+            "verse": 29,
+            "text": "\u03B4\u1F72 \u1F41 \u1F38\u03B7\u03C3\u03BF\u1FE6\u03C2 \u03B5\u1F36\u03C0\u03B5\u03BD \u03B1\u1F50\u03C4\u03BF\u1FD6\u03C2"
+          },
+          {
+            "verse": 30,
+            "text": "\u03C4\u1F78 \u03B2\u03AC\u03C0\u03C4\u03B9\u03C3\u03BC\u03B1 \u03C4\u1F78 \u1F38\u03C9\u03AC\u03BD\u03BD\u03BF\u03C5"
+          },
+          {
+            "verse": 31,
+            "text": "\u03BA\u03B1\u1F76 \u03B4\u03B9\u03B5\u03BB\u03BF\u03B3\u03AF\u03B6\u03BF\u03BD\u03C4\u03BF"
+          },
+          {
+            "verse": 32,
+            "text": "\u1F00\u03BB\u03BB\u1F70 \u03B5\u1F34\u03C0\u03C9\u03BC\u03B5\u03BD"
+          },
+          {
+            "verse": 33,
+            "text": "\u03BA\u03B1\u1F76 \u1F00\u03C0\u03BF\u03BA\u03C1\u03B9\u03B8\u03AD\u03BD\u03C4\u03B5\u03C2 \u03C4\u1FF7 \u1F38\u03B7\u03C3\u03BF\u1FE6"
+          }
+        ]
+      },
+      {
+        "chapter": 12,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "\u03BA\u03B1\u1F76 \u1F24\u03C1\u03BE\u03B1\u03C4\u03BF"
+          },
+          {
+            "verse": 2,
+            "text": "\u03BA\u03B1\u1F76 \u1F00\u03C0\u03AD\u03C3\u03C4\u03B5\u03B9\u03BB\u03B5\u03BD"
+          },
+          {
+            "verse": 3,
+            "text": "\u03BA\u03B1\u1F76 \u03BB\u03B1\u03B2\u03CC\u03BD\u03C4\u03B5\u03C2 \u03B1\u1F50\u03C4\u1F78\u03BD"
+          },
+          {
+            "verse": 4,
+            "text": "\u03BA\u03B1\u1F76 \u03C0\u03AC\u03BB\u03B9\u03BD"
+          },
+          {
+            "verse": 5,
+            "text": "\u03BA\u03B1\u1F76 \u1F00\u03C0\u03AD\u03C3\u03C4\u03B5\u03B9\u03BB\u03B5\u03BD"
+          },
+          {
+            "verse": 6,
+            "text": "\u03B5\u1F36\u03C7\u03B5\u03BD \u1F14\u03C4\u03B9"
+          },
+          {
+            "verse": 7,
+            "text": "\u03B4\u1F72 \u1F10\u03BA\u03B5\u1FD6\u03BD\u03BF\u03B9 \u03BF\u1F31 \u03B3\u03B5\u03C9\u03C1\u03B3\u03BF\u1F76"
+          },
+          {
+            "verse": 8,
+            "text": "\u03BA\u03B1\u1F76 \u03BB\u03B1\u03B2\u03CC\u03BD\u03C4\u03B5\u03C2"
+          },
+          {
+            "verse": 9,
+            "text": "\u03C4\u03AF \u03C0\u03BF\u03B9\u03AE\u03C3\u03B5\u03B9 \u03BF\u1F56\u03BD"
+          },
+          {
+            "verse": 12,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03B6\u03AE\u03C4\u03BF\u03C5\u03BD"
+          },
+          {
+            "verse": 13,
+            "text": "\u03BA\u03B1\u1F76 \u1F00\u03C0\u03BF\u03C3\u03C4\u03AD\u03BB\u03BB\u03BF\u03C5\u03C3\u03B9\u03BD"
+          },
+          {
+            "verse": 14,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03BB\u03B8\u03CC\u03BD\u03C4\u03B5\u03C2"
+          },
+          {
+            "verse": 15,
+            "text": "\u03B4\u1F72 \u1F41 \u03B5\u1F30\u03B4\u1F7C\u03C2"
+          },
+          {
+            "verse": 16,
+            "text": "\u03B4\u1F72"
+          },
+          {
+            "verse": 17,
+            "text": "\u03B4\u1F72 \u1F41 \u1F38\u03B7\u03C3\u03BF\u1FE6\u03C2"
+          },
+          {
+            "verse": 22,
+            "text": "\u03BA\u03B1\u1F76 \u03BF\u1F31 \u1F11\u03C0\u03C4\u1F70"
+          },
+          {
+            "verse": 23,
+            "text": "\u1F10\u03BD \u03C4\u1FC7 \u1F00\u03BD\u03B1\u03C3\u03C4\u03AC\u03C3\u03B5\u03B9"
+          },
+          {
+            "verse": 24,
+            "text": "\u1F41 \u1F38\u03B7\u03C3\u03BF\u1FE6\u03C2 \u1F14\u03C6\u03B7 \u03B1\u1F50\u03C4\u03BF\u1FD6\u03C2"
+          },
+          {
+            "verse": 25,
+            "text": "\u03B3\u1F70\u03C1 \u1F45\u03C4\u03B1\u03BD \u1F00\u03BD\u03B1\u03C3\u03C4\u1FF6\u03C3\u03B9\u03BD"
+          },
+          {
+            "verse": 26,
+            "text": "\u03B4\u1F72 \u03C0\u03B5\u03C1\u1F76 \u03C4\u1FF6\u03BD \u03BD\u03B5\u03BA\u03C1\u1FF6\u03BD"
+          },
+          {
+            "verse": 27,
+            "text": "\u0398\u03B5\u1F78\u03C2"
+          },
+          {
+            "verse": 28,
+            "text": "\u03BA\u03B1\u1F76 \u03B5\u1F37\u03C2 \u03C4\u1FF6\u03BD \u03B3\u03C1\u03B1\u03BC\u03BC\u03B1\u03C4\u03AD\u03C9\u03BD"
+          },
+          {
+            "verse": 31,
+            "text": "\u03B4\u03B5\u03C5\u03C4\u03AD\u03C1\u03B1 \u03B1\u1F55\u03C4\u03B7"
+          },
+          {
+            "verse": 34,
+            "text": "\u03BA\u03B1\u1F76 \u1F41 \u1F38\u03B7\u03C3\u03BF\u1FE6\u03C2"
+          },
+          {
+            "verse": 35,
+            "text": "\u03BA\u03B1\u1F76 \u1F41 \u1F38\u03B7\u03C3\u03BF\u1FE6\u03C2 \u1F00\u03C0\u03BF\u03BA\u03C1\u03B9\u03B8\u03B5\u1F76\u03C2"
+          },
+          {
+            "verse": 36,
+            "text": "\u0394\u03B1\u03C5\u03B5\u1F76\u03B4 \u03B1\u1F50\u03C4\u1F78\u03C2"
+          },
+          {
+            "verse": 37,
+            "text": "\u0394\u03B1\u03C5\u03B5\u1F76\u03B4 \u03B1\u1F50\u03C4\u1F78\u03C2"
+          },
+          {
+            "verse": 41,
+            "text": "\u03BA\u03B1\u1F76 \u03BA\u03B1\u03B8\u03AF\u03C3\u03B1\u03C2"
+          },
+          {
+            "verse": 42,
+            "text": "\u03BA\u03B1\u1F76 \u03BC\u03AF\u03B1 \u03C0\u03C4\u03C9\u03C7\u1F74 \u03C7\u03AE\u03C1\u03B1"
+          },
+          {
+            "verse": 43,
+            "text": "\u03BA\u03B1\u1F76 \u03C0\u03C1\u03BF\u03C3\u03BA\u03B1\u03BB\u03B5\u03C3\u03AC\u03BC\u03B5\u03BD\u03BF\u03C2"
+          },
+          {
+            "verse": 44,
+            "text": "\u03B3\u1F70\u03C1 \u03C0\u03AC\u03BD\u03C4\u03B5\u03C2"
+          }
+        ]
+      },
+      {
+        "chapter": 13,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "\u03BA\u03B1\u1F76 \u03B1\u1F50\u03C4\u03BF\u1FE6 \u1F10\u03BA\u03C0\u03BF\u03C1\u03B5\u03C5\u03BF\u03BC\u03AD\u03BD\u03BF\u03C5"
+          },
+          {
+            "verse": 2,
+            "text": "\u03BA\u03B1\u1F76 \u1F41 \u1F38\u03B7\u03C3\u03BF\u1FE6\u03C2"
+          },
+          {
+            "verse": 5,
+            "text": "\u03B4\u1F72 \u1F41 \u1F38\u03B7\u03C3\u03BF\u1FE6\u03C2 \u1F24\u03C1\u03BE\u03B1\u03C4\u03BF"
+          },
+          {
+            "verse": 6,
+            "text": "\u03C0\u03BF\u03BB\u03BB\u03BF\u1F76 \u1F10\u03BB\u03B5\u03CD\u03C3\u03BF\u03BD\u03C4\u03B1\u03B9"
+          },
+          {
+            "verse": 7,
+            "text": "\u03B4\u1F72 \u1F45\u03C4\u03B1\u03BD"
+          },
+          {
+            "verse": 8,
+            "text": "\u03B3\u1F70\u03C1 \u1F14\u03B8\u03BD\u03BF\u03C2"
+          },
+          {
+            "verse": 9,
+            "text": "\u03B4\u1F72 \u1F51\u03BC\u03B5\u1FD6\u03C2"
+          },
+          {
+            "verse": 10,
+            "text": "\u03BA\u03B1\u1F76 \u03C0\u03C1\u1FF6\u03C4\u03BF\u03BD"
+          },
+          {
+            "verse": 11,
+            "text": "\u03BA\u03B1\u1F76 \u1F45\u03C4\u03B1\u03BD"
+          },
+          {
+            "verse": 12,
+            "text": "\u03BA\u03B1\u1F76 \u1F00\u03B4\u03B5\u03BB\u03C6\u1F78\u03C2 \u03C0\u03B1\u03C1\u03B1\u03B4\u03CE\u03C3\u03B5\u03B9"
+          },
+          {
+            "verse": 13,
+            "text": "\u03BA\u03B1\u1F76 \u1F14\u03C3\u03B5\u03C3\u03B8\u03B5 \u03BC\u03B9\u03C3\u03BF\u03CD\u03BC\u03B5\u03BD\u03BF\u03B9"
+          },
+          {
+            "verse": 17,
+            "text": "\u03B4\u1F72 \u03BF\u1F50\u03B1\u1F76"
+          },
+          {
+            "verse": 20,
+            "text": "\u03BA\u03B1\u1F76 \u03B5\u1F30 \u039A\u03CD\u03C1\u03B9\u03BF\u03C2"
+          },
+          {
+            "verse": 21,
+            "text": "\u03BA\u03B1\u1F76 \u03C4\u03CC\u03C4\u03B5"
+          },
+          {
+            "verse": 22,
+            "text": "\u03B3\u1F70\u03C1 \u03C8\u03B5\u03C5\u03B4\u03CC\u03C7\u03C1\u03B9\u03C3\u03C4\u03BF\u03B9"
+          },
+          {
+            "verse": 23,
+            "text": "\u03B4\u1F72 \u1F51\u03BC\u03B5\u1FD6\u03C2"
+          },
+          {
+            "verse": 28,
+            "text": "\u03B4\u1F72"
+          },
+          {
+            "verse": 29,
+            "text": "\u03BA\u03B1\u1F76 \u03BF\u1F55\u03C4\u03C9\u03C2"
+          },
+          {
+            "verse": 30,
+            "text": "\u1F00\u03BC\u1F74\u03BD"
+          },
+          {
+            "verse": 31,
+            "text": "\u1F41 \u03BF\u1F50\u03C1\u03B1\u03BD\u1F78\u03C2"
+          },
+          {
+            "verse": 32,
+            "text": "\u03B4\u1F72"
+          },
+          {
+            "verse": 33,
+            "text": "\u03B2\u03BB\u03AD\u03C0\u03B5\u03C4\u03B5"
+          },
+          {
+            "verse": 34,
+            "text": "\u1F61\u03C2 \u1F04\u03BD\u03B8\u03C1\u03C9\u03C0\u03BF\u03C2"
+          },
+          {
+            "verse": 37,
+            "text": "\u03B4\u1F72"
+          }
+        ]
+      },
+      {
+        "chapter": 14,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "\u03B4\u1F72"
+          },
+          {
+            "verse": 2,
+            "text": "\u03B3\u03AC\u03C1 \u1F14\u03BB\u03B5\u03B3\u03BF\u03BD"
+          },
+          {
+            "verse": 3,
+            "text": "\u03BA\u03B1\u1F76 \u03B1\u1F50\u03C4\u03BF\u1FE6 \u1F44\u03BD\u03C4\u03BF\u03C2"
+          },
+          {
+            "verse": 4,
+            "text": "\u03B4\u03AD \u03C4\u03B9\u03BD\u03B5\u03C2"
+          },
+          {
+            "verse": 5,
+            "text": "\u03B3\u1F70\u03C1 \u1F20\u03B4\u03CD\u03BD\u03B1\u03C4\u03BF"
+          },
+          {
+            "verse": 6,
+            "text": "\u03B4\u1F72"
+          },
+          {
+            "verse": 7,
+            "text": "\u03B3\u1F70\u03C1 \u1F14\u03C7\u03B5\u03C4\u03B5"
+          },
+          {
+            "verse": 8,
+            "text": "\u1F10\u03C0\u03BF\u03AF\u03B7\u03C3\u03B5\u03BD"
+          },
+          {
+            "verse": 9,
+            "text": "\u03B4\u1F72 \u1F00\u03BC\u1F74\u03BD"
+          },
+          {
+            "verse": 10,
+            "text": "\u03BA\u03B1\u1F76 \u1F38\u03BF\u03CD\u03B4\u03B1\u03C2 \u1F38\u03C3\u03BA\u03B1\u03C1\u03B9\u1F7C\u03B8"
+          },
+          {
+            "verse": 11,
+            "text": "\u03B4\u1F72"
+          },
+          {
+            "verse": 12,
+            "text": "\u03BA\u03B1\u1F76"
+          },
+          {
+            "verse": 13,
+            "text": "\u03BA\u03B1\u1F76 \u1F00\u03C0\u03BF\u03C3\u03C4\u03AD\u03BB\u03BB\u03B5\u03B9"
+          },
+          {
+            "verse": 14,
+            "text": "\u03BA\u03B1\u1F76 \u1F45\u03C0\u03BF\u03C5 \u1F10\u1F70\u03BD \u03B5\u1F30\u03C3\u03AD\u03BB\u03B8\u1FC3"
+          },
+          {
+            "verse": 15,
+            "text": "\u03BA\u03B1\u1F76 \u03B1\u1F50\u03C4\u1F78\u03C2"
+          },
+          {
+            "verse": 16,
+            "text": "\u03BA\u03B1\u1F76 \u03BF\u1F31 \u03BC\u03B1\u03B8\u03B7\u03C4\u03B1\u1F76"
+          },
+          {
+            "verse": 17,
+            "text": "\u03BA\u03B1\u1F76 \u1F40\u03C8\u03AF\u03B1\u03C2 \u03B3\u03B5\u03BD\u03BF\u03BC\u03AD\u03BD\u03B7\u03C2"
+          },
+          {
+            "verse": 18,
+            "text": "\u03BA\u03B1\u1F76 \u03B1\u1F50\u03C4\u1FF6\u03BD"
+          },
+          {
+            "verse": 19,
+            "text": "\u1F24\u03C1\u03BE\u03B1\u03BD\u03C4\u03BF \u03BB\u03C5\u03C0\u03B5\u1FD6\u03C3\u03B8\u03B1\u03B9"
+          },
+          {
+            "verse": 20,
+            "text": "\u03B4\u1F72"
+          },
+          {
+            "verse": 21,
+            "text": "\u03BC\u1F72\u03BD"
+          },
+          {
+            "verse": 22,
+            "text": "\u03BA\u03B1\u1F76 \u03B1\u1F50\u03C4\u1FF6\u03BD \u1F10\u03C3\u03B8\u03B9\u03CC\u03BD\u03C4\u03C9\u03BD"
+          },
+          {
+            "verse": 23,
+            "text": "\u03BA\u03B1\u1F76 \u03BB\u03B1\u03B2\u1F7C\u03BD"
+          },
+          {
+            "verse": 24,
+            "text": "\u03BA\u03B1\u1F76 \u03B5\u1F36\u03C0\u03B5\u03BD \u03B1\u1F50\u03C4\u03BF\u1FD6\u03C2"
+          },
+          {
+            "verse": 25,
+            "text": "\u1F00\u03BC\u1F74\u03BD"
+          },
+          {
+            "verse": 26,
+            "text": "\u03BA\u03B1\u1F76 \u1F51\u03BC\u03BD\u03AE\u03C3\u03B1\u03BD\u03C4\u03B5\u03C2"
+          },
+          {
+            "verse": 27,
+            "text": "\u03BA\u03B1\u1F76 \u1F41 \u1F38\u03B7\u03C3\u03BF\u1FE6\u03C2"
+          },
+          {
+            "verse": 28,
+            "text": "\u1F00\u03BB\u03BB\u1F70"
+          },
+          {
+            "verse": 29,
+            "text": "\u03B4\u1F72 \u1F41 \u03A0\u03AD\u03C4\u03C1\u03BF\u03C2"
+          },
+          {
+            "verse": 30,
+            "text": "\u03BA\u03B1\u1F76 \u1F41 \u1F38\u03B7\u03C3\u03BF\u1FE6\u03C2"
+          },
+          {
+            "verse": 31,
+            "text": "\u03B4\u1F72 \u1F41 \u1F10\u03BB\u03AC\u03BB\u03B5\u03B9"
+          },
+          {
+            "verse": 32,
+            "text": "\u03BA\u03B1\u1F76 \u1F14\u03C1\u03C7\u03BF\u03BD\u03C4\u03B1\u03B9"
+          },
+          {
+            "verse": 33,
+            "text": "\u03BA\u03B1\u1F76 \u03C0\u03B1\u03C1\u03B1\u03BB\u03B1\u03BC\u03B2\u03AC\u03BD\u03B5\u03B9"
+          },
+          {
+            "verse": 34,
+            "text": "\u03BA\u03B1\u1F76 \u03BB\u03AD\u03B3\u03B5\u03B9 \u03B1\u1F50\u03C4\u03BF\u1FD6\u03C2"
+          },
+          {
+            "verse": 35,
+            "text": "\u03BA\u03B1\u1F76 \u03C0\u03C1\u03BF\u03B5\u03BB\u03B8\u1F7C\u03BD \u03BC\u03B9\u03BA\u03C1\u1F78\u03BD"
+          },
+          {
+            "verse": 36,
+            "text": "\u03BA\u03B1\u1F76 \u1F14\u03BB\u03B5\u03B3\u03B5\u03BD"
+          },
+          {
+            "verse": 37,
+            "text": "\u03BA\u03B1\u1F76 \u1F14\u03C1\u03C7\u03B5\u03C4\u03B1\u03B9"
+          },
+          {
+            "verse": 38,
+            "text": "\u03B3\u03C1\u03B7\u03B3\u03BF\u03C1\u03B5\u1FD6\u03C4\u03B5"
+          },
+          {
+            "verse": 39,
+            "text": "\u03BA\u03B1\u1F76 \u1F00\u03C0\u03B5\u03BB\u03B8\u1F7C\u03BD"
+          },
+          {
+            "verse": 40,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03BB\u03B8\u1F7C\u03BD"
+          },
+          {
+            "verse": 41,
+            "text": "\u03BA\u03B1\u1F76 \u1F14\u03C1\u03C7\u03B5\u03C4\u03B1\u03B9"
+          },
+          {
+            "verse": 42,
+            "text": "\u1F10\u03B3\u03B5\u03AF\u03C1\u03B5\u03C3\u03B8\u03B5"
+          },
+          {
+            "verse": 43,
+            "text": "\u03BA\u03B1\u1F76 \u03B5\u1F50\u03B8\u1F7A\u03C2"
+          },
+          {
+            "verse": 44,
+            "text": "\u03B4\u1F72 \u1F41 \u03C0\u03B1\u03C1\u03B1\u03B4\u03B9\u03B4\u03BF\u1F7A\u03C2 \u03B1\u1F50\u03C4\u1F78\u03BD"
+          },
+          {
+            "verse": 45,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03BB\u03B8\u1F7C\u03BD \u03B5\u1F50\u03B8\u1F7A\u03C2"
+          },
+          {
+            "verse": 46,
+            "text": "\u03B4\u1F72 \u03BF\u1F31 \u1F10\u03C0\u03AD\u03B2\u03B1\u03BB\u03B1\u03BD"
+          },
+          {
+            "verse": 47,
+            "text": "\u03B4\u03AD \u03C4\u03B9\u03C2"
+          },
+          {
+            "verse": 48,
+            "text": "\u03BA\u03B1\u1F76 \u1F00\u03C0\u03BF\u03BA\u03C1\u03B9\u03B8\u03B5\u1F76\u03C2"
+          },
+          {
+            "verse": 49,
+            "text": "\u03BA\u03B1\u03B8\u2019 \u1F21\u03BC\u03AD\u03C1\u03B1\u03BD"
+          },
+          {
+            "verse": 50,
+            "text": "\u03BA\u03B1\u1F76 \u1F00\u03C6\u03AD\u03BD\u03C4\u03B5\u03C2 \u03B1\u1F50\u03C4\u1F78\u03BD"
+          },
+          {
+            "verse": 53,
+            "text": "\u03BA\u03B1\u1F76 \u1F00\u03C0\u03AE\u03B3\u03B1\u03B3\u03BF\u03BD"
+          },
+          {
+            "verse": 54,
+            "text": "\u03BA\u03B1\u1F76 \u1F41 \u03A0\u03AD\u03C4\u03C1\u03BF\u03C2"
+          },
+          {
+            "verse": 55,
+            "text": "\u03B4\u1F72 \u03BF\u1F31 \u1F00\u03C1\u03C7\u03B9\u03B5\u03C1\u03B5\u1FD6\u03C2"
+          },
+          {
+            "verse": 56,
+            "text": "\u03B3\u1F70\u03C1 \u03C0\u03BF\u03BB\u03BB\u03BF\u1F76"
+          },
+          {
+            "verse": 59,
+            "text": "\u03BA\u03B1\u1F76 \u03BF\u1F50\u03B4\u1F72 \u03BF\u1F55\u03C4\u03C9\u03C2"
+          },
+          {
+            "verse": 60,
+            "text": "\u03BA\u03B1\u1F76 \u1F00\u03BD\u03B1\u03C3\u03C4\u1F70\u03C2"
+          },
+          {
+            "verse": 61,
+            "text": "\u03B4\u1F72 \u1F41 \u1F10\u03C3\u03B9\u03CE\u03C0\u03B1"
+          },
+          {
+            "verse": 62,
+            "text": "\u03B4\u1F72 \u1F41 \u1F38\u03B7\u03C3\u03BF\u1FE6\u03C2"
+          },
+          {
+            "verse": 63,
+            "text": "\u03B4\u1F72 \u1F41 \u1F00\u03C1\u03C7\u03B9\u03B5\u03C1\u03B5\u1F7A\u03C2"
+          },
+          {
+            "verse": 64,
+            "text": "\u1F20\u03BA\u03BF\u03CD\u03C3\u03B1\u03C4\u03B5"
+          },
+          {
+            "verse": 65,
+            "text": "\u03BA\u03B1\u1F76 \u03C4\u03B9\u03BD\u03B5\u03C2"
+          },
+          {
+            "verse": 68,
+            "text": "\u03B4\u1F72 \u1F41 \u1F20\u03C1\u03BD\u03AE\u03C3\u03B1\u03C4\u03BF"
+          },
+          {
+            "verse": 69,
+            "text": "\u03BA\u03B1\u1F76 \u1F21 \u03C0\u03B1\u03B9\u03B4\u03AF\u03C3\u03BA\u03B7"
+          },
+          {
+            "verse": 72,
+            "text": "\u03BA\u03B1\u1F76 \u03B5\u1F50\u03B8\u1F7A\u03C2"
+          }
+        ]
+      },
+      {
+        "chapter": 15,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "\u03BA\u03B1\u1F76 \u03B5\u1F50\u03B8\u1F7A\u03C2 \u03C0\u03C1\u03C9\u1FD2"
+          },
+          {
+            "verse": 2,
+            "text": "\u03BA\u03B1\u1F76 \u1F41 \u03A0\u03B5\u03B9\u03BB\u1FB6\u03C4\u03BF\u03C2"
+          },
+          {
+            "verse": 3,
+            "text": "\u03BA\u03B1\u1F76 \u03BF\u1F31 \u1F00\u03C1\u03C7\u03B9\u03B5\u03C1\u03B5\u1FD6\u03C2"
+          },
+          {
+            "verse": 4,
+            "text": "\u03B4\u1F72 \u1F41 \u03A0\u03B5\u03B9\u03BB\u1FB6\u03C4\u03BF\u03C2"
+          },
+          {
+            "verse": 5,
+            "text": "\u03B4\u1F72 \u1F41 \u1F38\u03B7\u03C3\u03BF\u1FE6\u03C2"
+          },
+          {
+            "verse": 6,
+            "text": "\u03B4\u1F72 \u03BA\u03B1\u03C4\u1F70 \u1F11\u03BF\u03C1\u03C4\u1F74\u03BD"
+          },
+          {
+            "verse": 7,
+            "text": "\u03B4\u1F72 \u1F26\u03BD"
+          },
+          {
+            "verse": 8,
+            "text": "\u03BA\u03B1\u1F76 \u1F00\u03BD\u03B1\u03B2\u1F70\u03C2"
+          },
+          {
+            "verse": 9,
+            "text": "\u03B4\u1F72"
+          },
+          {
+            "verse": 10,
+            "text": "\u03B3\u1F70\u03C1 \u1F10\u03B3\u03AF\u03BD\u03C9\u03C3\u03BA\u03B5\u03BD \u1F45\u03C4\u03B9"
+          },
+          {
+            "verse": 11,
+            "text": "\u03B4\u1F72 \u03BF\u1F31 \u1F00\u03C1\u03C7\u03B9\u03B5\u03C1\u03B5\u1FD6\u03C2"
+          },
+          {
+            "verse": 12,
+            "text": "\u03B4\u1F72 \u1F41 \u03A0\u03B5\u03B9\u03BB\u1FB6\u03C4\u03BF\u03C2"
+          },
+          {
+            "verse": 13,
+            "text": "\u03B4\u1F72 \u03BF\u1F31 \u1F14\u03BA\u03C1\u03B1\u03BE\u03B1\u03BD \u03C0\u03AC\u03BB\u03B9\u03BD"
+          },
+          {
+            "verse": 14,
+            "text": "\u03B4\u1F72 \u1F41 \u03A0\u03B5\u03B9\u03BB\u1FB6\u03C4\u03BF\u03C2"
+          },
+          {
+            "verse": 15,
+            "text": "\u03B4\u1F72 \u1F41 \u03A0\u03B5\u03B9\u03BB\u1FB6\u03C4\u03BF\u03C2"
+          },
+          {
+            "verse": 16,
+            "text": "\u03B4\u1F72 \u03BF\u1F31 \u03C3\u03C4\u03C1\u03B1\u03C4\u03B9\u1FF6\u03C4\u03B1\u03B9"
+          },
+          {
+            "verse": 19,
+            "text": "\u03BA\u03B1\u1F76 \u1F14\u03C4\u03C5\u03C0\u03C4\u03BF\u03BD"
+          },
+          {
+            "verse": 20,
+            "text": "\u03BA\u03B1\u1F76 \u1F45\u03C4\u03B5"
+          },
+          {
+            "verse": 21,
+            "text": "\u03BA\u03B1\u1F76 \u1F00\u03B3\u03B3\u03B1\u03C1\u03B5\u03CD\u03BF\u03C5\u03C3\u03B9\u03BD"
+          },
+          {
+            "verse": 22,
+            "text": "\u03BA\u03B1\u1F76 \u03C6\u03AD\u03C1\u03BF\u03C5\u03C3\u03B9\u03BD \u03B1\u1F50\u03C4\u1F78\u03BD"
+          },
+          {
+            "verse": 23,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03B4\u03AF\u03B4\u03BF\u03C5\u03BD \u03B1\u1F50\u03C4\u1FF7"
+          },
+          {
+            "verse": 24,
+            "text": "\u03BA\u03B1\u1F76 \u03C3\u03C4\u03B1\u03C5\u03C1\u03CE\u03C3\u03B1\u03BD\u03C4\u03B5\u03C2 \u03B1\u1F50\u03C4\u1F78\u03BD"
+          },
+          {
+            "verse": 25,
+            "text": "\u03B4\u1F72 \u1F26\u03BD"
+          },
+          {
+            "verse": 26,
+            "text": "\u03BA\u03B1\u1F76 \u1F26\u03BD"
+          },
+          {
+            "verse": 27,
+            "text": "\u03BA\u03B1\u1F76 \u03C3\u03C4\u03B1\u03C5\u03C1\u03BF\u1FE6\u03C3\u03B9\u03BD"
+          },
+          {
+            "verse": 28,
+            "text": "\u039A\u03B1\u1F76 \u1F21 \u03B3\u03C1\u03B1\u03C6\u1F74 \u1F21 \u03BB\u03AD\u03B3\u03BF\u03C5\u03C3\u03B1"
+          },
+          {
+            "verse": 31,
+            "text": "\u1F41\u03BC\u03BF\u03AF\u03C9\u03C2"
+          },
+          {
+            "verse": 32,
+            "text": "\u1F41 \u03A7\u03C1\u03B9\u03C3\u03C4\u1F78\u03C2"
+          },
+          {
+            "verse": 33,
+            "text": "\u03BA\u03B1\u1F76 \u1F15\u03BA\u03C4\u03B7\u03C2 \u1F65\u03C1\u03B1\u03C2"
+          },
+          {
+            "verse": 34,
+            "text": "\u03BA\u03B1\u1F76 \u03C4\u1FC7 \u1F10\u03BD\u03AC\u03C4\u1FC3 \u1F65\u03C1\u1FB3"
+          },
+          {
+            "verse": 35,
+            "text": "\u03BA\u03B1\u03AF \u03C4\u03B9\u03BD\u03B5\u03C2"
+          },
+          {
+            "verse": 36,
+            "text": "\u03B4\u03AD \u03C4\u03B9\u03C2 \u03B4\u03C1\u03B1\u03BC\u1F7C\u03BD"
+          },
+          {
+            "verse": 37,
+            "text": "\u03B4\u1F72 \u1F41 \u1F38\u03B7\u03C3\u03BF\u1FE6\u03C2"
+          },
+          {
+            "verse": 38,
+            "text": "\u03BA\u03B1\u1F76 \u03C4\u1F78 \u03BA\u03B1\u03C4\u03B1\u03C0\u03AD\u03C4\u03B1\u03C3\u03BC\u03B1 \u03C4\u03BF\u1FE6 \u03BD\u03B1\u03BF\u1FE6"
+          },
+          {
+            "verse": 39,
+            "text": "\u03B4\u1F72 \u1F30\u03B4\u1F7C\u03BD"
+          },
+          {
+            "verse": 44,
+            "text": "\u03B4\u1F72 \u1F41 \u03A0\u03B5\u03B9\u03BB\u1FB6\u03C4\u03BF\u03C2"
+          },
+          {
+            "verse": 45,
+            "text": "\u03BA\u03B1\u1F76 \u03B3\u03BD\u03BF\u1F7A\u03C2"
+          },
+          {
+            "verse": 46,
+            "text": "\u03BA\u03B1\u1F76 \u1F00\u03B3\u03BF\u03C1\u03AC\u03C3\u03B1\u03C2 \u03C3\u03B9\u03BD\u03B4\u03CC\u03BD\u03B1"
+          },
+          {
+            "verse": 47,
+            "text": "\u03B4\u1F72 \u1F21 \u039C\u03B1\u03C1\u03AF\u03B1 \u1F21 \u039C\u03B1\u03B3\u03B4\u03B1\u03BB\u03B7\u03BD\u1F74"
+          }
+        ]
+      },
+      {
+        "chapter": 16,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "\u03BA\u03B1\u1F76 \u03C4\u03BF\u1FE6 \u03A3\u03B1\u03B2\u03B2\u03AC\u03C4\u03BF\u03C5 \u03B4\u03B9\u03B1\u03B3\u03B5\u03BD\u03BF\u03BC\u03AD\u03BD\u03BF\u03C5"
+          },
+          {
+            "verse": 2,
+            "text": "\u03BA\u03B1\u1F76 \u03BB\u03B5\u03AF\u03B1\u03BD \u03C0\u03C1\u03C9\u1FD2"
+          },
+          {
+            "verse": 3,
+            "text": "\u03BA\u03B1\u1F76 \u1F14\u03BB\u03B5\u03B3\u03BF\u03BD"
+          },
+          {
+            "verse": 4,
+            "text": "\u03BA\u03B1\u1F76 \u1F00\u03BD\u03B1\u03B2\u03BB\u03AD\u03C8\u03B1\u03C3\u03B1\u03B9"
+          },
+          {
+            "verse": 5,
+            "text": "\u03BA\u03B1\u1F76 \u03B5\u1F30\u03C3\u03B5\u03BB\u03B8\u03BF\u1FE6\u03C3\u03B1\u03B9"
+          },
+          {
+            "verse": 6,
+            "text": "\u03B4\u1F72 \u1F41 \u03BB\u03AD\u03B3\u03B5\u03B9 \u03B1\u1F50\u03C4\u03B1\u1FD6\u03C2"
+          },
+          {
+            "verse": 7,
+            "text": "\u1F00\u03BB\u03BB\u1F70 \u1F51\u03C0\u03AC\u03B3\u03B5\u03C4\u03B5"
+          },
+          {
+            "verse": 8,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03BE\u03B5\u03BB\u03B8\u03BF\u1FE6\u03C3\u03B1\u03B9"
+          },
+          {
+            "verse": 9,
+            "text": "\u03B4\u1F72 \u1F08\u03BD\u03B1\u03C3\u03C4\u1F70\u03C2"
+          },
+          {
+            "verse": 10,
+            "text": "\u1F18\u03BA\u03B5\u03AF\u03BD\u03B7 \u03C0\u03BF\u03C1\u03B5\u03C5\u03B8\u03B5\u1FD6\u03C3\u03B1"
+          },
+          {
+            "verse": 11,
+            "text": "\u039A\u1F00\u03BA\u03B5\u1FD6\u03BD\u03BF\u03B9 \u1F00\u03BA\u03BF\u03CD\u03C3\u03B1\u03BD\u03C4\u03B5\u03C2 \u1F45\u03C4\u03B9"
+          },
+          {
+            "verse": 12,
+            "text": "\u03B4\u1F72 \u039C\u03B5\u03C4\u1F70 \u03C4\u03B1\u1FE6\u03C4\u03B1"
+          },
+          {
+            "verse": 13,
+            "text": "\u039A\u1F00\u03BA\u03B5\u1FD6\u03BD\u03BF\u03B9 \u1F00\u03C0\u03B5\u03BB\u03B8\u03CC\u03BD\u03C4\u03B5\u03C2"
+          },
+          {
+            "verse": 14,
+            "text": "\u03B4\u1F72 \u1F5D\u03C3\u03C4\u03B5\u03C1\u03BF\u03BD"
+          },
+          {
+            "verse": 15,
+            "text": "\u039A\u03B1\u1F76 \u03B5\u1F36\u03C0\u03B5\u03BD \u03B1\u1F50\u03C4\u03BF\u1FD6\u03C2"
+          },
+          {
+            "verse": 16,
+            "text": "\u1F49 \u03C0\u03B9\u03C3\u03C4\u03B5\u03CD\u03C3\u03B1\u03C2"
+          },
+          {
+            "verse": 19,
+            "text": "\u03BC\u1F72\u03BD \u1F49 \u03BA\u03CD\u03C1\u03B9\u03BF\u03C2 \u1F38\u03B7\u03C3\u03BF\u1FE6\u03C2"
+          },
+          {
+            "verse": 20,
+            "text": "\u03B4\u1F72 \u1F18\u03BA\u03B5\u1FD6\u03BD\u03BF\u03B9 \u1F10\u03BE\u03B5\u03BB\u03B8\u03CC\u03BD\u03C4\u03B5\u03C2"
+          }
+        ]
+      }
+    ],
+    "Galatians": [
+      {
+        "chapter": 1,
+        "verses": [
+          {
+            "verse": 8,
+            "text": "\u1F00\u03BB\u03BB\u1F70 \u03BA\u03B1\u1F76"
+          },
+          {
+            "verse": 9,
+            "text": "\u1F61\u03C2 \u03C0\u03C1\u03BF\u03B5\u03B9\u03C1\u03AE\u03BA\u03B1\u03BC\u03B5\u03BD"
+          },
+          {
+            "verse": 10,
+            "text": "\u03B3\u1F70\u03C1 \u03C0\u03B5\u03AF\u03B8\u03C9"
+          },
+          {
+            "verse": 11,
+            "text": "\u03B3\u1F70\u03C1 \u03B3\u03BD\u03C9\u03C1\u03AF\u03B6\u03C9 \u1F51\u03BC\u1FD6\u03BD"
+          },
+          {
+            "verse": 12,
+            "text": "\u03B3\u1F70\u03C1 \u1F10\u03B3\u1F7C"
+          },
+          {
+            "verse": 13,
+            "text": "\u03B3\u1F70\u03C1 \u1F20\u03BA\u03BF\u03CD\u03C3\u03B1\u03C4\u03B5"
+          },
+          {
+            "verse": 14,
+            "text": "\u03BA\u03B1\u1F76 \u03C0\u03C1\u03BF\u03AD\u03BA\u03BF\u03C0\u03C4\u03BF\u03BD"
+          },
+          {
+            "verse": 18,
+            "text": "\u1F14\u03C0\u03B5\u03B9\u03C4\u03B1 \u03BC\u03B5\u03C4\u1F70 \u03C4\u03C1\u03AF\u03B1 \u1F14\u03C4\u03B7"
+          },
+          {
+            "verse": 19,
+            "text": "\u03B4\u1F72"
+          },
+          {
+            "verse": 20,
+            "text": "\u03B4\u1F72 \u1F30\u03B4\u03BF\u1F7A"
+          },
+          {
+            "verse": 21,
+            "text": "\u1F14\u03C0\u03B5\u03B9\u03C4\u03B1 \u1F26\u03BB\u03B8\u03BF\u03BD"
+          },
+          {
+            "verse": 24,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03B4\u03CC\u03BE\u03B1\u03B6\u03BF\u03BD \u03C4\u1F78\u03BD \u0398\u03B5\u03CC\u03BD"
+          }
+        ]
+      },
+      {
+        "chapter": 2,
+        "verses": [
+          {
+            "verse": 3,
+            "text": "\u1F00\u03BB\u03BB\u2019"
+          },
+          {
+            "verse": 6,
+            "text": "\u03B4\u1F72 \u1F00\u03C0\u1F78 \u03C4\u1FF6\u03BD \u03B4\u03BF\u03BA\u03BF\u03CD\u03BD\u03C4\u03C9\u03BD"
+          },
+          {
+            "verse": 11,
+            "text": "\u03B4\u1F72 \u1F45\u03C4\u03B5 \u1F26\u03BB\u03B8\u03B5\u03BD \u039A\u03B7\u03C6\u1FB6\u03C2"
+          },
+          {
+            "verse": 12,
+            "text": "\u03B3\u1F70\u03C1 \u03C0\u03C1\u1F78"
+          },
+          {
+            "verse": 13,
+            "text": "\u03BA\u03B1\u1F76 \u03BF\u1F31 \u1F38\u03BF\u03C5\u03B4\u03B1\u1FD6\u03BF\u03B9 \u03BB\u03BF\u03B9\u03C0\u03BF\u1F76"
+          },
+          {
+            "verse": 14,
+            "text": "\u1F00\u03BB\u03BB\u2019 \u1F45\u03C4\u03B5 \u03B5\u1F36\u03B4\u03BF\u03BD \u1F45\u03C4\u03B9"
+          },
+          {
+            "verse": 17,
+            "text": "\u03B4\u1F72 \u03B5\u1F30 \u03B6\u03B7\u03C4\u03BF\u1FE6\u03BD\u03C4\u03B5\u03C2 \u03B4\u03B9\u03BA\u03B1\u03B9\u03C9\u03B8\u1FC6\u03BD\u03B1\u03B9"
+          },
+          {
+            "verse": 18,
+            "text": "\u03B3\u1F70\u03C1 \u03B5\u1F30 \u03BF\u1F30\u03BA\u03BF\u03B4\u03BF\u03BC\u1FF6 \u03C0\u03AC\u03BB\u03B9\u03BD"
+          },
+          {
+            "verse": 21,
+            "text": "\u03BF\u1F50\u03BA \u1F00\u03B8\u03B5\u03C4\u1FF6"
+          }
+        ]
+      },
+      {
+        "chapter": 3,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "\u1F66 \u0393\u03B1\u03BB\u03AC\u03C4\u03B1\u03B9"
+          },
+          {
+            "verse": 2,
+            "text": "\u03B8\u03AD\u03BB\u03C9 \u03BC\u03CC\u03BD\u03BF\u03BD \u03BC\u03B1\u03B8\u03B5\u1FD6\u03BD \u03C4\u03BF\u1FE6\u03C4\u03BF"
+          },
+          {
+            "verse": 3,
+            "text": "\u1F10\u03C3\u03C4\u03B5 \u03BF\u1F55\u03C4\u03C9\u03C2"
+          },
+          {
+            "verse": 4,
+            "text": "\u1F10\u03C0\u03AC\u03B8\u03B5\u03C4\u03B5 \u03C4\u03BF\u03C3\u03B1\u1FE6\u03C4\u03B1"
+          },
+          {
+            "verse": 5,
+            "text": "\u03BF\u1F56\u03BD"
+          },
+          {
+            "verse": 6,
+            "text": "\u03BA\u03B1\u03B8\u1F7C\u03C2 \u1F08\u03B2\u03C1\u03B1\u1F70\u03BC \u1F10\u03C0\u03AF\u03C3\u03C4\u03B5\u03C5\u03C3\u03B5\u03BD"
+          },
+          {
+            "verse": 7,
+            "text": "\u03B3\u03B9\u03BD\u03CE\u03C3\u03BA\u03B5\u03C4\u03B5 \u1F04\u03C1\u03B1 \u1F45\u03C4\u03B9"
+          },
+          {
+            "verse": 8,
+            "text": "\u03B4\u1F72 \u1F21 \u0393\u03C1\u03B1\u03C6\u1F74 \u03C0\u03C1\u03BF\u03CA\u03B4\u03BF\u1FE6\u03C3\u03B1"
+          },
+          {
+            "verse": 9,
+            "text": "\u1F65\u03C3\u03C4\u03B5 \u03BF\u1F31 \u1F10\u03BA \u03C0\u03AF\u03C3\u03C4\u03B5\u03C9\u03C2"
+          },
+          {
+            "verse": 10,
+            "text": "\u03B3\u1F70\u03C1 \u1F45\u03C3\u03BF\u03B9 \u03B5\u1F30\u03C3\u1F76\u03BD"
+          },
+          {
+            "verse": 11,
+            "text": "\u03B4\u1F72 \u03B4\u1FC6\u03BB\u03BF\u03BD \u1F45\u03C4\u03B9"
+          },
+          {
+            "verse": 12,
+            "text": "\u03B4\u1F72 \u1F41 \u03BD\u03CC\u03BC\u03BF\u03C2"
+          },
+          {
+            "verse": 15,
+            "text": "\u1F00\u03B4\u03B5\u03BB\u03C6\u03BF\u03AF"
+          },
+          {
+            "verse": 16,
+            "text": "\u03B4\u1F72 \u03B1\u1F31 \u1F10\u03C0\u03B1\u03B3\u03B3\u03B5\u03BB\u03AF\u03B1\u03B9 \u1F10\u03C1\u03C1\u03AD\u03B8\u03B7\u03C3\u03B1\u03BD"
+          },
+          {
+            "verse": 17,
+            "text": "\u03B4\u1F72 \u03BB\u03AD\u03B3\u03C9 \u03C4\u03BF\u1FE6\u03C4\u03BF"
+          },
+          {
+            "verse": 18,
+            "text": "\u03B3\u1F70\u03C1 \u03B5\u1F30 \u1F21 \u03BA\u03BB\u03B7\u03C1\u03BF\u03BD\u03BF\u03BC\u03AF\u03B1"
+          },
+          {
+            "verse": 19,
+            "text": "\u03C4\u03AF \u03BF\u1F56\u03BD"
+          },
+          {
+            "verse": 20,
+            "text": "\u03B4\u1F72 \u1F41 \u03BC\u03B5\u03C3\u03AF\u03C4\u03B7\u03C2"
+          },
+          {
+            "verse": 23,
+            "text": "\u03B4\u1F72 \u03C0\u03C1\u1F78 \u03C4\u03BF\u1FE6 \u03C4\u1F74\u03BD \u03C0\u03AF\u03C3\u03C4\u03B9\u03BD \u1F10\u03BB\u03B8\u03B5\u1FD6\u03BD"
+          },
+          {
+            "verse": 24,
+            "text": "\u1F65\u03C3\u03C4\u03B5 \u1F41 \u03BD\u03CC\u03BC\u03BF\u03C2"
+          },
+          {
+            "verse": 25,
+            "text": "\u03B4\u1F72 \u03C4\u1FC6\u03C2 \u03C0\u03AF\u03C3\u03C4\u03B5\u03C9\u03C2 \u1F10\u03BB\u03B8\u03BF\u03CD\u03C3\u03B7\u03C2"
+          },
+          {
+            "verse": 26,
+            "text": "\u03B3\u1F70\u03C1 \u1F10\u03C3\u03C4\u03B5 \u03C0\u03AC\u03BD\u03C4\u03B5\u03C2"
+          },
+          {
+            "verse": 27,
+            "text": "\u03B3\u1F70\u03C1 \u1F45\u03C3\u03BF\u03B9"
+          },
+          {
+            "verse": 28,
+            "text": "\u03BF\u1F50\u03BA \u1F14\u03BD\u03B9"
+          },
+          {
+            "verse": 29,
+            "text": "\u03B4\u1F72 \u03B5\u1F30 \u1F51\u03BC\u03B5\u1FD6\u03C2 \u03A7\u03C1\u03B9\u03C3\u03C4\u03BF\u1FE6"
+          }
+        ]
+      },
+      {
+        "chapter": 4,
+        "verses": [
+          {
+            "verse": 3,
+            "text": "\u03BF\u1F55\u03C4\u03C9\u03C2 \u1F21\u03BC\u03B5\u1FD6\u03C2 \u03BA\u03B1\u1F76"
+          },
+          {
+            "verse": 6,
+            "text": "\u03B4\u03AD \u1F45\u03C4\u03B9 \u1F10\u03C3\u03C4\u03B5 \u03C5\u1F31\u03BF\u03AF"
+          },
+          {
+            "verse": 7,
+            "text": "\u1F65\u03C3\u03C4\u03B5"
+          },
+          {
+            "verse": 10,
+            "text": "\u03C0\u03B1\u03C1\u03B1\u03C4\u03B7\u03C1\u03B5\u1FD6\u03C3\u03B8\u03B5 \u1F21\u03BC\u03AD\u03C1\u03B1\u03C2"
+          },
+          {
+            "verse": 11,
+            "text": "\u03C6\u03BF\u03B2\u03BF\u1FE6\u03BC\u03B1\u03B9 \u1F51\u03BC\u1FB6\u03C2"
+          },
+          {
+            "verse": 15,
+            "text": "\u03C0\u03BF\u1FE6 \u03BF\u1F56\u03BD"
+          },
+          {
+            "verse": 16,
+            "text": "\u1F65\u03C3\u03C4\u03B5 \u03B3\u03AD\u03B3\u03BF\u03BD\u03B1"
+          },
+          {
+            "verse": 17,
+            "text": "\u03B6\u03B7\u03BB\u03BF\u1FE6\u03C3\u03B9\u03BD \u1F51\u03BC\u1FB6\u03C2"
+          },
+          {
+            "verse": 18,
+            "text": "\u03B4\u1F72 \u03B6\u03B7\u03BB\u03BF\u1FE6\u03C3\u03B8\u03B1\u03B9 \u03C0\u03AC\u03BD\u03C4\u03BF\u03C4\u03B5"
+          },
+          {
+            "verse": 21,
+            "text": "\u03BB\u03AD\u03B3\u03B5\u03C4\u03AD \u03BC\u03BF\u03B9"
+          },
+          {
+            "verse": 22,
+            "text": "\u03B3\u1F70\u03C1 \u03B3\u03AD\u03B3\u03C1\u03B1\u03C0\u03C4\u03B1\u03B9 \u1F45\u03C4\u03B9"
+          },
+          {
+            "verse": 23,
+            "text": "\u1F00\u03BB\u03BB\u2019 \u03BC\u1F72\u03BD"
+          },
+          {
+            "verse": 24,
+            "text": "\u1F10\u03C3\u03C4\u03B9\u03BD \u1F05\u03C4\u03B9\u03BD\u03AC \u1F00\u03BB\u03BB\u03B7\u03B3\u03BF\u03C1\u03BF\u03CD\u03BC\u03B5\u03BD\u03B1"
+          },
+          {
+            "verse": 27,
+            "text": "\u03B3\u03AC\u03C1 \u03B3\u03AD\u03B3\u03C1\u03B1\u03C0\u03C4\u03B1\u03B9"
+          },
+          {
+            "verse": 28,
+            "text": "\u03B4\u03AD \u1F51\u03BC\u03B5\u1FD6\u03C2 \u1F00\u03B4\u03B5\u03BB\u03C6\u03BF\u03AF"
+          },
+          {
+            "verse": 29,
+            "text": "\u1F00\u03BB\u03BB\u2019 \u1F65\u03C3\u03C0\u03B5\u03C1"
+          },
+          {
+            "verse": 30,
+            "text": "\u1F00\u03BB\u03BB\u1F70 \u03C4\u03AF \u03BB\u03AD\u03B3\u03B5\u03B9"
+          },
+          {
+            "verse": 31,
+            "text": "\u03B4\u03B9\u03CC \u1F00\u03B4\u03B5\u03BB\u03C6\u03BF\u03AF"
+          }
+        ]
+      },
+      {
+        "chapter": 5,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "\u03A7\u03C1\u03B9\u03C3\u03C4\u1F78\u03C2 \u1F20\u03BB\u03B5\u03C5\u03B8\u03AD\u03C1\u03C9\u03C3\u03B5\u03BD \u1F21\u03BC\u1FB6\u03C2"
+          },
+          {
+            "verse": 2,
+            "text": "\u1F34\u03B4\u03B5"
+          },
+          {
+            "verse": 3,
+            "text": "\u03B4\u1F72 \u03BC\u03B1\u03C1\u03C4\u03CD\u03C1\u03BF\u03BC\u03B1\u03B9 \u03C0\u03AC\u03BB\u03B9\u03BD"
+          },
+          {
+            "verse": 4,
+            "text": "\u03BA\u03B1\u03C4\u03B7\u03C1\u03B3\u03AE\u03B8\u03B7\u03C4\u03B5 \u1F00\u03C0\u1F78 \u03A7\u03C1\u03B9\u03C3\u03C4\u03BF\u1FE6"
+          },
+          {
+            "verse": 5,
+            "text": "\u03B3\u1F70\u03C1 \u1F21\u03BC\u03B5\u1FD6\u03C2 \u1F00\u03C0\u03B5\u03BA\u03B4\u03B5\u03C7\u03CC\u03BC\u03B5\u03B8\u03B1"
+          },
+          {
+            "verse": 6,
+            "text": "\u03B3\u1F70\u03C1 \u1F10\u03BD \u03A7\u03C1\u03B9\u03C3\u03C4\u1FF7 \u1F38\u03B7\u03C3\u03BF\u1FE6"
+          },
+          {
+            "verse": 7,
+            "text": "\u1F10\u03C4\u03C1\u03AD\u03C7\u03B5\u03C4\u03B5 \u03BA\u03B1\u03BB\u1FF6\u03C2"
+          },
+          {
+            "verse": 8,
+            "text": "\u1F21 \u03C0\u03B5\u03B9\u03C3\u03BC\u03BF\u03BD\u1F74"
+          },
+          {
+            "verse": 9,
+            "text": "\u03BC\u03B9\u03BA\u03C1\u1F70 \u03B6\u03CD\u03BC\u03B7"
+          },
+          {
+            "verse": 10,
+            "text": "\u1F10\u03B3\u1F7C \u03C0\u03AD\u03C0\u03BF\u03B9\u03B8\u03B1 \u03B5\u1F30\u03C2 \u1F51\u03BC\u1FB6\u03C2"
+          },
+          {
+            "verse": 11,
+            "text": "\u03B4\u03AD \u1F10\u03B3\u1F7C"
+          },
+          {
+            "verse": 12,
+            "text": "\u1F44\u03C6\u03B5\u03BB\u03BF\u03BD \u03BA\u03B1\u1F76 \u1F00\u03C0\u03BF\u03BA\u03CC\u03C8\u03BF\u03BD\u03C4\u03B1\u03B9"
+          },
+          {
+            "verse": 13,
+            "text": "\u03B3\u1F70\u03C1 \u1F51\u03BC\u03B5\u1FD6\u03C2 \u1F10\u03BA\u03BB\u03AE\u03B8\u03B7\u03C4\u03B5"
+          },
+          {
+            "verse": 14,
+            "text": "\u03B3\u1F70\u03C1 \u03C0\u1FB6\u03C2 \u1F41 \u03BD\u03CC\u03BC\u03BF\u03C2"
+          },
+          {
+            "verse": 15,
+            "text": "\u03B4\u1F72 \u03B5\u1F30 \u03B4\u03AC\u03BA\u03BD\u03B5\u03C4\u03B5"
+          },
+          {
+            "verse": 16,
+            "text": "\u03B4\u03AD \u03BB\u03AD\u03B3\u03C9"
+          },
+          {
+            "verse": 17,
+            "text": "\u03B3\u1F70\u03C1 \u1F21 \u03C3\u1F70\u03C1\u03BE \u1F10\u03C0\u03B9\u03B8\u03C5\u03BC\u03B5\u1FD6"
+          },
+          {
+            "verse": 18,
+            "text": "\u03B4\u1F72 \u03B5\u1F30 \u1F04\u03B3\u03B5\u03C3\u03B8\u03B5"
+          },
+          {
+            "verse": 24,
+            "text": "\u03B4\u1F72 \u03BF\u1F31 \u03C4\u03BF\u1FE6 \u03A7\u03C1\u03B9\u03C3\u03C4\u03BF\u1FE6 \u1F38\u03B7\u03C3\u03BF\u1FE6"
+          },
+          {
+            "verse": 25,
+            "text": "\u03B5\u1F30 \u03B6\u1FF6\u03BC\u03B5\u03BD \u03A0\u03BD\u03B5\u03CD\u03BC\u03B1\u03C4\u03B9"
+          },
+          {
+            "verse": 26,
+            "text": "\u03BC\u1F74 \u03B3\u03B9\u03BD\u03CE\u03BC\u03B5\u03B8\u03B1"
+          }
+        ]
+      },
+      {
+        "chapter": 6,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "\u1F00\u03B4\u03B5\u03BB\u03C6\u03BF\u03AF"
+          },
+          {
+            "verse": 2,
+            "text": "\u03B2\u03B1\u03C3\u03C4\u03AC\u03B6\u03B5\u03C4\u03B5 \u03C4\u1F70 \u03B2\u03AC\u03C1\u03B7 \u1F00\u03BB\u03BB\u03AE\u03BB\u03C9\u03BD"
+          },
+          {
+            "verse": 3,
+            "text": "\u03B3\u1F70\u03C1 \u03B5\u1F30 \u03C4\u03B9\u03C2"
+          },
+          {
+            "verse": 6,
+            "text": "\u03B4\u1F72"
+          },
+          {
+            "verse": 7,
+            "text": "\u03BC\u1F74 \u03C0\u03BB\u03B1\u03BD\u1FB6\u03C3\u03B8\u03B5"
+          },
+          {
+            "verse": 8,
+            "text": "\u1F45\u03C4\u03B9 \u1F41 \u03C3\u03C0\u03B5\u03AF\u03C1\u03C9\u03BD"
+          },
+          {
+            "verse": 9,
+            "text": "\u03B4\u1F72 \u03C0\u03BF\u03B9\u03BF\u1FE6\u03BD\u03C4\u03B5\u03C2 \u03C4\u1F78 \u03BA\u03B1\u03BB\u1F78\u03BD"
+          },
+          {
+            "verse": 10,
+            "text": "\u1F04\u03C1\u03B1 \u03BF\u1F56\u03BD"
+          },
+          {
+            "verse": 11,
+            "text": "\u1F34\u03B4\u03B5\u03C4\u03B5 \u03C0\u03B7\u03BB\u03AF\u03BA\u03BF\u03B9\u03C2 \u03B3\u03C1\u03AC\u03BC\u03BC\u03B1\u03C3\u03B9\u03BD"
+          },
+          {
+            "verse": 12,
+            "text": "\u1F45\u03C3\u03BF\u03B9 \u03B8\u03AD\u03BB\u03BF\u03C5\u03C3\u03B9\u03BD \u03B5\u1F50\u03C0\u03C1\u03BF\u03C3\u03C9\u03C0\u1FC6\u03C3\u03B1\u03B9"
+          },
+          {
+            "verse": 13,
+            "text": "\u03B3\u1F70\u03C1 \u03BF\u1F31 \u03C0\u03B5\u03C1\u03B9\u03C4\u03B5\u03C4\u03BC\u03B7\u03BC\u03AD\u03BD\u03BF\u03B9 \u03B1\u1F50\u03C4\u03BF\u1F76"
+          },
+          {
+            "verse": 14,
+            "text": "\u03B4\u1F72 \u1F10\u03BC\u03BF\u1F76"
+          },
+          {
+            "verse": 15,
+            "text": "\u03B3\u1F70\u03C1 \u03C4\u1F76 \u1F10\u03C3\u03C4\u03B9\u03BD"
+          },
+          {
+            "verse": 16,
+            "text": "\u03BA\u03B1\u1F76 \u1F45\u03C3\u03BF\u03B9 \u03C3\u03C4\u03BF\u03B9\u03C7\u03AE\u03C3\u03BF\u03C5\u03C3\u03B9\u03BD"
+          },
+          {
+            "verse": 17,
+            "text": "\u03C4\u03BF\u1FE6 \u03BB\u03BF\u03B9\u03C0\u03BF\u1FE6"
+          },
+          {
+            "verse": 18,
+            "text": "\u1F21 \u03C7\u03AC\u03C1\u03B9\u03C2 \u03C4\u03BF\u1FE6 \u039A\u03C5\u03C1\u03AF\u03BF\u03C5 \u1F21\u03BC\u1FF6\u03BD"
+          }
+        ]
+      }
+    ],
+    "Philippians": [
+      {
+        "chapter": 1,
+        "verses": [
+          {
+            "verse": 8,
+            "text": "\u03B3\u03AC\u03C1 \u1F41 \u0398\u03B5\u03CC\u03C2"
+          },
+          {
+            "verse": 15,
+            "text": "\u03BA\u03B1\u1F76 \u03C4\u03B9\u03BD\u1F72\u03C2 \u03BC\u1F72\u03BD"
+          },
+          {
+            "verse": 18,
+            "text": "\u03C4\u03AF \u03B3\u03AC\u03C1"
+          },
+          {
+            "verse": 21,
+            "text": "\u03B3\u1F70\u03C1 \u1F10\u03BC\u03BF\u1F76"
+          },
+          {
+            "verse": 22,
+            "text": "\u03B4\u1F72"
+          }
+        ]
+      },
+      {
+        "chapter": 2,
+        "verses": [
+          {
+            "verse": 12,
+            "text": "\u1F65\u03C3\u03C4\u03B5"
+          },
+          {
+            "verse": 13,
+            "text": "\u03B3\u03AC\u03C1 \u0398\u03B5\u1F78\u03C2 \u1F10\u03C3\u03C4\u03B9\u03BD"
+          },
+          {
+            "verse": 18,
+            "text": "\u03B4\u1F72"
+          },
+          {
+            "verse": 19,
+            "text": "\u03B4\u1F72 \u1F10\u03BB\u03C0\u03AF\u03B6\u03C9"
+          },
+          {
+            "verse": 20,
+            "text": "\u03B3\u1F70\u03C1"
+          },
+          {
+            "verse": 21,
+            "text": "\u03B3\u1F70\u03C1"
+          },
+          {
+            "verse": 22,
+            "text": "\u03B4\u1F72 \u03B3\u03B9\u03BD\u03CE\u03C3\u03BA\u03B5\u03C4\u03B5"
+          },
+          {
+            "verse": 27,
+            "text": "\u03BA\u03B1\u1F76 \u03B3\u1F70\u03C1 \u1F20\u03C3\u03B8\u03AD\u03BD\u03B7\u03C3\u03B5\u03BD"
+          },
+          {
+            "verse": 28,
+            "text": "\u03BF\u1F56\u03BD"
+          }
+        ]
+      },
+      {
+        "chapter": 3,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "\u03C4\u1F78 \u03BB\u03BF\u03B9\u03C0\u03CC\u03BD"
+          },
+          {
+            "verse": 2,
+            "text": "\u03B2\u03BB\u03AD\u03C0\u03B5\u03C4\u03B5 \u03C4\u03BF\u1F7A\u03C2 \u03BA\u03CD\u03BD\u03B1\u03C2"
+          },
+          {
+            "verse": 7,
+            "text": "\u1F05\u03C4\u03B9\u03BD\u03B1"
+          },
+          {
+            "verse": 12,
+            "text": "\u03BF\u1F50\u03C7"
+          },
+          {
+            "verse": 15,
+            "text": "\u03BF\u1F56\u03BD"
+          },
+          {
+            "verse": 16,
+            "text": "\u03C0\u03BB\u1F74\u03BD"
+          },
+          {
+            "verse": 17,
+            "text": "\u03B3\u03AF\u03BD\u03B5\u03C3\u03B8\u03B5"
+          }
+        ]
+      },
+      {
+        "chapter": 4,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "\u1F65\u03C3\u03C4\u03B5"
+          },
+          {
+            "verse": 2,
+            "text": "\u03C0\u03B1\u03C1\u03B1\u03BA\u03B1\u03BB\u1FF6 \u0395\u1F50\u03BF\u03B4\u03AF\u03B1\u03BD"
+          },
+          {
+            "verse": 3,
+            "text": "\u03BD\u03B1\u1F76"
+          },
+          {
+            "verse": 4,
+            "text": "\u03C7\u03B1\u03AF\u03C1\u03B5\u03C4\u03B5 \u1F10\u03BD \u039A\u03C5\u03C1\u03AF\u1FF3"
+          },
+          {
+            "verse": 5,
+            "text": "\u03C4\u1F78 \u1F10\u03C0\u03B9\u03B5\u03B9\u03BA\u1F72\u03C2 \u1F51\u03BC\u1FF6\u03BD"
+          },
+          {
+            "verse": 6,
+            "text": "\u03BC\u03B5\u03C1\u03B9\u03BC\u03BD\u1FB6\u03C4\u03B5 \u03BC\u03B7\u03B4\u1F72\u03BD"
+          },
+          {
+            "verse": 7,
+            "text": "\u03BA\u03B1\u1F76 \u1F21 \u03B5\u1F30\u03C1\u03AE\u03BD\u03B7 \u03C4\u03BF\u1FE6 \u0398\u03B5\u03BF\u1FE6"
+          },
+          {
+            "verse": 8,
+            "text": "\u03C4\u1F78 \u03BB\u03BF\u03B9\u03C0\u03CC\u03BD"
+          },
+          {
+            "verse": 9,
+            "text": "\u1F03"
+          },
+          {
+            "verse": 10,
+            "text": "\u03B4\u1F72 \u1F10\u03C7\u03AC\u03C1\u03B7\u03BD \u03BC\u03B5\u03B3\u03AC\u03BB\u03C9\u03C2"
+          },
+          {
+            "verse": 11,
+            "text": "\u03BF\u1F50\u03C7"
+          },
+          {
+            "verse": 12,
+            "text": "\u03BA\u03B1\u1F76 \u03BF\u1F36\u03B4\u03B1 \u03C4\u03B1\u03C0\u03B5\u03B9\u03BD\u03BF\u1FE6\u03C3\u03B8\u03B1\u03B9"
+          },
+          {
+            "verse": 13,
+            "text": "\u1F30\u03C3\u03C7\u03CD\u03C9 \u03C0\u03AC\u03BD\u03C4\u03B1"
+          },
+          {
+            "verse": 14,
+            "text": "\u03C0\u03BB\u1F74\u03BD"
+          },
+          {
+            "verse": 15,
+            "text": "\u03B4\u1F72 \u1F51\u03BC\u03B5\u1FD6\u03C2 \u03BA\u03B1\u1F76"
+          },
+          {
+            "verse": 16,
+            "text": "\u1F45\u03C4\u03B9 \u03BA\u03B1\u1F76"
+          },
+          {
+            "verse": 17,
+            "text": "\u03BF\u1F50\u03C7"
+          },
+          {
+            "verse": 18,
+            "text": "\u03B4\u1F72 \u1F00\u03C0\u03AD\u03C7\u03C9 \u03C0\u03AC\u03BD\u03C4\u03B1"
+          },
+          {
+            "verse": 19,
+            "text": "\u03B4\u1F72 \u1F41 \u0398\u03B5\u03CC\u03C2 \u03BC\u03BF\u03C5"
+          },
+          {
+            "verse": 20,
+            "text": "\u03B4\u1F72"
+          },
+          {
+            "verse": 23,
+            "text": "\u1F21 \u03C7\u03AC\u03C1\u03B9\u03C2"
+          }
+        ]
+      }
+    ],
+    "Titus": [
+      {
+        "chapter": 1,
+        "verses": [
+          {
+            "verse": 12,
+            "text": "\u03C4\u03B9\u03C2 \u1F10\u03BE \u03B1\u1F50\u03C4\u1FF6\u03BD"
+          },
+          {
+            "verse": 15,
+            "text": "\u03C0\u03AC\u03BD\u03C4\u03B1 \u03BA\u03B1\u03B8\u03B1\u03C1\u1F70"
+          },
+          {
+            "verse": 16,
+            "text": "\u1F41\u03BC\u03BF\u03BB\u03BF\u03B3\u03BF\u1FE6\u03C3\u03B9\u03BD \u03B5\u1F30\u03B4\u03AD\u03BD\u03B1\u03B9 \u0398\u03B5\u1F78\u03BD"
+          }
+        ]
+      },
+      {
+        "chapter": 2,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "\u03B4\u1F72 \u03C3\u1F7A"
+          },
+          {
+            "verse": 2,
+            "text": "\u03C0\u03C1\u03B5\u03C3\u03B2\u03CD\u03C4\u03B1\u03C2 \u03B5\u1F36\u03BD\u03B1\u03B9"
+          },
+          {
+            "verse": 15,
+            "text": "\u03BB\u03AC\u03BB\u03B5\u03B9 \u03C4\u03B1\u1FE6\u03C4\u03B1"
+          }
+        ]
+      },
+      {
+        "chapter": 3,
+        "verses": [
+          {
+            "verse": 3,
+            "text": "\u03B3\u03AC\u03C1 \u1F21\u03BC\u03B5\u1FD6\u03C2 \u03BA\u03B1\u1F76"
+          },
+          {
+            "verse": 8,
+            "text": "\u1F41 \u03BB\u03CC\u03B3\u03BF\u03C2 \u03C0\u03B9\u03C3\u03C4\u1F78\u03C2"
+          },
+          {
+            "verse": 9,
+            "text": "\u03B4\u1F72 \u03C0\u03B5\u03C1\u03B9\u0390\u03C3\u03C4\u03B1\u03C3\u03BF"
+          },
+          {
+            "verse": 12,
+            "text": "\u1F45\u03C4\u03B1\u03BD \u03C0\u03AD\u03BC\u03C8\u03C9"
+          },
+          {
+            "verse": 13,
+            "text": "\u03C0\u03C1\u03CC\u03C0\u03B5\u03BC\u03C8\u03BF\u03BD \u03C3\u03C0\u03BF\u03C5\u03B4\u03B1\u03AF\u03C9\u03C2"
+          },
+          {
+            "verse": 14,
+            "text": "\u03B4\u1F72"
+          },
+          {
+            "verse": 15,
+            "text": "\u03C0\u03AC\u03BD\u03C4\u03B5\u03C2 \u03BF\u1F31 \u03BC\u03B5\u03C4\u2019 \u1F10\u03BC\u03BF\u1FE6"
+          }
+        ]
+      }
+    ],
+    "James": [
+      {
+        "chapter": 1,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "\u1F38\u03AC\u03BA\u03C9\u03B2\u03BF\u03C2"
+          },
+          {
+            "verse": 4,
+            "text": "\u03B4\u1F72 \u1F21 \u1F51\u03C0\u03BF\u03BC\u03BF\u03BD\u1F74"
+          },
+          {
+            "verse": 5,
+            "text": "\u03B4\u03AD \u03B5\u1F30 \u03C4\u03B9\u03C2 \u1F51\u03BC\u1FF6\u03BD"
+          },
+          {
+            "verse": 6,
+            "text": "\u03B4\u1F72 \u03B1\u1F30\u03C4\u03B5\u03AF\u03C4\u03C9"
+          },
+          {
+            "verse": 11,
+            "text": "\u03B3\u1F70\u03C1 \u1F41 \u1F25\u03BB\u03B9\u03BF\u03C2"
+          },
+          {
+            "verse": 12,
+            "text": "\u03BC\u03B1\u03BA\u03AC\u03C1\u03B9\u03BF\u03C2 \u1F00\u03BD\u1F74\u03C1"
+          },
+          {
+            "verse": 13,
+            "text": "\u03BC\u03B7\u03B4\u03B5\u1F76\u03C2 \u03C0\u03B5\u03B9\u03C1\u03B1\u03B6\u03CC\u03BC\u03B5\u03BD\u03BF\u03C2"
+          },
+          {
+            "verse": 16,
+            "text": "\u03BC\u1F74 \u03C0\u03BB\u03B1\u03BD\u1FB6\u03C3\u03B8\u03B5"
+          },
+          {
+            "verse": 17,
+            "text": "\u03C0\u1FB6\u03C3\u03B1 \u1F00\u03B3\u03B1\u03B8\u1F74 \u03B4\u03CC\u03C3\u03B9\u03C2"
+          },
+          {
+            "verse": 18,
+            "text": "\u03B2\u03BF\u03C5\u03BB\u03B7\u03B8\u03B5\u1F76\u03C2"
+          },
+          {
+            "verse": 21,
+            "text": "\u03B4\u03B9\u1F78"
+          },
+          {
+            "verse": 22,
+            "text": "\u03B4\u1F72 \u03B3\u03AF\u03BD\u03B5\u03C3\u03B8\u03B5"
+          },
+          {
+            "verse": 23,
+            "text": "\u1F45\u03C4\u03B9 \u03B5\u1F34"
+          },
+          {
+            "verse": 24,
+            "text": "\u03B3\u1F70\u03C1 \u03BA\u03B1\u03C4\u03B5\u03BD\u03CC\u03B7\u03C3\u03B5\u03BD \u1F11\u03B1\u03C5\u03C4\u1F78\u03BD"
+          },
+          {
+            "verse": 25,
+            "text": "\u03B4\u1F72 \u1F41 \u03C0\u03B1\u03C1\u03B1\u03BA\u03CD\u03C8\u03B1\u03C2"
+          },
+          {
+            "verse": 26,
+            "text": "\u03B5\u1F34 \u03C4\u03B9\u03C2 \u03B4\u03BF\u03BA\u03B5\u1FD6"
+          },
+          {
+            "verse": 27,
+            "text": "\u03B8\u03C1\u03B7\u03C3\u03BA\u03B5\u03AF\u03B1 \u03BA\u03B1\u03B8\u03B1\u03C1\u1F70"
+          }
+        ]
+      },
+      {
+        "chapter": 2,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "\u1F00\u03B4\u03B5\u03BB\u03C6\u03BF\u03AF \u03BC\u03BF\u03C5"
+          },
+          {
+            "verse": 5,
+            "text": "\u1F00\u03BA\u03BF\u03CD\u03C3\u03B1\u03C4\u03B5"
+          },
+          {
+            "verse": 6,
+            "text": "\u03B4\u1F72 \u1F51\u03BC\u03B5\u1FD6\u03C2"
+          },
+          {
+            "verse": 7,
+            "text": "\u03B1\u1F50\u03C4\u03BF\u1F76"
+          },
+          {
+            "verse": 8,
+            "text": "\u03BC\u03AD\u03BD\u03C4\u03BF\u03B9"
+          },
+          {
+            "verse": 9,
+            "text": "\u03B4\u1F72"
+          },
+          {
+            "verse": 10,
+            "text": "\u03B3\u1F70\u03C1 \u1F45\u03C3\u03C4\u03B9\u03C2 \u03C4\u03B7\u03C1\u03AE\u03C3\u1FC3"
+          },
+          {
+            "verse": 11,
+            "text": "\u03B3\u1F70\u03C1 \u1F41 \u03B5\u1F30\u03C0\u03CE\u03BD"
+          },
+          {
+            "verse": 12,
+            "text": "\u03BB\u03B1\u03BB\u03B5\u1FD6\u03C4\u03B5 \u03BF\u1F55\u03C4\u03C9\u03C2"
+          },
+          {
+            "verse": 13,
+            "text": "\u03B3\u1F70\u03C1"
+          },
+          {
+            "verse": 14,
+            "text": "\u03C4\u03AF \u03C4\u1F78 \u1F44\u03C6\u03B5\u03BB\u03BF\u03C2"
+          },
+          {
+            "verse": 17,
+            "text": "\u03BF\u1F55\u03C4\u03C9\u03C2 \u03BA\u03B1\u1F76"
+          },
+          {
+            "verse": 18,
+            "text": "\u1F00\u03BB\u03BB\u2019 \u03C4\u03B9\u03C2 \u1F10\u03C1\u03B5\u1FD6"
+          },
+          {
+            "verse": 19,
+            "text": "\u03C3\u1F7A \u03C0\u03B9\u03C3\u03C4\u03B5\u03CD\u03B5\u03B9\u03C2"
+          },
+          {
+            "verse": 20,
+            "text": "\u03B4\u1F72 \u03B8\u03AD\u03BB\u03B5\u03B9\u03C2 \u03B3\u03BD\u1FF6\u03BD\u03B1\u03B9"
+          },
+          {
+            "verse": 21,
+            "text": "\u1F08\u03B2\u03C1\u03B1\u1F70\u03BC"
+          },
+          {
+            "verse": 22,
+            "text": "\u03B2\u03BB\u03AD\u03C0\u03B5\u03B9\u03C2 \u1F45\u03C4\u03B9"
+          },
+          {
+            "verse": 23,
+            "text": "\u03BA\u03B1\u1F76 \u1F21 \u0393\u03C1\u03B1\u03C6\u1F74 \u1F10\u03C0\u03BB\u03B7\u03C1\u03CE\u03B8\u03B7"
+          },
+          {
+            "verse": 24,
+            "text": "\u1F41\u03C1\u1FB6\u03C4\u03B5 \u1F45\u03C4\u03B9"
+          },
+          {
+            "verse": 25,
+            "text": "\u03B4\u1F72 \u1F41\u03BC\u03BF\u03AF\u03C9\u03C2 \u03BA\u03B1\u1F76"
+          },
+          {
+            "verse": 26,
+            "text": "\u03B3\u1F70\u03C1 \u1F65\u03C3\u03C0\u03B5\u03C1"
+          }
+        ]
+      },
+      {
+        "chapter": 3,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "\u03BC\u1F74 \u03C0\u03BF\u03BB\u03BB\u03BF\u1F76"
+          },
+          {
+            "verse": 2,
+            "text": "\u03B3\u1F70\u03C1 \u1F05\u03C0\u03B1\u03BD\u03C4\u03B5\u03C2 \u03C0\u03C4\u03B1\u03AF\u03BF\u03BC\u03B5\u03BD"
+          },
+          {
+            "verse": 3,
+            "text": "\u03B4\u1F72 \u03B5\u1F30 \u03B2\u03AC\u03BB\u03BB\u03BF\u03BC\u03B5\u03BD"
+          },
+          {
+            "verse": 4,
+            "text": "\u1F30\u03B4\u03BF\u1F7A"
+          },
+          {
+            "verse": 5,
+            "text": "\u03BF\u1F55\u03C4\u03C9\u03C2 \u03BA\u03B1\u1F76"
+          },
+          {
+            "verse": 6,
+            "text": "\u03BA\u03B1\u1F76 \u1F21 \u03B3\u03BB\u1FF6\u03C3\u03C3\u03B1 \u03C0\u1FE6\u03C1"
+          },
+          {
+            "verse": 9,
+            "text": "\u1F10\u03BD \u03B1\u1F50\u03C4\u1FC7"
+          },
+          {
+            "verse": 10,
+            "text": "\u03B5\u1F50\u03BB\u03BF\u03B3\u03AF\u03B1 \u03BA\u03B1\u1F76 \u03BA\u03B1\u03C4\u03AC\u03C1\u03B1"
+          },
+          {
+            "verse": 11,
+            "text": "\u03BC\u03AE\u03C4\u03B9 \u1F21 \u03C0\u03B7\u03B3\u1F74"
+          },
+          {
+            "verse": 12,
+            "text": "\u1F00\u03B4\u03B5\u03BB\u03C6\u03BF\u03AF \u03BC\u03BF\u03C5"
+          },
+          {
+            "verse": 13,
+            "text": "\u03C4\u03AF\u03C2 \u03C3\u03BF\u03C6\u1F78\u03C2"
+          },
+          {
+            "verse": 14,
+            "text": "\u03B4\u1F72 \u03B5\u1F30 \u1F14\u03C7\u03B5\u03C4\u03B5"
+          },
+          {
+            "verse": 15,
+            "text": "\u03B1\u1F55\u03C4\u03B7"
+          },
+          {
+            "verse": 16,
+            "text": "\u03B3\u1F70\u03C1 \u1F45\u03C0\u03BF\u03C5"
+          },
+          {
+            "verse": 17,
+            "text": "\u03B4\u1F72 \u1F21 \u03C3\u03BF\u03C6\u03AF\u03B1 \u1F04\u03BD\u03C9\u03B8\u03B5\u03BD"
+          },
+          {
+            "verse": 18,
+            "text": "\u03B4\u1F72 \u03BA\u03B1\u03C1\u03C0\u1F78\u03C2 \u03B4\u03B9\u03BA\u03B1\u03B9\u03BF\u03C3\u03CD\u03BD\u03B7\u03C2"
+          }
+        ]
+      },
+      {
+        "chapter": 4,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "\u03C0\u03CC\u03B8\u03B5\u03BD \u03C0\u03CC\u03BB\u03B5\u03BC\u03BF\u03B9"
+          },
+          {
+            "verse": 4,
+            "text": "\u03BC\u03BF\u03B9\u03C7\u03B1\u03BB\u03AF\u03B4\u03B5\u03C2"
+          },
+          {
+            "verse": 5,
+            "text": "\u1F22 \u03B4\u03BF\u03BA\u03B5\u1FD6\u03C4\u03B5 \u1F45\u03C4\u03B9"
+          },
+          {
+            "verse": 6,
+            "text": "\u03B4\u1F72 \u03B4\u03AF\u03B4\u03C9\u03C3\u03B9\u03BD"
+          },
+          {
+            "verse": 7,
+            "text": "\u1F51\u03C0\u03BF\u03C4\u03AC\u03B3\u03B7\u03C4\u03B5 \u03BF\u1F56\u03BD"
+          },
+          {
+            "verse": 8,
+            "text": "\u1F10\u03B3\u03B3\u03AF\u03C3\u03B1\u03C4\u03B5 \u03C4\u1FF7 \u0398\u03B5\u1FF7"
+          },
+          {
+            "verse": 9,
+            "text": "\u03C4\u03B1\u03BB\u03B1\u03B9\u03C0\u03C9\u03C1\u03AE\u03C3\u03B1\u03C4\u03B5"
+          },
+          {
+            "verse": 10,
+            "text": "\u03C4\u03B1\u03C0\u03B5\u03B9\u03BD\u03CE\u03B8\u03B7\u03C4\u03B5"
+          },
+          {
+            "verse": 11,
+            "text": "\u03BC\u1F74 \u03BA\u03B1\u03C4\u03B1\u03BB\u03B1\u03BB\u03B5\u1FD6\u03C4\u03B5"
+          },
+          {
+            "verse": 12,
+            "text": "\u1F10\u03C3\u03C4\u03B9\u03BD \u03B5\u1F37\u03C2"
+          },
+          {
+            "verse": 13,
+            "text": "\u1F04\u03B3\u03B5 \u03BD\u1FE6\u03BD"
+          },
+          {
+            "verse": 14,
+            "text": "\u03BF\u1F35\u03C4\u03B9\u03BD\u03B5\u03C2"
+          },
+          {
+            "verse": 15,
+            "text": "\u1F00\u03BD\u03C4\u1F76 \u03C4\u03BF\u1FE6 \u1F51\u03BC\u1FB6\u03C2 \u03BB\u03AD\u03B3\u03B5\u03B9\u03BD"
+          },
+          {
+            "verse": 16,
+            "text": "\u03B4\u1F72 \u03BD\u1FE6\u03BD"
+          },
+          {
+            "verse": 17,
+            "text": "\u03B5\u1F30\u03B4\u03CC\u03C4\u03B9 \u03BF\u1F56\u03BD"
+          }
+        ]
+      },
+      {
+        "chapter": 5,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "\u1F04\u03B3\u03B5 \u03BD\u1FE6\u03BD"
+          },
+          {
+            "verse": 2,
+            "text": "\u1F41 \u03C0\u03BB\u03BF\u1FE6\u03C4\u03BF\u03C2 \u1F51\u03BC\u1FF6\u03BD"
+          },
+          {
+            "verse": 3,
+            "text": "\u1F41 \u03C7\u03C1\u03C5\u03C3\u1F78\u03C2 \u1F51\u03BC\u1FF6\u03BD"
+          },
+          {
+            "verse": 4,
+            "text": "\u1F30\u03B4\u03BF\u1F7A"
+          },
+          {
+            "verse": 5,
+            "text": "\u1F10\u03C4\u03C1\u03C5\u03C6\u03AE\u03C3\u03B1\u03C4\u03B5"
+          },
+          {
+            "verse": 6,
+            "text": "\u03BA\u03B1\u03C4\u03B5\u03B4\u03B9\u03BA\u03AC\u03C3\u03B1\u03C4\u03B5"
+          },
+          {
+            "verse": 7,
+            "text": "\u03BF\u1F56\u03BD \u03BC\u03B1\u03BA\u03C1\u03BF\u03B8\u03C5\u03BC\u03AE\u03C3\u03B1\u03C4\u03B5"
+          },
+          {
+            "verse": 8,
+            "text": "\u1F51\u03BC\u03B5\u1FD6\u03C2 \u03BA\u03B1\u1F76"
+          },
+          {
+            "verse": 9,
+            "text": "\u03BC\u1F74 \u03C3\u03C4\u03B5\u03BD\u03AC\u03B6\u03B5\u03C4\u03B5"
+          },
+          {
+            "verse": 10,
+            "text": "\u03BB\u03AC\u03B2\u03B5\u03C4\u03B5 \u1F51\u03C0\u03CC\u03B4\u03B5\u03B9\u03B3\u03BC\u03B1"
+          },
+          {
+            "verse": 11,
+            "text": "\u1F30\u03B4\u03BF\u1F7A"
+          },
+          {
+            "verse": 12,
+            "text": "\u03B4\u03AD \u03C0\u03C1\u1F78 \u03C0\u03AC\u03BD\u03C4\u03C9\u03BD"
+          },
+          {
+            "verse": 13,
+            "text": "\u03C4\u03B9\u03C2"
+          },
+          {
+            "verse": 14,
+            "text": "\u03C4\u03B9\u03C2"
+          },
+          {
+            "verse": 15,
+            "text": "\u03BA\u03B1\u1F76 \u1F21 \u03B5\u1F50\u03C7\u1F74 \u03C4\u1FC6\u03C2 \u03C0\u03AF\u03C3\u03C4\u03B5\u03C9\u03C2"
+          },
+          {
+            "verse": 16,
+            "text": "\u1F10\u03BE\u03BF\u03BC\u03BF\u03BB\u03BF\u03B3\u03B5\u1FD6\u03C3\u03B8\u03B5 \u03BF\u1F56\u03BD"
+          },
+          {
+            "verse": 17,
+            "text": "\u1F28\u03BB\u03B5\u03AF\u03B1\u03C2 \u1F26\u03BD"
+          },
+          {
+            "verse": 18,
+            "text": "\u03BA\u03B1\u1F76 \u03C0\u03C1\u03BF\u03C3\u03B7\u03CD\u03BE\u03B1\u03C4\u03BF \u03C0\u03AC\u03BB\u03B9\u03BD"
+          }
+        ]
+      }
+    ],
+    "1 Peter": [
+      {
+        "chapter": 1,
+        "verses": [
+          {
+            "verse": 13,
+            "text": "\u03B4\u03B9\u1F78"
+          },
+          {
+            "verse": 22,
+            "text": "\u1F21\u03B3\u03BD\u03B9\u03BA\u03CC\u03C4\u03B5\u03C2"
+          },
+          {
+            "verse": 23,
+            "text": "\u1F00\u03BD\u03B1\u03B3\u03B5\u03B3\u03B5\u03BD\u03BD\u03B7\u03BC\u03AD\u03BD\u03BF\u03B9"
+          }
+        ]
+      },
+      {
+        "chapter": 2,
+        "verses": [
+          {
+            "verse": 6,
+            "text": "\u03B4\u03B9\u03CC\u03C4\u03B9"
+          },
+          {
+            "verse": 17,
+            "text": "\u03C4\u03B9\u03BC\u03AE\u03C3\u03B1\u03C4\u03B5 \u03C0\u03AC\u03BD\u03C4\u03B1\u03C2"
+          },
+          {
+            "verse": 18,
+            "text": "\u03BF\u1F31 \u03BF\u1F30\u03BA\u03AD\u03C4\u03B1\u03B9"
+          },
+          {
+            "verse": 19,
+            "text": "\u03B3\u1F70\u03C1 \u03C4\u03BF\u1FE6\u03C4\u03BF \u03C7\u03AC\u03C1\u03B9\u03C2"
+          },
+          {
+            "verse": 20,
+            "text": "\u03B3\u1F70\u03C1 \u03C0\u03BF\u1FD6\u03BF\u03BD \u03BA\u03BB\u03AD\u03BF\u03C2"
+          },
+          {
+            "verse": 25,
+            "text": "\u03B3\u1F70\u03C1 \u1F26\u03C4\u03B5"
+          }
+        ]
+      },
+      {
+        "chapter": 3,
+        "verses": [
+          {
+            "verse": 7,
+            "text": "\u03BF\u1F31 \u1F04\u03BD\u03B4\u03C1\u03B5\u03C2"
+          },
+          {
+            "verse": 10,
+            "text": "\u03B3\u1F70\u03C1 \u1F41 \u03B8\u03AD\u03BB\u03C9\u03BD"
+          },
+          {
+            "verse": 11,
+            "text": "\u03B4\u1F72 \u1F10\u03BA\u03BA\u03BB\u03B9\u03BD\u03AC\u03C4\u03C9"
+          },
+          {
+            "verse": 12,
+            "text": "\u1F45\u03C4\u03B9"
+          },
+          {
+            "verse": 13,
+            "text": "\u03BA\u03B1\u1F76 \u03C4\u03AF\u03C2"
+          },
+          {
+            "verse": 17,
+            "text": "\u03B3\u1F70\u03C1 \u03BA\u03C1\u03B5\u1FD6\u03C4\u03C4\u03BF\u03BD \u03C0\u03AC\u03C3\u03C7\u03B5\u03B9\u03BD"
+          }
+        ]
+      },
+      {
+        "chapter": 4,
+        "verses": [
+          {
+            "verse": 3,
+            "text": "\u03B3\u1F70\u03C1 \u1F00\u03C1\u03BA\u03B5\u03C4\u1F78\u03C2"
+          },
+          {
+            "verse": 6,
+            "text": "\u03B3\u1F70\u03C1 \u03B5\u1F30\u03C2 \u03C4\u03BF\u1FE6\u03C4\u03BF"
+          },
+          {
+            "verse": 11,
+            "text": "\u03B5\u1F34 \u03C4\u03B9\u03C2 \u03BB\u03B1\u03BB\u03B5\u1FD6"
+          },
+          {
+            "verse": 14,
+            "text": "\u03B5\u1F30 \u1F40\u03BD\u03B5\u03B9\u03B4\u03AF\u03B6\u03B5\u03C3\u03B8\u03B5"
+          },
+          {
+            "verse": 17,
+            "text": "\u1F45\u03C4\u03B9"
+          },
+          {
+            "verse": 18,
+            "text": "\u03BA\u03B1\u1F76 \u03B5\u1F30"
+          },
+          {
+            "verse": 19,
+            "text": "\u1F65\u03C3\u03C4\u03B5"
+          }
+        ]
+      },
+      {
+        "chapter": 5,
+        "verses": [
+          {
+            "verse": 4,
+            "text": "\u03BA\u03B1\u1F76 \u03C4\u03BF\u1FE6 \u1F00\u03C1\u03C7\u03B9\u03C0\u03BF\u03AF\u03BC\u03B5\u03BD\u03BF\u03C2"
+          },
+          {
+            "verse": 5,
+            "text": "\u1F41\u03BC\u03BF\u03AF\u03C9\u03C2"
+          },
+          {
+            "verse": 10,
+            "text": "\u03B4\u1F72 \u1F41 \u0398\u03B5\u1F78\u03C2 \u03C0\u03AC\u03C3\u03B7\u03C2 \u03C7\u03AC\u03C1\u03B9\u03C4\u03BF\u03C2"
+          },
+          {
+            "verse": 11,
+            "text": "\u03B1\u1F50\u03C4\u1FF7"
+          },
+          {
+            "verse": 12,
+            "text": "\u03B4\u03B9\u1F70 \u03A3\u03B9\u03BB\u03BF\u03C5\u03B1\u03BD\u03BF\u1FE6"
+          },
+          {
+            "verse": 13,
+            "text": "\u1F21 \u03C3\u03C5\u03BD\u03B5\u03BA\u03BB\u03B5\u03BA\u03C4\u1F74"
+          },
+          {
+            "verse": 14,
+            "text": "\u1F00\u03C3\u03C0\u03AC\u03C3\u03B1\u03C3\u03B8\u03B5 \u1F00\u03BB\u03BB\u03AE\u03BB\u03BF\u03C5\u03C2"
+          }
+        ]
+      }
+    ],
+    "2 Peter": [
+      {
+        "chapter": 1,
+        "verses": [
+          {
+            "verse": 10,
+            "text": "\u03B4\u03B9\u1F78 \u03BC\u1FB6\u03BB\u03BB\u03BF\u03BD"
+          },
+          {
+            "verse": 11,
+            "text": "\u03B3\u1F70\u03C1 \u03BF\u1F55\u03C4\u03C9\u03C2"
+          },
+          {
+            "verse": 12,
+            "text": "\u03B4\u03B9\u1F78"
+          },
+          {
+            "verse": 16,
+            "text": "\u03B3\u1F70\u03C1"
+          },
+          {
+            "verse": 19,
+            "text": "\u03BA\u03B1\u1F76 \u1F14\u03C7\u03BF\u03BC\u03B5\u03BD \u03B2\u03B5\u03B2\u03B1\u03B9\u03CC\u03C4\u03B5\u03C1\u03BF\u03BD"
+          }
+        ]
+      },
+      {
+        "chapter": 2,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "\u03B4\u1F72 \u1F10\u03B3\u03AD\u03BD\u03BF\u03BD\u03C4\u03BF \u03BA\u03B1\u1F76"
+          },
+          {
+            "verse": 2,
+            "text": "\u03BA\u03B1\u1F76 \u03C0\u03BF\u03BB\u03BB\u03BF\u1F76"
+          },
+          {
+            "verse": 3,
+            "text": "\u03BA\u03B1\u1F76 \u1F10\u03BD \u03C0\u03BB\u03B5\u03BF\u03BD\u03B5\u03BE\u03AF\u1FB3"
+          },
+          {
+            "verse": 17,
+            "text": "\u03BF\u1F57\u03C4\u03BF\u03AF \u03B5\u1F30\u03C3\u03B9\u03BD"
+          },
+          {
+            "verse": 20,
+            "text": "\u03B3\u1F70\u03C1 \u03B5\u1F30 \u1F00\u03C0\u03BF\u03C6\u03C5\u03B3\u03CC\u03BD\u03C4\u03B5\u03C2"
+          },
+          {
+            "verse": 21,
+            "text": "\u03B3\u1F70\u03C1 \u1F26\u03BD \u03BA\u03C1\u03B5\u1FD6\u03C4\u03C4\u03BF\u03BD"
+          },
+          {
+            "verse": 22,
+            "text": "\u03C4\u1F78 \u03C4\u1FC6\u03C2 \u1F00\u03BB\u03B7\u03B8\u03BF\u1FE6\u03C2 \u03C0\u03B1\u03C1\u03BF\u03B9\u03BC\u03AF\u03B1\u03C2"
+          }
+        ]
+      },
+      {
+        "chapter": 3,
+        "verses": [
+          {
+            "verse": 7,
+            "text": "\u03B4\u1F72 \u03BD\u1FE6\u03BD"
+          },
+          {
+            "verse": 8,
+            "text": "\u03B4\u1F72 \u1F13\u03BD \u03C4\u03BF\u1FE6\u03C4\u03BF"
+          },
+          {
+            "verse": 9,
+            "text": "\u039A\u03CD\u03C1\u03B9\u03BF\u03C2 \u03C4\u1FC6\u03C2 \u1F10\u03C0\u03B1\u03B3\u03B3\u03B5\u03BB\u03AF\u03B1\u03C2"
+          },
+          {
+            "verse": 10,
+            "text": "\u03B4\u1F72 \u1F21\u03BC\u03AD\u03C1\u03B1 \u039A\u03C5\u03C1\u03AF\u03BF\u03C5"
+          },
+          {
+            "verse": 13,
+            "text": "\u03B4\u1F72 \u03C0\u03C1\u03BF\u03C3\u03B4\u03BF\u03BA\u1FF6\u03BC\u03B5\u03BD"
+          },
+          {
+            "verse": 14,
+            "text": "\u03B4\u03B9\u03CC \u1F00\u03B3\u03B1\u03C0\u03B7\u03C4\u03BF\u03AF"
+          },
+          {
+            "verse": 17,
+            "text": "\u1F51\u03BC\u03B5\u1FD6\u03C2 \u03BF\u1F56\u03BD"
+          },
+          {
+            "verse": 18,
+            "text": "\u03B4\u1F72 \u03B1\u1F50\u03BE\u03AC\u03BD\u03B5\u03C4\u03B5"
+          }
+        ]
+      }
+    ],
+    "2 John": [
+      {
+        "chapter": 1,
+        "verses": [
+          {
+            "verse": 4,
+            "text": "\u1F10\u03C7\u03AC\u03C1\u03B7\u03BD \u03BB\u03B5\u03AF\u03B1\u03BD"
+          },
+          {
+            "verse": 5,
+            "text": "\u03BA\u03B1\u1F76 \u03BD\u1FE6\u03BD \u1F10\u03C1\u03C9\u03C4\u1FF6 \u03C3\u03B5"
+          },
+          {
+            "verse": 6,
+            "text": "\u03BA\u03B1\u1F76 \u1F21 \u1F00\u03B3\u03AC\u03C0\u03B7"
+          },
+          {
+            "verse": 7,
+            "text": "\u1F45\u03C4\u03B9"
+          },
+          {
+            "verse": 8,
+            "text": "\u03B2\u03BB\u03AD\u03C0\u03B5\u03C4\u03B5 \u1F11\u03B1\u03C5\u03C4\u03BF\u03CD\u03C2"
+          },
+          {
+            "verse": 9,
+            "text": "\u03C0\u1FB6\u03C2 \u1F41 \u03C0\u03C1\u03BF\u03AC\u03B3\u03C9\u03BD"
+          },
+          {
+            "verse": 12,
+            "text": "\u1F14\u03C7\u03C9\u03BD \u03C0\u03BF\u03BB\u03BB\u1F70"
+          },
+          {
+            "verse": 13,
+            "text": "\u03C4\u1F70 \u03C4\u03AD\u03BA\u03BD\u03B1 \u03C4\u1FC6\u03C2 \u1F00\u03B4\u03B5\u03BB\u03C6\u1FC6\u03C2 \u03C3\u03BF\u03C5"
+          }
+        ]
+      }
+    ],
+    "Jude": [
+      {
+        "chapter": 1,
+        "verses": [
+          {
+            "verse": 3,
+            "text": "\u1F00\u03B3\u03B1\u03C0\u03B7\u03C4\u03BF\u03AF"
+          },
+          {
+            "verse": 4,
+            "text": "\u03B3\u03AC\u03C1 \u03C4\u03B9\u03BD\u03B5\u03C2 \u1F04\u03BD\u03B8\u03C1\u03C9\u03C0\u03BF\u03B9"
+          },
+          {
+            "verse": 5,
+            "text": "\u03B4\u1F72 \u03B2\u03BF\u03CD\u03BB\u03BF\u03BC\u03B1\u03B9 \u1F51\u03BC\u1FB6\u03C2 \u1F51\u03C0\u03BF\u03BC\u03BD\u1FC6\u03C3\u03B1\u03B9"
+          },
+          {
+            "verse": 8,
+            "text": "\u03BF\u1F57\u03C4\u03BF\u03B9 \u03BA\u03B1\u1F76 \u1F10\u03BD\u03C5\u03C0\u03BD\u03B9\u03B1\u03B6\u03CC\u03BC\u03B5\u03BD\u03BF\u03B9"
+          },
+          {
+            "verse": 9,
+            "text": "\u03B4\u1F72"
+          },
+          {
+            "verse": 10,
+            "text": "\u03B4\u1F72 \u03BF\u1F57\u03C4\u03BF\u03B9"
+          },
+          {
+            "verse": 11,
+            "text": "\u03BF\u1F50\u03B1\u1F76"
+          },
+          {
+            "verse": 16,
+            "text": "\u03BF\u1F57\u03C4\u03BF\u03AF \u03B5\u1F30\u03C3\u03B9\u03BD"
+          },
+          {
+            "verse": 19,
+            "text": "\u03BF\u1F57\u03C4\u03BF\u03AF \u03B5\u1F30\u03C3\u03B9\u03BD"
+          },
+          {
+            "verse": 20,
+            "text": "\u03B4\u03AD \u1F51\u03BC\u03B5\u1FD6\u03C2"
+          },
+          {
+            "verse": 21,
+            "text": "\u03C4\u03B7\u03C1\u03AE\u03C3\u03B1\u03C4\u03B5 \u1F11\u03B1\u03C5\u03C4\u03BF\u1F7A\u03C2"
+          }
+        ]
+      }
+    ]
+  }
+}

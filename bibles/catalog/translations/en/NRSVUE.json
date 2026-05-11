@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:NRSVUE",
+  "code": "NRSVUE",
+  "label": "New Revised Standard Version Updated Edition 2021",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "builtin",
+  "version": 10,
+  "contentUrl": "/bibles/content/en/NRSVUE/v10.json",
+  "contentHash": "sha256-9162cbd6e2e44dc9f2a1aa8e1a05af5a8d72e6b16df65420d277c35f8043f441",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:54.8655623Z"
+}

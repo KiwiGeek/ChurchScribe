@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "es:JBS",
+  "code": "JBS",
+  "label": "Biblia del Jubileo",
+  "languageTag": "es",
+  "languageCode3": "spa",
+  "sourceType": "official",
+  "version": 4,
+  "contentUrl": "/bibles/content/es/JBS/v4.json",
+  "contentHash": "sha256-fd6358a19aa68914fc4456975c3ac6d27224cf38ad7c1954daa32151430edccc",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:54:26.3315023Z"
+}

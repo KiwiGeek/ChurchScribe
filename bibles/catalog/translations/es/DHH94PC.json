@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "es:DHH94PC",
+  "code": "DHH94PC",
+  "label": "Biblia Dios Habla Hoy",
+  "languageTag": "es",
+  "languageCode3": "spa",
+  "sourceType": "official",
+  "version": 11,
+  "contentUrl": "/bibles/content/es/DHH94PC/v11.json",
+  "contentHash": "sha256-331709156f280dabbf1a3da8b5058f7267a81ce7a75bafe49e510e8eaef31511",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:54:25.9238849Z"
+}

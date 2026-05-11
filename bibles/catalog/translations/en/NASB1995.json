@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:NASB1995",
+  "code": "NASB1995",
+  "label": "New American Standard Bible - NASB 1995",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 16,
+  "contentUrl": "/bibles/content/en/NASB1995/v16.json",
+  "contentHash": "sha256-a79bd893ab4a8ea2eb7a2e0a967f66702d98adf67a0619d54a0a1e5da3c07473",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:53.8787744Z"
+}

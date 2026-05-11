@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:YLT98",
+  "code": "YLT98",
+  "label": "Young\u0027s Literal Translation 1898",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 7,
+  "contentUrl": "/bibles/content/en/YLT98/v7.json",
+  "contentHash": "sha256-e040a97c219625e134f4860d342b8dda1e4c0e6f989dc8f96f10b945a645e3dc",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:56.6875353Z"
+}

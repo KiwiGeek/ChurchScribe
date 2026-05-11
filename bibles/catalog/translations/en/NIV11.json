@@ -5,10 +5,10 @@
   "label": "New International Version",
   "languageTag": "en",
   "languageCode3": "eng",
-  "sourceType": "official",
-  "version": 29,
-  "contentUrl": "/bibles/content/en/NIV11/v29.json",
-  "contentHash": "sha256-4b40c563177a36d51961b084ac4e3ab69eadb7a55e38939ba6a33aa7e615cdef",
+  "sourceType": "builtin",
+  "version": 36,
+  "contentUrl": "/bibles/content/en/NIV11/v36.json",
+  "contentHash": "sha256-45c3c9b240fa7527509c9fa80c902848cb8fb7603c1530e7c6938a62dc3679d5",
   "bookOrder": "protestant-66",
   "features": {
     "headings": false,
@@ -16,5 +16,5 @@
     "superscriptions": false,
     "html": false
   },
-  "updatedAt": "2026-05-10T16:00:31.3030646Z"
+  "updatedAt": "2026-05-10T23:52:54.3261859Z"
 }

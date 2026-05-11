@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:MP1562",
+  "code": "MP1562",
+  "label": "Metrical Psalms and Scripture Selections 1562 (Sternhold and Hopkins)",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 1,
+  "contentUrl": "/bibles/content/en/MP1562/v1.json",
+  "contentHash": "sha256-c0847f31027f50f6162bf3316a5b1674535cc80cd3b4a3df4a4f7fd21541f9c8",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:53.4841116Z"
+}

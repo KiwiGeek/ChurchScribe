@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:NRSVCI",
+  "code": "NRSVCI",
+  "label": "New Revised Standard Version Catholic Interconfessional",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 6,
+  "contentUrl": "/bibles/content/en/NRSVCI/v6.json",
+  "contentHash": "sha256-dbd78d5fa9eae2144daec7c233b3e4b775578d9b3ed3a5ed8eef58228c47166b",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:54.7764035Z"
+}

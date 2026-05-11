@@ -5,10 +5,10 @@
   "label": "Nueva Traducci\u00F3n Viviente",
   "languageTag": "es",
   "languageCode3": "spa",
-  "sourceType": "official",
-  "version": 14,
-  "contentUrl": "/bibles/content/es/NTV/v14.json",
-  "contentHash": "sha256-abca3d98b6352b34ca112ba9ca7a747822e8dd1a9d2d2f6415c11e456e0495b2",
+  "sourceType": "builtin",
+  "version": 19,
+  "contentUrl": "/bibles/content/es/NTV/v19.json",
+  "contentHash": "sha256-a3957a52ab6e9a4b456d7bbd5b6c27ceafc015212cfbe7561fbe2c9254f5f93e",
   "bookOrder": "protestant-66",
   "features": {
     "headings": false,
@@ -16,5 +16,5 @@
     "superscriptions": false,
     "html": false
   },
-  "updatedAt": "2026-05-10T16:02:30.2690531Z"
+  "updatedAt": "2026-05-10T23:54:26.7763900Z"
 }

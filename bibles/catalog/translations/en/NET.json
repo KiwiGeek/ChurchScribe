@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:NET",
+  "code": "NET",
+  "label": "New English Translation",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 16,
+  "contentUrl": "/bibles/content/en/NET/v16.json",
+  "contentHash": "sha256-72013045e3469a3ad3b25f4468ea63b5a990a5c8ef41e7976f97157941e9006d",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:54.1901565Z"
+}

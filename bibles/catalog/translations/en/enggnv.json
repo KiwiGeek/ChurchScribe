@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:enggnv",
+  "code": "enggnv",
+  "label": "Geneva Bible",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 3,
+  "contentUrl": "/bibles/content/en/enggnv/v3.json",
+  "contentHash": "sha256-4d57d44e27feee9493e38e1eb4b771c75e171e52e2cf186b66a9357f3a29fe97",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:52.2516859Z"
+}

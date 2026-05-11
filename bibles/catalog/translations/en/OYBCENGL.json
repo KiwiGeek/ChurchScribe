@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:OYBCENGL",
+  "code": "OYBCENGL",
+  "label": "The third line (in English) translating the meaning of each word in the Orthodox Yiddish Brit Chadashah (New Testament)",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 1,
+  "contentUrl": "/bibles/content/en/OYBCENGL/v1.json",
+  "contentHash": "sha256-23fa7247d8a2812f31df80d947a42f5dc24f0481e8926578dde7a0a6f90b124f",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:54.9814058Z"
+}

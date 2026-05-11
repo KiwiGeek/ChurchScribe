@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:BOOKS",
+  "code": "BOOKS",
+  "label": "The Books of the Bible NT",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 10,
+  "contentUrl": "/bibles/content/en/BOOKS/v10.json",
+  "contentHash": "sha256-f13e46819b48a648987b733d10077321b935dfeff052b68057cd0f57baa04afa",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:50.3206672Z"
+}

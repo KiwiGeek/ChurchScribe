@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:GNBUK",
+  "code": "GNBUK",
+  "label": "Good News Bible (British Version) 2017",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 18,
+  "contentUrl": "/bibles/content/en/GNBUK/v18.json",
+  "contentHash": "sha256-bb48e1fec480b2283680ace53f98b2180fb134236556be9215f54c2f44a23259",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:52.0375889Z"
+}

@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:NLT",
+  "code": "NLT",
+  "label": "New Living Translation",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "builtin",
+  "version": 22,
+  "contentUrl": "/bibles/content/en/NLT/v22.json",
+  "contentHash": "sha256-1737887bc32cda8c302d15517bc1ea7a5b7a673f60e13dffdc3f8acbcbef61a6",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:54.5366904Z"
+}

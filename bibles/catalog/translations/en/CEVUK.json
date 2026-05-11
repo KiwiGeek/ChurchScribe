@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:CEVUK",
+  "code": "CEVUK",
+  "label": "Contemporary English Version (Anglicised) 2012",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 14,
+  "contentUrl": "/bibles/content/en/CEVUK/v14.json",
+  "contentHash": "sha256-f93633287b9548114ecb6b38f8f9916cccc324dfa52daddc023303e86d6469ea",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:50.7581900Z"
+}

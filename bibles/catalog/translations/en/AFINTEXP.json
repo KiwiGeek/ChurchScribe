@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:AFINTEXP",
+  "code": "AFINTEXP",
+  "label": "African International New Testament: Explanatory Paraphrase (American English Edition)",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 3,
+  "contentUrl": "/bibles/content/en/AFINTEXP/v3.json",
+  "contentHash": "sha256-8e15a646eeae42685be32e321815935f82990dd8776023b5bca6081807abf0eb",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:49.8470767Z"
+}

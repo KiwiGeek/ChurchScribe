@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:HCSB",
+  "code": "HCSB",
+  "label": "Holman Christian Standard Bible",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 22,
+  "contentUrl": "/bibles/content/en/HCSB/v22.json",
+  "contentHash": "sha256-07685e6dbf56ac83c007e136067d4515ac75a102ce6ad5130a481988ae7f5589",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:52.5631276Z"
+}

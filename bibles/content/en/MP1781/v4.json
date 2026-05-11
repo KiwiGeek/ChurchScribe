@@ -1,0 +1,2580 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:MP1781",
+  "version": 4,
+  "books": {
+    "Job": [
+      {
+        "chapter": 1,
+        "verses": [
+          {
+            "verse": 21,
+            "text": "Naked as from the earth we came,"
+          }
+        ]
+      }
+    ],
+    "Ecclesiastes": [
+      {
+        "chapter": 9,
+        "verses": [
+          {
+            "verse": 4,
+            "text": "As long as life its term extends,"
+          },
+          {
+            "verse": 5,
+            "text": "Life is the season God hath giv\u2019n"
+          },
+          {
+            "verse": 6,
+            "text": "Their hatred and their love is lost,"
+          },
+          {
+            "verse": 10,
+            "text": "Then what thy thoughts design to do,"
+          }
+        ]
+      },
+      {
+        "chapter": 12,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "In life\u2019s gay morn, when sprightly youth"
+          }
+        ]
+      }
+    ],
+    "Isaiah": [
+      {
+        "chapter": 57,
+        "verses": [
+          {
+            "verse": 15,
+            "text": "Thus speaks the high and lofty One;"
+          },
+          {
+            "verse": 16,
+            "text": "With me dwells no relentless wrath"
+          }
+        ]
+      },
+      {
+        "chapter": 58,
+        "verses": [
+          {
+            "verse": 5,
+            "text": "Attend, and mark the solemn fast"
+          },
+          {
+            "verse": 6,
+            "text": "Let such as feel oppression\u2019s load"
+          },
+          {
+            "verse": 7,
+            "text": "Go, bid the hungry orphan be"
+          }
+        ]
+      }
+    ],
+    "Lamentations": [
+      {
+        "chapter": 3,
+        "verses": [
+          {
+            "verse": 37,
+            "text": "Amidst the mighty, where is he"
+          },
+          {
+            "verse": 38,
+            "text": "He gives in gladsome bow\u2019rs to dwell,"
+          },
+          {
+            "verse": 39,
+            "text": "Why should a living man complain"
+          },
+          {
+            "verse": 40,
+            "text": "O sons of men! with anxious care"
+          }
+        ]
+      }
+    ],
+    "Habakkuk": [
+      {
+        "chapter": 3,
+        "verses": [
+          {
+            "verse": 17,
+            "text": "What though no flow\u2019rs the fig\u2010tree clothe,"
+          },
+          {
+            "verse": 18,
+            "text": "Yet in the Lord will I be glad,"
+          },
+          {
+            "verse": 19,
+            "text": "He to my tardy feet shall lend"
+          }
+        ]
+      }
+    ],
+    "Odes": [
+      {
+        "chapter": 1,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Let heav\u2019n arise, let earth appear,"
+          },
+          {
+            "verse": 2,
+            "text": "Thick darkness brooded o\u2019er the deep:"
+          },
+          {
+            "verse": 3,
+            "text": "He bade the clouds ascend on high;"
+          },
+          {
+            "verse": 4,
+            "text": "The liquid element below"
+          },
+          {
+            "verse": 5,
+            "text": "With herbs, and plants, and fruitful trees,"
+          },
+          {
+            "verse": 6,
+            "text": "Then high in heav\u2019n\u2019s resplendent arch"
+          },
+          {
+            "verse": 7,
+            "text": "Next, from the deep, th\u2019 Almighty King"
+          },
+          {
+            "verse": 8,
+            "text": "To all the various brutal tribes"
+          },
+          {
+            "verse": 9,
+            "text": "Then, chief o\u2019er all his works below,"
+          },
+          {
+            "verse": 10,
+            "text": "Fair in th\u2019 Almighty Maker\u2019s eye"
+          }
+        ]
+      },
+      {
+        "chapter": 2,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "O God of Bethel! by whose hand"
+          },
+          {
+            "verse": 2,
+            "text": "Our vows, our pray\u2019rs, we now present"
+          },
+          {
+            "verse": 3,
+            "text": "Through each perplexing path of life"
+          },
+          {
+            "verse": 4,
+            "text": "O spread thy cov\u2019ring wings around,"
+          },
+          {
+            "verse": 5,
+            "text": "Such blessings from thy gracious hand"
+          }
+        ]
+      },
+      {
+        "chapter": 3,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Naked as from the earth we came,"
+          },
+          {
+            "verse": 2,
+            "text": "Whate\u2019er we fondly call our own"
+          },
+          {
+            "verse": 3,
+            "text": "\u2019Tis God that lifts our comforts high,"
+          },
+          {
+            "verse": 4,
+            "text": "Then, ever blessed be his name!"
+          }
+        ]
+      },
+      {
+        "chapter": 4,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "How still and peaceful is the grave!"
+          },
+          {
+            "verse": 2,
+            "text": "The wicked there from troubling cease,"
+          },
+          {
+            "verse": 3,
+            "text": "There rest the pris\u2019ners, now releas\u2019d"
+          },
+          {
+            "verse": 4,
+            "text": "There servants, masters, small and great,"
+          },
+          {
+            "verse": 5,
+            "text": "All, levell\u2019d by the hand of Death,"
+          }
+        ]
+      },
+      {
+        "chapter": 5,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Though trouble springs not from the dust,"
+          },
+          {
+            "verse": 2,
+            "text": "As sparks in close succession rise,"
+          },
+          {
+            "verse": 3,
+            "text": "But with my God I leave my cause;"
+          },
+          {
+            "verse": 4,
+            "text": "Unnumber\u2019d are his wondrous works,"
+          }
+        ]
+      },
+      {
+        "chapter": 6,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "The rush may rise where waters flow,"
+          },
+          {
+            "verse": 2,
+            "text": "So is the sinner\u2019s hope cut off;"
+          },
+          {
+            "verse": 3,
+            "text": "Fix\u2019d on his house he leans; his house"
+          },
+          {
+            "verse": 4,
+            "text": "Fair, in his garden, to the sun,"
+          },
+          {
+            "verse": 5,
+            "text": "But forth the sentence flies from Heav\u2019n,"
+          },
+          {
+            "verse": 6,
+            "text": "Lo! this the joy of wicked men,"
+          },
+          {
+            "verse": 7,
+            "text": "But, for the just, with gracious care,"
+          }
+        ]
+      },
+      {
+        "chapter": 7,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "How should the sons of Adam\u2019s race"
+          },
+          {
+            "verse": 2,
+            "text": "If he should mark my words and thoughts"
+          },
+          {
+            "verse": 3,
+            "text": "Strong is his arm, his heart is wise;"
+          },
+          {
+            "verse": 4,
+            "text": "He makes the mountains feel his wrath,"
+          },
+          {
+            "verse": 5,
+            "text": "He bids the sun forbear to rise;"
+          },
+          {
+            "verse": 6,
+            "text": "He walks upon the raging sea;"
+          }
+        ]
+      },
+      {
+        "chapter": 8,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Few are thy days, and full of woe,"
+          },
+          {
+            "verse": 2,
+            "text": "Behold the emblem of thy state"
+          },
+          {
+            "verse": 3,
+            "text": "Guilty and frail, how shalt thou stand"
+          },
+          {
+            "verse": 4,
+            "text": "Determin\u2019d are the days that fly"
+          },
+          {
+            "verse": 5,
+            "text": "Great God! afflict not in thy wrath"
+          },
+          {
+            "verse": 6,
+            "text": "All nature dies, and lives again:"
+          },
+          {
+            "verse": 7,
+            "text": "Resign the honours of their form"
+          },
+          {
+            "verse": 8,
+            "text": "Yet soon reviving plants and flow\u2019rs"
+          },
+          {
+            "verse": 9,
+            "text": "But man forsakes this earthly scene,"
+          },
+          {
+            "verse": 10,
+            "text": "The mighty flood that rolls along"
+          },
+          {
+            "verse": 11,
+            "text": "So days, and years, and ages past,"
+          },
+          {
+            "verse": 12,
+            "text": "And man, when laid in lonesome grave,"
+          },
+          {
+            "verse": 13,
+            "text": "O may the grave become to me"
+          },
+          {
+            "verse": 14,
+            "text": "Cheer\u2019d by this hope, with patient mind,"
+          }
+        ]
+      },
+      {
+        "chapter": 9,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Who can resist th\u2019 Almighty arm"
+          },
+          {
+            "verse": 2,
+            "text": "From him no cov\u2019ring vails our crimes;"
+          },
+          {
+            "verse": 3,
+            "text": "Firm on the boundless void of space"
+          },
+          {
+            "verse": 4,
+            "text": "While nature\u2019s universal frame"
+          },
+          {
+            "verse": 5,
+            "text": "From where the rising day ascends,"
+          },
+          {
+            "verse": 6,
+            "text": "The pillars that support the sky"
+          },
+          {
+            "verse": 7,
+            "text": "He brings the waters from their beds,"
+          },
+          {
+            "verse": 8,
+            "text": "With bright inhabitants above"
+          },
+          {
+            "verse": 9,
+            "text": "Few of his works can we survey;"
+          }
+        ]
+      },
+      {
+        "chapter": 10,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "In streets, and op\u2019nings of the gates,"
+          },
+          {
+            "verse": 2,
+            "text": "How long, ye scorners of the truth,"
+          },
+          {
+            "verse": 3,
+            "text": "O turn, at last, at my reproof!"
+          },
+          {
+            "verse": 4,
+            "text": "But since so long, with earnest voice"
+          },
+          {
+            "verse": 5,
+            "text": "The time will come, when humbled low,"
+          },
+          {
+            "verse": 6,
+            "text": "When, like the whirlwind, o\u2019er the deep"
+          },
+          {
+            "verse": 7,
+            "text": "The choice you made has fix\u2019d your doom;"
+          }
+        ]
+      },
+      {
+        "chapter": 11,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "O happy is the man who hears"
+          },
+          {
+            "verse": 2,
+            "text": "For she has treasures greater far"
+          },
+          {
+            "verse": 3,
+            "text": "In her right hand she holds to view"
+          },
+          {
+            "verse": 4,
+            "text": "She guides the young with innocence,"
+          },
+          {
+            "verse": 5,
+            "text": "According as her labours rise,"
+          }
+        ]
+      },
+      {
+        "chapter": 12,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Ye indolent and slothful! rise,"
+          },
+          {
+            "verse": 2,
+            "text": "Yet see with what incessant cares"
+          },
+          {
+            "verse": 3,
+            "text": "But when will slothful man arise?"
+          },
+          {
+            "verse": 4,
+            "text": "But mark the end; want shall assail,"
+          }
+        ]
+      },
+      {
+        "chapter": 13,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Keep silence, all ye sons of men,"
+          },
+          {
+            "verse": 2,
+            "text": "I was th\u2019 Almighty\u2019s chief delight"
+          },
+          {
+            "verse": 3,
+            "text": "Before the sea began to flow,"
+          },
+          {
+            "verse": 4,
+            "text": "When first he rear\u2019d the arch of heav\u2019n,"
+          },
+          {
+            "verse": 5,
+            "text": "There I was with him, when he stretch\u2019d"
+          },
+          {
+            "verse": 6,
+            "text": "With joy I saw th\u2019 abode prepar\u2019d"
+          },
+          {
+            "verse": 7,
+            "text": "Now therefore hearken to my words,"
+          },
+          {
+            "verse": 8,
+            "text": "Where dubious paths perplex the mind,"
+          },
+          {
+            "verse": 9,
+            "text": "But he who scorns my sacred laws"
+          }
+        ]
+      },
+      {
+        "chapter": 14,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "While others crowd the house of mirth,"
+          },
+          {
+            "verse": 2,
+            "text": "Better to weep with those who weep,"
+          },
+          {
+            "verse": 3,
+            "text": "When virtuous sorrow clouds the face,"
+          },
+          {
+            "verse": 4,
+            "text": "The wise in heart revisit oft"
+          },
+          {
+            "verse": 5,
+            "text": "The noisy laughter of the fool"
+          }
+        ]
+      },
+      {
+        "chapter": 15,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "As long as life its term extends,"
+          },
+          {
+            "verse": 2,
+            "text": "Life is the season God hath giv\u2019n"
+          },
+          {
+            "verse": 3,
+            "text": "The living know that they must die;"
+          },
+          {
+            "verse": 4,
+            "text": "Their hatred and their love is lost,"
+          },
+          {
+            "verse": 5,
+            "text": "Then what thy thoughts design to do,"
+          },
+          {
+            "verse": 6,
+            "text": "In the cold grave, to which we haste,"
+          }
+        ]
+      },
+      {
+        "chapter": 16,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "In life\u2019s gay morn, when sprightly youth"
+          },
+          {
+            "verse": 2,
+            "text": "Deep on thy soul, before its pow\u2019rs"
+          },
+          {
+            "verse": 3,
+            "text": "For soon the shades of grief shall cloud"
+          },
+          {
+            "verse": 4,
+            "text": "Soon shall thy heart the woes of age"
+          }
+        ]
+      },
+      {
+        "chapter": 17,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Rulers of Sodom! hear the voice"
+          },
+          {
+            "verse": 2,
+            "text": "\u2019Tis thus he speaks: To what intent"
+          },
+          {
+            "verse": 3,
+            "text": "Burnt\u2010off\u2019rings long may blaze to heav\u2019n,"
+          },
+          {
+            "verse": 4,
+            "text": "Your rites, your fasts, your pray\u2019rs, I scorn,"
+          },
+          {
+            "verse": 5,
+            "text": "But cleanse your hands, ye guilty race,"
+          },
+          {
+            "verse": 6,
+            "text": "Mock not my name with honours vain,"
+          },
+          {
+            "verse": 7,
+            "text": "Then though your guilty souls are stain\u2019d"
+          }
+        ]
+      },
+      {
+        "chapter": 18,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Behold! the mountain of the Lord"
+          },
+          {
+            "verse": 2,
+            "text": "To this the joyful nations round,"
+          },
+          {
+            "verse": 3,
+            "text": "The beam that shines from Sion hill"
+          },
+          {
+            "verse": 4,
+            "text": "Among the nations he shall judge;"
+          },
+          {
+            "verse": 5,
+            "text": "No strife shall rage, nor hostile feuds"
+          },
+          {
+            "verse": 6,
+            "text": "No longer hosts encount\u2019ring hosts"
+          },
+          {
+            "verse": 7,
+            "text": "Come then, O house of Jacob! come"
+          }
+        ]
+      },
+      {
+        "chapter": 19,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "The race that long in darkness pin\u2019d"
+          },
+          {
+            "verse": 2,
+            "text": "To hail thy rise, thou better Sun!"
+          },
+          {
+            "verse": 3,
+            "text": "For thou our burden hast remov\u2019d,"
+          },
+          {
+            "verse": 4,
+            "text": "To us a Child of hope is born;"
+          },
+          {
+            "verse": 5,
+            "text": "His name shall be the Prince of Peace,"
+          },
+          {
+            "verse": 6,
+            "text": "His pow\u2019r increasing still shall spread,"
+          }
+        ]
+      },
+      {
+        "chapter": 20,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "How glorious Sion\u2019s courts appear,"
+          },
+          {
+            "verse": 2,
+            "text": "Its walls, defended by his grace,"
+          },
+          {
+            "verse": 3,
+            "text": "Lift up the everlasting gates,"
+          },
+          {
+            "verse": 4,
+            "text": "Here shall ye taste unmingled joys,"
+          },
+          {
+            "verse": 5,
+            "text": "Trust in the Lord, for ever trust,"
+          },
+          {
+            "verse": 6,
+            "text": "What though the wicked dwell on high,"
+          },
+          {
+            "verse": 7,
+            "text": "Along the dust shall then be spread"
+          }
+        ]
+      },
+      {
+        "chapter": 21,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Attend, ye tribes that dwell remote,"
+          },
+          {
+            "verse": 2,
+            "text": "The man who walks with God in truth,"
+          },
+          {
+            "verse": 3,
+            "text": "Whose soul abhors the impious bribe"
+          },
+          {
+            "verse": 4,
+            "text": "His dwelling, \u2019midst the strength of rocks,"
+          },
+          {
+            "verse": 5,
+            "text": "For him the kingdom of the just"
+          }
+        ]
+      },
+      {
+        "chapter": 22,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Why pour\u2019st thou forth thine anxious plaint,"
+          },
+          {
+            "verse": 2,
+            "text": "Hast thou not known, hast thou not heard,"
+          },
+          {
+            "verse": 3,
+            "text": "Art thou afraid his pow\u2019r shall fail"
+          },
+          {
+            "verse": 4,
+            "text": "Supreme in wisdom as in pow\u2019r"
+          },
+          {
+            "verse": 5,
+            "text": "He gives the conquest to the weak,"
+          },
+          {
+            "verse": 6,
+            "text": "Mere human pow\u2019r shall fast decay,"
+          },
+          {
+            "verse": 7,
+            "text": "They with unweary\u2019d feet shall tread"
+          },
+          {
+            "verse": 8,
+            "text": "On eagles\u2019 wings they mount, they soar,"
+          }
+        ]
+      },
+      {
+        "chapter": 23,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Behold my Servant! see him rise"
+          },
+          {
+            "verse": 2,
+            "text": "On him, in rich effusion pour\u2019d,"
+          },
+          {
+            "verse": 3,
+            "text": "Gentle and still shall be his voice,"
+          },
+          {
+            "verse": 4,
+            "text": "The feeble spark to flames he\u2019ll raise;"
+          },
+          {
+            "verse": 5,
+            "text": "The progress of his zeal and pow\u2019r"
+          },
+          {
+            "verse": 6,
+            "text": "He who erected heav\u2019n\u2019s bright arch,"
+          },
+          {
+            "verse": 7,
+            "text": "Thus saith the Lord, Thee have I rais\u2019d,"
+          },
+          {
+            "verse": 8,
+            "text": "I will establish with the lands"
+          },
+          {
+            "verse": 9,
+            "text": "Asunder burst the gates of brass;"
+          },
+          {
+            "verse": 10,
+            "text": "I am the Lord, and by the name"
+          },
+          {
+            "verse": 11,
+            "text": "Lo! former scenes, predicted once,"
+          },
+          {
+            "verse": 12,
+            "text": "Sing to the Lord in joyful strains!"
+          },
+          {
+            "verse": 13,
+            "text": "O city of the Lord! begin"
+          },
+          {
+            "verse": 14,
+            "text": "Let Kedar\u2019s wilderness afar"
+          },
+          {
+            "verse": 15,
+            "text": "Till \u2019midst the streams of distant lands"
+          }
+        ]
+      },
+      {
+        "chapter": 24,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Ye heav\u2019ns, send forth your song of praise!"
+          },
+          {
+            "verse": 2,
+            "text": "Behold how gracious is our God!"
+          },
+          {
+            "verse": 3,
+            "text": "Cease ye, when days of darkness come,"
+          },
+          {
+            "verse": 4,
+            "text": "Can the fond mother e\u2019er forget"
+          },
+          {
+            "verse": 5,
+            "text": "She may forget: nature may fail"
+          },
+          {
+            "verse": 6,
+            "text": "Full in my sight, upon my hands"
+          }
+        ]
+      },
+      {
+        "chapter": 25,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "How few receive with cordial faith"
+          },
+          {
+            "verse": 2,
+            "text": "The Saviour comes! no outward pomp"
+          },
+          {
+            "verse": 3,
+            "text": "Fair as a beauteous tender flow\u2019r"
+          },
+          {
+            "verse": 4,
+            "text": "Rejected and despis\u2019d of men,"
+          },
+          {
+            "verse": 5,
+            "text": "Yet all the griefs he felt were ours,"
+          },
+          {
+            "verse": 6,
+            "text": "We held him as condemn\u2019d by Heav\u2019n,"
+          },
+          {
+            "verse": 7,
+            "text": "His sacred blood hath wash\u2019d our souls"
+          },
+          {
+            "verse": 8,
+            "text": "We all, like sheep, had gone astray"
+          },
+          {
+            "verse": 9,
+            "text": "Wrong\u2019d and oppress\u2019d, how meekly he"
+          },
+          {
+            "verse": 10,
+            "text": "Who can his generation tell?"
+          },
+          {
+            "verse": 11,
+            "text": "\u2019Midst sinners low in dust he lay;"
+          },
+          {
+            "verse": 12,
+            "text": "Yet God shall raise his head on high,"
+          },
+          {
+            "verse": 13,
+            "text": "For, saith the Lord, my pleasure then"
+          },
+          {
+            "verse": 14,
+            "text": "His soul, rejoicing, shall behold"
+          },
+          {
+            "verse": 15,
+            "text": "He with the great shall share the spoil,"
+          },
+          {
+            "verse": 16,
+            "text": "He dy\u2019d to bear the guilt of men,"
+          }
+        ]
+      },
+      {
+        "chapter": 26,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Ho! ye that thirst, approach the spring"
+          },
+          {
+            "verse": 2,
+            "text": "How long to streams of false delight"
+          },
+          {
+            "verse": 3,
+            "text": "My stores afford those rich supplies"
+          },
+          {
+            "verse": 4,
+            "text": "With you a cov\u2019nant I will make,"
+          },
+          {
+            "verse": 5,
+            "text": "Behold he comes! your leader comes,"
+          },
+          {
+            "verse": 6,
+            "text": "See! nations hasten to his call"
+          },
+          {
+            "verse": 7,
+            "text": "Seek ye the Lord while yet his ear"
+          },
+          {
+            "verse": 8,
+            "text": "Let sinners quit their evil ways,"
+          },
+          {
+            "verse": 9,
+            "text": "He pardons with o\u2019erflowing love:"
+          },
+          {
+            "verse": 10,
+            "text": "But far as heav\u2019n\u2019s resplendent orbs"
+          },
+          {
+            "verse": 11,
+            "text": "And as the rains from heav\u2019n distil,"
+          },
+          {
+            "verse": 12,
+            "text": "So not a word that flows from me"
+          },
+          {
+            "verse": 13,
+            "text": "With joy and peace shall then be led"
+          },
+          {
+            "verse": 14,
+            "text": "Where briers grew \u2019midst barren wilds,"
+          }
+        ]
+      },
+      {
+        "chapter": 27,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Thus speaks the high and lofty One;"
+          },
+          {
+            "verse": 2,
+            "text": "Amidst the majesty of heav\u2019n"
+          },
+          {
+            "verse": 3,
+            "text": "Yet, looking down, I visit oft"
+          },
+          {
+            "verse": 4,
+            "text": "The downcast spirit to revive,"
+          },
+          {
+            "verse": 5,
+            "text": "With me dwells no relentless wrath"
+          }
+        ]
+      },
+      {
+        "chapter": 28,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Attend, and mark the solemn fast"
+          },
+          {
+            "verse": 2,
+            "text": "Do I delight in sorrow\u2019s dress?"
+          },
+          {
+            "verse": 3,
+            "text": "Let such as feel oppression\u2019s load"
+          },
+          {
+            "verse": 4,
+            "text": "Go, bid the hungry orphan be"
+          },
+          {
+            "verse": 5,
+            "text": "Let him who pines with piercing cold"
+          },
+          {
+            "verse": 6,
+            "text": "Then, bright as morning, shall come forth,"
+          }
+        ]
+      },
+      {
+        "chapter": 29,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Amidst the mighty, where is he"
+          },
+          {
+            "verse": 2,
+            "text": "He gives in gladsome bow\u2019rs to dwell,"
+          },
+          {
+            "verse": 3,
+            "text": "Why should a living man complain"
+          },
+          {
+            "verse": 4,
+            "text": "O sons of men! with anxious care"
+          }
+        ]
+      },
+      {
+        "chapter": 30,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Come, let us to the Lord our God"
+          },
+          {
+            "verse": 2,
+            "text": "His voice commands the tempest forth,"
+          },
+          {
+            "verse": 3,
+            "text": "Long hath the night of sorrow reign\u2019d,"
+          },
+          {
+            "verse": 4,
+            "text": "Our hearts, if God we seek to know,"
+          },
+          {
+            "verse": 5,
+            "text": "As dew upon the tender herb,"
+          },
+          {
+            "verse": 6,
+            "text": "So shall his presence bless our souls,"
+          }
+        ]
+      },
+      {
+        "chapter": 31,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Thus speaks the heathen: How shall man"
+          },
+          {
+            "verse": 2,
+            "text": "Shall clouds of incense to the skies"
+          },
+          {
+            "verse": 3,
+            "text": "Does justice nobler blood demand"
+          },
+          {
+            "verse": 4,
+            "text": "No: God rejects the bloody rites"
+          },
+          {
+            "verse": 5,
+            "text": "He what is good hath clearly shown,"
+          },
+          {
+            "verse": 6,
+            "text": "Thy deeds, let sacred justice rule;"
+          }
+        ]
+      },
+      {
+        "chapter": 32,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "What though no flow\u2019rs the fig\u2010tree clothe,"
+          },
+          {
+            "verse": 2,
+            "text": "Though from the fold, with sad surprise,"
+          },
+          {
+            "verse": 3,
+            "text": "Yet in the Lord will I be glad,"
+          },
+          {
+            "verse": 4,
+            "text": "He to my tardy feet shall lend"
+          },
+          {
+            "verse": 5,
+            "text": "God is the treasure of my soul,"
+          }
+        ]
+      },
+      {
+        "chapter": 33,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Father of all! we bow to thee,"
+          },
+          {
+            "verse": 2,
+            "text": "For ever hallow\u2019d be thy name"
+          },
+          {
+            "verse": 3,
+            "text": "A grateful homage may we yield,"
+          },
+          {
+            "verse": 4,
+            "text": "From day to day we humbly own"
+          },
+          {
+            "verse": 5,
+            "text": "Our sins before thee we confess;"
+          },
+          {
+            "verse": 6,
+            "text": "Still let thy grace our life direct;"
+          },
+          {
+            "verse": 7,
+            "text": "For thine the pow\u2019r, the kingdom thine;"
+          }
+        ]
+      },
+      {
+        "chapter": 34,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Thus spoke the Saviour of the world,"
+          },
+          {
+            "verse": 2,
+            "text": "Thou to the pure and lowly heart"
+          },
+          {
+            "verse": 3,
+            "text": "Ev\u2019n so! thou, Father, hast ordain\u2019d"
+          },
+          {
+            "verse": 4,
+            "text": "Thou only know\u2019st the Son: from thee"
+          },
+          {
+            "verse": 5,
+            "text": "Come then to me, all ye who groan,"
+          },
+          {
+            "verse": 6,
+            "text": "Take up my yoke, and learn of me"
+          },
+          {
+            "verse": 7,
+            "text": "For light and gentle is my yoke;"
+          }
+        ]
+      },
+      {
+        "chapter": 35,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "\u2019Twas on that night, when doom\u2019d to know"
+          },
+          {
+            "verse": 2,
+            "text": "And, after thanks and glory giv\u2019n"
+          },
+          {
+            "verse": 3,
+            "text": "My broken body thus I give"
+          },
+          {
+            "verse": 4,
+            "text": "Then in his hands the cup he rais\u2019d,"
+          },
+          {
+            "verse": 5,
+            "text": "My blood I thus pour forth, he cries,"
+          },
+          {
+            "verse": 6,
+            "text": "With love to man this cup is fraught,"
+          }
+        ]
+      },
+      {
+        "chapter": 36,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "My soul and spirit, fill\u2019d with joy,"
+          },
+          {
+            "verse": 2,
+            "text": "Me bless\u2019d of God, the God of might,"
+          },
+          {
+            "verse": 3,
+            "text": "Strength with his arm th\u2019 Almighty shew\u2019d;"
+          },
+          {
+            "verse": 4,
+            "text": "The hungry with good things were fill\u2019d,"
+          },
+          {
+            "verse": 5,
+            "text": "Which to our fathers\u2019 ancient race"
+          }
+        ]
+      },
+      {
+        "chapter": 37,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "While humble shepherds watch\u2019d their flocks"
+          },
+          {
+            "verse": 2,
+            "text": "Fear not, he said, (for sudden dread"
+          },
+          {
+            "verse": 3,
+            "text": "To you, in David\u2019s town, this day"
+          },
+          {
+            "verse": 4,
+            "text": "The heav\u2019nly Babe you there shall find"
+          },
+          {
+            "verse": 5,
+            "text": "Thus spake the seraph; and forthwith"
+          },
+          {
+            "verse": 6,
+            "text": "All glory be to God on high,"
+          }
+        ]
+      },
+      {
+        "chapter": 38,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Just and devout old Simeon liv\u2019d;"
+          },
+          {
+            "verse": 2,
+            "text": "For this consoling gift of Heav\u2019n"
+          },
+          {
+            "verse": 3,
+            "text": "Nor did he wait in vain; for, lo!"
+          },
+          {
+            "verse": 4,
+            "text": "When Jesus, to the temple brought"
+          },
+          {
+            "verse": 5,
+            "text": "Simeon into those sacred courts"
+          },
+          {
+            "verse": 6,
+            "text": "With holy joy upon his face"
+          },
+          {
+            "verse": 7,
+            "text": "And while he held the heav\u2019n\u2010born Babe,"
+          },
+          {
+            "verse": 8,
+            "text": "Now, Lord! according to thy word,"
+          },
+          {
+            "verse": 9,
+            "text": "At length my arms embrace my Lord,"
+          },
+          {
+            "verse": 10,
+            "text": "This great salvation, long prepar\u2019d,"
+          },
+          {
+            "verse": 11,
+            "text": "That Sun I now behold, whose light"
+          }
+        ]
+      },
+      {
+        "chapter": 39,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Hark, the glad sound, the Saviour comes!"
+          },
+          {
+            "verse": 2,
+            "text": "On him the Spirit, largely shed,"
+          },
+          {
+            "verse": 3,
+            "text": "He comes! the pris\u2019ners to relieve,"
+          },
+          {
+            "verse": 4,
+            "text": "He comes! from dark\u2019ning scales of vice"
+          },
+          {
+            "verse": 5,
+            "text": "He comes! the broken hearts to bind,"
+          },
+          {
+            "verse": 6,
+            "text": "The sacred year has now revolv\u2019d,"
+          },
+          {
+            "verse": 7,
+            "text": "Our glad hosannahs, Prince of Peace!"
+          }
+        ]
+      },
+      {
+        "chapter": 40,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "The wretched prodigal behold"
+          },
+          {
+            "verse": 2,
+            "text": "While I, despis\u2019d and scorn\u2019d, he cries,"
+          },
+          {
+            "verse": 3,
+            "text": "I\u2019ll go, and with a mourning voice,"
+          },
+          {
+            "verse": 4,
+            "text": "He said, and hasten\u2019d to his home,"
+          },
+          {
+            "verse": 5,
+            "text": "He ran, and fell upon his neck,"
+          },
+          {
+            "verse": 6,
+            "text": "No more, my father, can I hope"
+          },
+          {
+            "verse": 7,
+            "text": "Bring forth the fairest robe for him,"
+          },
+          {
+            "verse": 8,
+            "text": "A day of feasting I ordain;"
+          },
+          {
+            "verse": 9,
+            "text": "Thus joy abounds in paradise"
+          }
+        ]
+      },
+      {
+        "chapter": 41,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "As when the Hebrew prophet rais\u2019d"
+          },
+          {
+            "verse": 2,
+            "text": "So from the Saviour on the cross"
+          },
+          {
+            "verse": 3,
+            "text": "For God gave up his Son to death,"
+          },
+          {
+            "verse": 4,
+            "text": "Not to condemn the sons of men"
+          },
+          {
+            "verse": 5,
+            "text": "He came to raise our fallen state,"
+          },
+          {
+            "verse": 6,
+            "text": "But vengeance just for ever lies"
+          }
+        ]
+      },
+      {
+        "chapter": 42,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Let not your hearts with anxious thoughts"
+          },
+          {
+            "verse": 2,
+            "text": "I to my Father\u2019s house return;"
+          },
+          {
+            "verse": 3,
+            "text": "I go your entrance to secure,"
+          },
+          {
+            "verse": 4,
+            "text": "Thence shall I come, when ages close,"
+          },
+          {
+            "verse": 5,
+            "text": "I am the way, the truth, the life:"
+          }
+        ]
+      },
+      {
+        "chapter": 43,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "You now must hear my voice no more;"
+          },
+          {
+            "verse": 2,
+            "text": "That heav\u2019nly Teacher, sent from God,"
+          },
+          {
+            "verse": 3,
+            "text": "Peace is the gift I leave with you;"
+          },
+          {
+            "verse": 4,
+            "text": "I give not as the world bestows,"
+          }
+        ]
+      },
+      {
+        "chapter": 44,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Behold the Saviour on the cross,"
+          },
+          {
+            "verse": 2,
+            "text": "Till death\u2019s pale ensigns o\u2019er his cheek"
+          },
+          {
+            "verse": 3,
+            "text": "\u2019Tis finish\u2019d \u2014 was his latest voice;"
+          },
+          {
+            "verse": 4,
+            "text": "\u2019Tis finish\u2019d \u2014 The Messiah dies"
+          },
+          {
+            "verse": 5,
+            "text": "\u2019Tis finish\u2019d \u2014 All his groans are past;"
+          },
+          {
+            "verse": 6,
+            "text": "\u2019Tis finish\u2019d \u2014 Legal worship ends,"
+          }
+        ]
+      },
+      {
+        "chapter": 45,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Ungrateful sinners! whence this scorn"
+          },
+          {
+            "verse": 2,
+            "text": "Is it because his patience waits,"
+          },
+          {
+            "verse": 3,
+            "text": "Dost thou not know, self\u2010blinded man!"
+          },
+          {
+            "verse": 4,
+            "text": "And wilt thou rather chuse to meet"
+          },
+          {
+            "verse": 5,
+            "text": "Soon shall that fatal day approach"
+          },
+          {
+            "verse": 6,
+            "text": "While they, who full of holy deeds"
+          }
+        ]
+      },
+      {
+        "chapter": 46,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Vain are the hopes the sons of men"
+          },
+          {
+            "verse": 2,
+            "text": "Silent let Jew and Gentile stand,"
+          },
+          {
+            "verse": 3,
+            "text": "No hope can on the law be built"
+          },
+          {
+            "verse": 4,
+            "text": "Jesus! how glorious is thy grace!"
+          }
+        ]
+      },
+      {
+        "chapter": 47,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "And shall we then go on to sin,"
+          },
+          {
+            "verse": 2,
+            "text": "When to the sacred font we came,"
+          },
+          {
+            "verse": 3,
+            "text": "With Christ the Lord we dy\u2019d to sin;"
+          },
+          {
+            "verse": 4,
+            "text": "Too long enthrall\u2019d to Satan\u2019s sway,"
+          }
+        ]
+      },
+      {
+        "chapter": 48,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Let Christian faith and hope dispel"
+          },
+          {
+            "verse": 2,
+            "text": "He who his Son, most dear and lov\u2019d,"
+          },
+          {
+            "verse": 3,
+            "text": "Behold the best, the greatest gift,"
+          },
+          {
+            "verse": 4,
+            "text": "Where is the judge who can condemn,"
+          },
+          {
+            "verse": 5,
+            "text": "The Saviour dy\u2019d, but rose again"
+          },
+          {
+            "verse": 6,
+            "text": "Who then can e\u2019er divide us more"
+          },
+          {
+            "verse": 7,
+            "text": "Let troubles rise, and terrors frown,"
+          },
+          {
+            "verse": 8,
+            "text": "Nor death nor life, nor earth nor hell,"
+          },
+          {
+            "verse": 9,
+            "text": "Each future period that will bless,"
+          }
+        ]
+      },
+      {
+        "chapter": 49,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Though perfect eloquence adorn\u2019d"
+          },
+          {
+            "verse": 2,
+            "text": "Though prophecy my soul inspir\u2019d,"
+          },
+          {
+            "verse": 3,
+            "text": "Nay, though my faith with boundless pow\u2019r"
+          },
+          {
+            "verse": 4,
+            "text": "Although with lib\u2019ral hand I gave"
+          },
+          {
+            "verse": 5,
+            "text": "Love suffers long; love envies not;"
+          },
+          {
+            "verse": 6,
+            "text": "Love harbours no suspicious thought,"
+          },
+          {
+            "verse": 7,
+            "text": "Love no unseemly carriage shows,"
+          },
+          {
+            "verse": 8,
+            "text": "Love beareth much, much she believes,"
+          },
+          {
+            "verse": 9,
+            "text": "Love still shall hold an endless reign"
+          },
+          {
+            "verse": 10,
+            "text": "Here all our gifts imperfect are;"
+          },
+          {
+            "verse": 11,
+            "text": "Like children here we speak and think,"
+          },
+          {
+            "verse": 12,
+            "text": "Now dark and dim, as through a glass,"
+          },
+          {
+            "verse": 13,
+            "text": "Faith, Hope, and Love, now dwell on earth,"
+          },
+          {
+            "verse": 14,
+            "text": "Hope shall to full fruition rise,"
+          }
+        ]
+      },
+      {
+        "chapter": 50,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "When the last trumpet\u2019s awful voice"
+          },
+          {
+            "verse": 2,
+            "text": "Those bodies that corrupted fell"
+          },
+          {
+            "verse": 3,
+            "text": "Behold what heav\u2019nly prophets sung"
+          },
+          {
+            "verse": 4,
+            "text": "Let Faith exalt her joyful voice,"
+          },
+          {
+            "verse": 5,
+            "text": "Thy sting was sin, and conscious guilt,"
+          },
+          {
+            "verse": 6,
+            "text": "But God, whose name be ever bless\u2019d!"
+          },
+          {
+            "verse": 7,
+            "text": "Then stedfast let us still remain,"
+          },
+          {
+            "verse": 8,
+            "text": "Assur\u2019d that though we labour now,"
+          }
+        ]
+      },
+      {
+        "chapter": 51,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Soon shall this earthly frame, dissolv\u2019d,"
+          },
+          {
+            "verse": 2,
+            "text": "An house eternal, built by God,"
+          },
+          {
+            "verse": 3,
+            "text": "Hence, burden\u2019d with a weight of clay,"
+          },
+          {
+            "verse": 4,
+            "text": "We know, that when the soul, uncloth\u2019d,"
+          },
+          {
+            "verse": 5,
+            "text": "Such are the hopes that cheer the just;"
+          },
+          {
+            "verse": 6,
+            "text": "We walk by faith of joys to come,"
+          },
+          {
+            "verse": 7,
+            "text": "What faith rejoices to believe,"
+          },
+          {
+            "verse": 8,
+            "text": "But still, or here, or going hence,"
+          },
+          {
+            "verse": 9,
+            "text": "For, lo! before the Son, as judge,"
+          },
+          {
+            "verse": 10,
+            "text": "Impartial retributions then"
+          }
+        ]
+      },
+      {
+        "chapter": 52,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Ye who the name of Jesus bear,"
+          },
+          {
+            "verse": 2,
+            "text": "Though in the form of God he was,"
+          },
+          {
+            "verse": 3,
+            "text": "His greatness he for us abas\u2019d,"
+          },
+          {
+            "verse": 4,
+            "text": "Nor only as a man appears,"
+          },
+          {
+            "verse": 5,
+            "text": "Hence God this gen\u2019rous love to men"
+          },
+          {
+            "verse": 6,
+            "text": "That at this name, with sacred awe,"
+          },
+          {
+            "verse": 7,
+            "text": "That all the prostrate pow\u2019rs of hell"
+          }
+        ]
+      },
+      {
+        "chapter": 53,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Take comfort, Christians, when your friends"
+          },
+          {
+            "verse": 2,
+            "text": "Why inconsolable, as those"
+          },
+          {
+            "verse": 3,
+            "text": "As Jesus dy\u2019d, and rose again"
+          },
+          {
+            "verse": 4,
+            "text": "The time draws nigh, when from the clouds"
+          },
+          {
+            "verse": 5,
+            "text": "Then they who live shall changed be,"
+          },
+          {
+            "verse": 6,
+            "text": "The saints of God, from death set free,"
+          },
+          {
+            "verse": 7,
+            "text": "Together to their Father\u2019s house"
+          },
+          {
+            "verse": 8,
+            "text": "A few short years of evil past,"
+          }
+        ]
+      },
+      {
+        "chapter": 54,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "I\u2019m not asham\u2019d to own my Lord,"
+          },
+          {
+            "verse": 2,
+            "text": "Jesus, my Lord! I know his name,"
+          },
+          {
+            "verse": 3,
+            "text": "I know that safe with him remains,"
+          },
+          {
+            "verse": 4,
+            "text": "Then will he own his servant\u2019s name"
+          }
+        ]
+      },
+      {
+        "chapter": 55,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "My race is run; my warfare\u2019s o\u2019er;"
+          },
+          {
+            "verse": 2,
+            "text": "With heav\u2019nly weapons I have fought"
+          },
+          {
+            "verse": 3,
+            "text": "Henceforth there is laid up for me"
+          },
+          {
+            "verse": 4,
+            "text": "Nor hath the Sov\u2019reign Lord decreed"
+          },
+          {
+            "verse": 5,
+            "text": "From ev\u2019ry snare and evil work"
+          }
+        ]
+      },
+      {
+        "chapter": 56,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "How wretched was our former state,"
+          },
+          {
+            "verse": 2,
+            "text": "But, O my soul! for ever praise,"
+          },
+          {
+            "verse": 3,
+            "text": "Vain and presumptuous is the trust"
+          },
+          {
+            "verse": 4,
+            "text": "\u2019Tis from the mercy of our God"
+          },
+          {
+            "verse": 5,
+            "text": "His Spirit, through the Saviour shed,"
+          },
+          {
+            "verse": 6,
+            "text": "Thence rais\u2019d from death, we live anew;"
+          },
+          {
+            "verse": 7,
+            "text": "Let all who hold this faith and hope"
+          }
+        ]
+      },
+      {
+        "chapter": 57,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Jesus, the Son of God, who once"
+          },
+          {
+            "verse": 2,
+            "text": "Through life, through death, let us to him"
+          },
+          {
+            "verse": 3,
+            "text": "To human weakness not severe"
+          },
+          {
+            "verse": 4,
+            "text": "With sympathetic feelings touch\u2019d,"
+          },
+          {
+            "verse": 5,
+            "text": "But though he felt temptation\u2019s pow\u2019r,"
+          },
+          {
+            "verse": 6,
+            "text": "As, in the days of feeble flesh,"
+          },
+          {
+            "verse": 7,
+            "text": "Then let us, with a filial heart,"
+          },
+          {
+            "verse": 8,
+            "text": "That mercy we may there obtain"
+          }
+        ]
+      },
+      {
+        "chapter": 58,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Where high the heav\u2019nly temple stands,"
+          },
+          {
+            "verse": 2,
+            "text": "He who for men their surety stood,"
+          },
+          {
+            "verse": 3,
+            "text": "Though now ascended up on high,"
+          },
+          {
+            "verse": 4,
+            "text": "Our fellow\u2010suff\u2019rer yet retains"
+          },
+          {
+            "verse": 5,
+            "text": "In ev\u2019ry pang that rends the heart,"
+          },
+          {
+            "verse": 6,
+            "text": "With boldness, therefore, at the throne,"
+          }
+        ]
+      },
+      {
+        "chapter": 59,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Behold what witnesses unseen"
+          },
+          {
+            "verse": 2,
+            "text": "Let us, with zeal like theirs inspir\u2019d,"
+          },
+          {
+            "verse": 3,
+            "text": "Behold a witness nobler still,"
+          },
+          {
+            "verse": 4,
+            "text": "He for the joy before him set,"
+          },
+          {
+            "verse": 5,
+            "text": "If he the scorn of wicked men"
+          },
+          {
+            "verse": 6,
+            "text": "Have ye like him to blood, to death,"
+          },
+          {
+            "verse": 7,
+            "text": "My son, saith he, with patient mind"
+          },
+          {
+            "verse": 8,
+            "text": "His children thus most dear to him,"
+          },
+          {
+            "verse": 9,
+            "text": "We know he owns us for his sons,"
+          },
+          {
+            "verse": 10,
+            "text": "A father\u2019s voice with rev\u2019rence we"
+          },
+          {
+            "verse": 11,
+            "text": "Parents may err; but he is wise,"
+          },
+          {
+            "verse": 12,
+            "text": "Affliction, when it spreads around,"
+          },
+          {
+            "verse": 13,
+            "text": "Then let our hearts no more despond,"
+          }
+        ]
+      },
+      {
+        "chapter": 60,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Father of peace, and God of love!"
+          },
+          {
+            "verse": 2,
+            "text": "Him from the dead thou brought\u2019st again,"
+          },
+          {
+            "verse": 3,
+            "text": "O may thy Spirit seal our souls,"
+          },
+          {
+            "verse": 4,
+            "text": "That to perfection\u2019s sacred height"
+          }
+        ]
+      },
+      {
+        "chapter": 61,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Bless\u2019d be the everlasting God,"
+          },
+          {
+            "verse": 2,
+            "text": "When from the dead he rais\u2019d his Son,"
+          },
+          {
+            "verse": 3,
+            "text": "To an inheritance divine"
+          },
+          {
+            "verse": 4,
+            "text": "Saints by the pow\u2019r of God are kept"
+          }
+        ]
+      },
+      {
+        "chapter": 62,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Lo! in the last of days behold"
+          },
+          {
+            "verse": 2,
+            "text": "Where is the promise, deem\u2019d so true,"
+          },
+          {
+            "verse": 3,
+            "text": "Years roll\u2019d on years successive glide,"
+          },
+          {
+            "verse": 4,
+            "text": "Thus speaks the scoffer; but his words"
+          },
+          {
+            "verse": 5,
+            "text": "But when the sons of men began"
+          },
+          {
+            "verse": 6,
+            "text": "A diff\u2019rent fate is now prepar\u2019d"
+          },
+          {
+            "verse": 7,
+            "text": "Reserv\u2019d are sinners for the hour"
+          },
+          {
+            "verse": 8,
+            "text": "Though now, ye just! the time appears"
+          },
+          {
+            "verse": 9,
+            "text": "Still all may share his sov\u2019reign grace,"
+          },
+          {
+            "verse": 10,
+            "text": "The contrite race he counts his friends,"
+          },
+          {
+            "verse": 11,
+            "text": "Yet as the night\u2010wrapp\u2019d thief who lurks"
+          },
+          {
+            "verse": 12,
+            "text": "Then at the loud, the solemn peal,"
+          },
+          {
+            "verse": 13,
+            "text": "Since all this frame of things must end,"
+          },
+          {
+            "verse": 14,
+            "text": "Expecting calm th\u2019 appointed hour,"
+          }
+        ]
+      },
+      {
+        "chapter": 63,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Behold th\u2019 amazing gift of love"
+          },
+          {
+            "verse": 2,
+            "text": "Conceal\u2019d as yet this honour lies,"
+          },
+          {
+            "verse": 3,
+            "text": "High is the rank we now possess;"
+          },
+          {
+            "verse": 4,
+            "text": "Our souls, we know, when he appears,"
+          },
+          {
+            "verse": 5,
+            "text": "A hope so great, and so divine,"
+          }
+        ]
+      },
+      {
+        "chapter": 64,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "To him that lov\u2019d the souls of men,"
+          },
+          {
+            "verse": 2,
+            "text": "To him let ev\u2019ry tongue be praise,"
+          },
+          {
+            "verse": 3,
+            "text": "Behold, on flying clouds he comes!"
+          },
+          {
+            "verse": 4,
+            "text": "I am the First, and I the Last;"
+          }
+        ]
+      },
+      {
+        "chapter": 65,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Behold the glories of the Lamb,"
+          },
+          {
+            "verse": 2,
+            "text": "Lo! elders worship at his feet;"
+          },
+          {
+            "verse": 3,
+            "text": "These odours are the pray\u2019rs of saints,"
+          },
+          {
+            "verse": 4,
+            "text": "Who shall the Father\u2019s record search,"
+          },
+          {
+            "verse": 5,
+            "text": "Hark how th\u2019 adoring hosts above"
+          },
+          {
+            "verse": 6,
+            "text": "Worthy the Lamb that dy\u2019d, they cry,"
+          },
+          {
+            "verse": 7,
+            "text": "To him be pow\u2019r divine ascrib\u2019d,"
+          },
+          {
+            "verse": 8,
+            "text": "Thou hast redeem\u2019d us with thy blood,"
+          },
+          {
+            "verse": 9,
+            "text": "From ev\u2019ry kindred, ev\u2019ry tongue,"
+          },
+          {
+            "verse": 10,
+            "text": "Let all that dwell above the sky,"
+          },
+          {
+            "verse": 11,
+            "text": "To Him who sits upon the throne,"
+          }
+        ]
+      },
+      {
+        "chapter": 66,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "How bright these glorious spirits shine!"
+          },
+          {
+            "verse": 2,
+            "text": "Lo! these are they from suff\u2019rings great,"
+          },
+          {
+            "verse": 3,
+            "text": "Now, with triumphal palms, they stand"
+          },
+          {
+            "verse": 4,
+            "text": "His presence fills each heart with joy,"
+          },
+          {
+            "verse": 5,
+            "text": "Hunger and thirst are felt no more,"
+          },
+          {
+            "verse": 6,
+            "text": "The Lamb which dwells amidst the throne"
+          },
+          {
+            "verse": 7,
+            "text": "\u2019Mong pastures green he\u2019ll lead his flock,"
+          }
+        ]
+      },
+      {
+        "chapter": 67,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Lo! what a glorious sight appears"
+          },
+          {
+            "verse": 2,
+            "text": "From heav\u2019n the New Jerus\u2019lem comes,"
+          },
+          {
+            "verse": 3,
+            "text": "Attending angels shout for joy,"
+          },
+          {
+            "verse": 4,
+            "text": "The God of glory down to men"
+          },
+          {
+            "verse": 5,
+            "text": "His gracious hand shall wipe the tears"
+          },
+          {
+            "verse": 6,
+            "text": "Behold, I change all human things!"
+          },
+          {
+            "verse": 7,
+            "text": "I am the First, and I the Last,"
+          },
+          {
+            "verse": 8,
+            "text": "Ho, ye that thirst! to you my grace"
+          },
+          {
+            "verse": 9,
+            "text": "Bless\u2019d is the man that overcomes;"
+          },
+          {
+            "verse": 10,
+            "text": "But bloody hands and hearts unclean,"
+          },
+          {
+            "verse": 11,
+            "text": "They, seiz\u2019d by justice, shall be doom\u2019d"
+          },
+          {
+            "verse": 12,
+            "text": "O may we stand before the Lamb,"
+          }
+        ]
+      }
+    ],
+    "Matthew": [
+      {
+        "chapter": 6,
+        "verses": [
+          {
+            "verse": 9,
+            "text": "Father of all! we bow to thee,"
+          },
+          {
+            "verse": 10,
+            "text": "And may thy kingdom still advance,"
+          },
+          {
+            "verse": 11,
+            "text": "From day to day we humbly own"
+          },
+          {
+            "verse": 12,
+            "text": "Our sins before thee we confess;"
+          }
+        ]
+      },
+      {
+        "chapter": 26,
+        "verses": [
+          {
+            "verse": 26,
+            "text": "\u2019Twas on that night, when doom\u2019d to know"
+          },
+          {
+            "verse": 27,
+            "text": "Then in his hands the cup he rais\u2019d,"
+          },
+          {
+            "verse": 28,
+            "text": "My blood I thus pour forth, he cries,"
+          },
+          {
+            "verse": 29,
+            "text": "With love to man this cup is fraught,"
+          }
+        ]
+      }
+    ],
+    "Luke": [
+      {
+        "chapter": 2,
+        "verses": [
+          {
+            "verse": 8,
+            "text": "While humble shepherds watch\u2019d their flocks"
+          },
+          {
+            "verse": 9,
+            "text": "An angel sent from heav\u2019n appear\u2019d,"
+          },
+          {
+            "verse": 10,
+            "text": "Fear not, he said, (for sudden dread"
+          },
+          {
+            "verse": 11,
+            "text": "To you, in David\u2019s town, this day"
+          },
+          {
+            "verse": 12,
+            "text": "and this shall be the sign:"
+          },
+          {
+            "verse": 25,
+            "text": "Just and devout old Simeon liv\u2019d;"
+          },
+          {
+            "verse": 26,
+            "text": "That Christ, the Lord, his eyes should see"
+          },
+          {
+            "verse": 27,
+            "text": "For this consoling gift of Heav\u2019n"
+          }
+        ]
+      },
+      {
+        "chapter": 4,
+        "verses": [
+          {
+            "verse": 18,
+            "text": "Hark, the glad sound, the Saviour comes!"
+          },
+          {
+            "verse": 19,
+            "text": "The sacred year has now revolv\u2019d,"
+          }
+        ]
+      }
+    ],
+    "John": [
+      {
+        "chapter": 19,
+        "verses": [
+          {
+            "verse": 30,
+            "text": "Behold the Saviour on the cross,"
+          }
+        ]
+      }
+    ],
+    "Philippians": [
+      {
+        "chapter": 2,
+        "verses": [
+          {
+            "verse": 6,
+            "text": "Ye who the name of Jesus bear,"
+          },
+          {
+            "verse": 7,
+            "text": "His greatness he for us abas\u2019d,"
+          }
+        ]
+      }
+    ],
+    "1 Thessalonians": [
+      {
+        "chapter": 4,
+        "verses": [
+          {
+            "verse": 13,
+            "text": "Take comfort, Christians, when your friends"
+          }
+        ]
+      }
+    ],
+    "2 Timothy": [
+      {
+        "chapter": 1,
+        "verses": [
+          {
+            "verse": 12,
+            "text": "I\u2019m not asham\u2019d to own my Lord,"
+          }
+        ]
+      },
+      {
+        "chapter": 4,
+        "verses": [
+          {
+            "verse": 6,
+            "text": "My race is run; my warfare\u2019s o\u2019er;"
+          },
+          {
+            "verse": 7,
+            "text": "With heav\u2019nly weapons I have fought"
+          },
+          {
+            "verse": 8,
+            "text": "Henceforth there is laid up for me"
+          },
+          {
+            "verse": 18,
+            "text": "From ev\u2019ry snare and evil work"
+          }
+        ]
+      }
+    ],
+    "Hebrews": [
+      {
+        "chapter": 13,
+        "verses": [
+          {
+            "verse": 20,
+            "text": "Father of peace, and God of love!"
+          },
+          {
+            "verse": 21,
+            "text": "O may thy Spirit seal our souls,"
+          }
+        ]
+      }
+    ],
+    "1 Peter": [
+      {
+        "chapter": 1,
+        "verses": [
+          {
+            "verse": 3,
+            "text": "Bless\u2019d be the everlasting God,"
+          },
+          {
+            "verse": 4,
+            "text": "To an inheritance divine"
+          },
+          {
+            "verse": 5,
+            "text": "Saints by the pow\u2019r of God are kept"
+          }
+        ]
+      }
+    ]
+  }
+}

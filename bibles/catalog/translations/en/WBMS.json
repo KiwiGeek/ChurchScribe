@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:WBMS",
+  "code": "WBMS",
+  "label": "Wycliffe\u0027s Bible with Modern Spelling",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 4,
+  "contentUrl": "/bibles/content/en/WBMS/v4.json",
+  "contentHash": "sha256-21f8dec46b11f0516f4b1cfc4b6da5dc8df42867c27599a3fadef381ff13f3de",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:56.1269353Z"
+}

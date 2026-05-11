@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "es:TCB",
+  "code": "TCB",
+  "label": "Traducci\u00F3n Contempor\u00E1nea de la Biblia - NT \u002B",
+  "languageTag": "es",
+  "languageCode3": "spa",
+  "sourceType": "official",
+  "version": 11,
+  "contentUrl": "/bibles/content/es/TCB/v11.json",
+  "contentHash": "sha256-7b2e6ff482928b32a5b0c61c73949f7a047f5b42af6c6a0da037c945964a7d4f",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:54:27.7487633Z"
+}

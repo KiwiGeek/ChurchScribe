@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:RSV",
+  "code": "RSV",
+  "label": "Revised Standard Version",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 10,
+  "contentUrl": "/bibles/content/en/RSV/v10.json",
+  "contentHash": "sha256-3f7f60fb3b3b6f4a861d6a9213273764d9575319b1273634983ee61c30c80c13",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:55.2720210Z"
+}

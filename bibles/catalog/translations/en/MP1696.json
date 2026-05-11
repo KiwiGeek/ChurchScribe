@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:MP1696",
+  "code": "MP1696",
+  "label": "Metrical Psalms and Scripture Selections 1698 (Brady \u0026 Tate)",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 1,
+  "contentUrl": "/bibles/content/en/MP1696/v1.json",
+  "contentHash": "sha256-8586557cbb3cdfd1919655d9ab0af9c722cd0ec8c7d70afcd21438700fecc468",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:53.6642078Z"
+}

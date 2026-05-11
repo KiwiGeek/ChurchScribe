@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "es:NBV",
+  "code": "NBV",
+  "label": "Nueva Biblia Viva",
+  "languageTag": "es",
+  "languageCode3": "spa",
+  "sourceType": "official",
+  "version": 10,
+  "contentUrl": "/bibles/content/es/NBV/v10.json",
+  "contentHash": "sha256-89fd1009211b0052a414694c7e1a1a7453b473c6a41866bf49907825bf6d8024",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:54:26.6488145Z"
+}

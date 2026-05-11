@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:OYTNKHEG",
+  "code": "OYTNKHEG",
+  "label": "English word for word translation of Orthodox Yiddish Tanakh (OYTANAKH)",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 1,
+  "contentUrl": "/bibles/content/en/OYTNKHEG/v1.json",
+  "contentHash": "sha256-79ca3bc08b9bb81357d9185e7e771747c990b5356c5c9237ca83b3f885117f66",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:55.0383557Z"
+}

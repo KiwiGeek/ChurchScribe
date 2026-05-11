@@ -90,7 +90,7 @@ const PRECACHE_URLS = [
   "sync/cloud-sync.js",
   "sync/payloads.js",
   "sync/status.js",
-  "theme/controller.js",
+  "themes/controller.js",
   "translations/manager.js",
   "bibles/catalog/index.json",
   "bibles/catalog/languages/en.json",

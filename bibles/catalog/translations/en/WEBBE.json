@@ -5,10 +5,10 @@
   "label": "World English Bible British Edition",
   "languageTag": "en",
   "languageCode3": "eng",
-  "sourceType": "builtin",
-  "version": 59,
-  "contentUrl": "/bibles/content/en/WEBBE/v59.json",
-  "contentHash": "sha256-ce7541a874a4fc55663d04087d21b82276bb6d10533bfb7d54f2048080b2325c",
+  "sourceType": "official",
+  "version": 98,
+  "contentUrl": "/bibles/content/en/WEBBE/v98.json",
+  "contentHash": "sha256-a0f1efcec9ea9f781385a74e59c69d74d7dfbc93b3258e97e656e7fca53412c4",
   "bookOrder": "protestant-66",
   "features": {
     "headings": false,
@@ -16,5 +16,5 @@
     "superscriptions": false,
     "html": false
   },
-  "updatedAt": "2026-05-10T16:00:33.1897567Z"
+  "updatedAt": "2026-05-10T23:52:56.2115367Z"
 }

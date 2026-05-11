@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:NMV",
+  "code": "NMV",
+  "label": "New Messianic Version Bible",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 4,
+  "contentUrl": "/bibles/content/en/NMV/v4.json",
+  "contentHash": "sha256-c5b1cf9a8b5c2a5b549ba90549770c508358317e08212166eefe894dfd2b2e7e",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:54.6829940Z"
+}

@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "es:DHHS94",
+  "code": "DHHS94",
+  "label": "Dios habla Hoy Est\u00E1ndar",
+  "languageTag": "es",
+  "languageCode3": "spa",
+  "sourceType": "official",
+  "version": 12,
+  "contentUrl": "/bibles/content/es/DHHS94/v12.json",
+  "contentHash": "sha256-bf2a442a3b6ba4c9f1cd10a044083295621da3cf211d606958bc809a1f929e8c",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:54:26.1723380Z"
+}

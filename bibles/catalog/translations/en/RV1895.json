@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:RV1895",
+  "code": "RV1895",
+  "label": "Revised Version with Apocrypha 1885, 1895",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 10,
+  "contentUrl": "/bibles/content/en/RV1895/v10.json",
+  "contentHash": "sha256-f0895934e4cfacd892eee8fc97307bdfd32dab3bdd5f8cc1c25ee8890e2a7432",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:55.5837878Z"
+}

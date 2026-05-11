@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:MEV",
+  "code": "MEV",
+  "label": "Modern English Version",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 6,
+  "contentUrl": "/bibles/content/en/MEV/v6.json",
+  "contentHash": "sha256-c345e5bb4cdb8760e4fc96e641d009687c4fa71ac4fa1892ce4453f1ce2e5b9e",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:53.4485177Z"
+}

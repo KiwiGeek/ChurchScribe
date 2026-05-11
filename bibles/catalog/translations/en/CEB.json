@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:CEB",
+  "code": "CEB",
+  "label": "Common English Bible",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 20,
+  "contentUrl": "/bibles/content/en/CEB/v20.json",
+  "contentHash": "sha256-24d498d8be3a68d351a76bb55119afb2bc4aad174c827f16780faf8d9fa96e36",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:50.4830872Z"
+}

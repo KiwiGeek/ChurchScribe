@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:LEB",
+  "code": "LEB",
+  "label": "Lexham English Bible",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 10,
+  "contentUrl": "/bibles/content/en/LEB/v10.json",
+  "contentHash": "sha256-ff05fd4b3b2be8da024a6f33538619793101486b1671b178f71fea5ce0139863",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:53.1105988Z"
+}

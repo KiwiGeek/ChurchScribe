@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "fr:TFM",
+  "code": "TFM",
+  "label": "Traduction Fran\u00E7aise de Mod\u00E8le",
+  "languageTag": "fr",
+  "languageCode3": "fra",
+  "sourceType": "official",
+  "version": 1,
+  "contentUrl": "/bibles/content/fr/TFM/v1.json",
+  "contentHash": "sha256-c3d8be22f81e99cc24aaee647788a6e936368401c3e6913aff198de5b955bf9a",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:54:29.5940269Z"
+}

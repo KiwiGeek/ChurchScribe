@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "fr:NBS",
+  "code": "NBS",
+  "label": "Nouvelle Bible Segond",
+  "languageTag": "fr",
+  "languageCode3": "fra",
+  "sourceType": "official",
+  "version": 11,
+  "contentUrl": "/bibles/content/fr/NBS/v11.json",
+  "contentHash": "sha256-29ebcf6672648e9581ba35976023726f951a14660c1a239bd75bb7a076a8b9cd",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:54:28.8316741Z"
+}

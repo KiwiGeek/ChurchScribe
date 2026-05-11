@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:TS2009",
+  "code": "TS2009",
+  "label": "The Scriptures 2009",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 8,
+  "contentUrl": "/bibles/content/en/TS2009/v8.json",
+  "contentHash": "sha256-d8ddfc076a68c3a91f57067c3452465a9376705040a2945a9a216abebdb30843",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:56.0547134Z"
+}

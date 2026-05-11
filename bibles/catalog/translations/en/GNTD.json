@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:GNTD",
+  "code": "GNTD",
+  "label": "Good News Translation (US Version)",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 18,
+  "contentUrl": "/bibles/content/en/GNTD/v18.json",
+  "contentHash": "sha256-133b8d5a13270cd7a4654f87374fa44270dd0409da7e46d7b112b02d9889d3c3",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:52.1853262Z"
+}

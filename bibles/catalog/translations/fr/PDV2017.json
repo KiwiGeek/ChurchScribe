@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "fr:PDV2017",
+  "code": "PDV2017",
+  "label": "Parole de Vie 2017",
+  "languageTag": "fr",
+  "languageCode3": "fra",
+  "sourceType": "official",
+  "version": 15,
+  "contentUrl": "/bibles/content/fr/PDV2017/v15.json",
+  "contentHash": "sha256-3d412f0b82a84e59c8bb8ef7d77ed59b0d1d8b6ad9f84a5f774d8793883faa8c",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:54:29.4285800Z"
+}

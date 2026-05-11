@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:OYTORHEG",
+  "code": "OYTORHEG",
+  "label": "Translation into English of Orthodox Yiddish Torah (OYTORAH)",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 1,
+  "contentUrl": "/bibles/content/en/OYTORHEG/v1.json",
+  "contentHash": "sha256-b6b0ef13c1ce3048a8c959899c8ad7e29560b8ed05198b6a1d878480631d68a6",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:55.0826694Z"
+}

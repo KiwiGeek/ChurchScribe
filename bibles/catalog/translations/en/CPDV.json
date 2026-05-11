@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:CPDV",
+  "code": "CPDV",
+  "label": "Catholic Public Domain Version",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 10,
+  "contentUrl": "/bibles/content/en/CPDV/v10.json",
+  "contentHash": "sha256-a06e091da241ed06ab5bbc4abe73ae56cab6afd22e550f087c1aee6c75d513f2",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:50.9268927Z"
+}

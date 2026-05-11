@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:NLTCE",
+  "code": "NLTCE",
+  "label": "New Living Translation Catholic Edition",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 2,
+  "contentUrl": "/bibles/content/en/NLTCE/v2.json",
+  "contentHash": "sha256-46be4b8ae33f7a827a20f414194c68c27a21e2e47dcd2c50270d4f325f45b705",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:54.6086615Z"
+}

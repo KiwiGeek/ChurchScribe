@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:CSBA",
+  "code": "CSBA",
+  "label": "Christian Standard Bible Anglicised",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 5,
+  "contentUrl": "/bibles/content/en/CSBA/v5.json",
+  "contentHash": "sha256-6e8fc6ab535a5b8034517742821f1c01a5a42c8b5401366b7f2bd1f2d47f5964",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:51.1019641Z"
+}

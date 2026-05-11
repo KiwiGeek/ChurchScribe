@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "fr:NVS78P",
+  "code": "NVS78P",
+  "label": "Nouvelle Segond r\u00E9vis\u00E9e",
+  "languageTag": "fr",
+  "languageCode3": "fra",
+  "sourceType": "official",
+  "version": 6,
+  "contentUrl": "/bibles/content/fr/NVS78P/v6.json",
+  "contentHash": "sha256-c6971b61367f1b1e768792c880f73452de9cf0bd19ffde052064cf607f3c5eaf",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:54:29.2415514Z"
+}

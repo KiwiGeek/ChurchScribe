@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:engWEBUS",
+  "code": "engWEBUS",
+  "label": "World English Bible, American English Edition, without Strong\u0027s Numbers",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 81,
+  "contentUrl": "/bibles/content/en/engWEBUS/v81.json",
+  "contentHash": "sha256-8f5fe8f0d401e253067a78be6c13d787bd4f046d65d6d84cca7666ff8636cec4",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:56.2984513Z"
+}

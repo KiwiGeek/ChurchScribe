@@ -1,13 +1,24 @@
 ﻿{
   "schemaVersion": 1,
-  "catalogVersion": "2026-05-10T18:58:11.4113617\u002B00:00",
+  "catalogVersion": "2026-05-10T23:58:26.9399402\u002B00:00",
   "defaultBuiltinIds": [
-    "en:ASV",
+    "en:CSB",
+    "en:ESV",
     "en:KJV",
+    "en:MSG",
+    "en:NASB2020",
+    "en:NIrV",
+    "en:NIV11",
     "en:NKJV",
-    "en:WEBBE",
+    "en:NLT",
+    "en:NRSVUE",
+    "es:NTV",
+    "es:NVI-S",
+    "es:NVI-S",
     "es:RVR1960",
-    "fr:LSG"
+    "fr:BDS",
+    "fr:LSG",
+    "fr:S21"
   ],
   "languages": [
     {
@@ -21,11 +32,6 @@
       "shardUrl": "/bibles/catalog/languages/fr.json"
     },
     {
-      "languageTag": "pt",
-      "displayName": "Portuguese (Brazil)",
-      "shardUrl": "/bibles/catalog/languages/pt.json"
-    },
-    {
       "languageTag": "es",
       "displayName": "Spanish",
       "shardUrl": "/bibles/catalog/languages/es.json"
@@ -34,7 +40,6 @@
   "languageShards": {
     "en": "/bibles/catalog/languages/en.json",
     "es": "/bibles/catalog/languages/es.json",
-    "fr": "/bibles/catalog/languages/fr.json",
-    "pt": "/bibles/catalog/languages/pt.json"
+    "fr": "/bibles/catalog/languages/fr.json"
   }
 }

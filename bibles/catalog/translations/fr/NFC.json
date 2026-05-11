@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "fr:NFC",
+  "code": "NFC",
+  "label": "Nouvelle Fran\u00E7ais courant",
+  "languageTag": "fr",
+  "languageCode3": "fra",
+  "sourceType": "official",
+  "version": 7,
+  "contentUrl": "/bibles/content/fr/NFC/v7.json",
+  "contentHash": "sha256-fbb1c7379c00451e3c4f0d36e180c5746f4401543ad664fa2a8625c6c59dba06",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:54:29.1486369Z"
+}

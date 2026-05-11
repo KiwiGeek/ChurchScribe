@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "fr:FMAR",
+  "code": "FMAR",
+  "label": "Martin 1744",
+  "languageTag": "fr",
+  "languageCode3": "fra",
+  "sourceType": "official",
+  "version": 6,
+  "contentUrl": "/bibles/content/fr/FMAR/v6.json",
+  "contentHash": "sha256-465f7e0cb841baa7d084f9b81df8ac7b9704d68a1182429a92afb9ca95d19f2c",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:54:28.5217139Z"
+}

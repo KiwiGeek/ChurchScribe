@@ -1,0 +1,5507 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:TEG",
+  "version": 4,
+  "books": {
+    "Isaiah": [
+      {
+        "chapter": 1,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "THE VISION OF ISAIAH THE SON OF AMOZ, WHICH HE SAW CONCERNING JUDAH AND JERUSALEM; IN THE DAYS OF UZZIAH, JOTHAM, AHAZ, HEZEEIAH, KINGS OF JUDAH."
+          },
+          {
+            "verse": 2,
+            "text": "Hear, O ye heavens; and give ear, O earth:"
+          },
+          {
+            "verse": 3,
+            "text": "The ox knoweth his owner,"
+          },
+          {
+            "verse": 4,
+            "text": "Wo to the sinful nation, people laden with iniquity,"
+          },
+          {
+            "verse": 5,
+            "text": "Upon what part will ye be smitten any more, should you still revolt?"
+          },
+          {
+            "verse": 6,
+            "text": "From the sole of the foot even unto the crown of the head, there is no soundness;"
+          },
+          {
+            "verse": 7,
+            "text": "Your country is desolate, your cities are burned with fire;"
+          },
+          {
+            "verse": 8,
+            "text": "And the daughter of Zion is left alone, as a shed in a vineyard;"
+          },
+          {
+            "verse": 9,
+            "text": "Except Jehovah of hosts had left unto us the smallest remnant,"
+          },
+          {
+            "verse": 10,
+            "text": "Hear ye the word of Jehovah, O ye princes of Sodom!"
+          },
+          {
+            "verse": 11,
+            "text": "Why to me is the multitude of your sacrifices? saith Jehovah:"
+          },
+          {
+            "verse": 12,
+            "text": "When ye come to appear before me,"
+          },
+          {
+            "verse": 13,
+            "text": "Bring no more insincere oblation,"
+          },
+          {
+            "verse": 14,
+            "text": "Your new moons, and your appointed festivals, my soul hateth:"
+          },
+          {
+            "verse": 15,
+            "text": "And when ye spread forth your hands, I will hide mine eyes from you;"
+          },
+          {
+            "verse": 16,
+            "text": "Wash ye, make ye clean;"
+          },
+          {
+            "verse": 17,
+            "text": "Learn to do good; seek after justice; correct the evil-doer;"
+          },
+          {
+            "verse": 18,
+            "text": "Come now, and let us reason together, saith Jehovah:"
+          },
+          {
+            "verse": 19,
+            "text": "If ye be willing and obedient,"
+          },
+          {
+            "verse": 20,
+            "text": "But if ye refuse and rebel,"
+          },
+          {
+            "verse": 21,
+            "text": "How is the faithful city become an harlot!"
+          },
+          {
+            "verse": 22,
+            "text": "Thy silver is become dross;"
+          },
+          {
+            "verse": 23,
+            "text": "Thy princes are rebellious, and associates of robbers;"
+          },
+          {
+            "verse": 24,
+            "text": "Wherefore saith the Lord, Jehovah of hosts, the mighty One of Israel:"
+          },
+          {
+            "verse": 25,
+            "text": "And I will direct mine hand against thee,"
+          },
+          {
+            "verse": 26,
+            "text": "And I will restore thy judges, as at the first;"
+          },
+          {
+            "verse": 27,
+            "text": "Zion shall be redeemed with judgment,"
+          },
+          {
+            "verse": 28,
+            "text": "But the destruction of revolters and of sinners shall be together;"
+          },
+          {
+            "verse": 29,
+            "text": "Then shall men be ashamed of the grove of teberinths, which are your delight;"
+          },
+          {
+            "verse": 30,
+            "text": "For ye shall be as the teberinth, whose leaves are withered;"
+          },
+          {
+            "verse": 31,
+            "text": "The powerful shall become as tow,"
+          }
+        ]
+      },
+      {
+        "chapter": 2,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "THE WORD WHICH WAS REVEALED UNTO ISAIAH, THE SON OF AMOZ, CONCERNING JUDAH AND JERUSALEM."
+          },
+          {
+            "verse": 2,
+            "text": "It shall come to pass in the last days,"
+          },
+          {
+            "verse": 3,
+            "text": "And many people shall go, and say;"
+          },
+          {
+            "verse": 4,
+            "text": "And he shall judge among the nations,"
+          },
+          {
+            "verse": 5,
+            "text": "O house of Jacob, come ye,"
+          },
+          {
+            "verse": 6,
+            "text": "Therefore thou hast abandoned thy people, the house of Jacob,"
+          },
+          {
+            "verse": 7,
+            "text": "Their land is full of silver and gold;"
+          },
+          {
+            "verse": 8,
+            "text": "Their land is full of idols;"
+          },
+          {
+            "verse": 9,
+            "text": "Wherefore the mean man is bowed down, and the great man is humbled;"
+          },
+          {
+            "verse": 10,
+            "text": "Enter into the rock, and hide thee in the dust;"
+          },
+          {
+            "verse": 11,
+            "text": "The lofty looks of man shall be humbled,"
+          },
+          {
+            "verse": 12,
+            "text": "For there is unto Jehovah of hosts a day against every thing proud and lofty;"
+          },
+          {
+            "verse": 13,
+            "text": "Even against all the cedars of Lebanon, the high and the exalted;"
+          },
+          {
+            "verse": 14,
+            "text": "And against all the high mountains,"
+          },
+          {
+            "verse": 15,
+            "text": "And against every high raised tower;"
+          },
+          {
+            "verse": 16,
+            "text": "And against all the ships of Tarshish;"
+          },
+          {
+            "verse": 17,
+            "text": "And the pride of man shall be bowed down,"
+          },
+          {
+            "verse": 18,
+            "text": "And the idols shall be utterly destroyed."
+          },
+          {
+            "verse": 19,
+            "text": "And they shall go into the holes of the rocks, and into the caves of the earth;"
+          },
+          {
+            "verse": 20,
+            "text": "In that day shall men cast away their idols of silver,"
+          },
+          {
+            "verse": 21,
+            "text": "To go into the caves of the rocks, and into the clefts of the craggy rocks:"
+          },
+          {
+            "verse": 22,
+            "text": "Cease ye from trust in man, whose breath is in his nostrils;"
+          }
+        ]
+      },
+      {
+        "chapter": 3,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "For, behold, the Lord, Jehovah of hosts,"
+          },
+          {
+            "verse": 2,
+            "text": "The mighty man, and the warrior;"
+          },
+          {
+            "verse": 3,
+            "text": "The captain of fifty, and the honourable man;"
+          },
+          {
+            "verse": 4,
+            "text": "And I will set boys for their princes;"
+          },
+          {
+            "verse": 5,
+            "text": "And the people shall be oppressed;"
+          },
+          {
+            "verse": 6,
+            "text": "Then should a man lay hold on his brother, of the house of his father,"
+          },
+          {
+            "verse": 7,
+            "text": "He shall swear in that day, saying,"
+          },
+          {
+            "verse": 8,
+            "text": "For Jerusalem tottereth, and Judah falleth; Because their tongue and their deeds are against"
+          },
+          {
+            "verse": 9,
+            "text": "The shamelessness of their countenances witnesseth against them;"
+          },
+          {
+            "verse": 10,
+            "text": "Say ye to the righteous, that it shall be well with him;"
+          },
+          {
+            "verse": 11,
+            "text": "Wo unto the wicked, it shall be ill with him;"
+          },
+          {
+            "verse": 12,
+            "text": "As for my people, children are their oppressors;"
+          },
+          {
+            "verse": 13,
+            "text": "Jehovah ariseth to plead his cause;"
+          },
+          {
+            "verse": 14,
+            "text": "Jehovah will enter into judgment"
+          },
+          {
+            "verse": 15,
+            "text": "What mean ye that ye crush my people,"
+          },
+          {
+            "verse": 16,
+            "text": "Moreover Jehovah hath said:"
+          },
+          {
+            "verse": 17,
+            "text": "Therefore will the Lord smite with a scab the head of the daughters of Zion;"
+          },
+          {
+            "verse": 18,
+            "text": "In that day will the Lord remove the splendour of the foot-ornaments,"
+          },
+          {
+            "verse": 19,
+            "text": "The ear-pendents, and the bracelets, and the thin veils;"
+          },
+          {
+            "verse": 20,
+            "text": "The head-dress, and the ornaments of the legs, and the girdles,"
+          },
+          {
+            "verse": 21,
+            "text": "The rings, and the jewels of the nose;"
+          },
+          {
+            "verse": 22,
+            "text": "The embroidered robes, and the tunics;"
+          },
+          {
+            "verse": 23,
+            "text": "The transparent garments, and the fine linen vests;"
+          },
+          {
+            "verse": 24,
+            "text": "And it shall come to pass, that instead of perfume there shall be a stench;"
+          },
+          {
+            "verse": 25,
+            "text": "Thy men shall fall by the sword;"
+          },
+          {
+            "verse": 26,
+            "text": "And her gates shall lament and mourn;"
+          }
+        ]
+      },
+      {
+        "chapter": 4,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "And seven women shall lay hold on one man in that day, saying:"
+          },
+          {
+            "verse": 2,
+            "text": "In that day shall the Branch of Jehovah"
+          },
+          {
+            "verse": 3,
+            "text": "And it shall come to pass, that he that is left in Zion,"
+          },
+          {
+            "verse": 4,
+            "text": "When the Lord shall have Washed away the filth of the daughters of Zion;"
+          },
+          {
+            "verse": 5,
+            "text": "Then shall Jehovah create upon every dwelling-place in mount Zion,"
+          },
+          {
+            "verse": 6,
+            "text": "And a tabernacle it shall be for a shade by day from the heat;"
+          }
+        ]
+      },
+      {
+        "chapter": 5,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Let me sing now to my Beloved,"
+          },
+          {
+            "verse": 2,
+            "text": "He digged it, and cleared it of stones,"
+          },
+          {
+            "verse": 3,
+            "text": "And now, O inhabitants of Jerusalem, and ye men of Judah,"
+          },
+          {
+            "verse": 4,
+            "text": "What could have been done more to my vineyard,"
+          },
+          {
+            "verse": 5,
+            "text": "But come now, and I will make known unto you"
+          },
+          {
+            "verse": 6,
+            "text": "And I will make it a waste:"
+          },
+          {
+            "verse": 7,
+            "text": "For the vineyard of Jehovah of hosts is the house of Israel;"
+          },
+          {
+            "verse": 8,
+            "text": "Wo unto them, who join house to house;"
+          },
+          {
+            "verse": 9,
+            "text": "In my ears hath Jehovah of hosts revealed it:"
+          },
+          {
+            "verse": 10,
+            "text": "Yea, ten acres of vineyard shall yield but one bath,"
+          },
+          {
+            "verse": 11,
+            "text": "Wo unto them that rise up early in the morning to follow after strong drink;"
+          },
+          {
+            "verse": 12,
+            "text": "And the lyre, and the harp, the tabor, and the pipe,"
+          },
+          {
+            "verse": 13,
+            "text": "Therefore my people goeth into captivity by surprise;"
+          },
+          {
+            "verse": 14,
+            "text": "Therefore bath Hades opened its jaws with greediness;"
+          },
+          {
+            "verse": 15,
+            "text": "And the mean man shall be bowed down, and the great man shall be humbled;"
+          },
+          {
+            "verse": 16,
+            "text": "But Jehovah of hosts shall be exalted in judgment;"
+          },
+          {
+            "verse": 17,
+            "text": "Then shall the sheep feed, as upon their own pasture; And in the desolate possessions of the rich shall strange flocks graze."
+          },
+          {
+            "verse": 18,
+            "text": "Wo unto them that draw punishment along with a rope of vice;"
+          },
+          {
+            "verse": 19,
+            "text": "Who say, Let him make speed, let him hasten his work, that we may see it;"
+          },
+          {
+            "verse": 20,
+            "text": "Wo unto them that call evil good, and good evil;"
+          },
+          {
+            "verse": 21,
+            "text": "Wo unto them that are wise in their own eyes;"
+          },
+          {
+            "verse": 22,
+            "text": "Wo unto them that are powerful to drink wine;"
+          },
+          {
+            "verse": 23,
+            "text": "Who justify the guilty for reward,"
+          },
+          {
+            "verse": 24,
+            "text": "Therefore as the flame of fire devoureth the stubble,"
+          },
+          {
+            "verse": 25,
+            "text": "Therefore is the anger of Jehovah kindled against his people;"
+          },
+          {
+            "verse": 26,
+            "text": "And he will erect a standard for the nations afar off;"
+          },
+          {
+            "verse": 27,
+            "text": "None among them is faint, and none stumbleth;"
+          },
+          {
+            "verse": 28,
+            "text": "Whose arrows are sharpened,"
+          },
+          {
+            "verse": 29,
+            "text": "Their roaring is like that of the lioness;"
+          },
+          {
+            "verse": 30,
+            "text": "In that day shall they roar against them, like the roaring of the sea;"
+          }
+        ]
+      },
+      {
+        "chapter": 6,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "In the year, in which Uzziab the king died, I saw the Lord sitting upon a throne high and lofty; and his train filled the temple."
+          },
+          {
+            "verse": 2,
+            "text": "Above him stood the Seraphim: each one of them had six wings: with twain he covered his face, and with twain he covered his feet, mid with twain he did fly."
+          },
+          {
+            "verse": 3,
+            "text": "And the one called to the other, and said:"
+          },
+          {
+            "verse": 4,
+            "text": "And the foundations of the thresholds shook at the voice of him, who called; and the house was filled with smoke."
+          },
+          {
+            "verse": 5,
+            "text": "Then I said, Wo is me! I am undone: because I am a man of unclean lips; and in the midst of a people of unclean lips do i dwell: for mine eyes have seen the King, Jehovah of hosts."
+          },
+          {
+            "verse": 6,
+            "text": "Then flew one of the Seraphim unto me; and in his hand was a burning coal, which he had taken with the tongs from off the altar."
+          },
+          {
+            "verse": 7,
+            "text": "And he touched my mouth, and said: Lo, this bath touched thy lips: thine iniquity is removed, and thy sin is expiated."
+          },
+          {
+            "verse": 8,
+            "text": "And I heard the voice of the Lord, saying: Whom shall I send; and who will go for us! And I said: Behold, here am I, send me."
+          },
+          {
+            "verse": 9,
+            "text": "And he said:"
+          },
+          {
+            "verse": 10,
+            "text": "Make gross the heart of this people;"
+          },
+          {
+            "verse": 11,
+            "text": "And I said; How long, Lord! And he said:"
+          },
+          {
+            "verse": 12,
+            "text": "Then Jehovah will remove men far away;"
+          },
+          {
+            "verse": 13,
+            "text": "But should there still be left in it a tenth part,"
+          }
+        ]
+      },
+      {
+        "chapter": 7,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "And it came to pass in the days of Ahaz, the son of Jotham, the son of Uzziah, king of Judah, that Rezin king of Syria, and Pekah, the son of Remaliah, king of Israel, went up toward Jerusalem to war against it, but could not prevail against it."
+          },
+          {
+            "verse": 2,
+            "text": "And when it was told to the house of David, Syria is confederate with Ephraim: then his heart was moved, and the heart of his people, as the trees of the forest are moved before the wind."
+          },
+          {
+            "verse": 3,
+            "text": "And Jehovah said unto Isaiah: Go out now to meet Ahaz, thou and Shear-jeshub thy son, at the end of the aqueduct of the upper pool, at the causeway of the fuller\u2019s field."
+          },
+          {
+            "verse": 4,
+            "text": "And thou shalt say unto him: Take heed, and be still: fear not, neither let thy heart be faint, on account of these two tails of smoking firebrands; for the fierce wrath of Rezin, and Syria, and the son of Remaliah."
+          },
+          {
+            "verse": 5,
+            "text": "Because Syria, Ephraim, and the son of Remaliah, have plotted mischief against thee, saying:"
+          },
+          {
+            "verse": 6,
+            "text": "Let us go up against Judah, and besiege it;"
+          },
+          {
+            "verse": 7,
+            "text": "Thus saith the Lord Jehovah:"
+          },
+          {
+            "verse": 8,
+            "text": "Although the head of Syria be Damascus,"
+          },
+          {
+            "verse": 9,
+            "text": "Yea, although the head of Ephraim be Samaria;"
+          },
+          {
+            "verse": 10,
+            "text": "And Jehovah spoke yet again to Ahaz, saying:"
+          },
+          {
+            "verse": 11,
+            "text": "Ask for thee a sign from Jehovah thy God:"
+          },
+          {
+            "verse": 12,
+            "text": "And Ahaz said: I will not ask, neither will I tempt Jehovah. And he said:"
+          },
+          {
+            "verse": 13,
+            "text": "Hear ye now, O house of David:"
+          },
+          {
+            "verse": 14,
+            "text": "Therefore the Lord himself shall give you a sign:"
+          },
+          {
+            "verse": 15,
+            "text": "Butter and honey shall he eat,"
+          },
+          {
+            "verse": 16,
+            "text": "For before the child shall have knowledge"
+          },
+          {
+            "verse": 17,
+            "text": "But Jehovah shall bring upon thee,"
+          },
+          {
+            "verse": 18,
+            "text": "And it shall come to pass in that day,"
+          },
+          {
+            "verse": 19,
+            "text": "And they shall come, and they shall light all of"
+          },
+          {
+            "verse": 20,
+            "text": "In that day shall the Lord shave with a razor that is hired"
+          },
+          {
+            "verse": 21,
+            "text": "And it shall come to pass in that day,"
+          },
+          {
+            "verse": 22,
+            "text": "And it shall be,"
+          },
+          {
+            "verse": 23,
+            "text": "And it shall come to pass in that day,"
+          },
+          {
+            "verse": 24,
+            "text": "With arrows and with the bow shall men come thither;"
+          },
+          {
+            "verse": 25,
+            "text": "And upon all the hills, which were dressed with the mattock,"
+          }
+        ]
+      },
+      {
+        "chapter": 8,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "And Jehovah said unto me: Take unto thee a large roll; and write upon it, in the style of man, Hasten the spoil, take quickly the prey."
+          },
+          {
+            "verse": 2,
+            "text": "And I took unto me faithful witnesses; Uriah the priest, and Zachariah the son of Jerebechiah."
+          },
+          {
+            "verse": 3,
+            "text": "And I approached unto the prophetess; and she conceived and bare a son. And Jehovah said unto me: Call his name Maher-Shalal Hash-Baz."
+          },
+          {
+            "verse": 4,
+            "text": "For before the child shall have knowledge to cry, My father and My mother, the riches of Damascus, and the spoil of Samaria, shall be taken away before the face of the king of Assyria."
+          },
+          {
+            "verse": 5,
+            "text": "Yet again Jehovah spoke unto me, saying:"
+          },
+          {
+            "verse": 6,
+            "text": "Because this people hath rejected"
+          },
+          {
+            "verse": 7,
+            "text": "Now, therefore, behold the Lord bringeth up upon them"
+          },
+          {
+            "verse": 8,
+            "text": "And he shall pass through Judah, he shall overflow and go over;"
+          },
+          {
+            "verse": 9,
+            "text": "Link yourselves together, O ye people, yet shall you be broken in pieces;"
+          },
+          {
+            "verse": 10,
+            "text": "Take counsel together, yet it shall be brought to nought;"
+          },
+          {
+            "verse": 11,
+            "text": "For thus said Jehovah unto me, with a strong hand,"
+          },
+          {
+            "verse": 12,
+            "text": "Call ye not that a confederacy,"
+          },
+          {
+            "verse": 13,
+            "text": "Jehovah of hosts, Him sanctify;"
+          },
+          {
+            "verse": 14,
+            "text": "And he shall be unto you for a sanctuary:"
+          },
+          {
+            "verse": 15,
+            "text": "And, against which, many shall stumble,"
+          },
+          {
+            "verse": 16,
+            "text": "Bind up the testimony, seal the law among my disciples."
+          },
+          {
+            "verse": 17,
+            "text": "And I will wait for Jehovah, who hideth his face"
+          },
+          {
+            "verse": 18,
+            "text": "Behold, I and the children whom Jehovah hath given me"
+          },
+          {
+            "verse": 19,
+            "text": "And when they shall say unto you:"
+          },
+          {
+            "verse": 20,
+            "text": "To the law and to the testimony:"
+          },
+          {
+            "verse": 21,
+            "text": "And they shall pass through the land sorely beset and hungry:"
+          },
+          {
+            "verse": 22,
+            "text": "Whether they shall cast their eyes upward,"
+          }
+        ]
+      },
+      {
+        "chapter": 9,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "But yet there shall not always be darkness to that land wherein is now distress:"
+          },
+          {
+            "verse": 2,
+            "text": "The people that walked in darkness,"
+          },
+          {
+            "verse": 3,
+            "text": "Thou hast multiplied the nation,"
+          },
+          {
+            "verse": 4,
+            "text": "For the yoke of his burden, and the staff of his shoulder,"
+          },
+          {
+            "verse": 5,
+            "text": "For every greave of the warrior accoutred for battle,"
+          },
+          {
+            "verse": 6,
+            "text": "For unto us a child is born; unto us a son is given;"
+          },
+          {
+            "verse": 7,
+            "text": "Of the increase of his government and peace there shall be no end,"
+          },
+          {
+            "verse": 8,
+            "text": "The Lord hath sent a word unto Jacob;"
+          },
+          {
+            "verse": 9,
+            "text": "And all the people shall know,"
+          },
+          {
+            "verse": 10,
+            "text": "The bricks are fallen down, but we will build with hewn stone;"
+          },
+          {
+            "verse": 11,
+            "text": "Therefore shall Jehovah set up the adversaries of Rezin against him,"
+          },
+          {
+            "verse": 12,
+            "text": "Syria from before, and the Philistines from behind;"
+          },
+          {
+            "verse": 13,
+            "text": "For the people have not turned unto him who smote them;"
+          },
+          {
+            "verse": 14,
+            "text": "Therefore shall Jehovah cut off from Israel head and tail;"
+          },
+          {
+            "verse": 15,
+            "text": "The aged and honourable, they are the head;"
+          },
+          {
+            "verse": 16,
+            "text": "For the leaders of this people lead them astray,"
+          },
+          {
+            "verse": 17,
+            "text": "Wherefore the Lord shall have no joy in their young men,"
+          },
+          {
+            "verse": 18,
+            "text": "For wickedness burneth like a fire;"
+          },
+          {
+            "verse": 19,
+            "text": "Through the wrath of Jehovah of hosts is the land darkened;"
+          },
+          {
+            "verse": 20,
+            "text": "For he snatcheth on the right hand, yet is be hungry;"
+          },
+          {
+            "verse": 21,
+            "text": "Manasseh Ephraim, and Ephraim Manasseh;"
+          }
+        ]
+      },
+      {
+        "chapter": 10,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Wo unto them that decree iniquitous decrees,"
+          },
+          {
+            "verse": 2,
+            "text": "To turn aside the needy from judgment,"
+          },
+          {
+            "verse": 3,
+            "text": "And what will ye do in the day of visitation,"
+          },
+          {
+            "verse": 4,
+            "text": "Without me they shall bow down among prisoners,"
+          },
+          {
+            "verse": 5,
+            "text": "Wo unto the Assyrian, the rod of mine anger,"
+          },
+          {
+            "verse": 6,
+            "text": "Against an ungodly nation will I send him;"
+          },
+          {
+            "verse": 7,
+            "text": "Howbeit he doth not so purpose,"
+          },
+          {
+            "verse": 8,
+            "text": "For he saith, Are not my princes altogether kings?"
+          },
+          {
+            "verse": 9,
+            "text": "Is not Calno as Carchemish?"
+          },
+          {
+            "verse": 10,
+            "text": "As my hand hath seized the kingdoms of the idols,"
+          },
+          {
+            "verse": 11,
+            "text": "Shall I not, as I have done unto Samaria and her idols,"
+          },
+          {
+            "verse": 12,
+            "text": "Wherefore it shall come to pass, that when the Lord hath performed his whole work,"
+          },
+          {
+            "verse": 13,
+            "text": "For he saith, By the strength of my hand have I done it, it?"
+          },
+          {
+            "verse": 14,
+            "text": "And my band hath found, as a nest, the riches of the nations:"
+          },
+          {
+            "verse": 15,
+            "text": "Shall the axe boast itself against him that heweth therewith?"
+          },
+          {
+            "verse": 16,
+            "text": "Therefore shall the Lord, the Lord of hosts, send"
+          },
+          {
+            "verse": 17,
+            "text": "And the light of Israel shall become a fire,"
+          },
+          {
+            "verse": 18,
+            "text": "Even the glory of his forest, and of his fruitful field,"
+          },
+          {
+            "verse": 19,
+            "text": "And the rest of the trees of his forest shall be few,"
+          },
+          {
+            "verse": 20,
+            "text": "And it shall come to pass in that day,"
+          },
+          {
+            "verse": 21,
+            "text": "Yet a remnant shall return, a remnant of Jacob,"
+          },
+          {
+            "verse": 22,
+            "text": "For though thy people, O Israel, be as the sand of the sea,"
+          },
+          {
+            "verse": 23,
+            "text": "For a havock, even the judgment decreed,"
+          },
+          {
+            "verse": 24,
+            "text": "But yet thus saith the Lord, Jehovah of hosts:"
+          },
+          {
+            "verse": 25,
+            "text": "For yet a very little while, and indignation shall cease;"
+          },
+          {
+            "verse": 26,
+            "text": "And Jehovah of hosts, shall stir up a scourge for him,"
+          },
+          {
+            "verse": 27,
+            "text": "Then it shall come to pass, in that day,"
+          },
+          {
+            "verse": 28,
+            "text": "He is come to Aiath; he hath passed through Migron;"
+          },
+          {
+            "verse": 29,
+            "text": "They are gone over the passage; at Geba they have taken up their lodging:"
+          },
+          {
+            "verse": 30,
+            "text": "Lift up thy voice, O daughter of Gallim!"
+          },
+          {
+            "verse": 31,
+            "text": "Madmena is gone away; the inhabitants of Gebim have fled."
+          },
+          {
+            "verse": 32,
+            "text": "He will, as yet, remain a day at Nob;"
+          },
+          {
+            "verse": 33,
+            "text": "Behold the Lord, Jehovah of hosts,"
+          },
+          {
+            "verse": 34,
+            "text": "And he shall hew the thickets of the forest with iron,"
+          }
+        ]
+      },
+      {
+        "chapter": 11,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "And there shall come forth a rod from the stem, of Jesse;"
+          },
+          {
+            "verse": 2,
+            "text": "And the spirit of Jehovah shall rest upon him;"
+          },
+          {
+            "verse": 3,
+            "text": "And his delight shall be in the fear of Jehovah:"
+          },
+          {
+            "verse": 4,
+            "text": "But with righteousness shall he judge the poor,"
+          },
+          {
+            "verse": 5,
+            "text": "And righteousness shall be the girdle of his loins,"
+          },
+          {
+            "verse": 6,
+            "text": "Then shall the wolf take up his abode with the lamb;"
+          },
+          {
+            "verse": 7,
+            "text": "And the cow and the bear shall feed together;"
+          },
+          {
+            "verse": 8,
+            "text": "And the sucking child shall play at the hole of the asp,"
+          },
+          {
+            "verse": 9,
+            "text": "They shall not hurt, nor destroy, in all my holy mountain;"
+          },
+          {
+            "verse": 10,
+            "text": "And in that day there shall be"
+          },
+          {
+            "verse": 11,
+            "text": "And it shall come to pass in that day,"
+          },
+          {
+            "verse": 12,
+            "text": "And he shall lift up an ensign to the nations;"
+          },
+          {
+            "verse": 13,
+            "text": "And the jealousy of Ephraim shall depart,"
+          },
+          {
+            "verse": 14,
+            "text": "But they shall fly upon the shoulders of the Philistines toward the west;"
+          },
+          {
+            "verse": 15,
+            "text": "And Jehovah shall devote to destruction the tongue of the sea of Egypt;"
+          },
+          {
+            "verse": 16,
+            "text": "And there shall be a high-way for the remnant of his people,"
+          }
+        ]
+      },
+      {
+        "chapter": 12,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "And in that day thou shalt say:"
+          },
+          {
+            "verse": 2,
+            "text": "Behold, God is my salvation;"
+          },
+          {
+            "verse": 3,
+            "text": "And ye shall draw waters with joy From the fountains of salvation."
+          },
+          {
+            "verse": 4,
+            "text": "And ye shall say in that day:"
+          },
+          {
+            "verse": 5,
+            "text": "Sing ye unto Jehovah; for he hath wrought a"
+          },
+          {
+            "verse": 6,
+            "text": "Cry aloud, and shout for joy, O inhabitress of Zion!"
+          }
+        ]
+      },
+      {
+        "chapter": 13,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "the ORACLE CONCERNING BABYLON, WHICH WAS REVEALED UNTO ISAIAH, THE SON OF AMOZ."
+          },
+          {
+            "verse": 2,
+            "text": "Upon a lofty mountain erect the standard;"
+          },
+          {
+            "verse": 3,
+            "text": "To my appointed ones I have given command;"
+          },
+          {
+            "verse": 4,
+            "text": "Hark! a sound of a multitude in the mountains, as of a great people;"
+          },
+          {
+            "verse": 5,
+            "text": "They come from a far country, from the end of the heavens;"
+          },
+          {
+            "verse": 6,
+            "text": "Howl ye, for the day of Jehovah is at hand:"
+          },
+          {
+            "verse": 7,
+            "text": "Therefore shall all hands be slackened,"
+          },
+          {
+            "verse": 8,
+            "text": "And they shall be terrified: pangs and sorrows shall take hold of them;"
+          },
+          {
+            "verse": 9,
+            "text": "Behold the day of Jehovah cometh, cruel,"
+          },
+          {
+            "verse": 10,
+            "text": "For the stars of heaven, and the constellations thereof,"
+          },
+          {
+            "verse": 11,
+            "text": "And I will punish the world for its evil,"
+          },
+          {
+            "verse": 12,
+            "text": "I will moke a mortal more precious than fine gold;"
+          },
+          {
+            "verse": 13,
+            "text": "Wherefore I will make the heavens tremble,"
+          },
+          {
+            "verse": 14,
+            "text": "Then shall every one be, as a roe that is chased,"
+          },
+          {
+            "verse": 15,
+            "text": "Every one that is overtaken, shall be thrust through;"
+          },
+          {
+            "verse": 16,
+            "text": "Their children also shall be dashed in pieces before their eyes;"
+          },
+          {
+            "verse": 17,
+            "text": "Behold, I stir up the Medes against them,"
+          },
+          {
+            "verse": 18,
+            "text": "Their bows shall dash the young men to pieces,"
+          },
+          {
+            "verse": 19,
+            "text": "And Babylon, the beauty of kingdoms,"
+          },
+          {
+            "verse": 20,
+            "text": "It shall not be inhabited for ever,"
+          },
+          {
+            "verse": 21,
+            "text": "But there shall the wild beasts of the deserts couch them down;"
+          },
+          {
+            "verse": 22,
+            "text": "And wolves shall howl to one another in their palaces;"
+          }
+        ]
+      },
+      {
+        "chapter": 14,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "For Jehovah will have compassion on Jacob,"
+          },
+          {
+            "verse": 2,
+            "text": "And the people shall take them, and bring them into their own place;"
+          },
+          {
+            "verse": 3,
+            "text": "And it shall come to pass in that day, when Jehovah shall give thee rest from thine affliction, and from thy disquiet, and from the hard labour which was imposed upon thee,"
+          },
+          {
+            "verse": 4,
+            "text": "that thou shalt take up this parable against the king of Babylon; and shalt say:"
+          },
+          {
+            "verse": 5,
+            "text": "Jehovah hath broken the staff of the wicked,"
+          },
+          {
+            "verse": 6,
+            "text": "Which smote the people in wrath,"
+          },
+          {
+            "verse": 7,
+            "text": "The whole earth is at rest, it is quiet;"
+          },
+          {
+            "verse": 8,
+            "text": "Even the fir-trees rejoice over thee,"
+          },
+          {
+            "verse": 9,
+            "text": "Hades from beneath is moved because of thee,"
+          },
+          {
+            "verse": 10,
+            "text": "All these shall speak, and say unto thee:"
+          },
+          {
+            "verse": 11,
+            "text": "Thy pomp is brought down to Hades,"
+          },
+          {
+            "verse": 12,
+            "text": "How art thou fallen from heaven,"
+          },
+          {
+            "verse": 13,
+            "text": "For thou hast said in thine heart, I will ascend the heavens;"
+          },
+          {
+            "verse": 14,
+            "text": "I will ascend above the heights of the cloud;"
+          },
+          {
+            "verse": 15,
+            "text": "Yet thou shalt be brought down to Hades,"
+          },
+          {
+            "verse": 16,
+            "text": "Those that see thee shall look attentively at thee;"
+          },
+          {
+            "verse": 17,
+            "text": "That made the world like a wilderness,"
+          },
+          {
+            "verse": 18,
+            "text": "All the kings of the nations, all of them,"
+          },
+          {
+            "verse": 19,
+            "text": "But thou art cast away, deprived of thy grave,"
+          },
+          {
+            "verse": 20,
+            "text": "Thou shalt not be joined with them in burial;"
+          },
+          {
+            "verse": 21,
+            "text": "Prepare slaughter for his children,"
+          },
+          {
+            "verse": 22,
+            "text": "For I will rise up against them, saith Jehovah of hosts,"
+          },
+          {
+            "verse": 23,
+            "text": "And I will make it a place of inheritance for the porcupine, and pools of water;"
+          },
+          {
+            "verse": 24,
+            "text": "Jehovah of hosts hath sworn, saying,"
+          },
+          {
+            "verse": 25,
+            "text": "To crush the Assyrian in my land,"
+          },
+          {
+            "verse": 26,
+            "text": "This is the purpose that is purposed upon the whole earth;"
+          },
+          {
+            "verse": 27,
+            "text": "For Jehovah of hosts hath purposed, and who shall disannul it?"
+          },
+          {
+            "verse": 28,
+            "text": "IN THE YEAR IN WHICH AHAZ THE KING DIED, THIS"
+          },
+          {
+            "verse": 29,
+            "text": "Rejoice not, O Philistia, through thy extent,"
+          },
+          {
+            "verse": 30,
+            "text": "And the first-born of the poor shall feed,"
+          },
+          {
+            "verse": 31,
+            "text": "Howl, O gate! cry out, O city!"
+          },
+          {
+            "verse": 32,
+            "text": "And what shall one answer the ambassadors of the nations?"
+          }
+        ]
+      },
+      {
+        "chapter": 15,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "THE ORACLE CONCERNING MOAB."
+          },
+          {
+            "verse": 2,
+            "text": "He goeth up to Bajith and to Debon, the high places, to weep:"
+          },
+          {
+            "verse": 3,
+            "text": "In their streets they gird themselves with sackcloth;"
+          },
+          {
+            "verse": 4,
+            "text": "And Heshbon crieth out, and Elealeh;"
+          },
+          {
+            "verse": 5,
+            "text": "My heart crieth out for Moab,"
+          },
+          {
+            "verse": 6,
+            "text": "For the waters of Nimrim shall become desolate:"
+          },
+          {
+            "verse": 7,
+            "text": "Therefore the remnant which they possess,"
+          },
+          {
+            "verse": 8,
+            "text": "For the cry is gone round about the borders of Moab;"
+          },
+          {
+            "verse": 9,
+            "text": "Yea the waters of Dimon are full of blood:"
+          }
+        ]
+      },
+      {
+        "chapter": 16,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Send forth the lambs of the ruler of the land,"
+          },
+          {
+            "verse": 2,
+            "text": "For it shall be, that as a wandering bird, a nest forsaken,"
+          },
+          {
+            "verse": 3,
+            "text": "Impart counsel; execute justice;"
+          },
+          {
+            "verse": 4,
+            "text": "Let my out-casts, the Moabites, dwell with thee;"
+          },
+          {
+            "verse": 5,
+            "text": "And the throne shall be established in mercy,"
+          },
+          {
+            "verse": 6,
+            "text": "We have heard of the pride of Moab; he is very proud:"
+          },
+          {
+            "verse": 7,
+            "text": "Therefore shall Moab lament over Moab,"
+          },
+          {
+            "verse": 8,
+            "text": "For the fields of Heshbon languish,"
+          },
+          {
+            "verse": 9,
+            "text": "Therefore I will weep, with the weeping of Jazer,"
+          },
+          {
+            "verse": 10,
+            "text": "And joy and gladness is taken away from the fruitful field;"
+          },
+          {
+            "verse": 11,
+            "text": "Wherefore my bowels shall sound like a harp for Moab;"
+          },
+          {
+            "verse": 12,
+            "text": "And it shall be, when it is seen"
+          },
+          {
+            "verse": 13,
+            "text": "This is the word, which Jehovah spake concerning Moab long ago;"
+          },
+          {
+            "verse": 14,
+            "text": "but now Jehovah hath spoken, saying:"
+          }
+        ]
+      },
+      {
+        "chapter": 17,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "THE ORACLE CONCERNING DAMASCUS."
+          },
+          {
+            "verse": 2,
+            "text": "The cities of Aroer are forsaken:"
+          },
+          {
+            "verse": 3,
+            "text": "The fortress also shall cease from Ephraim,"
+          },
+          {
+            "verse": 4,
+            "text": "And in that day it shall come to pass,"
+          },
+          {
+            "verse": 5,
+            "text": "And it shall be as when a reaper gathereth the standing corn,"
+          },
+          {
+            "verse": 6,
+            "text": "A gleaning only shall be left in it, as in the shaking of an olive tree,"
+          },
+          {
+            "verse": 7,
+            "text": "In that day shall a man regard his Maker,"
+          },
+          {
+            "verse": 8,
+            "text": "And he shall not regard the altars, the work of his hands;"
+          },
+          {
+            "verse": 9,
+            "text": "In that day shall his strongly fenced cities become"
+          },
+          {
+            "verse": 10,
+            "text": "Because thou hast forgotten the God of thy salvation,"
+          },
+          {
+            "verse": 11,
+            "text": "In the day shalt thou make thy plants to grow,"
+          },
+          {
+            "verse": 12,
+            "text": "Ah! the noise of many people;"
+          },
+          {
+            "verse": 13,
+            "text": "Ah! the rushing of nations; like the rushing of mighty waters do they rush:"
+          },
+          {
+            "verse": 14,
+            "text": "At eveningtide, behold terror!"
+          }
+        ]
+      },
+      {
+        "chapter": 18,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Ho! Thou land that makest a loud noise with thy wings,"
+          },
+          {
+            "verse": 2,
+            "text": "Which sendeth ambassadors along the sea,"
+          },
+          {
+            "verse": 3,
+            "text": "All ye inhabitants of the world, and dwellers on the earth,"
+          },
+          {
+            "verse": 4,
+            "text": "For thus hath Jehovah said unto me:"
+          },
+          {
+            "verse": 5,
+            "text": "For before the harvest, when the bud is perfect,"
+          },
+          {
+            "verse": 6,
+            "text": "They shall be left together unto the rapacious bird of the mountains,"
+          },
+          {
+            "verse": 7,
+            "text": "At that time shall a present be brought to Jehovah of hosts,"
+          }
+        ]
+      },
+      {
+        "chapter": 19,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "THE ORACLE CONCERNING EGYPT."
+          },
+          {
+            "verse": 2,
+            "text": "And I will excite the Egyptians against the Egyptians,"
+          },
+          {
+            "verse": 3,
+            "text": "And the spirit of Egypt shall fail in the midst thereof;"
+          },
+          {
+            "verse": 4,
+            "text": "And I will deliver up the Egyptians into the hands of a cruel lord,"
+          },
+          {
+            "verse": 5,
+            "text": "Then shall the waters fail from the sea,"
+          },
+          {
+            "verse": 6,
+            "text": "And the rivers shall send forth stench,"
+          },
+          {
+            "verse": 7,
+            "text": "The meadows by the river, even at the mouth of the river,"
+          },
+          {
+            "verse": 8,
+            "text": "The fishers also shall mourn,"
+          },
+          {
+            "verse": 9,
+            "text": "And the workers of combed flax shall be confounded,"
+          },
+          {
+            "verse": 10,
+            "text": "And her foundations are broken in pieces,"
+          },
+          {
+            "verse": 11,
+            "text": "Surely, the princes of Zoan are fools:"
+          },
+          {
+            "verse": 12,
+            "text": "Where now are they, thy wise men?"
+          },
+          {
+            "verse": 13,
+            "text": "The princes of Zoan are become foolish, the princes of Noph are deceived;"
+          },
+          {
+            "verse": 14,
+            "text": "Jehovah hath mingled in the midst of her a spirit of giddiness;"
+          },
+          {
+            "verse": 15,
+            "text": "Neither shall there be done by Egypt any work,"
+          },
+          {
+            "verse": 16,
+            "text": "In that day the Egyptians shall be as women;"
+          },
+          {
+            "verse": 17,
+            "text": "And the land of Judah shall become a terror to the Egyptians:"
+          },
+          {
+            "verse": 18,
+            "text": "In that day there shall be five cities in the land of Egypt,"
+          },
+          {
+            "verse": 19,
+            "text": "In that day there shall be an altar to Jehovah"
+          },
+          {
+            "verse": 20,
+            "text": "And it shall be for a sign, and for a witness,"
+          },
+          {
+            "verse": 21,
+            "text": "And Jehovah shall be known to Egypt,"
+          },
+          {
+            "verse": 22,
+            "text": "And Jehovah shall smite Egypt, smiting and healing her;"
+          },
+          {
+            "verse": 23,
+            "text": "In that day there shall be a highway from Egypt towards Assyria;"
+          },
+          {
+            "verse": 24,
+            "text": "In that day shall Israel be the third"
+          },
+          {
+            "verse": 25,
+            "text": "Whom Jehovah of hosts shall bless, saying:"
+          }
+        ]
+      },
+      {
+        "chapter": 20,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "In the year that Tartan came to Ashdod, (when Sargon the king of Assyria sent him,) and fought against Ashdod and took it;"
+          },
+          {
+            "verse": 2,
+            "text": "at that time Jehovah spake by Isaiab the son of Amoz, saying: Go and loose the sackcloth from off thy loins, and put off thy shoes from thy feet. And he did so, walking naked and barefoot."
+          },
+          {
+            "verse": 3,
+            "text": "And Jehovah said: Like as my servant Isaiab hath walked naked and barefoot three years, a sign and wonder for Egypt and for Cush;"
+          },
+          {
+            "verse": 4,
+            "text": "so shall the king of Assyria lead the captives of Egypt and the exiles of Cush, the young and the old, naked and barefoot with their hind-parts uncovered, to the shame of the Egyptians."
+          },
+          {
+            "verse": 5,
+            "text": "And they shall be terrified, and ashamed of Cush their expectation; and of Egypt their glory."
+          },
+          {
+            "verse": 6,
+            "text": "And the inhabitant of this region shall say in that day: Behold, such is our expectation, whither we fled for help to be delivered from the king of Assyria: and how shall we escape?"
+          }
+        ]
+      },
+      {
+        "chapter": 21,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "THE ORACLE CONCERNING THE DESERT OF THE SEA."
+          },
+          {
+            "verse": 2,
+            "text": "A dreadful vision hath been revealed unto me:"
+          },
+          {
+            "verse": 3,
+            "text": "Therefore are my loins filled with dreadful pain;"
+          },
+          {
+            "verse": 4,
+            "text": "My heart is bewildered; terror hath come upon me:"
+          },
+          {
+            "verse": 5,
+            "text": "The table is prepared, the watch is set; they eat, they drink;"
+          },
+          {
+            "verse": 6,
+            "text": "For thus hath the Lord said unto me:"
+          },
+          {
+            "verse": 7,
+            "text": "And he beheld riders, a couple of horsemen,"
+          },
+          {
+            "verse": 8,
+            "text": "Then he cried out like a lion:"
+          },
+          {
+            "verse": 9,
+            "text": "And, behold, there come men riding, a couple of horsemen."
+          },
+          {
+            "verse": 10,
+            "text": "O my threshing, and the corn of my floor!"
+          },
+          {
+            "verse": 11,
+            "text": "THE ORACLE CONCERNING DOMAH."
+          },
+          {
+            "verse": 12,
+            "text": "The watchman said;"
+          },
+          {
+            "verse": 13,
+            "text": "THE ORACLE AGAINST ARABIA."
+          },
+          {
+            "verse": 14,
+            "text": "To meet the thirsty they brought water,"
+          },
+          {
+            "verse": 15,
+            "text": "For from the face of the sword have they fled,"
+          },
+          {
+            "verse": 16,
+            "text": "For thus hath the Lord said unto me:"
+          },
+          {
+            "verse": 17,
+            "text": "And the residue of the number of the mighty bow men of the sons of Kedar, shall be diminished:"
+          }
+        ]
+      },
+      {
+        "chapter": 22,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "THE ORACLE CONCERNING THE VALLEY OF VISION."
+          },
+          {
+            "verse": 2,
+            "text": "O thou, that wast full of noise,"
+          },
+          {
+            "verse": 3,
+            "text": "All thy leaders who fled away together, have been taken by the archers;"
+          },
+          {
+            "verse": 4,
+            "text": "Wherefore I said: Turn your eyes away from me; I will weep bitterly:"
+          },
+          {
+            "verse": 5,
+            "text": "For it is a day of trouble, and of treading down, and of perplexity,"
+          },
+          {
+            "verse": 6,
+            "text": "And Elam beareth the quiver,"
+          },
+          {
+            "verse": 7,
+            "text": "And it came to pass, that thy choicest valleys were filled with chariots,"
+          },
+          {
+            "verse": 8,
+            "text": "And when he removed the veil of Judah,"
+          },
+          {
+            "verse": 9,
+            "text": "Ye have seen also the breaches of the city of David, that they have multiplied;"
+          },
+          {
+            "verse": 10,
+            "text": "And ye have numbered the houses of Jerusalem,"
+          },
+          {
+            "verse": 11,
+            "text": "Ye have made also a reservoir for water between the two walls,"
+          },
+          {
+            "verse": 12,
+            "text": "And in that day did the Lord, Jehovah of hosts, call"
+          },
+          {
+            "verse": 13,
+            "text": "But, behold joy and gladness,"
+          },
+          {
+            "verse": 14,
+            "text": "Therefore it was revealed in mine ears by Jehovah of hosts,"
+          },
+          {
+            "verse": 15,
+            "text": "Thus saith the Lord, Jehovah of hosts:"
+          },
+          {
+            "verse": 16,
+            "text": "What hast thou here? and whom hast thou here?"
+          },
+          {
+            "verse": 17,
+            "text": "Behold, Jehovah casteth thee down with a mighty overthrow:"
+          },
+          {
+            "verse": 18,
+            "text": "In whirling he will whirl thee with a whirl,"
+          },
+          {
+            "verse": 19,
+            "text": "And I will drive thee from thy station,"
+          },
+          {
+            "verse": 20,
+            "text": "And it shall come to pass in that day,"
+          },
+          {
+            "verse": 21,
+            "text": "And I will clothe him with thy robe,"
+          },
+          {
+            "verse": 22,
+            "text": "And I will lay the key of the house of David upon his shoulder;"
+          },
+          {
+            "verse": 23,
+            "text": "And I will fasten him as a nail in a sure place;"
+          },
+          {
+            "verse": 24,
+            "text": "And they shall hang upon him all the glory of his father\u0027s house,"
+          },
+          {
+            "verse": 25,
+            "text": "In that day, saith Jehovah of hosts,"
+          }
+        ]
+      },
+      {
+        "chapter": 23,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "THE ORACLE CONCERNING TYRE."
+          },
+          {
+            "verse": 2,
+            "text": "Be silent, ye inhabitants of the sea-coast:"
+          },
+          {
+            "verse": 3,
+            "text": "And upon the mighty waters the seed of Sihor,"
+          },
+          {
+            "verse": 4,
+            "text": "Be thou ashamed, O Zidon; for the sea hath spoken."
+          },
+          {
+            "verse": 5,
+            "text": "When the tidings shall reach Egypt,"
+          },
+          {
+            "verse": 6,
+            "text": "Pass ye over to Tarshish;"
+          },
+          {
+            "verse": 7,
+            "text": "Is this your joyous city;"
+          },
+          {
+            "verse": 8,
+            "text": "Who hath purposed this against Tyre, the dispenser of crowns;"
+          },
+          {
+            "verse": 9,
+            "text": "Jehovah of hosts hath purposed it,"
+          },
+          {
+            "verse": 10,
+            "text": "Pass through thy land, like the river, O daughter of Tarshish!"
+          },
+          {
+            "verse": 11,
+            "text": "He hath stretched his hand over the sea,"
+          },
+          {
+            "verse": 12,
+            "text": "And he hath said: Thou shalt no more rejoice,"
+          },
+          {
+            "verse": 13,
+            "text": "Behold the land of the Chaldeans!"
+          },
+          {
+            "verse": 14,
+            "text": "Howl, ye ships of Tarshish:"
+          },
+          {
+            "verse": 15,
+            "text": "And it shall come to pass in that day,"
+          },
+          {
+            "verse": 16,
+            "text": "Take an harp, go about the city,"
+          },
+          {
+            "verse": 17,
+            "text": "And it shall come to pass at the end of seventy years, That Jehovah will visit Tyre,"
+          },
+          {
+            "verse": 18,
+            "text": "But her merchandise and her hire shall be holy to Jehovah:"
+          }
+        ]
+      },
+      {
+        "chapter": 24,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Behold, Jehovah is about to make the land empty, and to make it waste;"
+          },
+          {
+            "verse": 2,
+            "text": "And it shall be, as with the people, so with the priest;"
+          },
+          {
+            "verse": 3,
+            "text": "The land shall be utterly emptied, and utterly spoiled;"
+          },
+          {
+            "verse": 4,
+            "text": "The land mourneth, it withereth;"
+          },
+          {
+            "verse": 5,
+            "text": "The land is even polluted under the inhabitants thereof;"
+          },
+          {
+            "verse": 6,
+            "text": "Therefore doth a curse devour the land,"
+          },
+          {
+            "verse": 7,
+            "text": "The new wine mourneth; the vine languisheth;"
+          },
+          {
+            "verse": 8,
+            "text": "The mirth of tabrets ceaseth,"
+          },
+          {
+            "verse": 9,
+            "text": "They shall not drink wine in the song;"
+          },
+          {
+            "verse": 10,
+            "text": "A desolate city is broken to pieces;"
+          },
+          {
+            "verse": 11,
+            "text": "There is a crying for wine in the streets,"
+          },
+          {
+            "verse": 12,
+            "text": "In the city is left devastation;"
+          },
+          {
+            "verse": 13,
+            "text": "For thus it shall be in the midst of the land, among the people,"
+          },
+          {
+            "verse": 14,
+            "text": "They shall lift up their voice, they shall shout for joy:"
+          },
+          {
+            "verse": 15,
+            "text": "Wherefore glorify ye Jehovah in the eastern regions,"
+          },
+          {
+            "verse": 16,
+            "text": "From the extremity of the earth have we heard songs: Glory to the righteous!"
+          },
+          {
+            "verse": 17,
+            "text": "The terror, and the pit, and the snare,"
+          },
+          {
+            "verse": 18,
+            "text": "And it shall be, that whoso fleeth from the sound of the terror shall fall into the pit;"
+          },
+          {
+            "verse": 19,
+            "text": "The earth is utterly broken down,"
+          },
+          {
+            "verse": 20,
+            "text": "The earth verily reeleth like a drunkard,"
+          },
+          {
+            "verse": 21,
+            "text": "And it shall come to pass in that day,"
+          },
+          {
+            "verse": 22,
+            "text": "And they shall be gathered together, as prisoners are gathered for the pit;"
+          },
+          {
+            "verse": 23,
+            "text": "And the moon shall be confounded, and the sun shall be ashamed;"
+          }
+        ]
+      },
+      {
+        "chapter": 25,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "O Jehovah, thou art my God:"
+          },
+          {
+            "verse": 2,
+            "text": "For thou hast made the city an heap;"
+          },
+          {
+            "verse": 3,
+            "text": "Therefore shall the strong people glorify thee,"
+          },
+          {
+            "verse": 4,
+            "text": "For thou hast been a defence to the poor,"
+          },
+          {
+            "verse": 5,
+            "text": "As heat in a dry land, so shalt thou bring down the tumult of the strangers;"
+          },
+          {
+            "verse": 6,
+            "text": "And in this mountain shall Jehovah of hosts make unto all the people"
+          },
+          {
+            "verse": 7,
+            "text": "And He shall destroy in this mountain"
+          },
+          {
+            "verse": 8,
+            "text": "He shall utterly destroy death for ever,"
+          },
+          {
+            "verse": 9,
+            "text": "And it shall be said in that day: Lo, this is our God;"
+          },
+          {
+            "verse": 10,
+            "text": "For the hand of Jehovah shall rest in this mountain:"
+          },
+          {
+            "verse": 11,
+            "text": "And he shall spread forth his hands in the midst thereof,"
+          },
+          {
+            "verse": 12,
+            "text": "And the bulwark of thy lofty walls shall he bring down, lay low,"
+          }
+        ]
+      },
+      {
+        "chapter": 26,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "In that day shall this song be sung in the land of Judah:"
+          },
+          {
+            "verse": 2,
+            "text": "Open ye the gates, that a righteous nation"
+          },
+          {
+            "verse": 3,
+            "text": "A well-established mind,"
+          },
+          {
+            "verse": 4,
+            "text": "Trust ye in Jehovah for ever;"
+          },
+          {
+            "verse": 5,
+            "text": "For he hath humbled those that dwell on high;"
+          },
+          {
+            "verse": 6,
+            "text": "The foot shall trample upon her;"
+          },
+          {
+            "verse": 7,
+            "text": "The way of the righteous is perfectly straight;"
+          },
+          {
+            "verse": 8,
+            "text": "Yea, in the way of thy judgments, O Jehovah, we have waited for thee;"
+          },
+          {
+            "verse": 9,
+            "text": "With my soul have I desired thee in the night;"
+          },
+          {
+            "verse": 10,
+            "text": "Though mercy be shewn to the wicked, yet will he not learn righteousness:"
+          },
+          {
+            "verse": 11,
+            "text": "Thy hand, O Jehovah, is lifted up, yet will they not see:"
+          },
+          {
+            "verse": 12,
+            "text": "Thou, O Jehovah, wilt ordain peace for us."
+          },
+          {
+            "verse": 13,
+            "text": "O Jehovah, our God!"
+          },
+          {
+            "verse": 14,
+            "text": "They are dead, they shall not live;"
+          },
+          {
+            "verse": 15,
+            "text": "Thou hast added to the nation, O Jehovah;"
+          },
+          {
+            "verse": 16,
+            "text": "O Jehovah, in affliction have they looked up to thee:"
+          },
+          {
+            "verse": 17,
+            "text": "Like as a woman with child, when her delivery approacheth,"
+          },
+          {
+            "verse": 18,
+            "text": "We have conceived, we have travailed,"
+          },
+          {
+            "verse": 19,
+            "text": "Thy dead shall revive, and our dead bodies shall rise again:"
+          },
+          {
+            "verse": 20,
+            "text": "Come, my people! retire into thy secret apartments;"
+          },
+          {
+            "verse": 21,
+            "text": "For behold, Jehovah is going forth from his place,"
+          }
+        ]
+      },
+      {
+        "chapter": 27,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "In that day,"
+          },
+          {
+            "verse": 2,
+            "text": "In that day,"
+          },
+          {
+            "verse": 3,
+            "text": "I Jehovah do guard her,"
+          },
+          {
+            "verse": 4,
+            "text": "Anger is not in me:"
+          },
+          {
+            "verse": 5,
+            "text": "But if any one will lay hold of my strength,"
+          },
+          {
+            "verse": 6,
+            "text": "In time to come, Jacob shall take root;"
+          },
+          {
+            "verse": 7,
+            "text": "Hath He smitten him, as he smote them that smote him?"
+          },
+          {
+            "verse": 8,
+            "text": "With moderation did He punish her, by removing her far away;"
+          },
+          {
+            "verse": 9,
+            "text": "By this therefore is the guilt of Jacob expiated,"
+          },
+          {
+            "verse": 10,
+            "text": "For the fortified city shall be solitary,"
+          },
+          {
+            "verse": 11,
+            "text": "When the boughs thereof are withered, they shall be broken off:"
+          },
+          {
+            "verse": 12,
+            "text": "And it shall come to pass in that day,"
+          },
+          {
+            "verse": 13,
+            "text": "And it shall come to pass in that day;"
+          }
+        ]
+      },
+      {
+        "chapter": 28,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Wo to the proud crown of the drunkards of Ephraim,"
+          },
+          {
+            "verse": 2,
+            "text": "Behold the strong and mighty one of the Lord!"
+          },
+          {
+            "verse": 3,
+            "text": "Under foot shall it be trodden down,"
+          },
+          {
+            "verse": 4,
+            "text": "The fading flower, their glorious beauty,"
+          },
+          {
+            "verse": 5,
+            "text": "In that day shall Jehovah of hosts become a beauteous crown,"
+          },
+          {
+            "verse": 6,
+            "text": "And a spirit of judgment to him that sitteth in judgment;"
+          },
+          {
+            "verse": 7,
+            "text": "But even these have erred through wine, and through strong drink they have reeled:"
+          },
+          {
+            "verse": 8,
+            "text": "For all tables are full of filthy vomit;"
+          },
+          {
+            "verse": 9,
+            "text": "Whom, say they, would he teach knowledge?"
+          },
+          {
+            "verse": 10,
+            "text": "For it is precept upon precept, precept upon precept;"
+          },
+          {
+            "verse": 11,
+            "text": "Yea verily, by speakers of a strange language, and in a foreign tongue,"
+          },
+          {
+            "verse": 12,
+            "text": "For when He said unto them:"
+          },
+          {
+            "verse": 13,
+            "text": "But the word of Jehovah was unto them,"
+          },
+          {
+            "verse": 14,
+            "text": "Wherefore hear ye the word of Jehovah, ye scoffers;"
+          },
+          {
+            "verse": 15,
+            "text": "Because ye have said: We have made a covenant with death,"
+          },
+          {
+            "verse": 16,
+            "text": "Therefore thus saith the Lord Jehovah:"
+          },
+          {
+            "verse": 17,
+            "text": "And I will set judgment for a line,"
+          },
+          {
+            "verse": 18,
+            "text": "And your covenant with death shall be annulled;"
+          },
+          {
+            "verse": 19,
+            "text": "As oft as it passeth through, shall it seize you;"
+          },
+          {
+            "verse": 20,
+            "text": "For the bed is too short, for one to stretch himself out at length;"
+          },
+          {
+            "verse": 21,
+            "text": "For as in mount Perazim, Jehovah will arise;"
+          },
+          {
+            "verse": 22,
+            "text": "Now therefore give not up yourselves to scoffing,"
+          },
+          {
+            "verse": 23,
+            "text": "Give ye ear, and hear my voice;"
+          },
+          {
+            "verse": 24,
+            "text": "Doth the ploughman plough all day long that he may sow?"
+          },
+          {
+            "verse": 25,
+            "text": "Doth he not also, when he hath levelled the surface thereof,"
+          },
+          {
+            "verse": 26,
+            "text": "For He instructeth him as to the right way,"
+          },
+          {
+            "verse": 27,
+            "text": "For the dill is not threshed with the threshing sledge,"
+          },
+          {
+            "verse": 28,
+            "text": "Bread-corn is threshed:"
+          },
+          {
+            "verse": 29,
+            "text": "This also cometh from Jehovah of hosts,"
+          }
+        ]
+      },
+      {
+        "chapter": 29,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Wo to Ariel, to Ariel,"
+          },
+          {
+            "verse": 2,
+            "text": "Yet I will bring distress upon Ariel;"
+          },
+          {
+            "verse": 3,
+            "text": "And I will encamp against thee round about,"
+          },
+          {
+            "verse": 4,
+            "text": "And thou shalt be brought low; and thou shalt speak out of the ground,"
+          },
+          {
+            "verse": 5,
+            "text": "Moreover the multitude of thy strangers shall be like small dust,"
+          },
+          {
+            "verse": 6,
+            "text": "From Jehovah of hosts cometh the visitation,"
+          },
+          {
+            "verse": 7,
+            "text": "And like a dream, a night vision, shall be"
+          },
+          {
+            "verse": 8,
+            "text": "It shall even be,"
+          },
+          {
+            "verse": 9,
+            "text": "Stare ye now, and wonder!"
+          },
+          {
+            "verse": 10,
+            "text": "For Jehovah hath poured out upon you a spirit of deep sleep,"
+          },
+          {
+            "verse": 11,
+            "text": "So that the whole vision is to you like the words of a sealed book,"
+          },
+          {
+            "verse": 12,
+            "text": "And the book is delivered to one that knoweth not letters,"
+          },
+          {
+            "verse": 13,
+            "text": "Wherefore the Lord hath said:"
+          },
+          {
+            "verse": 14,
+            "text": "Therefore, behold, I will proceed to deal wonderfully"
+          },
+          {
+            "verse": 15,
+            "text": "Wo unto them that seek with deep cunning to hide their counsel from Jehovah;"
+          },
+          {
+            "verse": 16,
+            "text": "O your perverseness!"
+          },
+          {
+            "verse": 17,
+            "text": "Is it not yet a very little while,"
+          },
+          {
+            "verse": 18,
+            "text": "And in that day shall the deaf hear the words of this book;"
+          },
+          {
+            "verse": 19,
+            "text": "The meek also shall increase their joy in Jehovah;"
+          },
+          {
+            "verse": 20,
+            "text": "For the oppressor hath ceased, and the scoffer is no more;"
+          },
+          {
+            "verse": 21,
+            "text": "They who would bring in a man guilty for a word,"
+          },
+          {
+            "verse": 22,
+            "text": "Wherefore thus saith Jehovah to the house of Jacob,"
+          },
+          {
+            "verse": 23,
+            "text": "For when his children shall see the work of my hands in the midst of themselves,"
+          },
+          {
+            "verse": 24,
+            "text": "They also that have erred in spirit shall be full of understanding,"
+          }
+        ]
+      },
+      {
+        "chapter": 30,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Wo unto the rebellious children, saith Jehovah,"
+          },
+          {
+            "verse": 2,
+            "text": "Who set forward to go down to Egypt;"
+          },
+          {
+            "verse": 3,
+            "text": "But the strength of Pharaoh shall be your shame;"
+          },
+          {
+            "verse": 4,
+            "text": "When his princes were at Zoan,"
+          },
+          {
+            "verse": 5,
+            "text": "They were all ashamed of a people that could not profit them;"
+          },
+          {
+            "verse": 6,
+            "text": "THE ORACLE CONCERNING THE BEASTS OF THE SOUTH."
+          },
+          {
+            "verse": 7,
+            "text": "For Egypt shall help in vain, and to no purpose;"
+          },
+          {
+            "verse": 8,
+            "text": "Now, go write it for them on a tablet;"
+          },
+          {
+            "verse": 9,
+            "text": "For this is a rebellious people, lying children;"
+          },
+          {
+            "verse": 10,
+            "text": "Who say to the seers, See not;"
+          },
+          {
+            "verse": 11,
+            "text": "Get you out of the way,"
+          },
+          {
+            "verse": 12,
+            "text": "Wherefore thus saith the Holy One of Israel:"
+          },
+          {
+            "verse": 13,
+            "text": "Therefore this iniquity shall be unto you"
+          },
+          {
+            "verse": 14,
+            "text": "And it shall be broken, as the breaking of a potter\u0027s vessel that is broken in pieces;"
+          },
+          {
+            "verse": 15,
+            "text": "Verily thus saith the Lord Jehovah, the Holy One of Israel:"
+          },
+          {
+            "verse": 16,
+            "text": "And ye said: No, for we will flee upon horses;"
+          },
+          {
+            "verse": 17,
+            "text": "One thousand shall flee at the rebuke of one;"
+          },
+          {
+            "verse": 18,
+            "text": "And therefore shall Jehovah delay, that he may be gracious unto you;"
+          },
+          {
+            "verse": 19,
+            "text": "Surely the people shall dwell in Zion at Jerusalem:"
+          },
+          {
+            "verse": 20,
+            "text": "And the Lord shall give you the bread of adversity and the water of affliction;"
+          },
+          {
+            "verse": 21,
+            "text": "And thine ears shall hear a word behind thee,"
+          },
+          {
+            "verse": 22,
+            "text": "And ye shall defile the covering of your graven images of silver,"
+          },
+          {
+            "verse": 23,
+            "text": "Then shall he give rain for thy seed,"
+          },
+          {
+            "verse": 24,
+            "text": "And the oxen, and the young asses, that till the ground,"
+          },
+          {
+            "verse": 25,
+            "text": "And there shall be upon every high mountain,"
+          },
+          {
+            "verse": 26,
+            "text": "Moreover the light of the moon shall be as the light of the sun,"
+          },
+          {
+            "verse": 27,
+            "text": "Behold! the name of Jehovah cometh from afar,"
+          },
+          {
+            "verse": 28,
+            "text": "And his breath is like an overflowing torrent,"
+          },
+          {
+            "verse": 29,
+            "text": "Ye shall have a song, as in the night when the feast"
+          },
+          {
+            "verse": 30,
+            "text": "And Jehovah shall cause his glorious voice to be heard,"
+          },
+          {
+            "verse": 31,
+            "text": "When at the voice of Jehovah the Assyrian shall be beaten down,"
+          },
+          {
+            "verse": 32,
+            "text": "And wherever the appointed rod shall pass,"
+          },
+          {
+            "verse": 33,
+            "text": "For Tophet is ordained of old,"
+          }
+        ]
+      },
+      {
+        "chapter": 31,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Wo unto them that go down to Egypt for help,"
+          },
+          {
+            "verse": 2,
+            "text": "Yet He also is wise, and will bring evil;"
+          },
+          {
+            "verse": 3,
+            "text": "Now the Egyptians are men, and not God;"
+          },
+          {
+            "verse": 4,
+            "text": "For thus hath Jehovah said unto me:"
+          },
+          {
+            "verse": 5,
+            "text": "As birds hover over their young,"
+          },
+          {
+            "verse": 6,
+            "text": "Return unto him, from whom ye have deeply revolted,"
+          },
+          {
+            "verse": 7,
+            "text": "Surely, in that day shall they cast away with contempt,"
+          },
+          {
+            "verse": 8,
+            "text": "And the Assyrian shall fall by a sword not of man;"
+          },
+          {
+            "verse": 9,
+            "text": "And for terror he shall pass by his strong hold,"
+          }
+        ]
+      },
+      {
+        "chapter": 32,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Behold! a king shall reign in righteousness,"
+          },
+          {
+            "verse": 2,
+            "text": "And a man shall be as an hiding-place from the wind,"
+          },
+          {
+            "verse": 3,
+            "text": "And the eyes of them that see shall not be dim;"
+          },
+          {
+            "verse": 4,
+            "text": "The heart also of the rash shall understand knowledge,"
+          },
+          {
+            "verse": 5,
+            "text": "The fool shall no longer be called honourable,"
+          },
+          {
+            "verse": 6,
+            "text": "For the fool will still utter folly,"
+          },
+          {
+            "verse": 7,
+            "text": "As for the fraudulent, his instruments are evil;"
+          },
+          {
+            "verse": 8,
+            "text": "But the honourable man will devise honourable things,"
+          },
+          {
+            "verse": 9,
+            "text": "Arise, hear my voice, ye women that are at ease,"
+          },
+          {
+            "verse": 10,
+            "text": "Many days and years shall ye be disquieted, ye careless ones!"
+          },
+          {
+            "verse": 11,
+            "text": "Tremble, ye women that are at ease; be disquieted, ye careless ones!"
+          },
+          {
+            "verse": 12,
+            "text": "They lament for the fields,"
+          },
+          {
+            "verse": 13,
+            "text": "Upon the land of my people shall come up thorns and briers,"
+          },
+          {
+            "verse": 14,
+            "text": "For the palace shall be deserted, the populous city shall be forsaken;"
+          },
+          {
+            "verse": 15,
+            "text": "Until the Spirit be poured out upon us from on high;"
+          },
+          {
+            "verse": 16,
+            "text": "Then judgment shall dwell in the wilderness,"
+          },
+          {
+            "verse": 17,
+            "text": "And the work of righteousness shall be peace;"
+          },
+          {
+            "verse": 18,
+            "text": "And my people shall dwell in a peaceful abode,"
+          },
+          {
+            "verse": 19,
+            "text": "But it shall hail at the time when the forest is cut down,"
+          },
+          {
+            "verse": 20,
+            "text": "Blessed are ye who sow your seed beside all waters,"
+          }
+        ]
+      },
+      {
+        "chapter": 33,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Wo unto thee that spoilest, and thou hast not been spoiled;"
+          },
+          {
+            "verse": 2,
+            "text": "O Jehovah, be gracious unto us; we have waited for thee:"
+          },
+          {
+            "verse": 3,
+            "text": "At the noise of the tumult the people fled;"
+          },
+          {
+            "verse": 4,
+            "text": "But your spoil shall be gathered, as the caterpillar gathereth;"
+          },
+          {
+            "verse": 5,
+            "text": "Jehovah is exalted, for he dwelleth on high:"
+          },
+          {
+            "verse": 6,
+            "text": "And there shall be stability of thy times,"
+          },
+          {
+            "verse": 7,
+            "text": "Behold their valiant men! they raise a cry without; The messengers of peace! they weep bitterly."
+          },
+          {
+            "verse": 8,
+            "text": "The highways are desolate,"
+          },
+          {
+            "verse": 9,
+            "text": "The land mourneth, it languished!;"
+          },
+          {
+            "verse": 10,
+            "text": "Now will I arise, saith Jehovah;"
+          },
+          {
+            "verse": 11,
+            "text": "Ye shall conceive chaff, ye shall bring forth stubble;"
+          },
+          {
+            "verse": 12,
+            "text": "And the people shall be as stones burnt into lime,"
+          },
+          {
+            "verse": 13,
+            "text": "Hear, ye that are afar off, my doings;"
+          },
+          {
+            "verse": 14,
+            "text": "The sinners in Zion are struck with dread,"
+          },
+          {
+            "verse": 15,
+            "text": "He that walketh righteously, and speaketh uprightly;"
+          },
+          {
+            "verse": 16,
+            "text": "He shall dwell on high:"
+          },
+          {
+            "verse": 17,
+            "text": "Thine eyes shall see the king in his beauty:"
+          },
+          {
+            "verse": 18,
+            "text": "Thine heart shall reflect on the terror:"
+          },
+          {
+            "verse": 19,
+            "text": "That fierce people shalt thou see no more;"
+          },
+          {
+            "verse": 20,
+            "text": "Look upon Zion, the city of our solemn feasts:"
+          },
+          {
+            "verse": 21,
+            "text": "But there shall the Mighty One, Jehovah, be unto us"
+          },
+          {
+            "verse": 22,
+            "text": "For Jehovah is our judge; Jehovah is our lawgiver;"
+          },
+          {
+            "verse": 23,
+            "text": "Thy ropes are loosed, O thou enemy!"
+          },
+          {
+            "verse": 24,
+            "text": "Neither shall the inhabitant say, I am sick:"
+          }
+        ]
+      },
+      {
+        "chapter": 34,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Come near, ye nations, to hear;"
+          },
+          {
+            "verse": 2,
+            "text": "For the indignation of Jehovah is upon all nations,"
+          },
+          {
+            "verse": 3,
+            "text": "And their slain shall he cast out,"
+          },
+          {
+            "verse": 4,
+            "text": "And all the host of heaven shall be dissolved."
+          },
+          {
+            "verse": 5,
+            "text": "For my sword hath already been made drunk in the heavens:"
+          },
+          {
+            "verse": 6,
+            "text": "The sword of Jehovah is glutted with blood,"
+          },
+          {
+            "verse": 7,
+            "text": "And with them shall be slaughtered the buffaloes,"
+          },
+          {
+            "verse": 8,
+            "text": "For to Jehovah there is a day of vengeance,"
+          },
+          {
+            "verse": 9,
+            "text": "And her streams shall be turned into pitch,"
+          },
+          {
+            "verse": 10,
+            "text": "By night or by day it shall not be extinguished,"
+          },
+          {
+            "verse": 11,
+            "text": "But the pelican and the porcupine shall possess it;"
+          },
+          {
+            "verse": 12,
+            "text": "As for her nobles, there is not one there whom they might call to the government of the kingdom;"
+          },
+          {
+            "verse": 13,
+            "text": "And in her palaces shall spring up thorns;"
+          },
+          {
+            "verse": 14,
+            "text": "And the wild cats shall meet the jackals,"
+          },
+          {
+            "verse": 15,
+            "text": "There shall the darting serpent make her nest, and lay her eggs:"
+          },
+          {
+            "verse": 16,
+            "text": "Seek ye out of the book of Jehovah, and read:"
+          },
+          {
+            "verse": 17,
+            "text": "And he hath cast the lot for them,"
+          }
+        ]
+      },
+      {
+        "chapter": 35,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "The desert, and the dry place, shall be glad for them;"
+          },
+          {
+            "verse": 2,
+            "text": "It shall blossom abundantly,"
+          },
+          {
+            "verse": 3,
+            "text": "Strengthen ye the feeble hands,"
+          },
+          {
+            "verse": 4,
+            "text": "Say to the agitated in heart: Be strong,"
+          },
+          {
+            "verse": 5,
+            "text": "Then the eyes of the blind shall be opened,"
+          },
+          {
+            "verse": 6,
+            "text": "Then shall the lame bound like the hart,"
+          },
+          {
+            "verse": 7,
+            "text": "And the apparent water of the desert shall become a pool,"
+          },
+          {
+            "verse": 8,
+            "text": "And an highway shall be there, even a road;"
+          },
+          {
+            "verse": 9,
+            "text": "There shall not be a lion there,"
+          },
+          {
+            "verse": 10,
+            "text": "And the ransomed of Jehovah shall return,"
+          }
+        ]
+      },
+      {
+        "chapter": 36,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Now it came to pass in the fourteenth year of king Hezekiah, that Sennacherib king of Assyria came up against all the fenced cities of Judah, and took them."
+          },
+          {
+            "verse": 2,
+            "text": "And the king of Assyria sent Rabshakeh from Lachish to Jerusalem unto king Hezekiah with a great army. And he stood by the conduit of the upper pool in the high-way of the fuller\u2019s field."
+          },
+          {
+            "verse": 3,
+            "text": "Then came forth unto him Eliakim, the son of Hilkiah, who was over the household, and Shebna the scribe, and Joah, the son of Asaph, the recorder."
+          },
+          {
+            "verse": 4,
+            "text": "And Rabshakeh said unto them: Say ye now to Hezekiah, Thus saith the great king, the king of Assyria: What confidence is this wherein thou trustest?"
+          },
+          {
+            "verse": 5,
+            "text": "I say, sayest thou, (but they are vain words) there is counsel and strength for the war. Now on whom dost thou trust, that thou rebellest against me?"
+          },
+          {
+            "verse": 6,
+            "text": "Lo, thou trustest in the staff of this broken reed, on Egypt; on which if a man lean, it will pierce his hand, and go through it: so is Pharaoh king of Egypt to all that trust in him."
+          },
+          {
+            "verse": 7,
+            "text": "But if thou say to me, We trust in Jehovah our God: is it not He, whose high places and whose altars Hezekiah hath taken away, and said to Judah and Jerusalem,"
+          },
+          {
+            "verse": 8,
+            "text": "Ye shall worship before this altar? Now therefore give pledges, I pray thee, to my master the king of Assyria; and I will give thee two thousand horses, if thou be able on thy part to set riders upon them."
+          },
+          {
+            "verse": 9,
+            "text": "How then wilt thou turn away the face of one captain of the least of my master\u0027s servants, and put thy trust on Egypt for chariots and horsemen?"
+          },
+          {
+            "verse": 10,
+            "text": "And am I now come up without Jehovah against this land to destroy it? Jehovah hath said unto me, Go up against this land and destroy it."
+          },
+          {
+            "verse": 11,
+            "text": "Then said Eliakim, and Shebna, and Joah, unto Rabshakeh: Speak, we beseech thee, to thy servants in the Syrian language, for we understand it; and speak not unto us in the Jewish language, in the hearing of the people who are on the wall."
+          },
+          {
+            "verse": 12,
+            "text": "But Rabshakeh said, Hath my master sent me to thy master and to thee to speak these words? Hath he not sent me to the men that sit upon the wall, that they may eat their own filth, and drink their own urine with you?"
+          },
+          {
+            "verse": 13,
+            "text": "Then Rabshakeh stood, and cried with a loud voice in the Jews\u2019 language, and said: Hear ye the words of the great king, the king of Assyria."
+          },
+          {
+            "verse": 14,
+            "text": "Thus saith the king: Let not Hezekiah deceive you; for he will not be able to deliver you."
+          },
+          {
+            "verse": 15,
+            "text": "And let not Hezekiah make you trust in Jehovah; saying, Jehovah will certainly deliver us: this city shall not be delivered into the hand of the king of Assyria."
+          },
+          {
+            "verse": 16,
+            "text": "Hearken not unto Hezekiah: for thus saith the king of Assyria, Make peace with me and come out unto me. And eat ye every one of his own vine, and every one of his own fig-tree, and drink ye every one the waters of his own cistern;"
+          },
+          {
+            "verse": 17,
+            "text": "until I come and take you to a land like your own land, a land of corn and of wine, a land of bread and of vineyards."
+          },
+          {
+            "verse": 18,
+            "text": "Let not Hezekiah seduce you, saying, Jehovah will deliver us. Have the gods of the nations delivered, each his own land, from the hand of the king of Assyria?"
+          },
+          {
+            "verse": 19,
+            "text": "Where are the gods of Hamath and Arpad? where are the gods of Sepharvaim? And have they delivered Samaria out of my hand?"
+          },
+          {
+            "verse": 20,
+            "text": "Who are they among all the gods of these lands, that have delivered their own lands out of my hand, that Jehovah should deliver Jerusalem out of my hand?"
+          },
+          {
+            "verse": 21,
+            "text": "But they held their peace, and answered him not a word: for the king\u0027s command was, saying, Answer him not."
+          },
+          {
+            "verse": 22,
+            "text": "Then came Eliakim, the son of Hilkiah, who was over the household, and Shebna the scribe, and Joah, the son of Asaph, the recorder, to Hezekiah with their clothes rent, and told him the words of Rabshakeh."
+          }
+        ]
+      },
+      {
+        "chapter": 37,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "And it came to pass when king Hezekiah heard it, that he rent his clothes, and covered himself with sackcloth, and went into the house of Jehovah."
+          },
+          {
+            "verse": 2,
+            "text": "And he sent Eliakim, who was over the household, and Shebna the scribe, and the elders of the priests covered with sackcloth, unto Isaiah the prophet, the son of Amoz."
+          },
+          {
+            "verse": 3,
+            "text": "And they said unto him: Thus saith Hezekiah, This day is a day of distress, and of rebuke, and of contumely: for the children are come to the birth, and there is not strength to bring forth."
+          },
+          {
+            "verse": 4,
+            "text": "It may be that Jehovah, thy God, will hear the words of Rabshakeh, whom his master the king of Assyria hath sent to reproach the living God, and will reprove the words which Jehovah, thy God, hath heard: wherefore lift up thy prayer for the remnant that is yet left."
+          },
+          {
+            "verse": 5,
+            "text": "And the servants of king Hezekiah came to Isaiah."
+          },
+          {
+            "verse": 6,
+            "text": "And Isaiah said unto them: Thus shall ye say to your master, Thus saith Jehovah: Be not afraid because of the words which thou hast heard, with which the servants of the king of Assyria have blasphemed me."
+          },
+          {
+            "verse": 7,
+            "text": "Behold, I will bring a tremour upon him; and he shall hear a rumour, and return to his own land; and I will cause him to fall by the sword in his own land."
+          },
+          {
+            "verse": 8,
+            "text": "So Rabshakeh returned, and found the king of Assyriah warring against Libnah: for he had heard that he was departed from Lachish."
+          },
+          {
+            "verse": 9,
+            "text": "And he heard say concerning Tirhakah, king of Cush, He is come forth to make war with thee. And when he heard it, he sent messengers to Hezekiah, saying:"
+          },
+          {
+            "verse": 10,
+            "text": "Thus shall ye speak unto Hezekiah, king of Judah, saying Let not thy God, in whom thou trustest, deceive thee, saying, Jerusalem shall not be given into the hand of the king of Assyria."
+          },
+          {
+            "verse": 11,
+            "text": "Behold, thou hast heard what the kings of Assyria have done to all these lands by destroying them utterly; and shalt thou be delivered?"
+          },
+          {
+            "verse": 12,
+            "text": "Have the gods of the nations delivered those, whom my father have destroyed? as Gozan, and Haran, and Rezeph, and the children of Eden which were in Telassar?"
+          },
+          {
+            "verse": 13,
+            "text": "Where is the king of Hamath, and the king of Arpad, and the king of the city of Sepharvaim, of Henah, and of Ivah?"
+          },
+          {
+            "verse": 14,
+            "text": "And Hezekiah received the letter from the hand of the messengers, and read it; and he went up unto the house of Jehovah, and Hezekiah spread it before Jehovah."
+          },
+          {
+            "verse": 15,
+            "text": "And Hezekiah prayed unto Jehovah, saying:"
+          },
+          {
+            "verse": 16,
+            "text": "O Jehovah of hosts, the God of Israel, who dwellest between the Cherubims, Thou art the God, even thou alone, of all the kingdoms of the earth: Thou hast made the heavens, and the earth. Incline thine ear, O Jehovah, and hear;"
+          },
+          {
+            "verse": 17,
+            "text": "open thine eyes, O Jehovah, and see; and hear all the words of Sennacherib, which he hath sent to reproach the living God."
+          },
+          {
+            "verse": 18,
+            "text": "In truth, O Jehovah, the kings of Assyria have destroyed all the nations, and their lands;"
+          },
+          {
+            "verse": 19,
+            "text": "and have cast their gods into the fire: for they were no gods, but the work of men\u2019s hands, wood and stone: therefore they have destroyed them."
+          },
+          {
+            "verse": 20,
+            "text": "And now, O Jehovah, our God! save us from his hand, that all the kingdoms of the earth may know that thou art Jehovah, even thou only."
+          },
+          {
+            "verse": 21,
+            "text": "Then Isaiah, the son of Amoz, sent unto Hezekiah, saying: Thus saith Jehovah, the God of Israel: Whereas thou hast prayed unto me, concerning Sennacherib king of Assyria:"
+          },
+          {
+            "verse": 22,
+            "text": "This is the word which Jehovah hath spoken against him:"
+          },
+          {
+            "verse": 23,
+            "text": "Whom hast thou reproached, and blasphemed;"
+          },
+          {
+            "verse": 24,
+            "text": "By thy servants hast thou reproached the Lord, and hast said:"
+          },
+          {
+            "verse": 25,
+            "text": "I have digged, and drunk water;"
+          },
+          {
+            "verse": 26,
+            "text": "Hast thou not heard, that, from of old, I had disposed it?"
+          },
+          {
+            "verse": 27,
+            "text": "Therefore were their inhabitants of small power,"
+          },
+          {
+            "verse": 28,
+            "text": "But thy sitting down, and thy going out, and thy coming in, have I known;"
+          },
+          {
+            "verse": 29,
+            "text": "Because thy rage against me, and thy insolence,"
+          },
+          {
+            "verse": 30,
+            "text": "And this shall be a sign unto thee:"
+          },
+          {
+            "verse": 31,
+            "text": "And the escaped of the house of Judah, which remain,"
+          },
+          {
+            "verse": 32,
+            "text": "For from Jerusalem shall go forth the remnant,"
+          },
+          {
+            "verse": 33,
+            "text": "Therefore thus saith Jehovah concerning the king of Assyria:"
+          },
+          {
+            "verse": 34,
+            "text": "By the way through which he came, by the same shall he return;"
+          },
+          {
+            "verse": 35,
+            "text": "And I will protect this city to deliver it,"
+          },
+          {
+            "verse": 36,
+            "text": "Then an angel of Jehovah went forth, and smote in the camp of the Assyrians an hundred and fourscore and five thousand men; and when man arose early in the morning, behold, they were all dead corpses."
+          },
+          {
+            "verse": 37,
+            "text": "Then Sennacherib king of Assyria departed, and went, and returned; and dwelt at Nineveh."
+          },
+          {
+            "verse": 38,
+            "text": "And it came to pass, as he was worshipping in the house of Nisroch his god, Adrammelech and Sharezer, his sons, smote him with the sword; and they escaped into the land of Ararat: and Esarhaddon, his son, reigned in his stead."
+          }
+        ]
+      },
+      {
+        "chapter": 38,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "In those days was Hezekiah sick unto death. And Isaiah the prophet, the son of Amoz, came unto him, and said unto him Thus saith Jehovah: Give charge concerning thine house: for thou shalt die and not live."
+          },
+          {
+            "verse": 2,
+            "text": "Then Hezekiah turned his face toward the wall, mad prayed unto Jehovah."
+          },
+          {
+            "verse": 3,
+            "text": "And he said, Remember now, O Jehovah, I beseech thee, how I have walked before thee in truth, and with a perfect heart, and have done that which is good in thy sight And Hezekiah wept sore."
+          },
+          {
+            "verse": 4,
+            "text": "Then came the word of Jehovah to Isaiah, saying:"
+          },
+          {
+            "verse": 5,
+            "text": "Go, and say unto Hezekiah, Thus saith Jehovah, the God of David thy father: I have heard thy prayer, I have seen thy tears: Behold, I will add unto thy days fifteen years."
+          },
+          {
+            "verse": 6,
+            "text": "And I will deliver thee, and this city, out of the hand of the king of Assyria: and I will defend this city."
+          },
+          {
+            "verse": 7,
+            "text": "And this shall be a sign unto thee from Jehovah, that Jehovah will do this thing which he hath spoken."
+          },
+          {
+            "verse": 8,
+            "text": "Behold, I will cause the shadow of degrees, which hath gone down, by the sun, on the dial of Ahaz, to go back ten degrees. And the sun returned back ten degrees, by the degrees by which it had gone down."
+          },
+          {
+            "verse": 9,
+            "text": "THE WRITING OF HEZEKIAH KING OF JUDAH, WHEN HE HAD BEEN SICK, AND WAS RECOVERED FROM HIS SICKNESS."
+          },
+          {
+            "verse": 10,
+            "text": "I said: In the noontide of my days I shall go to the gates of the grave;"
+          },
+          {
+            "verse": 11,
+            "text": "I said: I shall no more see Jehovah,"
+          },
+          {
+            "verse": 12,
+            "text": "My habitation is taken down, and removed from me, like a shepherd\u0027s tent."
+          },
+          {
+            "verse": 13,
+            "text": "I resembled a roaring lion till the morning,"
+          },
+          {
+            "verse": 14,
+            "text": "Like a swallow, or a crane, so did I twitter;"
+          },
+          {
+            "verse": 15,
+            "text": "What shall I say?"
+          },
+          {
+            "verse": 16,
+            "text": "O Lord, by these things do men live;"
+          },
+          {
+            "verse": 17,
+            "text": "Behold, my bitter anguish is changed into health:"
+          },
+          {
+            "verse": 18,
+            "text": "For the grave cannot praise thee,"
+          },
+          {
+            "verse": 19,
+            "text": "The living, the living, he shall praise thee, as I do this day;"
+          },
+          {
+            "verse": 20,
+            "text": "Jehovah was at hand to save me:"
+          },
+          {
+            "verse": 21,
+            "text": "Now, Isaiah had said: Let them take a lump of figs, and lay it for a plaister upon the boil, and he shall"
+          },
+          {
+            "verse": 22,
+            "text": "recover. Hezekiah also had said: What is the sign that I shall go up to the house of Jehovah?"
+          }
+        ]
+      },
+      {
+        "chapter": 39,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "At that time Merodach Baladan, the son of Baladan, king of Babylon, sent letters and a present to Hezekiah; for he had heard that he had been sick, and was recovered."
+          },
+          {
+            "verse": 2,
+            "text": "And Hezekiah was glad of them, and shewed them his treasure-house, the silver, and the gold, and the spices, and the precious ointment, and all the house of his armour, and all that was found among his treasures. There was nothing in his house, or in all his dominion, that Hezekiah did not shew them."
+          },
+          {
+            "verse": 3,
+            "text": "Then came Isaiah the prophet unto king Hezekiah, and said unto him: What said these men? and from whence came they unto thee? And Hezekiah said: They came unto me from a far country, even from Babylon."
+          },
+          {
+            "verse": 4,
+            "text": "Then said he: What have they seen in thine house? And Hezekiah said: All that is in mine house have they seen: there is nothing among my treasures which I have not shewed them."
+          },
+          {
+            "verse": 5,
+            "text": "Then said Isaiah to Hezekiah:"
+          },
+          {
+            "verse": 6,
+            "text": "Hear the word of Jehovah of hosts. Behold, the days shall come, when all that is in thine house, and all that thy fathers have treasured up unto this day, shall be carried away to Babylon: nothing shall be left, saith Jehovah."
+          },
+          {
+            "verse": 7,
+            "text": "And of thy sons which shall issue from thee, which thou shalt beget, shall they take away, and they shall be eunuchs in the palace of the king of Babylon."
+          },
+          {
+            "verse": 8,
+            "text": "And Hezekiah said to Isaiah: Good is the word of Jehovah, which thou hast spoken: He said, moreover, There shall be peace and truth in my days."
+          }
+        ]
+      },
+      {
+        "chapter": 40,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Comfort ye, comfort ye my people, saith your God:"
+          },
+          {
+            "verse": 2,
+            "text": "Speak ye things pleasing to the heart of Jerusalem, and declare unto her,"
+          },
+          {
+            "verse": 3,
+            "text": "A voice crieth in the wilderness,"
+          },
+          {
+            "verse": 4,
+            "text": "Every valley shall be exalted,"
+          },
+          {
+            "verse": 5,
+            "text": "And the glory of Jehovah shall be revealed,"
+          },
+          {
+            "verse": 6,
+            "text": "A voice saith, Proclaim!"
+          },
+          {
+            "verse": 7,
+            "text": "The grass withereth, the flower fadeth,"
+          },
+          {
+            "verse": 8,
+            "text": "The grass withereth, the flower fadeth;"
+          },
+          {
+            "verse": 9,
+            "text": "Get thee up upon a high mountain, O Zion, that bringest good tidings:"
+          },
+          {
+            "verse": 10,
+            "text": "Behold, the Lord. Jehovah shall come with might,"
+          },
+          {
+            "verse": 11,
+            "text": "He shall feed his flock, like a shepherd;"
+          },
+          {
+            "verse": 12,
+            "text": "Who hath measured the waters in the hollow of his hand,"
+          },
+          {
+            "verse": 13,
+            "text": "Who hath searched out the Spirit of Jehovah,"
+          },
+          {
+            "verse": 14,
+            "text": "With whom took he counsel, that he should instruct him;"
+          },
+          {
+            "verse": 15,
+            "text": "Behold, the nations are as a drop from the bucket;"
+          },
+          {
+            "verse": 16,
+            "text": "And Lebanon is not sufficient to supply fire,"
+          },
+          {
+            "verse": 17,
+            "text": "All the nations are before him, as though they were nought;"
+          },
+          {
+            "verse": 18,
+            "text": "To whom then will ye liken God?"
+          },
+          {
+            "verse": 19,
+            "text": "The workman casteth an image,"
+          },
+          {
+            "verse": 20,
+            "text": "He that is too poor to make a costly oblation chooseth him a piece of wood that will not rot;"
+          },
+          {
+            "verse": 21,
+            "text": "Have ye not known? have ye not heard?"
+          },
+          {
+            "verse": 22,
+            "text": "He it is who sitteth upon the circle of the earth,"
+          },
+          {
+            "verse": 23,
+            "text": "Who reduceth princes to nothing;"
+          },
+          {
+            "verse": 24,
+            "text": "Yea, they shall not scarcely be planted; yea, they shall not scarcely be sown;"
+          },
+          {
+            "verse": 25,
+            "text": "To whom then will ye liken me?"
+          },
+          {
+            "verse": 26,
+            "text": "Lift up your eyes on high,"
+          },
+          {
+            "verse": 27,
+            "text": "Why sayest thou, O Jacob,"
+          },
+          {
+            "verse": 28,
+            "text": "Hast thou not known? hast thou not heard,"
+          },
+          {
+            "verse": 29,
+            "text": "He giveth power to the faint,"
+          },
+          {
+            "verse": 30,
+            "text": "Even the youths shall faint and be weary,"
+          },
+          {
+            "verse": 31,
+            "text": "But they that wait upon Jehovah shall gather new strength;"
+          }
+        ]
+      },
+      {
+        "chapter": 41,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Keep silence before me, O Islands;"
+          },
+          {
+            "verse": 2,
+            "text": "Who hath stirred up from the east him,"
+          },
+          {
+            "verse": 3,
+            "text": "He hath pursued them, he hath passed safely,"
+          },
+          {
+            "verse": 4,
+            "text": "Who hath wrought and done it,"
+          },
+          {
+            "verse": 5,
+            "text": "The isles saw it, and feared;"
+          },
+          {
+            "verse": 6,
+            "text": "They helped every one his neighbour,"
+          },
+          {
+            "verse": 7,
+            "text": "So the carpenter encouraged the goldsmith,"
+          },
+          {
+            "verse": 8,
+            "text": "But thou, O Israel, my servant,"
+          },
+          {
+            "verse": 9,
+            "text": "Thou, whom I have taken from the ends of the earth,"
+          },
+          {
+            "verse": 10,
+            "text": "Fear not, for I am with thee;"
+          },
+          {
+            "verse": 11,
+            "text": "Behold, all they that were enraged against thee shall be ashamed and confounded:"
+          },
+          {
+            "verse": 12,
+            "text": "Thou shalt seek them, and shalt not find them, even the men that strove with thee:"
+          },
+          {
+            "verse": 13,
+            "text": "For I Jehovah thy God, hold thee fast by thy right hand,"
+          },
+          {
+            "verse": 14,
+            "text": "Fear not, thou worm Jacob; ye mortals of Israel;"
+          },
+          {
+            "verse": 15,
+            "text": "Behold, I have made thee a new sharp threshing wain, armed with pointed teeth:"
+          },
+          {
+            "verse": 16,
+            "text": "Thou shalt winnow them, and the wind shall carry them away,"
+          },
+          {
+            "verse": 17,
+            "text": "The poor and needy who seek for water, and there is none;"
+          },
+          {
+            "verse": 18,
+            "text": "I will open rivers in the high places,"
+          },
+          {
+            "verse": 19,
+            "text": "I will plant in the wilderness the cedar, the acacia,"
+          },
+          {
+            "verse": 20,
+            "text": "That they might see, and know,"
+          },
+          {
+            "verse": 21,
+            "text": "Bring forward your cause, saith Jehovah:"
+          },
+          {
+            "verse": 22,
+            "text": "Let them approach, and tell us the things that shall happen;"
+          },
+          {
+            "verse": 23,
+            "text": "Tell us the things that will come to pass in the later times,"
+          },
+          {
+            "verse": 24,
+            "text": "Lo, ye are worse than nothing;"
+          },
+          {
+            "verse": 25,
+            "text": "I have raised up one from the north, and he shall come;"
+          },
+          {
+            "verse": 26,
+            "text": "Who hath declared this from the beginning, that we should know it?"
+          },
+          {
+            "verse": 27,
+            "text": "I am the first who said unto Zion, Behold, behold them I"
+          },
+          {
+            "verse": 28,
+            "text": "And I looked, but there was no man;"
+          },
+          {
+            "verse": 29,
+            "text": "Behold, they are all of them vanity;"
+          }
+        ]
+      },
+      {
+        "chapter": 42,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Behold my servant, whom I will uphold;"
+          },
+          {
+            "verse": 2,
+            "text": "He shall not cry, nor raise a clamour,"
+          },
+          {
+            "verse": 3,
+            "text": "A bruised reed shall he not break,"
+          },
+          {
+            "verse": 4,
+            "text": "He shall not despond, neither shall he be faint;"
+          },
+          {
+            "verse": 5,
+            "text": "Thus saith the God, Jehovah,"
+          },
+          {
+            "verse": 6,
+            "text": "I Jehovah have called thee in righteousness,"
+          },
+          {
+            "verse": 7,
+            "text": "To open the blind eyes,"
+          },
+          {
+            "verse": 8,
+            "text": "I am Jehovah, that is my name;"
+          },
+          {
+            "verse": 9,
+            "text": "The former predictions, behold! they are come to pass;"
+          },
+          {
+            "verse": 10,
+            "text": "Sing unto Jehovah a new song,"
+          },
+          {
+            "verse": 11,
+            "text": "Let the wilderness and the cities thereof lift up their voice,"
+          },
+          {
+            "verse": 12,
+            "text": "Let them ascribe glory to Jehovah,"
+          },
+          {
+            "verse": 13,
+            "text": "Jehovah shall march forth like a hero;"
+          },
+          {
+            "verse": 14,
+            "text": "I have long time holden my peace,"
+          },
+          {
+            "verse": 15,
+            "text": "I will make waste mountains and hills,"
+          },
+          {
+            "verse": 16,
+            "text": "And I will lead the blind by a way that they knew not;"
+          },
+          {
+            "verse": 17,
+            "text": "They are turned backward, they are utterly confounded,"
+          },
+          {
+            "verse": 18,
+            "text": "Hear, ye deaf!"
+          },
+          {
+            "verse": 19,
+            "text": "Who is blind, if not my servant?"
+          },
+          {
+            "verse": 20,
+            "text": "Thou hast seen many things, but thou observest not;"
+          },
+          {
+            "verse": 21,
+            "text": "Jehovah is well pleased for his righteousness\u2019 sake;"
+          },
+          {
+            "verse": 22,
+            "text": "But this is a people spoiled and plundered;"
+          },
+          {
+            "verse": 23,
+            "text": "Who is there among you that will give ear to this?"
+          },
+          {
+            "verse": 24,
+            "text": "Who hath given Jacob for a spoil,"
+          },
+          {
+            "verse": 25,
+            "text": "Therefore he hath poured upon them the heat of his anger, and the vehemence of war:"
+          }
+        ]
+      },
+      {
+        "chapter": 43,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "But now, thus saith Jehovah that created thee, O Jacob,"
+          },
+          {
+            "verse": 2,
+            "text": "When thou passest through the waters, I am with thee;"
+          },
+          {
+            "verse": 3,
+            "text": "For I am Jehovah, thy God;"
+          },
+          {
+            "verse": 4,
+            "text": "From the time that thou hast been precious in my sight,"
+          },
+          {
+            "verse": 5,
+            "text": "Fear not, for I am with thee:"
+          },
+          {
+            "verse": 6,
+            "text": "I will say to the north, Give up;"
+          },
+          {
+            "verse": 7,
+            "text": "Even every one that is called by my name,"
+          },
+          {
+            "verse": 8,
+            "text": "Bring forth the people that are blind, although they have eyes;"
+          },
+          {
+            "verse": 9,
+            "text": "Let all the nations be gathered together,"
+          },
+          {
+            "verse": 10,
+            "text": "Ye are my witnesses, saith Jehovah,"
+          },
+          {
+            "verse": 11,
+            "text": "I, even I, am Jehovah;"
+          },
+          {
+            "verse": 12,
+            "text": "I have declared my purpose, and I have saved;"
+          },
+          {
+            "verse": 13,
+            "text": "Ever since time began I am He;"
+          },
+          {
+            "verse": 14,
+            "text": "Thus saith Jehovah,"
+          },
+          {
+            "verse": 15,
+            "text": "I am Jehovah, your Holy One;"
+          },
+          {
+            "verse": 16,
+            "text": "Thus saith Jehovah,"
+          },
+          {
+            "verse": 17,
+            "text": "Who hath brought forth the chariot and the horse, the army and the warrior;"
+          },
+          {
+            "verse": 18,
+            "text": "Remember not the former things,"
+          },
+          {
+            "verse": 19,
+            "text": "Behold, I make a new thing;"
+          },
+          {
+            "verse": 20,
+            "text": "The wild beast of the field shall honour me,"
+          },
+          {
+            "verse": 21,
+            "text": "This people whom I have formed for myself;"
+          },
+          {
+            "verse": 22,
+            "text": "But thou hast not called upon me, O Jacob!"
+          },
+          {
+            "verse": 23,
+            "text": "Thou hast not brought me the lamb of thy burnt-offering,"
+          },
+          {
+            "verse": 24,
+            "text": "Thou hast not bought for me with silver the sweet cane;"
+          },
+          {
+            "verse": 25,
+            "text": "I, even I, am He,"
+          },
+          {
+            "verse": 26,
+            "text": "Put me in remembrance; let us plead together:"
+          },
+          {
+            "verse": 27,
+            "text": "Thy first father hath sinned,"
+          },
+          {
+            "verse": 28,
+            "text": "Therefore I have profaned the princes of the sanctuary;"
+          }
+        ]
+      },
+      {
+        "chapter": 44,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Yet now hear, O Jacob, my servant!"
+          },
+          {
+            "verse": 2,
+            "text": "Thus saith Jehovah who made thee,"
+          },
+          {
+            "verse": 3,
+            "text": "For I will pour waters upon the thirsty soil,"
+          },
+          {
+            "verse": 4,
+            "text": "And they shall spring up as among the grass,"
+          },
+          {
+            "verse": 5,
+            "text": "One shall say: I am Jehovah\u2019s;"
+          },
+          {
+            "verse": 6,
+            "text": "Thus saith Jehovah, the King of Israel,"
+          },
+          {
+            "verse": 7,
+            "text": "And who like me could foretell,"
+          },
+          {
+            "verse": 8,
+            "text": "Fear ye not, neither be afraid:"
+          },
+          {
+            "verse": 9,
+            "text": "They that form a graven image are all of them vanity;"
+          },
+          {
+            "verse": 10,
+            "text": "Who hath formed a god, or molten a graven image,"
+          },
+          {
+            "verse": 11,
+            "text": "Behold, all his associates shall be ashamed;"
+          },
+          {
+            "verse": 12,
+            "text": "The smith maketh an axe,"
+          },
+          {
+            "verse": 13,
+            "text": "The carpenter stretcheth out the line;"
+          },
+          {
+            "verse": 14,
+            "text": "He heweth him down cedars,"
+          },
+          {
+            "verse": 15,
+            "text": "Then shall it be for man to burn;"
+          },
+          {
+            "verse": 16,
+            "text": "Part of it he burneth in the fire;"
+          },
+          {
+            "verse": 17,
+            "text": "And the residue thereof he maketh a god, even his graven image:"
+          },
+          {
+            "verse": 18,
+            "text": "They know not, neither do they understand;"
+          },
+          {
+            "verse": 19,
+            "text": "Neither doth he consider in his heart;"
+          },
+          {
+            "verse": 20,
+            "text": "He feedeth on ashes: a deluded heart leadeth him aside,"
+          },
+          {
+            "verse": 21,
+            "text": "Remember these things, O Jacob,"
+          },
+          {
+            "verse": 22,
+            "text": "I have blotted out as a thick cloud thy transgressions,"
+          },
+          {
+            "verse": 23,
+            "text": "Sing, O ye heavens, for Jehovah hath done it;"
+          },
+          {
+            "verse": 24,
+            "text": "Thus saith Jehovah, thy Redeemer,"
+          },
+          {
+            "verse": 25,
+            "text": "I am He who frustrated the foretokens of the impostors,"
+          },
+          {
+            "verse": 26,
+            "text": "Who established the word of his servant,"
+          },
+          {
+            "verse": 27,
+            "text": "Who saith to the deep, Be dry;"
+          },
+          {
+            "verse": 28,
+            "text": "Who saith of Cyrus, He is my shepherd;"
+          }
+        ]
+      },
+      {
+        "chapter": 45,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Thus saith Jehovah to his Anointed, to Cyrus,"
+          },
+          {
+            "verse": 2,
+            "text": "I will go before thee,"
+          },
+          {
+            "verse": 3,
+            "text": "And I will give thee the treasures of darkness,"
+          },
+          {
+            "verse": 4,
+            "text": "For Jacob my servant\u2019s sake,"
+          },
+          {
+            "verse": 5,
+            "text": "I am Jehovah, and there is none else;"
+          },
+          {
+            "verse": 6,
+            "text": "That men may know from the rising of the sun,"
+          },
+          {
+            "verse": 7,
+            "text": "I form light, and create darkness;"
+          },
+          {
+            "verse": 8,
+            "text": "Drop down, ye heavens, from above;"
+          },
+          {
+            "verse": 9,
+            "text": "Wo unto him that striveth with his Maker!"
+          },
+          {
+            "verse": 10,
+            "text": "Wo unto him that saith unto his father, What begettest thou?"
+          },
+          {
+            "verse": 11,
+            "text": "Thus saith Jehovah,"
+          },
+          {
+            "verse": 12,
+            "text": "I have made the earth,"
+          },
+          {
+            "verse": 13,
+            "text": "I have raised him up in righteousness,"
+          },
+          {
+            "verse": 14,
+            "text": "Thus saith Jehovah:"
+          },
+          {
+            "verse": 15,
+            "text": "Verily thou art a God that hidest thyself;"
+          },
+          {
+            "verse": 16,
+            "text": "They are ashamed, and also confounded, all of them;"
+          },
+          {
+            "verse": 17,
+            "text": "But Israel shall be saved through Jehovah with an everlasting salvation:"
+          },
+          {
+            "verse": 18,
+            "text": "For thus saith Jehovah who created the heavens;"
+          },
+          {
+            "verse": 19,
+            "text": "I have not spoken in secret, in a dark place of the earth;"
+          },
+          {
+            "verse": 20,
+            "text": "Assemble yourselves and come;"
+          },
+          {
+            "verse": 21,
+            "text": "Publish it abroad, and bring them near; yea, let them take counsel together:"
+          },
+          {
+            "verse": 22,
+            "text": "Look unto me, and be ye saved, all the ends of the earth:"
+          },
+          {
+            "verse": 23,
+            "text": "I have sworn by myself, the truth is gone out of my mouth;"
+          },
+          {
+            "verse": 24,
+            "text": "Only in Jehovah, shall one say of me, is righteousness and strength;"
+          },
+          {
+            "verse": 25,
+            "text": "In Jehovah shall all the seed of Israel be justified, and shall glory."
+          }
+        ]
+      },
+      {
+        "chapter": 46,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Bel boweth down, Nebo stoopeth;"
+          },
+          {
+            "verse": 2,
+            "text": "They stoop, they bow down together:"
+          },
+          {
+            "verse": 3,
+            "text": "Hearken unto me, O house of Jacob,"
+          },
+          {
+            "verse": 4,
+            "text": "And even to your old age, I am the same;"
+          },
+          {
+            "verse": 5,
+            "text": "To whom will ye liken me, and equal me?"
+          },
+          {
+            "verse": 6,
+            "text": "They lavish gold out of the bag,"
+          },
+          {
+            "verse": 7,
+            "text": "They bear him upon the shoulder; they carry him about;"
+          },
+          {
+            "verse": 8,
+            "text": "Remember this, and shew yourselves men:"
+          },
+          {
+            "verse": 9,
+            "text": "Remember the former things, of old time:"
+          },
+          {
+            "verse": 10,
+            "text": "Declaring the end from the beginning,"
+          },
+          {
+            "verse": 11,
+            "text": "Calling a ravenous bird from the east,"
+          },
+          {
+            "verse": 12,
+            "text": "Hearken unto me, ye stubborn in heart,"
+          },
+          {
+            "verse": 13,
+            "text": "I will bring near my righteousness; it shall not be far off;"
+          }
+        ]
+      },
+      {
+        "chapter": 47,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Come down, and sit in the dust, O virgin daughter of Babylon I"
+          },
+          {
+            "verse": 2,
+            "text": "Take the mill, and grind meal:"
+          },
+          {
+            "verse": 3,
+            "text": "Thy nakedness shall be disclosed; yea, thy shame shall be seen:"
+          },
+          {
+            "verse": 4,
+            "text": "Thus saith our Redeemer, Jehovah of hosts is his name,"
+          },
+          {
+            "verse": 5,
+            "text": "Sit thou silent, and get thee into darkness, O daughter of the Chaldeans;"
+          },
+          {
+            "verse": 6,
+            "text": "I was angry with my people, I polluted mine inheritance,"
+          },
+          {
+            "verse": 7,
+            "text": "And thou saidst: I shall be a lady for ever:"
+          },
+          {
+            "verse": 8,
+            "text": "Now, therefore, hear this, O thou voluptuous, that sittest in security:"
+          },
+          {
+            "verse": 9,
+            "text": "Yet these two things shall come to thee in a moment,"
+          },
+          {
+            "verse": 10,
+            "text": "But thou didst trust in thy wickedness, and saidst: None seeth me."
+          },
+          {
+            "verse": 11,
+            "text": "Therefore shall evil come upon thee,"
+          },
+          {
+            "verse": 12,
+            "text": "Persist now in thine enchantments,"
+          },
+          {
+            "verse": 13,
+            "text": "Thou art wearied in the multiplicity of thy counsels:"
+          },
+          {
+            "verse": 14,
+            "text": "Behold, they shall be as stubble; the fire shall burn them up;"
+          },
+          {
+            "verse": 15,
+            "text": "Thus will they prove to be unto thee, amongst whom thou hast laboured,"
+          }
+        ]
+      },
+      {
+        "chapter": 48,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Hear this, O house of Jacob,"
+          },
+          {
+            "verse": 2,
+            "text": "For they take their name from the Holy City,"
+          },
+          {
+            "verse": 3,
+            "text": "The former events I declared of old;"
+          },
+          {
+            "verse": 4,
+            "text": "Because I knew that thou wast obstinate,"
+          },
+          {
+            "verse": 5,
+            "text": "Therefore I declared them to thee of old;"
+          },
+          {
+            "verse": 6,
+            "text": "Thou hast heard; have now regard to the whole of it:"
+          },
+          {
+            "verse": 7,
+            "text": "They are produced now, and not of old;"
+          },
+          {
+            "verse": 8,
+            "text": "Yea, thou hast not heard; yea, thou hast not known;"
+          },
+          {
+            "verse": 9,
+            "text": "For my name\u0027s sake I will defer mine anger;"
+          },
+          {
+            "verse": 10,
+            "text": "Behold, I have purified thee in the fire, but not as silver;"
+          },
+          {
+            "verse": 11,
+            "text": "For mine own sake, even for mine own sake, will I do it; for how should my name be profaned?"
+          },
+          {
+            "verse": 12,
+            "text": "Hearken unto me, O Jacob,"
+          },
+          {
+            "verse": 13,
+            "text": "Yea, my hand hath founded the earth,"
+          },
+          {
+            "verse": 14,
+            "text": "Gather yourselves together all of you, and hear:"
+          },
+          {
+            "verse": 15,
+            "text": "I, even I, have spoken; yea, I have called him:"
+          },
+          {
+            "verse": 16,
+            "text": "Draw ye near unto me, and hear this:"
+          },
+          {
+            "verse": 17,
+            "text": "Thus saith Jehovah,"
+          },
+          {
+            "verse": 18,
+            "text": "O that thou hadst attended to my commandments!"
+          },
+          {
+            "verse": 19,
+            "text": "Thy seed also had been as the sand of the sea,"
+          },
+          {
+            "verse": 20,
+            "text": "Go ye forth from Babylon,"
+          },
+          {
+            "verse": 21,
+            "text": "And they thirsted not in the desert, through which He led them;"
+          },
+          {
+            "verse": 22,
+            "text": "There is no peace, saith Jehovah, to the wicked."
+          }
+        ]
+      },
+      {
+        "chapter": 49,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Listen, O isles, unto me;"
+          },
+          {
+            "verse": 2,
+            "text": "And He hath made my mouth like a sharp sword,"
+          },
+          {
+            "verse": 3,
+            "text": "And He said unto me: Thou art my servant,"
+          },
+          {
+            "verse": 4,
+            "text": "But I said: I have laboured in vain;"
+          },
+          {
+            "verse": 5,
+            "text": "And now, saith Jehovah"
+          },
+          {
+            "verse": 6,
+            "text": "Yea, He said: It is too light a thing that thou shouldest be my servant"
+          },
+          {
+            "verse": 7,
+            "text": "Thus saith Jehovah,"
+          },
+          {
+            "verse": 8,
+            "text": "Thus saith Jehovah:"
+          },
+          {
+            "verse": 9,
+            "text": "To say to the bounden, Go forth;"
+          },
+          {
+            "verse": 10,
+            "text": "They shall not hunger, nor thirst;"
+          },
+          {
+            "verse": 11,
+            "text": "And I will make all my mountains an even way,"
+          },
+          {
+            "verse": 12,
+            "text": "Behold! these shall come from far;"
+          },
+          {
+            "verse": 13,
+            "text": "Sing, O ye heavens! and be joyful, O earth!"
+          },
+          {
+            "verse": 14,
+            "text": "But Zion saith: Jehovah hath forsaken me,"
+          },
+          {
+            "verse": 15,
+            "text": "Can a woman forget her suckling,"
+          },
+          {
+            "verse": 16,
+            "text": "Behold! I have graven thee on the palms of my hands;"
+          },
+          {
+            "verse": 17,
+            "text": "Thy sons shall make haste:"
+          },
+          {
+            "verse": 18,
+            "text": "Lift up thine eyes around, and see;"
+          },
+          {
+            "verse": 19,
+            "text": "For in thy waste, and in thy desolate places,"
+          },
+          {
+            "verse": 20,
+            "text": "Moreover, thy sons, of whom thou wast bereaved, shall say in thine ears:"
+          },
+          {
+            "verse": 21,
+            "text": "Then shalt thou say in thine heart: Who hath begotten me these?"
+          },
+          {
+            "verse": 22,
+            "text": "Thus saith the Lord Jehovah:"
+          },
+          {
+            "verse": 23,
+            "text": "And kings shall be thy nourishers,"
+          },
+          {
+            "verse": 24,
+            "text": "Shall the spoil be taken away from the mighty?"
+          },
+          {
+            "verse": 25,
+            "text": "Yea, thus saith Jehovah:"
+          },
+          {
+            "verse": 26,
+            "text": "And I will gorge thine oppressors with their own flesh;"
+          }
+        ]
+      },
+      {
+        "chapter": 50,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Thus saith Jehovah:"
+          },
+          {
+            "verse": 2,
+            "text": "Wherefore, when I came, was there no man?"
+          },
+          {
+            "verse": 3,
+            "text": "I clothe the heavens with blackness;"
+          },
+          {
+            "verse": 4,
+            "text": "The Lord Jehovah hath given me the tongue of the learned,"
+          },
+          {
+            "verse": 5,
+            "text": "The Lord Jehovah hath opened mine ear,"
+          },
+          {
+            "verse": 6,
+            "text": "I gave my back to the smiters,"
+          },
+          {
+            "verse": 7,
+            "text": "For the Lord Jehovah will help me;"
+          },
+          {
+            "verse": 8,
+            "text": "He is near that justifieth me;"
+          },
+          {
+            "verse": 9,
+            "text": "Behold, the Lord Jehovah will help me;"
+          },
+          {
+            "verse": 10,
+            "text": "Who is there among you that feareth Jehovah,"
+          },
+          {
+            "verse": 11,
+            "text": "Behold, all ye that kindle a fire,"
+          }
+        ]
+      },
+      {
+        "chapter": 51,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Hearken unto me, ye that follow after righteousness,"
+          },
+          {
+            "verse": 2,
+            "text": "Look unto Abraham your father,"
+          },
+          {
+            "verse": 3,
+            "text": "For Jehovah shall comfort Zion;"
+          },
+          {
+            "verse": 4,
+            "text": "Attend unto me, my people;"
+          },
+          {
+            "verse": 5,
+            "text": "My righteousness is near, my salvation is gone forth;"
+          },
+          {
+            "verse": 6,
+            "text": "Lift up your eyes to the heavens,"
+          },
+          {
+            "verse": 7,
+            "text": "Hearken unto me, ye that know righteousness,"
+          },
+          {
+            "verse": 8,
+            "text": "For the moth shall eat them up like a garment,"
+          },
+          {
+            "verse": 9,
+            "text": "Awake, awake, put on strength, O arm of Jehovah!"
+          },
+          {
+            "verse": 10,
+            "text": "Art thou not it which dried the sea, the waters of the great deep?"
+          },
+          {
+            "verse": 11,
+            "text": "Thus shall the ransomed of Jehovah return,"
+          },
+          {
+            "verse": 12,
+            "text": "I, even I, am he that comforteth you:"
+          },
+          {
+            "verse": 13,
+            "text": "And shouldest forget Jehovah thy maker,"
+          },
+          {
+            "verse": 14,
+            "text": "The bound prisoner shall soon be released:"
+          },
+          {
+            "verse": 15,
+            "text": "For I am Jehovah thy God,"
+          },
+          {
+            "verse": 16,
+            "text": "I have put my words in thy mouth,"
+          },
+          {
+            "verse": 17,
+            "text": "Awake, awake; stand up, O Jerusalem!"
+          },
+          {
+            "verse": 18,
+            "text": "There is not one to guide her of all the sons which she hath brought forth;"
+          },
+          {
+            "verse": 19,
+            "text": "These two things have befallen thee, who shall bemoan thee?"
+          },
+          {
+            "verse": 20,
+            "text": "Thy sons have fainted away; they lie down at the head of all the streets,"
+          },
+          {
+            "verse": 21,
+            "text": "Wherefore hear now this, thou afflicted,"
+          },
+          {
+            "verse": 22,
+            "text": "Thus saith thy Lord, Jehovah,"
+          },
+          {
+            "verse": 23,
+            "text": "But I will put it into the hand of them that afflict thee,"
+          }
+        ]
+      },
+      {
+        "chapter": 52,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Awake, awake; put on thy strength, O Zion!"
+          },
+          {
+            "verse": 2,
+            "text": "Shake thyself from the dust, arise, and sit down, O Jerusalem!"
+          },
+          {
+            "verse": 3,
+            "text": "For thus saith Jehovah:"
+          },
+          {
+            "verse": 4,
+            "text": "For thus saith the Lord Jehovah:"
+          },
+          {
+            "verse": 5,
+            "text": "And now, what have I to do here, saith Jehovah,"
+          },
+          {
+            "verse": 6,
+            "text": "Therefore my people shall know my name;"
+          },
+          {
+            "verse": 7,
+            "text": "How beautiful upon the mountains are the feet of him that bringeth good tidings,"
+          },
+          {
+            "verse": 8,
+            "text": "The voice of thy watchmen! they lift up the voice; they shout for joy together:"
+          },
+          {
+            "verse": 9,
+            "text": "Break out into singing, shout for joy together,"
+          },
+          {
+            "verse": 10,
+            "text": "Jehovah hath made bare his holy arm before the eyes of all the nations;"
+          },
+          {
+            "verse": 11,
+            "text": "Depart ye, depart ye, go ye out from thence;"
+          },
+          {
+            "verse": 12,
+            "text": "For ye shall not go out with haste,"
+          },
+          {
+            "verse": 13,
+            "text": "Behold! my servant shall prosper;"
+          },
+          {
+            "verse": 14,
+            "text": "As many were astonished at thee,"
+          },
+          {
+            "verse": 15,
+            "text": "So shall he sprinkle many nations:"
+          }
+        ]
+      },
+      {
+        "chapter": 53,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Who hath believed our report,"
+          },
+          {
+            "verse": 2,
+            "text": "For he grew up like a tender plant before him,"
+          },
+          {
+            "verse": 3,
+            "text": "He was despised and abandoned by men,"
+          },
+          {
+            "verse": 4,
+            "text": "But it was our infirmities that he bare,"
+          },
+          {
+            "verse": 5,
+            "text": "And he was wounded for our transgressions,"
+          },
+          {
+            "verse": 6,
+            "text": "All we, like sheep, have gone astray;"
+          },
+          {
+            "verse": 7,
+            "text": "He was oppressed, and he submitted himself, and opened not his mouth:"
+          },
+          {
+            "verse": 8,
+            "text": "He was taken from prison and from judgment:"
+          },
+          {
+            "verse": 9,
+            "text": "And his grave was appointed with the wicked;"
+          },
+          {
+            "verse": 10,
+            "text": "But Jehovah was pleased to bruise him; He put him to grief:"
+          },
+          {
+            "verse": 11,
+            "text": "He shall see of the travail of his soul, and shall be satisfied;"
+          },
+          {
+            "verse": 12,
+            "text": "Therefore will I distribute to him the many for his portion,"
+          }
+        ]
+      },
+      {
+        "chapter": 54,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Shout for joy, O barren, thou that didst not bear;"
+          },
+          {
+            "verse": 2,
+            "text": "Enlarge the place of thy tent;"
+          },
+          {
+            "verse": 3,
+            "text": "For thou shalt break forth on the right hand, and on the left;"
+          },
+          {
+            "verse": 4,
+            "text": "Fear not, for thou shalt not be ashamed;"
+          },
+          {
+            "verse": 5,
+            "text": "For thy Maker is thine husband,"
+          },
+          {
+            "verse": 6,
+            "text": "For Jehovah hath called thee as a woman forsaken, and grieved in spirit;"
+          },
+          {
+            "verse": 7,
+            "text": "For a short moment have I forsaken thee;"
+          },
+          {
+            "verse": 8,
+            "text": "In vehemence of wrath I hid my face from thee for a moment;"
+          },
+          {
+            "verse": 9,
+            "text": "For this is as the waters of Noah unto me,"
+          },
+          {
+            "verse": 10,
+            "text": "For the mountains shall depart,"
+          },
+          {
+            "verse": 11,
+            "text": "O thou afflicted, tossed with tempest, and not comforted,"
+          },
+          {
+            "verse": 12,
+            "text": "And I will make thy battlements of rubies,"
+          },
+          {
+            "verse": 13,
+            "text": "And all thy children shall be taught by Jehovah,"
+          },
+          {
+            "verse": 14,
+            "text": "In righteousness shalt thou be established:"
+          },
+          {
+            "verse": 15,
+            "text": "Behold! they shall assemble together, but not by me;"
+          },
+          {
+            "verse": 16,
+            "text": "Behold! I created the smith that bloweth the coals in the fire,"
+          },
+          {
+            "verse": 17,
+            "text": "No weapon that is formed against thee shall prosper;"
+          }
+        ]
+      },
+      {
+        "chapter": 55,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Ho! every one that thirsteth, come ye to the waters!"
+          },
+          {
+            "verse": 2,
+            "text": "Wherefore do ye spend money for that which is not bread?"
+          },
+          {
+            "verse": 3,
+            "text": "Incline your ear, and come unto me;"
+          },
+          {
+            "verse": 4,
+            "text": "Behold! I have given him for a Witness to the people,"
+          },
+          {
+            "verse": 5,
+            "text": "Behold! a nation which thou knewest not shalt thou call,"
+          },
+          {
+            "verse": 6,
+            "text": "Seek ye Jehovah while he may be found,"
+          },
+          {
+            "verse": 7,
+            "text": "Let the wicked forsake his way,"
+          },
+          {
+            "verse": 8,
+            "text": "For my thoughts are not your thoughts,"
+          },
+          {
+            "verse": 9,
+            "text": "For as the heavens are higher than the earth,"
+          },
+          {
+            "verse": 10,
+            "text": "For as the rain cometh down, and the snow from heaven,"
+          },
+          {
+            "verse": 11,
+            "text": "So shall my word be, which goeth forth out of my mouth;"
+          },
+          {
+            "verse": 12,
+            "text": "For ye shall go forth with joy,"
+          },
+          {
+            "verse": 13,
+            "text": "Instead of the thorn shall come up the fir tree,"
+          }
+        ]
+      },
+      {
+        "chapter": 56,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Thus saith Jehovah:"
+          },
+          {
+            "verse": 2,
+            "text": "Blessed is the man that doeth this,"
+          },
+          {
+            "verse": 3,
+            "text": "And let not the son of the stranger, that hath joined himself to Jehovah, speak, saying:"
+          },
+          {
+            "verse": 4,
+            "text": "For thus saith Jehovah unto the eunuchs that keep my sabbaths,"
+          },
+          {
+            "verse": 5,
+            "text": "Even unto them will I give in mine house, and within my walls,"
+          },
+          {
+            "verse": 6,
+            "text": "And the sons of the stranger that join themselves unto Jehovah, to minister unto him,"
+          },
+          {
+            "verse": 7,
+            "text": "Even them will I bring to my holy mountain,"
+          },
+          {
+            "verse": 8,
+            "text": "The Lord Jehovah,"
+          },
+          {
+            "verse": 9,
+            "text": "All ye beasts of the field, come to devour;"
+          },
+          {
+            "verse": 10,
+            "text": "His watchmen are blind, they are all ignorant;"
+          },
+          {
+            "verse": 11,
+            "text": "Yea, they are dogs of greedy appetite, they can never have enough;"
+          },
+          {
+            "verse": 12,
+            "text": "Come ye, say they, I will fetch wine,"
+          }
+        ]
+      },
+      {
+        "chapter": 57,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "The righteous perisheth, and no man layeth it to heart;"
+          },
+          {
+            "verse": 2,
+            "text": "He shall go in peace;"
+          },
+          {
+            "verse": 3,
+            "text": "But draw ye near hither, O sons of the sorceress!"
+          },
+          {
+            "verse": 4,
+            "text": "Of whom do ye make your sport?"
+          },
+          {
+            "verse": 5,
+            "text": "Who burn with the lust of idols under every green tree;"
+          },
+          {
+            "verse": 6,
+            "text": "Among the smooth stones of the valley is thy portion;"
+          },
+          {
+            "verse": 7,
+            "text": "Upon a high and lofty mountain hast thou set thy bed:"
+          },
+          {
+            "verse": 8,
+            "text": "Behind the door also, and the door-post, hast thou set up thy memorial,"
+          },
+          {
+            "verse": 9,
+            "text": "And thou wentest to the king with ointment,"
+          },
+          {
+            "verse": 10,
+            "text": "In the length of thy journeys thou didst weary thyself;"
+          },
+          {
+            "verse": 11,
+            "text": "And of whom hast thou been fearful or afraid, that thou shouldest deal falsely, and not remember me,"
+          },
+          {
+            "verse": 12,
+            "text": "I will declare thy righteousness, and thy works;"
+          },
+          {
+            "verse": 13,
+            "text": "When thou criest, let thine associates deliver thee:"
+          },
+          {
+            "verse": 14,
+            "text": "And it shall be said: Cast ye up, cast ye up, prepare the way;"
+          },
+          {
+            "verse": 15,
+            "text": "For thus saith the high and lofty One,"
+          },
+          {
+            "verse": 16,
+            "text": "For I will not always contend,"
+          },
+          {
+            "verse": 17,
+            "text": "For the iniquity of his avarice was I angry, and smote him;"
+          },
+          {
+            "verse": 18,
+            "text": "I have seen his ways, and I will heal him; I will also be his guide; and I will restore comforts unto him,"
+          },
+          {
+            "verse": 19,
+            "text": "I create the fruit of the lips:"
+          },
+          {
+            "verse": 20,
+            "text": "But the wicked are like the troubled sea,"
+          },
+          {
+            "verse": 21,
+            "text": "There is no peace, saith my God, to the wicked."
+          }
+        ]
+      },
+      {
+        "chapter": 58,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Cry aloud, spare not;"
+          },
+          {
+            "verse": 2,
+            "text": "Yet they seek me daily,"
+          },
+          {
+            "verse": 3,
+            "text": "Wherefore we have fasted, say they, and thou seest not?"
+          },
+          {
+            "verse": 4,
+            "text": "Behold! ye fast for strife and contention,"
+          },
+          {
+            "verse": 5,
+            "text": "Is it such a fast that I have chosen?"
+          },
+          {
+            "verse": 6,
+            "text": "Is not this the fast that I have chosen?"
+          },
+          {
+            "verse": 7,
+            "text": "Is it not to distribute thy bread to the hungry,"
+          },
+          {
+            "verse": 8,
+            "text": "Then shall thy light break forth as the dawn,"
+          },
+          {
+            "verse": 9,
+            "text": "Then shalt thou call, and Jehovah shall answer;"
+          },
+          {
+            "verse": 10,
+            "text": "And if thou draw out thy soul to the hungry,"
+          },
+          {
+            "verse": 11,
+            "text": "And Jehovah shall guide thee continually,"
+          },
+          {
+            "verse": 12,
+            "text": "And they that spring from thee shall build the old waste places,"
+          },
+          {
+            "verse": 13,
+            "text": "If thou turn away thy foot from the sabbath,"
+          },
+          {
+            "verse": 14,
+            "text": "Then shalt thou delight thyself in Jehovah;"
+          }
+        ]
+      },
+      {
+        "chapter": 59,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Behold! the hand of Jehovah is not shortened, that it cannot save;"
+          },
+          {
+            "verse": 2,
+            "text": "But it is your iniquities that have made a separation between you and your God;"
+          },
+          {
+            "verse": 3,
+            "text": "For your hands are polluted with blood,"
+          },
+          {
+            "verse": 4,
+            "text": "None pronounceth a verdict in justice,"
+          },
+          {
+            "verse": 5,
+            "text": "They hatch the eggs of the basilisk,"
+          },
+          {
+            "verse": 6,
+            "text": "Their webs shall not become garments,"
+          },
+          {
+            "verse": 7,
+            "text": "Their feet run to evil,"
+          },
+          {
+            "verse": 8,
+            "text": "The way of peace they know not,"
+          },
+          {
+            "verse": 9,
+            "text": "Therefore is judgment far distant from us,"
+          },
+          {
+            "verse": 10,
+            "text": "We grope like the blind for the wall,"
+          },
+          {
+            "verse": 11,
+            "text": "We roar like bears, every one of us;"
+          },
+          {
+            "verse": 12,
+            "text": "For our transgressions are multiplied before thee,"
+          },
+          {
+            "verse": 13,
+            "text": "We have transgressed; and we have denied Jehovah;"
+          },
+          {
+            "verse": 14,
+            "text": "And judgment is turned away backward,"
+          },
+          {
+            "verse": 15,
+            "text": "Yea, truth is wanted,"
+          },
+          {
+            "verse": 16,
+            "text": "And He saw that there was no man,"
+          },
+          {
+            "verse": 17,
+            "text": "And He put on righteousness as a breastplate,"
+          },
+          {
+            "verse": 18,
+            "text": "According to their deeds, accordingly He will repay, prey:"
+          },
+          {
+            "verse": 19,
+            "text": "And they from the west shall fear the name of Jehovah,"
+          },
+          {
+            "verse": 20,
+            "text": "And the Redeemer shall come to Zion,"
+          },
+          {
+            "verse": 21,
+            "text": "As for me, this is my covenant with them, saith Jehovah:"
+          }
+        ]
+      },
+      {
+        "chapter": 60,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Arise, shine; for thy light is come,"
+          },
+          {
+            "verse": 2,
+            "text": "For, behold, the darkness shall cover the earth,"
+          },
+          {
+            "verse": 3,
+            "text": "And the nations shall come to thy light,"
+          },
+          {
+            "verse": 4,
+            "text": "Lift up thine eyes round about, and see:"
+          },
+          {
+            "verse": 5,
+            "text": "Then shalt thou look, and overflow with joy;"
+          },
+          {
+            "verse": 6,
+            "text": "A multitude of camels shall cover thee,"
+          },
+          {
+            "verse": 7,
+            "text": "All the flocks of Kedar shall be gathered together unto thee,"
+          },
+          {
+            "verse": 8,
+            "text": "Who are these that fly as a cloud?"
+          },
+          {
+            "verse": 9,
+            "text": "Surely, the isles shall wait for me,"
+          },
+          {
+            "verse": 10,
+            "text": "And the sons of strangers shall build up thy walls,"
+          },
+          {
+            "verse": 11,
+            "text": "Therefore thy gates shall be open continually;"
+          },
+          {
+            "verse": 12,
+            "text": "For the nations and the kingdom that will not serve thee shall perish;"
+          },
+          {
+            "verse": 13,
+            "text": "The glory of Lebanon shall come unto thee,"
+          },
+          {
+            "verse": 14,
+            "text": "The sons also of them that afflicted thee shall come bending unto thee;"
+          },
+          {
+            "verse": 15,
+            "text": "Instead of thy being forsaken and hated,"
+          },
+          {
+            "verse": 16,
+            "text": "Thou shalt also suck the milk of the nations,"
+          },
+          {
+            "verse": 17,
+            "text": "Instead of brass, I will bring gold;"
+          },
+          {
+            "verse": 18,
+            "text": "Violence shall no more be heard in thy land,"
+          },
+          {
+            "verse": 19,
+            "text": "The sun shall no more be for light unto thee by day,"
+          },
+          {
+            "verse": 20,
+            "text": "Thy sun shall no more go down,"
+          },
+          {
+            "verse": 21,
+            "text": "Thy people also shall be all righteous;"
+          },
+          {
+            "verse": 22,
+            "text": "The little one shall become a thousand,"
+          }
+        ]
+      },
+      {
+        "chapter": 61,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "The Spirit of the Lord Jehovah is upon me;"
+          },
+          {
+            "verse": 2,
+            "text": "To proclain the acceptable year of Jehovah,"
+          },
+          {
+            "verse": 3,
+            "text": "To appoint unto the mourners of Zion,"
+          },
+          {
+            "verse": 4,
+            "text": "And they shall build up the old ruins,"
+          },
+          {
+            "verse": 5,
+            "text": "And strangers shall stand up and feed your flocks;"
+          },
+          {
+            "verse": 6,
+            "text": "But ye shall be named, The Priests of Jehovah;"
+          },
+          {
+            "verse": 7,
+            "text": "Instead of your shame, ye shall have double;"
+          },
+          {
+            "verse": 8,
+            "text": "For I Jehovah love jugment;"
+          },
+          {
+            "verse": 9,
+            "text": "And their seed shall be known among the nations,"
+          },
+          {
+            "verse": 10,
+            "text": "I will greatly rejoice in Jehovah,"
+          },
+          {
+            "verse": 11,
+            "text": "For as the earth bringeth forth her bud;"
+          }
+        ]
+      },
+      {
+        "chapter": 62,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "For Zion\u0027s sake I will not keep silence,"
+          },
+          {
+            "verse": 2,
+            "text": "And the nations shall see thy righteousness,"
+          },
+          {
+            "verse": 3,
+            "text": "Thou shalt also be a beautiful crown in the hand of Jehovah,"
+          },
+          {
+            "verse": 4,
+            "text": "Thou shalt no more be termed, Forsaken;"
+          },
+          {
+            "verse": 5,
+            "text": "For as a young man marrieth a virgin,"
+          },
+          {
+            "verse": 6,
+            "text": "I have set watchmen upon thy walls, O Jerusalem!"
+          },
+          {
+            "verse": 7,
+            "text": "And give Him no rest,"
+          },
+          {
+            "verse": 8,
+            "text": "Jehovah hath sworn by his right hand, and by the arm of his strength:"
+          },
+          {
+            "verse": 9,
+            "text": "But they that have gathered it shall eat it,"
+          },
+          {
+            "verse": 10,
+            "text": "Pass ye, pass through the gates;"
+          },
+          {
+            "verse": 11,
+            "text": "Behold! Jehovah hath proclaimed unto the end of the earth:"
+          },
+          {
+            "verse": 12,
+            "text": "And they shall be called: The Holy People, The Redeemed of Jehovah;"
+          }
+        ]
+      },
+      {
+        "chapter": 63,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Who is this that cometh from Edom?"
+          },
+          {
+            "verse": 2,
+            "text": "Wherefore is thine apparel red?"
+          },
+          {
+            "verse": 3,
+            "text": "I have trodden the wine-press alone,"
+          },
+          {
+            "verse": 4,
+            "text": "For the day of vengeance was in mine heart,"
+          },
+          {
+            "verse": 5,
+            "text": "And I looked, and there was none to help;"
+          },
+          {
+            "verse": 6,
+            "text": "And I trod down the people in mine anger,"
+          },
+          {
+            "verse": 7,
+            "text": "I will mention the lovingkindnesses of Jehovah, and the praises of Jehovah,"
+          },
+          {
+            "verse": 8,
+            "text": "For He said: Surely they are my people,"
+          },
+          {
+            "verse": 9,
+            "text": "In all their adversity, He was not an adversary;"
+          },
+          {
+            "verse": 10,
+            "text": "But they rebelled, and vexed his Holy Spirit;"
+          },
+          {
+            "verse": 11,
+            "text": "Then remembered his people the ancient days of Moses:"
+          },
+          {
+            "verse": 12,
+            "text": "Who made his glorious arm to march at the right hand of Moses,"
+          },
+          {
+            "verse": 13,
+            "text": "Who led them through the deep,"
+          },
+          {
+            "verse": 14,
+            "text": "As the cattle descend into the valley,"
+          },
+          {
+            "verse": 15,
+            "text": "Look down from heaven, and behold from the habitation of thy holiness, and of thy glory;"
+          },
+          {
+            "verse": 16,
+            "text": "Doubtless thou art our Father;"
+          },
+          {
+            "verse": 17,
+            "text": "Wherefore, O Jehovah, hast thou made us to err from thy ways?"
+          },
+          {
+            "verse": 18,
+            "text": "Thy holy people have possessed the land but a little time;"
+          },
+          {
+            "verse": 19,
+            "text": "We have long been as those over whom thou hast not ruled;"
+          }
+        ]
+      },
+      {
+        "chapter": 64,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "O that thou wouldest rend the heavens, that thou wouldest come down,"
+          },
+          {
+            "verse": 2,
+            "text": "As the fire kindleth the dry fuel,"
+          },
+          {
+            "verse": 3,
+            "text": "When thou didst terrible things, which we expected not;"
+          },
+          {
+            "verse": 4,
+            "text": "For from the remotest time men have not heard, nor perceived by the ear."
+          },
+          {
+            "verse": 5,
+            "text": "Thou meetest them that rejoice and do justice,"
+          },
+          {
+            "verse": 6,
+            "text": "We are all of us as an unclean thing,"
+          },
+          {
+            "verse": 7,
+            "text": "There is none that calleth upon thy name,"
+          },
+          {
+            "verse": 8,
+            "text": "But now, O Jehovah, thou art our Father;"
+          },
+          {
+            "verse": 9,
+            "text": "Be not wroth very sore, O Jehovah,"
+          },
+          {
+            "verse": 10,
+            "text": "Thy holy cities are a wilderness,"
+          },
+          {
+            "verse": 11,
+            "text": "Our holy and our beautiful house,"
+          },
+          {
+            "verse": 12,
+            "text": "Wilt thou refrain thyself for these things, O Jehovah?"
+          }
+        ]
+      },
+      {
+        "chapter": 65,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "I am sought of them who asked not of me;"
+          },
+          {
+            "verse": 2,
+            "text": "I have spread out my hands all the day to a rebellious people,"
+          },
+          {
+            "verse": 3,
+            "text": "A people who provoke me to anger continually to my face,"
+          },
+          {
+            "verse": 4,
+            "text": "Who dwell in the sepulchres, and lodge in the caverns;"
+          },
+          {
+            "verse": 5,
+            "text": "Who say: Keep by thyself; come not near to me, for I am holier than thou."
+          },
+          {
+            "verse": 6,
+            "text": "Behold I it is written before me:"
+          },
+          {
+            "verse": 7,
+            "text": "Your iniquities, and the iniquities of your fathers together, saith Jehovah;"
+          },
+          {
+            "verse": 8,
+            "text": "Thus saith Jehovah:"
+          },
+          {
+            "verse": 9,
+            "text": "For I will cause to go forth from Jacob a seed,"
+          },
+          {
+            "verse": 10,
+            "text": "And Sharon shall be a fold for the flocks,"
+          },
+          {
+            "verse": 11,
+            "text": "But ye, who have deserted Jehovah,"
+          },
+          {
+            "verse": 12,
+            "text": "You will I number out to the sword,"
+          },
+          {
+            "verse": 13,
+            "text": "Therefore thus saith the Lord Jehovah:"
+          },
+          {
+            "verse": 14,
+            "text": "Behold! my servants shall sing aloud for gladness of heart;"
+          },
+          {
+            "verse": 15,
+            "text": "And ye shall leave your name for an execration unto my chosen;"
+          },
+          {
+            "verse": 16,
+            "text": "Whoso blesseth himself upon the earth,"
+          },
+          {
+            "verse": 17,
+            "text": "For behold! I create new heavens, and a new earth;"
+          },
+          {
+            "verse": 18,
+            "text": "But ye shall rejoice and exult for ever in that which I create;"
+          },
+          {
+            "verse": 19,
+            "text": "And I will exult in Jerusalem,"
+          },
+          {
+            "verse": 20,
+            "text": "There shall be no more thence an infant of days,"
+          },
+          {
+            "verse": 21,
+            "text": "And they shall build houses, and shall inhabit them;"
+          },
+          {
+            "verse": 22,
+            "text": "They shall not build, and another inhabit;"
+          },
+          {
+            "verse": 23,
+            "text": "They shall not labour in vain,"
+          },
+          {
+            "verse": 24,
+            "text": "And it shall come to pass, that before they call, I will answer;"
+          },
+          {
+            "verse": 25,
+            "text": "The wolf and the lamb shall feed together,"
+          }
+        ]
+      },
+      {
+        "chapter": 66,
+        "verses": [
+          {
+            "verse": 1,
+            "text": "Thus saith Jehovah:"
+          },
+          {
+            "verse": 2,
+            "text": "For all these things hath mine hand made;"
+          },
+          {
+            "verse": 3,
+            "text": "He that slayeth an ox, killeth a man;"
+          },
+          {
+            "verse": 4,
+            "text": "I will also choose their calamities,"
+          },
+          {
+            "verse": 5,
+            "text": "Hear ye the word of Jehovah,"
+          },
+          {
+            "verse": 6,
+            "text": "A voice of tumult from the city!"
+          },
+          {
+            "verse": 7,
+            "text": "Before she was in travail, she brought forth;"
+          },
+          {
+            "verse": 8,
+            "text": "Who hath heard such a thing?"
+          },
+          {
+            "verse": 9,
+            "text": "Shall I bring to the birth, and not cause to bring forth? saith Jehovah:"
+          },
+          {
+            "verse": 10,
+            "text": "Rejoice ye with Jerusalem,"
+          },
+          {
+            "verse": 11,
+            "text": "That ye may suck, and be satisfied, from the breast of her consolations;"
+          },
+          {
+            "verse": 12,
+            "text": "For thus saith Jehovah:"
+          },
+          {
+            "verse": 13,
+            "text": "As one whom his mother comforteth,"
+          },
+          {
+            "verse": 14,
+            "text": "And ye shall see it, and your heart shall rejoice;"
+          },
+          {
+            "verse": 15,
+            "text": "For, behold! Jehovah shall come with fire,"
+          },
+          {
+            "verse": 16,
+            "text": "For with fire shall Jehovah contend,"
+          },
+          {
+            "verse": 17,
+            "text": "They that sanctify themselves, and purify themselves"
+          },
+          {
+            "verse": 18,
+            "text": "For I know their works and their thoughts:"
+          },
+          {
+            "verse": 19,
+            "text": "And I will set a sign among them,"
+          },
+          {
+            "verse": 20,
+            "text": "And they shall bring all your brethren,"
+          },
+          {
+            "verse": 21,
+            "text": "And I will also take of them"
+          },
+          {
+            "verse": 22,
+            "text": "For as the new heavens,"
+          },
+          {
+            "verse": 23,
+            "text": "And it shall be, that from new moon to new moon,"
+          },
+          {
+            "verse": 24,
+            "text": "And they shall go forth, and shall see"
+          }
+        ]
+      }
+    ]
+  }
+}

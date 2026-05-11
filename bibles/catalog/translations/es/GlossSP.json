@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "es:GlossSP",
+  "code": "GlossSP",
+  "label": "Gloss Spanish",
+  "languageTag": "es",
+  "languageCode3": "spa",
+  "sourceType": "official",
+  "version": 1,
+  "contentUrl": "/bibles/content/es/GlossSP/v1.json",
+  "contentHash": "sha256-2a13445472d0fd39fbabc885d1d206eba79e1c06b47f079062958921365e8afe",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:54:26.2327097Z"
+}

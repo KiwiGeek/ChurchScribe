@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:RAD",
+  "code": "RAD",
+  "label": "Radiate New Testament",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 3,
+  "contentUrl": "/bibles/content/en/RAD/v3.json",
+  "contentHash": "sha256-8888a9a858189abef692c7271da74b305fa6dc5f2ef26f8dad49fc2179565028",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:55.2032001Z"
+}

@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:GW",
+  "code": "GW",
+  "label": "GOD\u0027S WORD",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 15,
+  "contentUrl": "/bibles/content/en/GW/v15.json",
+  "contentHash": "sha256-8a34003304d5c1bef7fd7cf87b40c099a40a096a8732deaac764bacd38bcee64",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:52.3464154Z"
+}

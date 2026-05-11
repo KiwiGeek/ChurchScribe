@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:DRC1752",
+  "code": "DRC1752",
+  "label": "Douay-Rheims Challoner Revision 1752 \u2720",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 26,
+  "contentUrl": "/bibles/content/en/DRC1752/v26.json",
+  "contentHash": "sha256-c5180a15ab2f028827835d2f2dcd1ba477f833f1192987984af7c17732ca20c8",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:51.2862808Z"
+}

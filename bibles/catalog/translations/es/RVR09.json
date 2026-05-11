@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "es:RVR09",
+  "code": "RVR09",
+  "label": "Biblia Reina Valera 1909",
+  "languageTag": "es",
+  "languageCode3": "spa",
+  "sourceType": "official",
+  "version": 9,
+  "contentUrl": "/bibles/content/es/RVR09/v9.json",
+  "contentHash": "sha256-718c8fbfe9818608a03bba4193804a2cbf76e72cb10ddc6cea086c84176c27bc",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:54:27.4411278Z"
+}

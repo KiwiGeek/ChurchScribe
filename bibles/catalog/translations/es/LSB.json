@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "es:LSB",
+  "code": "LSB",
+  "label": "LA SANTA BIBLIA",
+  "languageTag": "es",
+  "languageCode3": "spa",
+  "sourceType": "official",
+  "version": 1,
+  "contentUrl": "/bibles/content/es/LSB/v1.json",
+  "contentHash": "sha256-3a19546c056a488cabe88161c0f9c244b779650825c616ebabca0ab72a71d2c3",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:54:26.4689248Z"
+}

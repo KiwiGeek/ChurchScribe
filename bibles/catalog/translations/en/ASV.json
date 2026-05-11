@@ -5,10 +5,10 @@
   "label": "American Standard Version",
   "languageTag": "en",
   "languageCode3": "eng",
-  "sourceType": "builtin",
-  "version": 20,
-  "contentUrl": "/bibles/content/en/ASV/v20.json",
-  "contentHash": "sha256-d191177553758a2804d9c2f23033e508567ea7a93f052bf545aededefc6648fa",
+  "sourceType": "official",
+  "version": 25,
+  "contentUrl": "/bibles/content/en/ASV/v25.json",
+  "contentHash": "sha256-6c97ab791e8f466eeaef3bdcdabacc03f9334fc114a0a39157abec74d45dcfd0",
   "bookOrder": "protestant-66",
   "features": {
     "headings": false,
@@ -16,5 +16,5 @@
     "superscriptions": false,
     "html": false
   },
-  "updatedAt": "2026-05-10T16:00:27.8776419Z"
+  "updatedAt": "2026-05-10T23:52:50.2519320Z"
 }

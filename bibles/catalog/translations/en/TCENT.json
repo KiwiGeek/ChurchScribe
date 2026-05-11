@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:TCENT",
+  "code": "TCENT",
+  "label": "The Text-Critical English New Testament",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 9,
+  "contentUrl": "/bibles/content/en/TCENT/v9.json",
+  "contentHash": "sha256-44ba404a942b22e343ce96442d35311defd8968cf8acf61bc581d493a3fa3ebb",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:55.6267911Z"
+}

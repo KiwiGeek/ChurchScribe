@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "es:DHHDK",
+  "code": "DHHDK",
+  "label": "Dios Habla Hoy DK",
+  "languageTag": "es",
+  "languageCode3": "spa",
+  "sourceType": "official",
+  "version": 6,
+  "contentUrl": "/bibles/content/es/DHHDK/v6.json",
+  "contentHash": "sha256-23b30cb1313a2fafcb760f8e4e45aaa31f6922734b54267ef450db94fec2cd9a",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:54:26.0479411Z"
+}

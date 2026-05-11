@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:LSB",
+  "code": "LSB",
+  "label": "Legacy Standard Bible",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 12,
+  "contentUrl": "/bibles/content/en/LSB/v12.json",
+  "contentHash": "sha256-759906a46910c0fc6fa4b9656045132ebdb1f33c76eeb1102a1c899904ca0918",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:53.1818437Z"
+}

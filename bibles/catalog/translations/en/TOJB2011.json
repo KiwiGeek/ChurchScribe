@@ -1,0 +1,20 @@
+﻿{
+  "schemaVersion": 1,
+  "translationId": "en:TOJB2011",
+  "code": "TOJB2011",
+  "label": "The Orthodox Jewish Bible",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 10,
+  "contentUrl": "/bibles/content/en/TOJB2011/v10.json",
+  "contentHash": "sha256-b77d311e7d35f42fa6fbef687b1f708c5647840a6b62a7bea939c2cc88ff3e8e",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": false,
+    "subheadings": false,
+    "superscriptions": false,
+    "html": false
+  },
+  "updatedAt": "2026-05-10T23:52:55.8143754Z"
+}
