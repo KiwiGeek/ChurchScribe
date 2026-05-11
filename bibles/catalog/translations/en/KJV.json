@@ -7,7 +7,7 @@
   "languageCode3": "eng",
   "sourceType": "builtin",
   "version": 27,
-  "contentUrl": "/bibles/content/en/KJV/v27.json",
+  "contentUrl": "bibles/content/en/KJV/v27.json",
   "contentHash": "sha256-e52a3a4c746d536794bf1a7ee1789a559b99dc379881410586dcb6a5d9fa65f9",
   "bookOrder": "protestant-66",
   "features": {

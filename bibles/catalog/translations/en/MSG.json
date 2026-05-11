@@ -7,7 +7,7 @@
   "languageCode3": "eng",
   "sourceType": "builtin",
   "version": 22,
-  "contentUrl": "/bibles/content/en/MSG/v22.json",
+  "contentUrl": "bibles/content/en/MSG/v22.json",
   "contentHash": "sha256-b8df3b82d388c9986903d071d86195ae5738a53265fd2e315e7f3e2fc492f392",
   "bookOrder": "protestant-66",
   "features": {

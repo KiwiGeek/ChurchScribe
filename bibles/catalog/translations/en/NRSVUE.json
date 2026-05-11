@@ -7,7 +7,7 @@
   "languageCode3": "eng",
   "sourceType": "builtin",
   "version": 10,
-  "contentUrl": "/bibles/content/en/NRSVUE/v10.json",
+  "contentUrl": "bibles/content/en/NRSVUE/v10.json",
   "contentHash": "sha256-9162cbd6e2e44dc9f2a1aa8e1a05af5a8d72e6b16df65420d277c35f8043f441",
   "bookOrder": "protestant-66",
   "features": {

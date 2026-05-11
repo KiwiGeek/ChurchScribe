@@ -7,7 +7,7 @@
   "languageCode3": "eng",
   "sourceType": "official",
   "version": 12,
-  "contentUrl": "/bibles/content/en/TLV/v12.json",
+  "contentUrl": "bibles/content/en/TLV/v12.json",
   "contentHash": "sha256-1afe8c09ff0c7d531eb1104c44a22ca50a6710dc22c107bff2d3c886132ef0c1",
   "bookOrder": "protestant-66",
   "features": {

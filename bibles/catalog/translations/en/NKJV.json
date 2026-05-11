@@ -7,7 +7,7 @@
   "languageCode3": "eng",
   "sourceType": "builtin",
   "version": 19,
-  "contentUrl": "/bibles/content/en/NKJV/v19.json",
+  "contentUrl": "bibles/content/en/NKJV/v19.json",
   "contentHash": "sha256-470e8fcbcab9339fd0a69c937b4009d6c4f2cff6fc4baa80b70bf9d04604657a",
   "bookOrder": "protestant-66",
   "features": {

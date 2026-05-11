@@ -7,7 +7,7 @@
   "languageCode3": "eng",
   "sourceType": "builtin",
   "version": 36,
-  "contentUrl": "/bibles/content/en/NIV11/v36.json",
+  "contentUrl": "bibles/content/en/NIV11/v36.json",
   "contentHash": "sha256-45c3c9b240fa7527509c9fa80c902848cb8fb7603c1530e7c6938a62dc3679d5",
   "bookOrder": "protestant-66",
   "features": {

@@ -7,7 +7,7 @@
   "languageCode3": "eng",
   "sourceType": "official",
   "version": 17,
-  "contentUrl": "/bibles/content/en/GNT/v17.json",
+  "contentUrl": "bibles/content/en/GNT/v17.json",
   "contentHash": "sha256-0b4e4517139b0557def1e5898587f8c0eaa510cc155ab3321dc9083404453ef0",
   "bookOrder": "protestant-66",
   "features": {

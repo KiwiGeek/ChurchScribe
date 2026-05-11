@@ -7,7 +7,7 @@
   "languageCode3": "fra",
   "sourceType": "official",
   "version": 6,
-  "contentUrl": "/bibles/content/fr/OST/v6.json",
+  "contentUrl": "bibles/content/fr/OST/v6.json",
   "contentHash": "sha256-9db76f80ec5ae862eb3841205768c8b02db0aa1e81030b2655866681686aac52",
   "bookOrder": "protestant-66",
   "features": {

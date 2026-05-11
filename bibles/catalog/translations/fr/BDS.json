@@ -7,7 +7,7 @@
   "languageCode3": "fra",
   "sourceType": "builtin",
   "version": 17,
-  "contentUrl": "/bibles/content/fr/BDS/v17.json",
+  "contentUrl": "bibles/content/fr/BDS/v17.json",
   "contentHash": "sha256-56fa18122cdc08215fb5eb22c3b071111629863e581dee172241f65a481d8b05",
   "bookOrder": "protestant-66",
   "features": {
