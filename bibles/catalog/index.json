@@ -24,22 +24,22 @@
     {
       "languageTag": "en",
       "displayName": "English",
-      "shardUrl": "/bibles/catalog/languages/en.json"
+      "shardUrl": "bibles/catalog/languages/en.json"
     },
     {
       "languageTag": "fr",
       "displayName": "French",
-      "shardUrl": "/bibles/catalog/languages/fr.json"
+      "shardUrl": "bibles/catalog/languages/fr.json"
     },
     {
       "languageTag": "es",
       "displayName": "Spanish",
-      "shardUrl": "/bibles/catalog/languages/es.json"
+      "shardUrl": "bibles/catalog/languages/es.json"
     }
   ],
   "languageShards": {
-    "en": "/bibles/catalog/languages/en.json",
-    "es": "/bibles/catalog/languages/es.json",
-    "fr": "/bibles/catalog/languages/fr.json"
+    "en": "bibles/catalog/languages/en.json",
+    "es": "bibles/catalog/languages/es.json",
+    "fr": "bibles/catalog/languages/fr.json"
   }
 }
