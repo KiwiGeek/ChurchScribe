@@ -2,23 +2,7 @@
   "schemaVersion": 1,
   "catalogVersion": "2026-05-10T23:58:26.9399402\u002B00:00",
   "defaultBuiltinIds": [
-    "en:CSB",
-    "en:ESV",
-    "en:KJV",
-    "en:MSG",
-    "en:NASB2020",
-    "en:NIrV",
-    "en:NIV11",
-    "en:NKJV",
-    "en:NLT",
-    "en:NRSVUE",
-    "es:NTV",
-    "es:NVI-S",
-    "es:NVI-S",
-    "es:RVR1960",
-    "fr:BDS",
-    "fr:LSG",
-    "fr:S21"
+    "en:KJV"
   ],
   "languages": [
     {

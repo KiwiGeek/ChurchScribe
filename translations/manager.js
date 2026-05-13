@@ -23,6 +23,7 @@ window.ScriptoriaModules.createTranslationsManager = (deps) => {
   const USER_SOURCE_TYPE = "user";
   const OFFICIAL_SOURCE_TYPE = "official";
   const BUILTIN_SOURCE_TYPE = "builtin";
+
   const offlineAvailableTranslations = new Set();
 
   let downloadAllTranslationsInFlight = false;
@@ -202,6 +203,31 @@ window.ScriptoriaModules.createTranslationsManager = (deps) => {
 
   const loadTranslationRegistry = async () => {
     translationRegistry = normalizeTranslationRegistry(await readStoredValue(translationRegistryStorageKey));
+  };
+
+  // Migration: any previously-bundled bible the user had downloaded is recorded in
+  // installedTranslations with sourceType "builtin". Now that only KJV is bundled,
+  // those entries must become "official" so they stay visible in the selector.
+  // This is naturally idempotent — once promoted there are no "builtin" entries left
+  // (other than KJV, which remains bundled and is skipped).
+  // TODO: Remove this function and its call in initializeTranslations once enough time
+  // has passed that no user would still have un-migrated "builtin" entries (~November 2026).
+  const migrateBuiltinBibles = async () => {
+    const entries = Object.entries(translationRegistry.installedTranslations);
+    const toPromote = entries.filter(
+      ([translationId, record]) => record.sourceType === BUILTIN_SOURCE_TYPE && translationId !== "en:KJV"
+    );
+
+    if (toPromote.length === 0) {
+      return;
+    }
+
+    for (const [translationId, record] of toPromote) {
+      record.sourceType = OFFICIAL_SOURCE_TYPE;
+      console.info(`[Migration] Promoted "${translationId}" from builtin to Added bible.`);
+    }
+
+    await persistTranslationRegistry();
   };
 
   const ensureCatalogIndexLoaded = async () => {
@@ -985,8 +1011,12 @@ window.ScriptoriaModules.createTranslationsManager = (deps) => {
     await persistTranslationRegistry();
   };
 
+  // TODO: Remove migrateBuiltinBibles and the PREVIOUSLY_BUNDLED_IDS / MIGRATION_BUNDLED_TO_OFFICIAL
+  // constants once enough time has passed that no user would still have the old bundled bibles
+  // in their cache without having run the migration (~November 2026).
   const initializeTranslations = async () => {
     await loadTranslationRegistry();
+    await migrateBuiltinBibles();
     await ensureCatalogIndexLoaded();
     await ensureCatalogEntriesLoaded([
       ...(catalogIndex?.defaultBuiltinIds ?? []),
