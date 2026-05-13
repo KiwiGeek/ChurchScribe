@@ -7,7 +7,7 @@
   "languageCode3": "fra",
   "sourceType": "official",
   "version": 3,
-  "contentUrl": "bibles/content/fr/SGNEG79/v3.json",
+  "contentUrl": "/bibles/content/fr/SGNEG79/v3.json",
   "contentHash": "sha256-d7af2074d7c5371c4d3b3727bd93c9c904ddfe77c92fc21b1ac4768d9f777138",
   "bookOrder": "protestant-66",
   "features": {

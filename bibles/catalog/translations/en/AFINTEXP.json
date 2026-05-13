@@ -7,7 +7,7 @@
   "languageCode3": "eng",
   "sourceType": "official",
   "version": 3,
-  "contentUrl": "bibles/content/en/AFINTEXP/v3.json",
+  "contentUrl": "/bibles/content/en/AFINTEXP/v3.json",
   "contentHash": "sha256-8e15a646eeae42685be32e321815935f82990dd8776023b5bca6081807abf0eb",
   "bookOrder": "protestant-66",
   "features": {

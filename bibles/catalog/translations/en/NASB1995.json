@@ -7,7 +7,7 @@
   "languageCode3": "eng",
   "sourceType": "official",
   "version": 16,
-  "contentUrl": "bibles/content/en/NASB1995/v16.json",
+  "contentUrl": "/bibles/content/en/NASB1995/v16.json",
   "contentHash": "sha256-a79bd893ab4a8ea2eb7a2e0a967f66702d98adf67a0619d54a0a1e5da3c07473",
   "bookOrder": "protestant-66",
   "features": {

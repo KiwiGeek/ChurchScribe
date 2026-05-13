@@ -7,7 +7,7 @@
   "languageCode3": "eng",
   "sourceType": "official",
   "version": 1,
-  "contentUrl": "bibles/content/en/OYTORHEG/v1.json",
+  "contentUrl": "/bibles/content/en/OYTORHEG/v1.json",
   "contentHash": "sha256-b6b0ef13c1ce3048a8c959899c8ad7e29560b8ed05198b6a1d878480631d68a6",
   "bookOrder": "protestant-66",
   "features": {

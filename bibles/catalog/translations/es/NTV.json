@@ -5,9 +5,9 @@
   "label": "Nueva Traducci\u00F3n Viviente",
   "languageTag": "es",
   "languageCode3": "spa",
-  "sourceType": "builtin",
+  "sourceType": "official",
   "version": 19,
-  "contentUrl": "bibles/content/es/NTV/v19.json",
+  "contentUrl": "/bibles/content/es/NTV/v19.json",
   "contentHash": "sha256-a3957a52ab6e9a4b456d7bbd5b6c27ceafc015212cfbe7561fbe2c9254f5f93e",
   "bookOrder": "protestant-66",
   "features": {

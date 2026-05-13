@@ -7,7 +7,7 @@
   "languageCode3": "eng",
   "sourceType": "official",
   "version": 25,
-  "contentUrl": "bibles/content/en/NIVUK11/v25.json",
+  "contentUrl": "/bibles/content/en/NIVUK11/v25.json",
   "contentHash": "sha256-0e88aefb2b29586a527c4df6903501c32659346f98a55b9b55187cdf924e2d92",
   "bookOrder": "protestant-66",
   "features": {

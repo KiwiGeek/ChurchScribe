@@ -7,7 +7,7 @@
   "languageCode3": "spa",
   "sourceType": "official",
   "version": 5,
-  "contentUrl": "bibles/content/es/NTBIZ/v5.json",
+  "contentUrl": "/bibles/content/es/NTBIZ/v5.json",
   "contentHash": "sha256-33f34f9505eaa67d81758a8f7f42c25b358ff1fafdef1f1dc63dcb81fb88d018",
   "bookOrder": "protestant-66",
   "features": {

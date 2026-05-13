@@ -5,9 +5,9 @@
   "label": "New American Standard Bible - NASB",
   "languageTag": "en",
   "languageCode3": "eng",
-  "sourceType": "builtin",
+  "sourceType": "official",
   "version": 12,
-  "contentUrl": "bibles/content/en/NASB2020/v12.json",
+  "contentUrl": "/bibles/content/en/NASB2020/v12.json",
   "contentHash": "sha256-826ecd2c513ccb67e616eee1ee687230c791158fd029830d23570d76be9836b4",
   "bookOrder": "protestant-66",
   "features": {

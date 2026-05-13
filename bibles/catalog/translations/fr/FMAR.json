@@ -7,7 +7,7 @@
   "languageCode3": "fra",
   "sourceType": "official",
   "version": 6,
-  "contentUrl": "bibles/content/fr/FMAR/v6.json",
+  "contentUrl": "/bibles/content/fr/FMAR/v6.json",
   "contentHash": "sha256-465f7e0cb841baa7d084f9b81df8ac7b9704d68a1182429a92afb9ca95d19f2c",
   "bookOrder": "protestant-66",
   "features": {

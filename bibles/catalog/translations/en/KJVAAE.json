@@ -7,7 +7,7 @@
   "languageCode3": "eng",
   "sourceType": "official",
   "version": 9,
-  "contentUrl": "bibles/content/en/KJVAAE/v9.json",
+  "contentUrl": "/bibles/content/en/KJVAAE/v9.json",
   "contentHash": "sha256-34adcd2cefd77879fd6856ca94eff700e0fb9da662c4a4deb9bd98e7011b44e3",
   "bookOrder": "protestant-66",
   "features": {

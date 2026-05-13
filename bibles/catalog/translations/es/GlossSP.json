@@ -7,7 +7,7 @@
   "languageCode3": "spa",
   "sourceType": "official",
   "version": 1,
-  "contentUrl": "bibles/content/es/GlossSP/v1.json",
+  "contentUrl": "/bibles/content/es/GlossSP/v1.json",
   "contentHash": "sha256-2a13445472d0fd39fbabc885d1d206eba79e1c06b47f079062958921365e8afe",
   "bookOrder": "protestant-66",
   "features": {

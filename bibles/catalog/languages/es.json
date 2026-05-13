@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "languageTag": "es",
   "displayName": "Spanish",
-  "catalogVersion": "2026-05-10T23:58:26.9343598+00:00",
+  "catalogVersion": "2026-05-13T23:39:45.1198669\u002B00:00",
   "translations": [
     {
       "translationId": "es:JBS",
@@ -14,7 +14,7 @@
       "version": 4,
       "copyright": "Biblia del Jubileo 2000 (JUS) por Ransom Press International, Inc.",
       "downloadSizeBytes": 3229061,
-      "manifestUrl": "bibles/catalog/translations/es/JBS.json"
+      "manifestUrl": "/bibles/catalog/translations/es/JBS.json"
     },
     {
       "translationId": "es:BDO1573",
@@ -24,9 +24,9 @@
       "languageTag": "es",
       "languageCode3": "spa",
       "version": 6,
-      "copyright": "Biblia del Oso 1973 Public Domain.\nEdición Digital © Sociedades Biblicas Unidas, 2000.",
+      "copyright": "Biblia del Oso 1973 Public Domain.\nEdici\u00F3n Digital \u00A9 Sociedades Biblicas Unidas, 2000.",
       "downloadSizeBytes": 4400504,
-      "manifestUrl": "bibles/catalog/translations/es/BDO1573.json"
+      "manifestUrl": "/bibles/catalog/translations/es/BDO1573.json"
     },
     {
       "translationId": "es:DHH94I",
@@ -36,9 +36,9 @@
       "languageTag": "es",
       "languageCode3": "spa",
       "version": 12,
-      "copyright": "Texto © Sociedades Bíblicas Unidas, 1994.",
+      "copyright": "Texto \u00A9 Sociedades B\u00EDblicas Unidas, 1994.",
       "downloadSizeBytes": 5576830,
-      "manifestUrl": "bibles/catalog/translations/es/DHH94I.json"
+      "manifestUrl": "/bibles/catalog/translations/es/DHH94I.json"
     },
     {
       "translationId": "es:DHH94PC",
@@ -48,9 +48,9 @@
       "languageTag": "es",
       "languageCode3": "spa",
       "version": 11,
-      "copyright": "Texto © Sociedades Bíblicas Unidas, 1994.",
+      "copyright": "Texto \u00A9 Sociedades B\u00EDblicas Unidas, 1994.",
       "downloadSizeBytes": 4892916,
-      "manifestUrl": "bibles/catalog/translations/es/DHH94PC.json"
+      "manifestUrl": "/bibles/catalog/translations/es/DHH94PC.json"
     },
     {
       "translationId": "es:RVR09",
@@ -60,9 +60,9 @@
       "languageTag": "es",
       "languageCode3": "spa",
       "version": 9,
-      "copyright": "Reina-Valera 1909 - Dominio público.\nFue realizada por Sociedades Bíblicas Unidas y publicada por primera vez en 1909.",
+      "copyright": "Reina-Valera 1909 - Dominio p\u00FAblico.\nFue realizada por Sociedades B\u00EDblicas Unidas y publicada por primera vez en 1909.",
       "downloadSizeBytes": 4184819,
-      "manifestUrl": "bibles/catalog/translations/es/RVR09.json"
+      "manifestUrl": "/bibles/catalog/translations/es/RVR09.json"
     },
     {
       "translationId": "es:RVR1960",
@@ -72,9 +72,9 @@
       "languageTag": "es",
       "languageCode3": "spa",
       "version": 23,
-      "copyright": "Texto bíblico Reina-Valera 1960® © Sociedades Bíblicas en América Latina, 1960. Derechos renovados 1988, Sociedades Bíblicas Unidas.",
+      "copyright": "Texto b\u00EDblico Reina-Valera 1960\u00AE \u00A9 Sociedades B\u00EDblicas en Am\u00E9rica Latina, 1960. Derechos renovados 1988, Sociedades B\u00EDblicas Unidas.",
       "downloadSizeBytes": 3480128,
-      "manifestUrl": "bibles/catalog/translations/es/RVR1960.json"
+      "manifestUrl": "/bibles/catalog/translations/es/RVR1960.json"
     },
     {
       "translationId": "es:RVR95",
@@ -84,21 +84,21 @@
       "languageTag": "es",
       "languageCode3": "spa",
       "version": 12,
-      "copyright": "Texto: Reina-Valera 95® © Sociedades Bíblica Unidas, 1995.\nNotas: Notas de Estudio Reina-Valera 95 © Sociedades Bíblicas Unidas, 1995.",
+      "copyright": "Texto: Reina-Valera 95\u00AE \u00A9 Sociedades B\u00EDblica Unidas, 1995.\nNotas: Notas de Estudio Reina-Valera 95 \u00A9 Sociedades B\u00EDblicas Unidas, 1995.",
       "downloadSizeBytes": 3361041,
-      "manifestUrl": "bibles/catalog/translations/es/RVR95.json"
+      "manifestUrl": "/bibles/catalog/translations/es/RVR95.json"
     },
     {
       "translationId": "es:DHH23ST",
       "code": "DHH23ST",
-      "label": "Dios habla hoy 4ta. edición. Estándar.",
+      "label": "Dios habla hoy 4ta. edici\u00F3n. Est\u00E1ndar.",
       "sourceType": "official",
       "languageTag": "es",
       "languageCode3": "spa",
       "version": 4,
-      "copyright": "Copyright: Dios habla hoy ®, Cuarta edición © Sociedades Bíblicas Unidas, 2023. Otras ediciones: 1966, 1970, 1979, 1983, 1994.\nDios habla hoy ® es una marca registrada de Sociedades Bíblicas Unidas, y puede ser usada solamente bajo licencia.",
+      "copyright": "Copyright: Dios habla hoy \u00AE, Cuarta edici\u00F3n \u00A9 Sociedades B\u00EDblicas Unidas, 2023. Otras ediciones: 1966, 1970, 1979, 1983, 1994.\nDios habla hoy \u00AE es una marca registrada de Sociedades B\u00EDblicas Unidas, y puede ser usada solamente bajo licencia.",
       "downloadSizeBytes": 3823666,
-      "manifestUrl": "bibles/catalog/translations/es/DHH23ST.json"
+      "manifestUrl": "/bibles/catalog/translations/es/DHH23ST.json"
     },
     {
       "translationId": "es:DHHDK",
@@ -108,21 +108,21 @@
       "languageTag": "es",
       "languageCode3": "spa",
       "version": 6,
-      "copyright": "Texto Bíblico: Dios habla hoy © Sociedades Bíblicas Unidas, 1966, 1970, 1979, 1983, 1994.",
+      "copyright": "Texto B\u00EDblico: Dios habla hoy \u00A9 Sociedades B\u00EDblicas Unidas, 1966, 1970, 1979, 1983, 1994.",
       "downloadSizeBytes": 5639271,
-      "manifestUrl": "bibles/catalog/translations/es/DHHDK.json"
+      "manifestUrl": "/bibles/catalog/translations/es/DHHDK.json"
     },
     {
       "translationId": "es:DHHS94",
       "code": "DHHS94",
-      "label": "Dios habla Hoy Estándar",
+      "label": "Dios habla Hoy Est\u00E1ndar",
       "sourceType": "official",
       "languageTag": "es",
       "languageCode3": "spa",
       "version": 12,
-      "copyright": "Bible text: LA BIBLIA DIOS HABLA HOY, Tercera edición © Sociedades Bíblicas Unidas 1966, 1970, 1979, 1983, 1994, 1996\nTodos los derechos reservados. www.unitedbiblesocieties.org/",
+      "copyright": "Bible text: LA BIBLIA DIOS HABLA HOY, Tercera edici\u00F3n \u00A9 Sociedades B\u00EDblicas Unidas 1966, 1970, 1979, 1983, 1994, 1996\nTodos los derechos reservados. www.unitedbiblesocieties.org/",
       "downloadSizeBytes": 3901345,
-      "manifestUrl": "bibles/catalog/translations/es/DHHS94.json"
+      "manifestUrl": "/bibles/catalog/translations/es/DHHS94.json"
     },
     {
       "translationId": "es:GlossSP",
@@ -134,31 +134,31 @@
       "version": 1,
       "copyright": "2023 by Betheden Ministries\nPublic Domain. All of this publication may be shared, translated, sold, or copied freely without limitation and without permission. To learn more about this open license visit https://creativecommons.org/share-your-work/public-domain/cc0/",
       "downloadSizeBytes": 2084833,
-      "manifestUrl": "bibles/catalog/translations/es/GlossSP.json"
+      "manifestUrl": "/bibles/catalog/translations/es/GlossSP.json"
     },
     {
       "translationId": "es:LBLA",
       "code": "LBLA",
-      "label": "La Biblia de las Américas",
+      "label": "La Biblia de las Am\u00E9ricas",
       "sourceType": "official",
       "languageTag": "es",
       "languageCode3": "spa",
       "version": 11,
       "copyright": "1986, 1995, 1997 by The Lockman Foundation",
       "downloadSizeBytes": 3817645,
-      "manifestUrl": "bibles/catalog/translations/es/LBLA.json"
+      "manifestUrl": "/bibles/catalog/translations/es/LBLA.json"
     },
     {
       "translationId": "es:BHTI",
       "code": "BHTI",
-      "label": "La Biblia Hispanoamericana (Traducción Interconfesional, versión hispanoamericana)",
+      "label": "La Biblia Hispanoamericana (Traducci\u00F3n Interconfesional, versi\u00F3n hispanoamericana)",
       "sourceType": "official",
       "languageTag": "es",
       "languageCode3": "spa",
       "version": 11,
-      "copyright": "La Biblia Hispanoamericana (BHTI) Traducción Interconfesional versión hispanoamericana Copyright © Sociedad Bíblica de España, 2011 Utilizada con permiso",
+      "copyright": "La Biblia Hispanoamericana (BHTI) Traducci\u00F3n Interconfesional versi\u00F3n hispanoamericana Copyright \u00A9 Sociedad B\u00EDblica de Espa\u00F1a, 2011 Utilizada con permiso",
       "downloadSizeBytes": 5783815,
-      "manifestUrl": "bibles/catalog/translations/es/BHTI.json"
+      "manifestUrl": "/bibles/catalog/translations/es/BHTI.json"
     },
     {
       "translationId": "es:PDT",
@@ -170,19 +170,19 @@
       "version": 16,
       "copyright": "Bible League International",
       "downloadSizeBytes": 3639760,
-      "manifestUrl": "bibles/catalog/translations/es/PDT.json"
+      "manifestUrl": "/bibles/catalog/translations/es/PDT.json"
     },
     {
       "translationId": "es:BLPH",
       "code": "BLPH",
-      "label": "La Palabra (versión hispanoamericana)",
+      "label": "La Palabra (versi\u00F3n hispanoamericana)",
       "sourceType": "official",
       "languageTag": "es",
       "languageCode3": "spa",
       "version": 14,
-      "copyright": "La Palabra (BLPH) versión hispanoamericana Copyright © Sociedad Bíblica de España, 2010 Utilizada con permiso",
+      "copyright": "La Palabra (BLPH) versi\u00F3n hispanoamericana Copyright \u00A9 Sociedad B\u00EDblica de Espa\u00F1a, 2010 Utilizada con permiso",
       "downloadSizeBytes": 3818906,
-      "manifestUrl": "bibles/catalog/translations/es/BLPH.json"
+      "manifestUrl": "/bibles/catalog/translations/es/BLPH.json"
     },
     {
       "translationId": "es:LSB",
@@ -192,33 +192,33 @@
       "languageTag": "es",
       "languageCode3": "spa",
       "version": 1,
-      "copyright": "Reina-Valera SBT © 2023 Sociedad Bíblica Trinitaria",
+      "copyright": "Reina-Valera SBT \u00A9 2023 Sociedad B\u00EDblica Trinitaria",
       "downloadSizeBytes": 490,
-      "manifestUrl": "bibles/catalog/translations/es/LSB.json"
+      "manifestUrl": "/bibles/catalog/translations/es/LSB.json"
     },
     {
       "translationId": "es:NVI-S",
       "code": "NVI-S",
-      "label": "La Santa Biblia, Nueva Versión Internacional Simplificada",
+      "label": "La Santa Biblia, Nueva Versi\u00F3n Internacional Simplificada",
       "sourceType": "official",
       "languageTag": "es",
       "languageCode3": "spa",
       "version": 4,
-      "copyright": "Nueva Versión Internacional Simplificada\n© 2019 por Biblica, Inc.®\nReservados todos los derechos en todo el mundo.\nNueva Versión Internacional Simplificada\nCopyright © 2019 by Biblica, Inc.®\nAll rights reserved worldwide.",
+      "copyright": "Nueva Versi\u00F3n Internacional Simplificada\n\u00A9 2019 por Biblica, Inc.\u00AE\nReservados todos los derechos en todo el mundo.\nNueva Versi\u00F3n Internacional Simplificada\nCopyright \u00A9 2019 by Biblica, Inc.\u00AE\nAll rights reserved worldwide.",
       "downloadSizeBytes": 823728,
-      "manifestUrl": "bibles/catalog/translations/es/NVI-S.json"
+      "manifestUrl": "/bibles/catalog/translations/es/NVI-S.json"
     },
     {
       "translationId": "es:NBLA",
       "code": "NBLA",
-      "label": "Nueva Biblia de las Américas",
+      "label": "Nueva Biblia de las Am\u00E9ricas",
       "sourceType": "official",
       "languageTag": "es",
       "languageCode3": "spa",
       "version": 19,
       "copyright": "1986, 1995, 1997, 2005 by The Lockman Foundation",
       "downloadSizeBytes": 3714608,
-      "manifestUrl": "bibles/catalog/translations/es/NBLA.json"
+      "manifestUrl": "/bibles/catalog/translations/es/NBLA.json"
     },
     {
       "translationId": "es:NBV",
@@ -228,21 +228,33 @@
       "languageTag": "es",
       "languageCode3": "spa",
       "version": 10,
-      "copyright": "Nueva Biblia Viva\n© 2006, 2008 por Biblica, Inc.®\nUsado con permiso de Biblica, Inc.® Reservados todos los derechos en todo el mundo.",
+      "copyright": "Nueva Biblia Viva\n\u00A9 2006, 2008 por Biblica, Inc.\u00AE\nUsado con permiso de Biblica, Inc.\u00AE Reservados todos los derechos en todo el mundo.",
       "downloadSizeBytes": 3244147,
-      "manifestUrl": "bibles/catalog/translations/es/NBV.json"
+      "manifestUrl": "/bibles/catalog/translations/es/NBV.json"
     },
     {
       "translationId": "es:NTV",
       "code": "NTV",
-      "label": "Nueva Traducción Viviente",
+      "label": "Nueva Traducci\u00F3n Viviente",
       "sourceType": "official",
       "languageTag": "es",
       "languageCode3": "spa",
       "version": 19,
-      "copyright": "Santa Biblia, Nueva Traducción Viviente, copyright © 2010 by Tyndale House Foundation. Used by permission of Tyndale House Publishers, a Division of Tyndale House Ministries, Carol Stream, Illinois 60188. All rights reserved.",
+      "copyright": "Santa Biblia, Nueva Traducci\u00F3n Viviente, copyright \u00A9 2010 by Tyndale House Foundation. Used by permission of Tyndale House Publishers, a Division of Tyndale House Ministries, Carol Stream, Illinois 60188. All rights reserved.",
       "downloadSizeBytes": 3840281,
-      "manifestUrl": "bibles/catalog/translations/es/NTV.json"
+      "manifestUrl": "/bibles/catalog/translations/es/NTV.json"
+    },
+    {
+      "translationId": "es:NVI-S",
+      "code": "NVI-S",
+      "label": "Nueva Versi\u00F3n Internacional - Espa\u00F1ol",
+      "sourceType": "official",
+      "languageTag": "es",
+      "languageCode3": "spa",
+      "version": 25,
+      "copyright": "Santa Biblia, Nueva Versi\u00F3n Internacional\u00AE NVI\u00AE | \u00A9 1999, 2015, 2022 por Biblica, Inc. | Usado con permiso. Reservados todos los derechos en todo el mundo.",
+      "downloadSizeBytes": 3619321,
+      "manifestUrl": "/bibles/catalog/translations/es/NVI-S.json"
     },
     {
       "translationId": "es:NTBIZ",
@@ -252,9 +264,9 @@
       "languageTag": "es",
       "languageCode3": "spa",
       "version": 5,
-      "copyright": "© 2014, 2016, 2019, 2021\nEDITORIAL RÍO GRANDE EDINBURG, TEXAS",
+      "copyright": "\u00A9 2014, 2016, 2019, 2021\nEDITORIAL R\u00CDO GRANDE EDINBURG, TEXAS",
       "downloadSizeBytes": 829087,
-      "manifestUrl": "bibles/catalog/translations/es/NTBIZ.json"
+      "manifestUrl": "/bibles/catalog/translations/es/NTBIZ.json"
     },
     {
       "translationId": "es:spaPdDpt",
@@ -264,9 +276,9 @@
       "languageTag": "es",
       "languageCode3": "spa",
       "version": 9,
-      "copyright": "Copyright © 2020 Asociación Bíblica Latinoamericana. CC-BY",
+      "copyright": "Copyright \u00A9 2020 Asociaci\u00F3n B\u00EDblica Latinoamericana. CC-BY",
       "downloadSizeBytes": 3195521,
-      "manifestUrl": "bibles/catalog/translations/es/spaPdDpt.json"
+      "manifestUrl": "/bibles/catalog/translations/es/spaPdDpt.json"
     },
     {
       "translationId": "es:RVA2015",
@@ -276,21 +288,21 @@
       "languageTag": "es",
       "languageCode3": "spa",
       "version": 8,
-      "copyright": "Copyright © 2015 by Editorial Mundo Hispano",
+      "copyright": "Copyright \u00A9 2015 by Editorial Mundo Hispano",
       "downloadSizeBytes": 3384546,
-      "manifestUrl": "bibles/catalog/translations/es/RVA2015.json"
+      "manifestUrl": "/bibles/catalog/translations/es/RVA2015.json"
     },
     {
       "translationId": "es:RVC",
       "code": "RVC",
-      "label": "Reina Valera Contemporánea",
+      "label": "Reina Valera Contempor\u00E1nea",
       "sourceType": "official",
       "languageTag": "es",
       "languageCode3": "spa",
       "version": 36,
-      "copyright": "Reina Valera Contemporánea™ © Sociedades Bíblicas Unidas, 2009, 2010.",
+      "copyright": "Reina Valera Contempor\u00E1nea\u2122 \u00A9 Sociedades B\u00EDblicas Unidas, 2009, 2010.",
       "downloadSizeBytes": 3391447,
-      "manifestUrl": "bibles/catalog/translations/es/RVC.json"
+      "manifestUrl": "/bibles/catalog/translations/es/RVC.json"
     },
     {
       "translationId": "es:RVES",
@@ -302,55 +314,55 @@
       "version": 8,
       "copyright": "",
       "downloadSizeBytes": 3028045,
-      "manifestUrl": "bibles/catalog/translations/es/RVES.json"
+      "manifestUrl": "/bibles/catalog/translations/es/RVES.json"
     },
     {
       "translationId": "es:TCB",
       "code": "TCB",
-      "label": "Traducción Contemporánea de la Biblia - NT +",
+      "label": "Traducci\u00F3n Contempor\u00E1nea de la Biblia - NT \u002B",
       "sourceType": "official",
       "languageTag": "es",
       "languageCode3": "spa",
       "version": 11,
-      "copyright": "Proyecto Evanggelio: Traducción Contemporánea de la Biblia.\nCopyright ©. 2022 por Yattenciy Bonilla.\nTodos los derechos reservados.\nhttps://proyectoevanggelio.org/",
+      "copyright": "Proyecto Evanggelio: Traducci\u00F3n Contempor\u00E1nea de la Biblia.\nCopyright \u00A9. 2022 por Yattenciy Bonilla.\nTodos los derechos reservados.\nhttps://proyectoevanggelio.org/",
       "downloadSizeBytes": 1646512,
-      "manifestUrl": "bibles/catalog/translations/es/TCB.json"
+      "manifestUrl": "/bibles/catalog/translations/es/TCB.json"
     },
     {
       "translationId": "es:TLA",
       "code": "TLA",
-      "label": "Traducción en Lenguaje Actual",
+      "label": "Traducci\u00F3n en Lenguaje Actual",
       "sourceType": "official",
       "languageTag": "es",
       "languageCode3": "spa",
       "version": 26,
-      "copyright": "Traducción en lenguaje actual ® © Sociedades Bíblicas Unidas, 2002, 2004.",
+      "copyright": "Traducci\u00F3n en lenguaje actual \u00AE \u00A9 Sociedades B\u00EDblicas Unidas, 2002, 2004.",
       "downloadSizeBytes": 3617600,
-      "manifestUrl": "bibles/catalog/translations/es/TLA.json"
+      "manifestUrl": "/bibles/catalog/translations/es/TLA.json"
     },
     {
       "translationId": "es:TLAI",
       "code": "TLAI",
-      "label": "Traducción en Lenguaje Actual Interconfesional",
+      "label": "Traducci\u00F3n en Lenguaje Actual Interconfesional",
       "sourceType": "official",
       "languageTag": "es",
       "languageCode3": "spa",
       "version": 18,
-      "copyright": "Traducción en lenguaje actual ® © Sociedades Bíblicas Unidas, 2002, 2004.",
+      "copyright": "Traducci\u00F3n en lenguaje actual \u00AE \u00A9 Sociedades B\u00EDblicas Unidas, 2002, 2004.",
       "downloadSizeBytes": 3973802,
-      "manifestUrl": "bibles/catalog/translations/es/TLAI.json"
+      "manifestUrl": "/bibles/catalog/translations/es/TLAI.json"
     },
     {
       "translationId": "es:VBL",
       "code": "VBL",
-      "label": "Versión Biblia Libre",
+      "label": "Versi\u00F3n Biblia Libre",
       "sourceType": "official",
       "languageTag": "es",
       "languageCode3": "spa",
       "version": 6,
-      "copyright": "Derechos de autor © 2022 Jonathan Gallagher. Publicado bajo licencia Creative Commons Attribution-ShareAlike 4.0 Unported.\nVersión 1.1 beta.\nPara correcciones enviar correo electrónico a jonathangallagherfbv@gmail.com\nCopyright © 2022 Jonathan Gallagher. Dr. Jonathan Gallagher. Released under Creative Commons Attribution-ShareAlike 4.0 Unported License. Version 1.1 beta. For corrections send email to jonathangallagherfbv@gmail.com",
+      "copyright": "Derechos de autor \u00A9 2022 Jonathan Gallagher. Publicado bajo licencia Creative Commons Attribution-ShareAlike 4.0 Unported.\nVersi\u00F3n 1.1 beta.\nPara correcciones enviar correo electr\u00F3nico a jonathangallagherfbv@gmail.com\nCopyright \u00A9 2022 Jonathan Gallagher. Dr. Jonathan Gallagher. Released under Creative Commons Attribution-ShareAlike 4.0 Unported License. Version 1.1 beta. For corrections send email to jonathangallagherfbv@gmail.com",
       "downloadSizeBytes": 3527416,
-      "manifestUrl": "bibles/catalog/translations/es/VBL.json"
+      "manifestUrl": "/bibles/catalog/translations/es/VBL.json"
     }
   ]
 }

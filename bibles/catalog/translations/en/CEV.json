@@ -7,7 +7,7 @@
   "languageCode3": "eng",
   "sourceType": "official",
   "version": 14,
-  "contentUrl": "bibles/content/en/CEV/v14.json",
+  "contentUrl": "/bibles/content/en/CEV/v14.json",
   "contentHash": "sha256-17adc3c209baaba9b41db2e7bab07b28421eba1f5b9f1dc6c49faeb02220d1d1",
   "bookOrder": "protestant-66",
   "features": {

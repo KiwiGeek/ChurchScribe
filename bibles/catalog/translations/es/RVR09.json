@@ -7,7 +7,7 @@
   "languageCode3": "spa",
   "sourceType": "official",
   "version": 9,
-  "contentUrl": "bibles/content/es/RVR09/v9.json",
+  "contentUrl": "/bibles/content/es/RVR09/v9.json",
   "contentHash": "sha256-718c8fbfe9818608a03bba4193804a2cbf76e72cb10ddc6cea086c84176c27bc",
   "bookOrder": "protestant-66",
   "features": {

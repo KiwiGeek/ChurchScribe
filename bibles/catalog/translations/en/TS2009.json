@@ -7,7 +7,7 @@
   "languageCode3": "eng",
   "sourceType": "official",
   "version": 8,
-  "contentUrl": "bibles/content/en/TS2009/v8.json",
+  "contentUrl": "/bibles/content/en/TS2009/v8.json",
   "contentHash": "sha256-d8ddfc076a68c3a91f57067c3452465a9376705040a2945a9a216abebdb30843",
   "bookOrder": "protestant-66",
   "features": {

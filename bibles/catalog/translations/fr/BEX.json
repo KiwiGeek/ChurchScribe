@@ -7,7 +7,7 @@
   "languageCode3": "fra",
   "sourceType": "official",
   "version": 5,
-  "contentUrl": "bibles/content/fr/BEX/v5.json",
+  "contentUrl": "/bibles/content/fr/BEX/v5.json",
   "contentHash": "sha256-c1db83554c58c788dc2d47b0b9c9d606316b67e344229a3c8480b2265ad2d03f",
   "bookOrder": "protestant-66",
   "features": {

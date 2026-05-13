@@ -7,7 +7,7 @@
   "languageCode3": "spa",
   "sourceType": "official",
   "version": 26,
-  "contentUrl": "bibles/content/es/TLA/v26.json",
+  "contentUrl": "/bibles/content/es/TLA/v26.json",
   "contentHash": "sha256-99cd93aa29a3b8ed936786b02723c7e13140c06643e000e4ded4463bb800cd00",
   "bookOrder": "protestant-66",
   "features": {

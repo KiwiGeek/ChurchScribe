@@ -7,7 +7,7 @@
   "languageCode3": "eng",
   "sourceType": "official",
   "version": 5,
-  "contentUrl": "bibles/content/en/BSB/v5.json",
+  "contentUrl": "/bibles/content/en/BSB/v5.json",
   "contentHash": "sha256-c5b90ec3dc789b792a7e2ef544250ba73dd5782e1a70d6b240c40fcf0d499d38",
   "bookOrder": "protestant-66",
   "features": {

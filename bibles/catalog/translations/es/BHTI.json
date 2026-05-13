@@ -7,7 +7,7 @@
   "languageCode3": "spa",
   "sourceType": "official",
   "version": 11,
-  "contentUrl": "bibles/content/es/BHTI/v11.json",
+  "contentUrl": "/bibles/content/es/BHTI/v11.json",
   "contentHash": "sha256-e9cc3c795b234babece2139aeedc4e85715d6df2d32ed0afdcdf49d106a8f1bc",
   "bookOrder": "protestant-66",
   "features": {

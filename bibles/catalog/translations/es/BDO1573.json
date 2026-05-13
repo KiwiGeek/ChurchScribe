@@ -7,7 +7,7 @@
   "languageCode3": "spa",
   "sourceType": "official",
   "version": 6,
-  "contentUrl": "bibles/content/es/BDO1573/v6.json",
+  "contentUrl": "/bibles/content/es/BDO1573/v6.json",
   "contentHash": "sha256-d159d06f9390fb154b1571c75df11a2beb6c6c9f8840cdf439fba6e1bda4bc21",
   "bookOrder": "protestant-66",
   "features": {

@@ -7,7 +7,7 @@
   "languageCode3": "eng",
   "sourceType": "official",
   "version": 7,
-  "contentUrl": "bibles/content/en/DARBY/v7.json",
+  "contentUrl": "/bibles/content/en/DARBY/v7.json",
   "contentHash": "sha256-0affc588ab776a54be5ecddadb3204324be0d92d493557b3f731fec625f215eb",
   "bookOrder": "protestant-66",
   "features": {
