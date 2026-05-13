@@ -7,7 +7,7 @@
   "languageCode3": "eng",
   "sourceType": "official",
   "version": 10,
-  "contentUrl": "/bibles/content/en/CPDV/v10.json",
+  "contentUrl": "bibles/content/en/CPDV/v10.json",
   "contentHash": "sha256-a06e091da241ed06ab5bbc4abe73ae56cab6afd22e550f087c1aee6c75d513f2",
   "bookOrder": "protestant-66",
   "features": {

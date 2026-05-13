@@ -7,7 +7,7 @@
   "languageCode3": "eng",
   "sourceType": "official",
   "version": 98,
-  "contentUrl": "/bibles/content/en/WMBBE/v98.json",
+  "contentUrl": "bibles/content/en/WMBBE/v98.json",
   "contentHash": "sha256-f0fbd08dc82574006f6035fc20685c18f60f5c8d0b22d2e59396e27296b25f9b",
   "bookOrder": "protestant-66",
   "features": {

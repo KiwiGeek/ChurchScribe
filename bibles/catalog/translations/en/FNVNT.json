@@ -7,7 +7,7 @@
   "languageCode3": "eng",
   "sourceType": "official",
   "version": 7,
-  "contentUrl": "/bibles/content/en/FNVNT/v7.json",
+  "contentUrl": "bibles/content/en/FNVNT/v7.json",
   "contentHash": "sha256-104ae71cd472b3fe9b730b5c7943bee441ab18bde61a65b411a7bab75aa453eb",
   "bookOrder": "protestant-66",
   "features": {

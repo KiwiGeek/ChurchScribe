@@ -7,7 +7,7 @@
   "languageCode3": "eng",
   "sourceType": "official",
   "version": 25,
-  "contentUrl": "/bibles/content/en/ASV/v25.json",
+  "contentUrl": "bibles/content/en/ASV/v25.json",
   "contentHash": "sha256-6c97ab791e8f466eeaef3bdcdabacc03f9334fc114a0a39157abec74d45dcfd0",
   "bookOrder": "protestant-66",
   "features": {

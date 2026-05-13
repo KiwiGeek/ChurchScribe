@@ -7,7 +7,7 @@
   "languageCode3": "eng",
   "sourceType": "official",
   "version": 4,
-  "contentUrl": "/bibles/content/en/ICB/v4.json",
+  "contentUrl": "bibles/content/en/ICB/v4.json",
   "contentHash": "sha256-958259c5e738f27dbefef930e27253adaa9cc916f92a9af9b439a56f22a44201",
   "bookOrder": "protestant-66",
   "features": {

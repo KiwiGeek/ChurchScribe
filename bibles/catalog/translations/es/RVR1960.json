@@ -7,7 +7,7 @@
   "languageCode3": "spa",
   "sourceType": "official",
   "version": 23,
-  "contentUrl": "/bibles/content/es/RVR1960/v23.json",
+  "contentUrl": "bibles/content/es/RVR1960/v23.json",
   "contentHash": "sha256-dd4e2cbd3006dcbf6b473d764898e6aa544911c93e08af2b4f253d555eb25d85",
   "bookOrder": "protestant-66",
   "features": {

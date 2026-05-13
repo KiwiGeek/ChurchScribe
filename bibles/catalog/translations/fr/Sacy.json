@@ -7,7 +7,7 @@
   "languageCode3": "fra",
   "sourceType": "official",
   "version": 3,
-  "contentUrl": "/bibles/content/fr/Sacy/v3.json",
+  "contentUrl": "bibles/content/fr/Sacy/v3.json",
   "contentHash": "sha256-6627aac71de63c516e552b5ee9d68e0fa0a6cdb2c4cb323bd4122ca6e75b50dc",
   "bookOrder": "protestant-66",
   "features": {

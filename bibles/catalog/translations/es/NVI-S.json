@@ -7,7 +7,7 @@
   "languageCode3": "spa",
   "sourceType": "official",
   "version": 25,
-  "contentUrl": "/bibles/content/es/NVI-S/v25.json",
+  "contentUrl": "bibles/content/es/NVI-S/v25.json",
   "contentHash": "sha256-f9b362db2d624e2f5968c8363e4fe56ac15454a945d0c61877495513d2079a57",
   "bookOrder": "protestant-66",
   "features": {

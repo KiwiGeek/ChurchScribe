@@ -7,7 +7,7 @@
   "languageCode3": "eng",
   "sourceType": "official",
   "version": 12,
-  "contentUrl": "/bibles/content/en/FBV/v12.json",
+  "contentUrl": "bibles/content/en/FBV/v12.json",
   "contentHash": "sha256-1227166f316425c0ff042514a12002fc6e6052b739b2324a8cc13fecf81a0507",
   "bookOrder": "protestant-66",
   "features": {
