@@ -9,8 +9,6 @@ window.ScriptoriaModules.createTranslationsManager = (deps) => {
     translationRegistryStorageKey,
     translationStorageKey,
     translationSelect,
-    downloadAllTranslationsButton,
-    downloadAllTranslationsStatus,
     getCurrentTranslationCode,
     applyTranslation,
     openOfficialTranslationsSettings
@@ -26,11 +24,11 @@ window.ScriptoriaModules.createTranslationsManager = (deps) => {
 
   const offlineAvailableTranslations = new Set();
 
-  let downloadAllTranslationsInFlight = false;
   let catalogIndex = null;
   let translationRegistry = null;
   let officialLanguageSearch = "";
   let officialLanguageFilters = new Set();
+  let availableTranslationSearch = "";
   const catalogEntries = new Map();
   const loadedLanguageTags = new Set();
 
@@ -111,7 +109,7 @@ window.ScriptoriaModules.createTranslationsManager = (deps) => {
       .sort((a, b) => (a.label ?? a.code).localeCompare(b.label ?? b.code, undefined, { sensitivity: "base" }));
 
   const getDefaultTranslationId = () =>
-    catalogIndex?.defaultBuiltinIds?.[0]
+    Object.keys(translationRegistry?.installedTranslations ?? {})[0]
     ?? Object.keys(translationLibrary)[0]
     ?? "en:KJV";
 
@@ -205,18 +203,14 @@ window.ScriptoriaModules.createTranslationsManager = (deps) => {
     translationRegistry = normalizeTranslationRegistry(await readStoredValue(translationRegistryStorageKey));
   };
 
-  // Migration: any previously-bundled bible the user had downloaded is recorded in
-  // installedTranslations with sourceType "builtin". Now that only KJV is bundled,
-  // those entries must become "official" so they stay visible in the selector.
-  // This is naturally idempotent — once promoted there are no "builtin" entries left
-  // (other than KJV, which remains bundled and is skipped).
+  // Migration: any translation recorded in installedTranslations with sourceType "builtin"
+  // must become "official" so it stays visible and consistent with the new unified model.
+  // This is naturally idempotent — once promoted there are no "builtin" entries left.
   // TODO: Remove this function and its call in initializeTranslations once enough time
   // has passed that no user would still have un-migrated "builtin" entries (~November 2026).
   const migrateBuiltinBibles = async () => {
     const entries = Object.entries(translationRegistry.installedTranslations);
-    const toPromote = entries.filter(
-      ([translationId, record]) => record.sourceType === BUILTIN_SOURCE_TYPE && translationId !== "en:KJV"
-    );
+    const toPromote = entries.filter(([, record]) => record.sourceType === BUILTIN_SOURCE_TYPE);
 
     if (toPromote.length === 0) {
       return;
@@ -224,7 +218,7 @@ window.ScriptoriaModules.createTranslationsManager = (deps) => {
 
     for (const [translationId, record] of toPromote) {
       record.sourceType = OFFICIAL_SOURCE_TYPE;
-      console.info(`[Migration] Promoted "${translationId}" from builtin to Added bible.`);
+      console.info(`[Migration] Promoted "${translationId}" from builtin to official.`);
     }
 
     await persistTranslationRegistry();
@@ -291,12 +285,8 @@ window.ScriptoriaModules.createTranslationsManager = (deps) => {
     await Promise.all(languageTags.map((languageTag) => ensureLanguageCatalogLoaded(languageTag)));
   };
 
-  const getVisibleTranslationIds = () => {
-    const builtinIds = catalogIndex?.defaultBuiltinIds ?? [];
-    const officialIds = getInstalledOfficialIds();
-    const userIds = Object.keys(translationRegistry?.userTranslations ?? {});
-    return [...new Set([...builtinIds, ...officialIds, ...userIds])];
-  };
+  const getVisibleTranslationIds = () =>
+    Object.keys(translationRegistry?.installedTranslations ?? {});
 
   const rebuildTranslationLibrary = () => {
     const visibleIds = new Set(getVisibleTranslationIds());
@@ -348,8 +338,14 @@ window.ScriptoriaModules.createTranslationsManager = (deps) => {
     translationLibrary[translationId] ?? catalogEntries.get(translationId) ?? null;
 
   const writeInstalledRecord = async (translationId, entry, contentHash = null) => {
+    // Normalize builtin → official so the registry is always consistent.
+    // The "builtin" sourceType is a catalog/builder concept only; in the installed
+    // registry every catalog-sourced translation is "official".
+    const sourceType = entry.sourceType === BUILTIN_SOURCE_TYPE
+      ? OFFICIAL_SOURCE_TYPE
+      : entry.sourceType;
     translationRegistry.installedTranslations[translationId] = {
-      sourceType: entry.sourceType,
+      sourceType,
       version: entry.version,
       installedAt: new Date().toISOString(),
       contentHash
@@ -492,121 +488,35 @@ window.ScriptoriaModules.createTranslationsManager = (deps) => {
     }
   };
 
-  const refreshDownloadAllTranslationsUi = () => {
-    if (!downloadAllTranslationsButton || !downloadAllTranslationsStatus) {
-      return;
-    }
-
-    const builtinIds = catalogIndex?.defaultBuiltinIds ?? [];
-    const missing = builtinIds.filter((translationId) => !offlineAvailableTranslations.has(translationId));
-    const offline = !navigator.onLine;
-
-    if (downloadAllTranslationsInFlight) {
-      return;
-    }
-
-    if (missing.length === 0) {
-      downloadAllTranslationsButton.disabled = true;
-      downloadAllTranslationsButton.textContent = "All downloaded";
-      downloadAllTranslationsStatus.textContent = `${builtinIds.length} of ${builtinIds.length} available offline.`;
-      return;
-    }
-
-    downloadAllTranslationsButton.textContent = "Download all for offline use";
-
-    if (offline) {
-      downloadAllTranslationsButton.disabled = true;
-      downloadAllTranslationsStatus.textContent = `You're offline — ${missing.length} of ${builtinIds.length} not yet downloaded. Reconnect to download the rest.`;
-      return;
-    }
-
-    downloadAllTranslationsButton.disabled = false;
-    downloadAllTranslationsStatus.textContent = `${builtinIds.length - missing.length} of ${builtinIds.length} available offline.`;
-  };
-
-  const downloadAllBuiltinTranslations = async () => {
-    if (downloadAllTranslationsInFlight) {
-      return;
-    }
-
-    if (!navigator.onLine) {
-      if (downloadAllTranslationsStatus) {
-        downloadAllTranslationsStatus.textContent = "You're offline — connect to download.";
-      }
-      return;
-    }
-
-    const builtinIds = catalogIndex?.defaultBuiltinIds ?? [];
-    const missing = builtinIds.filter((translationId) => !offlineAvailableTranslations.has(translationId));
-
-    if (missing.length === 0) {
-      return;
-    }
-
-    downloadAllTranslationsInFlight = true;
-
-    if (downloadAllTranslationsButton) {
-      downloadAllTranslationsButton.disabled = true;
-    }
-
-    let succeeded = 0;
-    let failed = 0;
-
-    for (let index = 0; index < missing.length; index += 1) {
-      const translationId = missing[index];
-      const entry = getTranslationEntry(translationId);
-
-      if (downloadAllTranslationsButton) {
-        downloadAllTranslationsButton.textContent = `Downloading ${index + 1} of ${missing.length}…`;
-      }
-
-      if (downloadAllTranslationsStatus) {
-        downloadAllTranslationsStatus.textContent = `Downloading ${entry?.label ?? translationId}…`;
-      }
-
-      try {
-        await ensureTranslationLoaded(translationId);
-        succeeded += 1;
-      } catch (error) {
-        console.warn(`[Translation] Bulk download failed for "${translationId}":`, error);
-        failed += 1;
-      }
-    }
-
-    downloadAllTranslationsInFlight = false;
-    populateTranslationSelect();
-    renderTranslationsPanel();
-
-    if (downloadAllTranslationsStatus) {
-      downloadAllTranslationsStatus.textContent = failed === 0
-        ? `Downloaded ${succeeded} translation${succeeded === 1 ? "" : "s"}. All available offline.`
-        : `Downloaded ${succeeded}, failed ${failed}. Click again to retry.`;
-    }
-
-    refreshDownloadAllTranslationsUi();
-  };
 
   const renderOfficialLanguageOptions = () => {
-    const select = document.querySelector("#official-translation-language-filter");
-
-    if (!select) {
+    const pillsContainer = document.querySelector("#translation-language-pills");
+    if (!pillsContainer) {
       return;
     }
 
-    const search = officialLanguageSearch.trim().toLowerCase();
-    const languages = getCatalogLanguageEntries().filter((entry) =>
-      !search
-      || entry.displayName.toLowerCase().includes(search)
-      || entry.languageTag.toLowerCase().includes(search)
-    );
+    const languages = getCatalogLanguageEntries();
+    pillsContainer.innerHTML = "";
 
-    select.innerHTML = "";
     languages.forEach((entry) => {
-      const option = document.createElement("option");
-      option.value = entry.languageTag;
-      option.textContent = `${entry.displayName} (${entry.languageTag})`;
-      option.selected = officialLanguageFilters.has(entry.languageTag);
-      select.append(option);
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "translation-language-pill";
+      button.textContent = entry.displayName;
+      button.dataset.languageTag = entry.languageTag;
+      button.setAttribute("aria-pressed", officialLanguageFilters.has(entry.languageTag) ? "true" : "false");
+
+      button.addEventListener("click", () => {
+        if (officialLanguageFilters.has(entry.languageTag)) {
+          officialLanguageFilters.delete(entry.languageTag);
+        } else {
+          officialLanguageFilters.add(entry.languageTag);
+        }
+        button.setAttribute("aria-pressed", officialLanguageFilters.has(entry.languageTag) ? "true" : "false");
+        void renderTranslationsPanel();
+      });
+
+      pillsContainer.append(button);
     });
   };
 
@@ -617,77 +527,43 @@ window.ScriptoriaModules.createTranslationsManager = (deps) => {
 
     await Promise.all(selectedTags.map((languageTag) => ensureLanguageCatalogLoaded(languageTag)));
 
+    const search = availableTranslationSearch.trim().toLowerCase();
+
     return [...catalogEntries.values()]
-      .filter((entry) => entry.sourceType === OFFICIAL_SOURCE_TYPE)
+      .filter((entry) => entry.sourceType === OFFICIAL_SOURCE_TYPE || entry.sourceType === BUILTIN_SOURCE_TYPE)
       .filter((entry) => selectedTags.includes(entry.languageTag))
+      .filter((entry) => !getInstalledTranslations()[entry.translationId])
+      .filter((entry) =>
+        !search
+        || (entry.label ?? "").toLowerCase().includes(search)
+        || (entry.code ?? "").toLowerCase().includes(search)
+      )
       .sort((a, b) => (a.label ?? a.code).localeCompare(b.label ?? b.code, undefined, { sensitivity: "base" }));
   };
 
   const renderTranslationsPanel = async () => {
-    const builtinList = document.querySelector("#builtin-translation-list");
-    const officialList = document.querySelector("#official-translation-list");
-    const officialEmptyNote = document.querySelector("#official-translations-empty-note");
-    const userList = document.querySelector("#user-translation-list");
-    const userEmptyNote = document.querySelector("#user-translations-empty-note");
+    const installedList = document.querySelector("#installed-translation-list");
+    const installedEmptyNote = document.querySelector("#installed-translations-empty-note");
+    const availableList = document.querySelector("#available-translation-list");
+    const availableEmptyNote = document.querySelector("#available-translations-empty-note");
 
-    if (!builtinList || !officialList || !userList || !userEmptyNote) {
+    if (!installedList || !availableList) {
       return;
     }
 
     renderOfficialLanguageOptions();
 
-    builtinList.innerHTML = "";
-    (catalogIndex?.defaultBuiltinIds ?? [])
-      .map((translationId) => getTranslationEntry(translationId))
-      .filter(Boolean)
-      .sort((a, b) => (a.label ?? a.code).localeCompare(b.label ?? b.code, undefined, { sensitivity: "base" }))
-      .forEach((entry) => {
-        const li = document.createElement("li");
-        li.className = "translation-list-item";
+    // ── Installed ────────────────────────────────────────────────────────────
+    installedList.innerHTML = "";
+    const installedEntries = Object.values(translationLibrary)
+      .sort((a, b) => (a.label ?? a.code).localeCompare(b.label ?? b.code, undefined, { sensitivity: "base" }));
+    const onlyOne = installedEntries.length === 1;
 
-        const info = document.createElement("span");
-        info.className = "translation-list-item-info";
-
-        const codeEl = document.createElement("span");
-        codeEl.className = "translation-list-item-code";
-        codeEl.textContent = entry.code;
-
-        const labelEl = document.createElement("span");
-        labelEl.className = "translation-list-item-label";
-        labelEl.textContent = entry.label;
-
-        const tag = document.createElement("span");
-        tag.className = "translation-list-item-tag";
-
-        if (entry.hasUpdate) {
-          tag.textContent = "Update available";
-          tag.dataset.state = "missing";
-        } else if (offlineAvailableTranslations.has(entry.translationId)) {
-          tag.textContent = "Downloaded";
-          tag.dataset.state = "downloaded";
-        } else {
-          tag.textContent = "Not downloaded";
-          tag.dataset.state = "missing";
-        }
-
-        const header = document.createElement("span");
-        header.className = "translation-list-item-header";
-        header.append(codeEl, tag);
-        info.append(header, labelEl);
-        li.append(info);
-        builtinList.append(li);
-      });
-
-    refreshDownloadAllTranslationsUi();
-
-    officialList.innerHTML = "";
-    const officialEntries = await getOfficialDiscoveryEntries();
-
-    if (officialEmptyNote) {
-      officialEmptyNote.hidden = officialEntries.length > 0;
+    if (installedEmptyNote) {
+      installedEmptyNote.hidden = installedEntries.length > 0;
     }
 
-    officialEntries.forEach((entry) => {
+    installedEntries.forEach((entry) => {
       const li = document.createElement("li");
       li.className = "translation-list-item translation-list-item--actionable";
 
@@ -700,45 +576,40 @@ window.ScriptoriaModules.createTranslationsManager = (deps) => {
 
       const labelEl = document.createElement("span");
       labelEl.className = "translation-list-item-label";
-      labelEl.textContent = `${entry.label} (${entry.languageTag})`;
-
-      const tag = document.createElement("span");
-      tag.className = "translation-list-item-tag";
-
-      if (entry.hasUpdate) {
-        tag.textContent = "Update available";
-        tag.dataset.state = "missing";
-      } else if (getInstalledTranslations()[entry.translationId]) {
-        tag.textContent = "Added";
-        tag.dataset.state = "downloaded";
-      } else {
-        tag.textContent = "Available";
-        tag.dataset.state = "available";
-      }
+      labelEl.textContent = entry.languageTag
+        ? `${entry.label ?? entry.code} (${entry.languageTag})`
+        : (entry.label ?? entry.code);
 
       const header = document.createElement("span");
       header.className = "translation-list-item-header";
-      header.append(codeEl, tag);
+      header.append(codeEl);
+      info.append(header, labelEl);
 
       const button = document.createElement("button");
       button.type = "button";
-      button.className = "ghost-button ghost-button--small";
-      button.dataset.installOfficialTranslation = entry.translationId;
-      button.textContent = getInstalledTranslations()[entry.translationId] ? (entry.hasUpdate ? "Update" : "Added") : "Add";
-      button.disabled = !!getInstalledTranslations()[entry.translationId] && !entry.hasUpdate;
+      button.className = "ghost-button ghost-button--danger ghost-button--small";
+      button.dataset.uninstallTranslation = entry.translationId;
+      button.textContent = "Uninstall";
+      button.disabled = onlyOne;
+      if (onlyOne) {
+        button.title = "You must have at least one translation installed.";
+      }
 
-      info.append(header, labelEl);
       li.append(info, button);
-      officialList.append(li);
+      installedList.append(li);
     });
 
-    userList.innerHTML = "";
-    const userTranslations = getUserTranslations();
-    userEmptyNote.hidden = userTranslations.length > 0;
+    // ── Available ─────────────────────────────────────────────────────────────
+    availableList.innerHTML = "";
+    const availableEntries = await getOfficialDiscoveryEntries();
 
-    userTranslations.forEach((entry) => {
+    if (availableEmptyNote) {
+      availableEmptyNote.hidden = availableEntries.length > 0;
+    }
+
+    availableEntries.forEach((entry) => {
       const li = document.createElement("li");
-      li.className = "translation-list-item";
+      li.className = "translation-list-item translation-list-item--actionable";
 
       const info = document.createElement("span");
       info.className = "translation-list-item-info";
@@ -749,17 +620,21 @@ window.ScriptoriaModules.createTranslationsManager = (deps) => {
 
       const labelEl = document.createElement("span");
       labelEl.className = "translation-list-item-label";
-      labelEl.textContent = `${entry.label} (${entry.languageTag})`;
+      labelEl.textContent = `${entry.label ?? entry.code} (${entry.languageTag})`;
+
+      const header = document.createElement("span");
+      header.className = "translation-list-item-header";
+      header.append(codeEl);
+      info.append(header, labelEl);
 
       const button = document.createElement("button");
       button.type = "button";
-      button.className = "ghost-button ghost-button--danger ghost-button--small";
-      button.dataset.deleteTranslation = entry.translationId;
-      button.textContent = "Delete";
+      button.className = "ghost-button ghost-button--small";
+      button.dataset.installOfficialTranslation = entry.translationId;
+      button.textContent = "Install";
 
-      info.append(codeEl, labelEl);
       li.append(info, button);
-      userList.append(li);
+      availableList.append(li);
     });
   };
 
@@ -836,7 +711,7 @@ window.ScriptoriaModules.createTranslationsManager = (deps) => {
     const translationPackage = buildUserTranslationPackage(rawPackage);
     const { manifest, content } = translationPackage;
 
-    if (catalogEntries.has(manifest.translationId) || (catalogIndex?.defaultBuiltinIds ?? []).includes(manifest.translationId)) {
+    if (catalogEntries.has(manifest.translationId)) {
       throw new Error(`"${manifest.translationId}" is already defined by the catalog.`);
     }
 
@@ -857,29 +732,34 @@ window.ScriptoriaModules.createTranslationsManager = (deps) => {
     return manifest.translationId;
   };
 
-  const deleteCustomTranslation = async (translationId) => {
-    if (!translationRegistry.userTranslations[translationId]) {
+  const uninstallTranslation = async (translationId) => {
+    // Guard: never allow removing the last installed translation.
+    if (Object.keys(translationRegistry.installedTranslations).length <= 1) {
       return;
     }
 
-    delete translationRegistry.userTranslations[translationId];
+    const isUserTranslation = !!translationRegistry.userTranslations[translationId];
+    if (isUserTranslation) {
+      delete translationRegistry.userTranslations[translationId];
+    }
     delete translationRegistry.installedTranslations[translationId];
     delete translationLibrary[translationId];
+
     await deleteStoredValue(`${translationContentCacheKeyPrefix}${translationId}`);
     await deleteStoredValue(`${translationManifestCacheKeyPrefix}${translationId}`);
     await persistTranslationRegistry();
 
-    const fallbackTranslationId = getDefaultTranslationId();
-
     if (getCurrentTranslationCode() === translationId) {
-      await applyTranslation(fallbackTranslationId);
-      await writeStoredValue(translationStorageKey, fallbackTranslationId);
-      await markRegistrySelection(fallbackTranslationId);
+      const fallback = getDefaultTranslationId();
+      await applyTranslation(fallback);
+      await writeStoredValue(translationStorageKey, fallback);
+      await markRegistrySelection(fallback);
     }
 
     rebuildTranslationLibrary();
     await refreshOfflineTranslationAvailability();
     populateTranslationSelect();
+    await renderTranslationsPanel();
   };
 
   const setOfficialLanguageSearch = (value) => {
@@ -894,6 +774,11 @@ window.ScriptoriaModules.createTranslationsManager = (deps) => {
   const clearOfficialLanguageFilters = async () => {
     officialLanguageFilters = new Set();
     await renderTranslationsPanel();
+  };
+
+  const setAvailableTranslationSearch = (value) => {
+    availableTranslationSearch = typeof value === "string" ? value.trim().toLowerCase() : "";
+    void renderTranslationsPanel();
   };
 
   const handleTranslationSelection = async (translationId) => {
@@ -934,10 +819,7 @@ window.ScriptoriaModules.createTranslationsManager = (deps) => {
       ? translationState.installedOfficialIds.filter((translationId) => typeof translationId === "string")
       : [];
 
-    await ensureCatalogEntriesLoaded([
-      ...(catalogIndex?.defaultBuiltinIds ?? []),
-      ...officialIds
-    ]);
+    await ensureCatalogEntriesLoaded(officialIds);
 
     const nextInstalledTranslations = {};
 
@@ -1011,25 +893,26 @@ window.ScriptoriaModules.createTranslationsManager = (deps) => {
     await persistTranslationRegistry();
   };
 
-  // TODO: Remove migrateBuiltinBibles and the PREVIOUSLY_BUNDLED_IDS / MIGRATION_BUNDLED_TO_OFFICIAL
-  // constants once enough time has passed that no user would still have the old bundled bibles
-  // in their cache without having run the migration (~November 2026).
+  // Auto-installs KJV for first-time users (installedTranslations empty after migration).
+  // Does nothing if at least one translation is already installed.
+  const autoInstallDefaultTranslation = async () => {
+    if (Object.keys(translationRegistry.installedTranslations).length === 0) {
+      await ensureCatalogEntriesLoaded(["en:KJV"]);
+      await ensureTranslationLoaded("en:KJV");
+      console.info("[Init] Auto-installed KJV as default translation.");
+    }
+  };
+
+  // TODO: Remove migrateBuiltinBibles once enough time has passed that no user
+  // would still have un-migrated "builtin" entries (~November 2026).
   const initializeTranslations = async () => {
     await loadTranslationRegistry();
     await migrateBuiltinBibles();
+    await autoInstallDefaultTranslation();
     await ensureCatalogIndexLoaded();
-    await ensureCatalogEntriesLoaded([
-      ...(catalogIndex?.defaultBuiltinIds ?? []),
-      ...getInstalledOfficialIds()
-    ]);
+    await ensureCatalogEntriesLoaded(getInstalledOfficialIds());
     rebuildTranslationLibrary();
   };
-
-  if (downloadAllTranslationsButton) {
-    downloadAllTranslationsButton.addEventListener("click", () => {
-      void downloadAllBuiltinTranslations();
-    });
-  }
 
   return {
     GET_MORE_TRANSLATIONS_VALUE,
@@ -1041,14 +924,13 @@ window.ScriptoriaModules.createTranslationsManager = (deps) => {
     populateTranslationSelect,
     renderTranslationsPanel,
     importTranslationFromFile,
-    deleteCustomTranslation,
+    uninstallTranslation,
     installOfficialTranslation,
     setOfficialLanguageSearch,
     setOfficialLanguageFilters,
     clearOfficialLanguageFilters,
+    setAvailableTranslationSearch,
     handleTranslationSelection,
-    downloadAllBuiltinTranslations,
-    refreshDownloadAllTranslationsUi,
     getDefaultTranslationId,
     getInstalledOfficialIds,
     getTranslationStateForBackup,
