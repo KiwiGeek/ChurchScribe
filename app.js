@@ -52,12 +52,12 @@ const providerSettingsContainer = document.querySelector("#provider-settings-con
 const googleConnectButton = document.querySelector("#google-connect-button");
 const googleDisconnectButton = document.querySelector("#google-disconnect-button");
 const googleSyncNowButton = document.querySelector("#google-sync-now-button");
-const downloadAllTranslationsButton = document.querySelector("#download-all-translations-button");
-const downloadAllTranslationsStatus = document.querySelector("#download-all-translations-status");
 const officialTranslationLanguageSearch = document.querySelector("#official-translation-language-search");
 const officialTranslationLanguageFilter = document.querySelector("#official-translation-language-filter");
 const clearOfficialLanguageFiltersButton = document.querySelector("#clear-official-language-filters-button");
-const officialTranslationList = document.querySelector("#official-translation-list");
+const availableTranslationSearch = document.querySelector("#available-translation-search");
+const availableTranslationList = document.querySelector("#available-translation-list");
+const installedTranslationList = document.querySelector("#installed-translation-list");
 const downloadBackupButton = document.querySelector("#download-backup-button");
 const restoreBackupButton = document.querySelector("#restore-backup-button");
 const restoreBackupFile = document.querySelector("#restore-backup-file");
@@ -1410,7 +1410,6 @@ settingsTabNav.addEventListener("click", (event) => {
 
 const translationFileInput = document.querySelector("#translation-file-input");
 const importTranslationFileButton = document.querySelector("#import-translation-file-button");
-const userTranslationList = document.querySelector("#user-translation-list");
 
 importTranslationFileButton.addEventListener("click", () => {
   translationFileInput.click();
@@ -1438,6 +1437,10 @@ translationFileInput.addEventListener("change", () => {
   });
 });
 
+availableTranslationSearch?.addEventListener("input", () => {
+  translationsManagerApiRef.setAvailableTranslationSearch(availableTranslationSearch.value);
+});
+
 officialTranslationLanguageSearch.addEventListener("input", () => {
   translationsManagerApiRef.setOfficialLanguageSearch(officialTranslationLanguageSearch.value);
   void renderTranslationsPanel();
@@ -1449,13 +1452,14 @@ officialTranslationLanguageFilter.addEventListener("change", () => {
 });
 
 clearOfficialLanguageFiltersButton.addEventListener("click", () => {
-  officialTranslationLanguageFilter.selectedIndex = -1;
-  officialTranslationLanguageSearch.value = "";
-  translationsManagerApiRef.setOfficialLanguageSearch("");
+  if (availableTranslationSearch) {
+    availableTranslationSearch.value = "";
+  }
+  translationsManagerApiRef.setAvailableTranslationSearch("");
   void translationsManagerApiRef.clearOfficialLanguageFilters();
 });
 
-officialTranslationList.addEventListener("click", (event) => {
+availableTranslationList?.addEventListener("click", (event) => {
   const button = event.target.closest("[data-install-official-translation]");
 
   if (!button) {
@@ -1463,32 +1467,33 @@ officialTranslationList.addEventListener("click", (event) => {
   }
 
   button.disabled = true;
-  button.textContent = "Adding…";
+  button.textContent = "Installing…";
   const translationId = button.dataset.installOfficialTranslation;
 
   void translationsManagerApiRef.installOfficialTranslation(translationId).then(() => {
-    updateSaveStatus(`Translation "${translationId}" added successfully.`);
+    updateSaveStatus(`"${translationId}" installed.`);
     setTimeout(() => refreshSaveStatus(), 4000);
   }).catch((err) => {
-    window.alert(`Couldn't add translation: ${err.message}`);
+    window.alert(`Couldn't install translation: ${err.message}`);
   });
 });
 
-userTranslationList.addEventListener("click", (event) => {
-  const btn = event.target.closest("[data-delete-translation]");
+installedTranslationList?.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-uninstall-translation]");
 
-  if (!btn) {
+  if (!button) {
     return;
   }
 
-  const translationId = btn.dataset.deleteTranslation;
+  const translationId = button.dataset.uninstallTranslation;
+  const label = translationLibrary[translationId]?.label ?? translationId;
 
   // eslint-disable-next-line no-alert
-  if (!window.confirm(`Delete the "${translationId}" translation? This cannot be undone.`)) {
+  if (!window.confirm(`Uninstall "${label}"? You can reinstall it from the Available list.`)) {
     return;
   }
 
-  void deleteCustomTranslation(translationId).then(() => renderTranslationsPanel());
+  void translationsManagerApiRef.uninstallTranslation(translationId);
 });
 
 
@@ -1689,15 +1694,13 @@ const translationsManagerApi = window.ScriptoriaModules.createTranslationsManage
   translationRegistryStorageKey,
   translationStorageKey,
   translationSelect,
-  downloadAllTranslationsButton,
-  downloadAllTranslationsStatus,
   getCurrentTranslationCode: () => viewerApi.getCurrentTranslationCode(),
   applyTranslation: (...args) => applyTranslation(...args),
   openOfficialTranslationsSettings: () => {
     activeSettingsTabId = "translations";
     renderSettings();
     openDialog(settingsDialog);
-    window.setTimeout(() => officialTranslationLanguageSearch?.focus(), 0);
+    window.setTimeout(() => availableTranslationSearch?.focus(), 0);
   }
 });
 
@@ -1716,8 +1719,6 @@ const {
   validateTranslationData,
   populateTranslationSelect,
   importTranslationFromFile,
-  deleteCustomTranslation,
-  refreshDownloadAllTranslationsUi,
   renderTranslationsPanel
 } = translationsManagerApi;
 
@@ -1979,7 +1980,6 @@ window.ScriptoriaModules.createConnectivityWatcher({
   windowObject: window,
   refreshSaveStatus: () => refreshSaveStatus(),
   populateTranslationSelect: () => populateTranslationSelect(),
-  refreshDownloadAllTranslationsUi: () => refreshDownloadAllTranslationsUi(),
   isSettingsOpen: () => settingsDialog.open,
   renderSettings: () => renderSettings(),
   consumeQueuedCloudSync: () => consumeQueuedCloudSync(),

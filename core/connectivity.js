@@ -16,7 +16,6 @@ window.ScriptoriaModules.createConnectivityWatcher = (deps) => {
     windowObject,
     refreshSaveStatus,
     populateTranslationSelect,
-    refreshDownloadAllTranslationsUi,
     isSettingsOpen,
     renderSettings,
     consumeQueuedCloudSync,
@@ -30,7 +29,6 @@ window.ScriptoriaModules.createConnectivityWatcher = (deps) => {
     // Refresh the translation picker so any not-yet-downloaded translations
     // get greyed out (offline) or re-enabled (online).
     populateTranslationSelect();
-    refreshDownloadAllTranslationsUi();
     if (isSettingsOpen()) {
       renderSettings();
     }

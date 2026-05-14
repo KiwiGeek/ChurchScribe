@@ -396,44 +396,33 @@
           <div class="note-switcher-header">
             <h3 id="translations-title">Bible Translations</h3>
           </div>
-          <p class="settings-copy">Manage built-in, official, and user-added Bible translations. Drop a <code>.json</code> translation package anywhere on the page to import it, or use the import button below.</p>
+          <p class="settings-copy">Manage your installed Bible translations. Drop a <code>.json</code> translation package anywhere on the page to import it, or use the import button below.</p>
 
           <div class="data-management-section">
-            <h4 class="data-section-title">Built-in Translations</h4>
-            <p class="settings-copy">Translations download automatically the first time you select them. Use the button below to grab them all now so the full set is available offline.</p>
-            <div class="dialog-actions translation-download-actions">
-              <button class="ghost-button" id="download-all-translations-button" type="button">Download all for offline use</button>
-              <span class="settings-copy download-all-translations-status" id="download-all-translations-status" aria-live="polite"></span>
-            </div>
-            <ul class="translation-list" id="builtin-translation-list"></ul>
+            <h4 class="data-section-title">Installed Translations</h4>
+            <p class="settings-copy translation-list-empty-note" id="installed-translations-empty-note" hidden>No translations are installed.</p>
+            <ul class="translation-list" id="installed-translation-list"></ul>
           </div>
 
           <div class="data-management-section">
-            <div class="note-switcher-header translation-discovery-header">
-              <h4 class="data-section-title">Official Translations</h4>
-            </div>
-            <p class="settings-copy">Browse the licensed catalog and add translations for offline use. Use the language filter to narrow the list before adding.</p>
+            <h4 class="data-section-title">Available Translations</h4>
+            <p class="settings-copy">Browse the licensed catalog and install translations for offline use.</p>
             <div class="translation-discovery-controls">
               <label class="field">
-                <span>Filter Languages</span>
-                <input id="official-translation-language-search" type="search" placeholder="Search languages">
+                <span>Search</span>
+                <input id="available-translation-search" type="search" placeholder="Search by name or abbreviation…">
               </label>
-              <label class="field">
-                <span>Selected Languages</span>
-                <select id="official-translation-language-filter" multiple size="8" aria-label="Official translation language filter"></select>
-              </label>
+              <div class="field translation-language-filter-group">
+                <span class="field-label">Filter by Language</span>
+                <div class="translation-language-pills" id="translation-language-pills" role="group" aria-label="Filter by language"></div>
+                <button class="ghost-button ghost-button--small" id="clear-official-language-filters-button" type="button">Clear</button>
+                <!-- Hidden select kept for existing event-handler compatibility -->
+                <select id="official-translation-language-filter" multiple hidden aria-hidden="true"></select>
+                <input id="official-translation-language-search" type="search" hidden aria-hidden="true">
+              </div>
             </div>
-            <div class="dialog-actions data-actions">
-              <button class="ghost-button" id="clear-official-language-filters-button" type="button">Clear Language Filters</button>
-            </div>
-            <p class="settings-copy translation-list-empty-note" id="official-translations-empty-note" hidden>No official translations match the current language filter.</p>
-            <ul class="translation-list" id="official-translation-list"></ul>
-          </div>
-
-          <div class="data-management-section" id="user-translations-section">
-            <h4 class="data-section-title">User-Added Translations</h4>
-            <p class="settings-copy" id="user-translations-empty-note">No user-added translations have been added yet.</p>
-            <ul class="translation-list" id="user-translation-list"></ul>
+            <p class="settings-copy translation-list-empty-note" id="available-translations-empty-note" hidden>No translations match the current search or language filter.</p>
+            <ul class="translation-list" id="available-translation-list"></ul>
           </div>
 
           <div class="data-management-section">
