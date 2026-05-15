@@ -179,7 +179,9 @@ window.ScriptoriaModules.createScriptureSearch = (deps) => {
             terms.every((term) => verseTextLower.includes(term));
 
           if (matchesAll) {
-            results.push({ book: bookName, chapter: chapter.chapter, verse: verse.verse, text: verseText });
+            const cov = Array.isArray(verse.coversVerses) ? verse.coversVerses : null;
+            const jumpVerse = cov && cov.length > 0 ? cov[0] : verse.verse;
+            results.push({ book: bookName, chapter: chapter.chapter, verse: jumpVerse, text: verseText });
           }
         }
       }

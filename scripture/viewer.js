@@ -52,6 +52,15 @@ window.ScriptoriaModules.createScriptureViewer = (deps) => {
   const getCurrentTranslation = () => translationLibrary[currentTranslationCode];
   const getCurrentScriptureLibrary = () => getCurrentTranslation().books;
 
+  /** Non-empty `verseDisplaysAs` when the builder kept a publisher-only label; otherwise null. */
+  const publisherVerseLabel = (row) => {
+    if (!row || typeof row.verseDisplaysAs !== "string") {
+      return null;
+    }
+    const t = row.verseDisplaysAs.trim();
+    return t.length > 0 ? t : null;
+  };
+
   const getPreferredTranslation = async () => {
     // Goes through migrateLegacyPreference so users coming from the pre-IDB
     // localStorage build still pick up their saved translation on first load.
@@ -132,6 +141,78 @@ window.ScriptoriaModules.createScriptureViewer = (deps) => {
         : []
     );
 
+    const rowCoverage = (row) => {
+      const c = Array.isArray(row.coversVerses) ? row.coversVerses : null;
+      if (c && c.length > 0) {
+        return c;
+      }
+      return [row.verse];
+    };
+
+    const labelForPassageRow = (row) => {
+      const pub = publisherVerseLabel(row);
+      if (pub) {
+        return pub;
+      }
+      const c = rowCoverage(row);
+      if (c.length > 1) {
+        const lo = c[0];
+        const hi = c[c.length - 1];
+        return lo === hi ? String(lo) : `${lo}–${hi}`;
+      }
+      return String(row.verse);
+    };
+
+    const verseToRows = new Map();
+    for (const row of chapter.verses) {
+      for (const n of rowCoverage(row)) {
+        if (!verseToRows.has(n)) {
+          verseToRows.set(n, []);
+        }
+        verseToRows.get(n).push(row);
+      }
+    }
+
+    const continuationPeersFor = (verse, covers) => {
+      const currentIndex = chapter.verses.indexOf(verse);
+      const covThis = covers && covers.length > 0 ? covers : [verse.verse];
+      const rowHighlighted = [...highlightedVerses].some((v) => covThis.includes(v));
+      if (!rowHighlighted || highlightedVerses.size === 0) {
+        return [];
+      }
+      const peers = [];
+      const seenAnchors = new Set();
+      for (const hv of highlightedVerses) {
+        if (!covThis.includes(hv)) {
+          continue;
+        }
+        for (const peer of verseToRows.get(hv) || []) {
+          if (peer === verse) {
+            continue;
+          }
+          if (chapter.verses.indexOf(peer) <= currentIndex) {
+            continue;
+          }
+          const covP = rowCoverage(peer);
+          if (!covThis.some((c) => covP.includes(c))) {
+            continue;
+          }
+          const a = peer.verse;
+          if (seenAnchors.has(a)) {
+            continue;
+          }
+          seenAnchors.add(a);
+          peers.push(peer);
+        }
+      }
+      peers.sort((a, b) => chapter.verses.indexOf(a) - chapter.verses.indexOf(b));
+      return peers;
+    };
+
+    const usesPassageLayout = chapter.verses.some(
+      (v) => Array.isArray(v.coversVerses) && v.coversVerses.length > 1
+    );
+
     verseReference.textContent = `${selectedBook} ${chapter.chapter}`;
     chapterText.innerHTML = "";
 
@@ -175,13 +256,29 @@ window.ScriptoriaModules.createScriptureViewer = (deps) => {
       line.className = "chapter-verse";
       line.dataset.verse = String(verse.verse);
 
-      if (highlightedVerses.has(verse.verse)) {
+      const covers = Array.isArray(verse.coversVerses) ? verse.coversVerses : null;
+      if (covers && covers.length > 0) {
+        line.dataset.verses = covers.join(",");
+      }
+
+      const rowCoversCanonical = (v) => (covers && covers.length > 0 ? covers.includes(v) : v === verse.verse);
+
+      if ([...highlightedVerses].some((v) => rowCoversCanonical(v))) {
         line.classList.add("is-highlighted");
       }
 
       const number = document.createElement("span");
       number.className = "chapter-verse-number";
-      number.textContent = verse.verse;
+      const pub = publisherVerseLabel(verse);
+      if (pub) {
+        number.textContent = pub;
+      } else if (covers && covers.length > 1) {
+        const lo = covers[0];
+        const hi = covers[covers.length - 1];
+        number.textContent = lo === hi ? String(lo) : `${lo}–${hi}`;
+      } else {
+        number.textContent = verse.verse;
+      }
 
       const text = document.createElement("span");
       text.className = "chapter-verse-text";
@@ -193,13 +290,47 @@ window.ScriptoriaModules.createScriptureViewer = (deps) => {
       }
 
       line.append(number, text);
+
+      const peers = continuationPeersFor(verse, covers);
+      if (peers.length > 0) {
+        const ctn = document.createElement("span");
+        ctn.className = "chapter-verse-continues";
+        ctn.append(document.createTextNode(" · "));
+        peers.forEach((peer, i) => {
+          if (i > 0) {
+            ctn.append(document.createTextNode(" · "));
+          }
+          const a = document.createElement("a");
+          a.href = "#";
+          a.className = "chapter-verse-continues-link";
+          a.textContent = `Continues in ${labelForPassageRow(peer)}`;
+          a.addEventListener("click", (ev) => {
+            ev.preventDefault();
+            const target = rowCoverage(peer)[0];
+            navigateToVerse(selectedBook, chapter.chapter, target);
+          });
+          ctn.append(a);
+        });
+        line.append(ctn);
+      }
+
       chapterText.append(line);
     });
 
-    verseTranslation.textContent = `${getCurrentTranslation().label} • ${chapter.verses.length} verses`;
+    const unit = usesPassageLayout ? "passages" : "verses";
+    verseTranslation.textContent = `${getCurrentTranslation().label} • ${chapter.verses.length} ${unit}`;
 
     if (activeScriptureFocus && activeScriptureFocus.book === selectedBook && activeScriptureFocus.chapter === chapter.chapter) {
-      const targetVerse = chapterText.querySelector(`[data-verse="${activeScriptureFocus.firstVerse}"]`);
+      const fv = activeScriptureFocus.firstVerse;
+      const targetRow = chapter.verses.find((v) => {
+        const cov = Array.isArray(v.coversVerses) ? v.coversVerses : null;
+        if (cov && cov.length > 0) {
+          return cov.includes(fv);
+        }
+        return v.verse === fv;
+      });
+      const anchor = targetRow ? targetRow.verse : fv;
+      const targetVerse = chapterText.querySelector(`[data-verse="${anchor}"]`);
 
       if (targetVerse) {
         targetVerse.scrollIntoView({ block: "start", behavior: "smooth" });

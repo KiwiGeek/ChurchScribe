@@ -25,6 +25,32 @@ window.ScriptoriaModules.createScriptureReferences = (deps) => {
     getCurrentScriptureLibrary
   } = deps;
 
+  const maxCanonicalVerseInChapter = (chapterData) => {
+    let max = 0;
+    for (const row of chapterData.verses) {
+      if (Array.isArray(row.coversVerses) && row.coversVerses.length > 0) {
+        for (const v of row.coversVerses) {
+          if (v > max) max = v;
+        }
+      } else if (typeof row.verse === "number") {
+        if (row.verse > max) max = row.verse;
+      }
+    }
+    return max;
+  };
+
+  const isVerseCoveredInChapter = (chapterData, verseNum) => {
+    for (const row of chapterData.verses) {
+      if (Array.isArray(row.coversVerses) && row.coversVerses.includes(verseNum)) {
+        return true;
+      }
+      if (!row.coversVerses && row.verse === verseNum) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   const isValidScriptureReference = (canonicalBook, chapter, verseStart = null, verseEnd = null) => {
     const scriptureLibrary = getCurrentScriptureLibrary();
     const bookChapters = scriptureLibrary[canonicalBook];
@@ -43,10 +69,20 @@ window.ScriptoriaModules.createScriptureReferences = (deps) => {
       return true;
     }
 
-    const maxVerse = chapterData.verses[chapterData.verses.length - 1]?.verse ?? 0;
+    const maxVerse = maxCanonicalVerseInChapter(chapterData);
     const effectiveVerseEnd = verseEnd ?? verseStart;
 
-    return verseStart >= 1 && effectiveVerseEnd <= maxVerse;
+    if (verseStart < 1 || effectiveVerseEnd > maxVerse) {
+      return false;
+    }
+
+    for (let v = verseStart; v <= effectiveVerseEnd; v += 1) {
+      if (!isVerseCoveredInChapter(chapterData, v)) {
+        return false;
+      }
+    }
+
+    return true;
   };
 
   const isSingleChapterBook = (canonicalBook) => {
@@ -375,7 +411,9 @@ window.ScriptoriaModules.createScriptureReferences = (deps) => {
   // Render a parsed reference back to canonical "Book C:V-V" form, collapsing
   // consecutive verses into ranges.
   const formatResolvedReference = (parsedReference) => {
-    const verses = [...(parsedReference.chapterHighlights.get(parsedReference.chapter) ?? [])];
+    const verses = [...(parsedReference.chapterHighlights.get(parsedReference.chapter) ?? [])].sort(
+      (a, b) => a - b
+    );
 
     if (!verses.length) {
       return `${parsedReference.book} ${parsedReference.chapter}`;

@@ -1470,6 +1470,33 @@ h1 {
   vertical-align: top;
 }
 
+.chapter-verse-continues {
+  display: inline;
+  margin-left: 0.35rem;
+  font-size: 0.62rem;
+  font-weight: 400;
+  line-height: 1.25;
+  letter-spacing: 0.03em;
+  color: var(--muted);
+  opacity: 0.82;
+  white-space: normal;
+  vertical-align: baseline;
+}
+
+.chapter-verse-continues-link {
+  color: inherit;
+  text-decoration: underline dotted;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+  text-decoration-color: color-mix(in srgb, var(--muted) 40%, transparent);
+  cursor: pointer;
+}
+
+.chapter-verse-continues-link:hover {
+  opacity: 1;
+  text-decoration-color: color-mix(in srgb, var(--muted) 72%, transparent);
+}
+
 .verse-added-words {
   font-style: italic;
 }
