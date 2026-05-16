@@ -1555,6 +1555,15 @@ h1 {
   line-height: 1.5;
 }
 
+.chapter-copyright {
+  display: block;
+  margin-top: 0.3em;
+  font-size: 0.72rem;
+  color: var(--text);
+  opacity: 0.5;
+  line-height: 1.4;
+}
+
 .verse-translation {
   margin: 12px 0 0;
   user-select: none;

@@ -318,7 +318,17 @@ window.ScriptoriaModules.createScriptureViewer = (deps) => {
     });
 
     const unit = usesPassageLayout ? "passages" : "verses";
-    verseTranslation.textContent = `${getCurrentTranslation().label} • ${chapter.verses.length} ${unit}`;
+    const translation = getCurrentTranslation();
+    verseTranslation.innerHTML = "";
+    const metaLine = document.createElement("span");
+    metaLine.textContent = `${translation.label} • ${chapter.verses.length} ${unit}`;
+    verseTranslation.append(metaLine);
+    if (translation.copyright) {
+      const copyrightLine = document.createElement("span");
+      copyrightLine.className = "chapter-copyright";
+      copyrightLine.textContent = translation.copyright;
+      verseTranslation.append(copyrightLine);
+    }
 
     if (activeScriptureFocus && activeScriptureFocus.book === selectedBook && activeScriptureFocus.chapter === chapter.chapter) {
       const fv = activeScriptureFocus.firstVerse;
