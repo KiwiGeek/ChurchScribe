@@ -8,7 +8,7 @@
   "sourceType": "official",
   "version": 25,
   "contentUrl": "bibles/content/es/NVI-S/v25.json",
-  "contentHash": "sha256-5fa6d3926765810108ddd7b97523f25873109eb89f75a21373730feb25eec3d7",
+  "contentHash": "sha256-aebc48dbb899de7756646c95a28a2f3c511c7d2bc92f6c0759bfe72766c093aa",
   "bookOrder": "protestant-66",
   "features": {
     "headings": true,
