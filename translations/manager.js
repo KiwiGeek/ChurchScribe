@@ -82,6 +82,7 @@ window.ScriptoriaModules.createTranslationsManager = (deps) => {
   const normalizeTranslationRegistry = (value = {}) => ({
     schemaVersion: 1,
     catalogVersionSeen: typeof value.catalogVersionSeen === "string" ? value.catalogVersionSeen : null,
+    decoderVersionSeen: typeof value.decoderVersionSeen === "number" ? value.decoderVersionSeen : null,
     selectedTranslationId: typeof value.selectedTranslationId === "string" ? value.selectedTranslationId : null,
     installedTranslations: normalizeInstalledTranslations(value.installedTranslations),
     userTranslations: normalizeUserTranslations(value.userTranslations)
@@ -181,7 +182,10 @@ window.ScriptoriaModules.createTranslationsManager = (deps) => {
       features: entry.features && typeof entry.features === "object" ? entry.features : {},
       books: existingBooks,
       installed: !!existingInstalled || entry.sourceType === USER_SOURCE_TYPE,
-      hasUpdate: !!existingInstalled && existingInstalled.version < (Number(entry.version) || 1)
+      hasUpdate: !!existingInstalled && (
+        existingInstalled.version < (Number(entry.version) || 1)
+        || (typeof entry.contentHash === "string" && typeof existingInstalled.contentHash === "string" && entry.contentHash !== existingInstalled.contentHash)
+      )
     };
   };
 
@@ -231,6 +235,22 @@ window.ScriptoriaModules.createTranslationsManager = (deps) => {
 
     catalogIndex = await fetchJson(CATALOG_INDEX_URL);
     officialLanguageFilters = new Set(translationRegistry?.officialLanguageFilters ?? []);
+
+    // If the decoder version has changed, all cached translation content is potentially
+    // stale (the decoder may have changed how it renders text). Clear every installed
+    // translation's content and manifest caches so they are re-fetched on next use.
+    const freshDecoderVersion = typeof catalogIndex.decoderVersion === "number" ? catalogIndex.decoderVersion : null;
+    if (freshDecoderVersion !== null && freshDecoderVersion !== translationRegistry.decoderVersionSeen) {
+      console.info(`[Cache] Decoder version changed (${translationRegistry.decoderVersionSeen} → ${freshDecoderVersion}). Clearing all translation content caches.`);
+      const installedIds = Object.keys(translationRegistry.installedTranslations);
+      for (const translationId of installedIds) {
+        await deleteStoredValue(`${translationContentCacheKeyPrefix}${translationId}`);
+        await deleteStoredValue(`${translationManifestCacheKeyPrefix}${translationId}`);
+      }
+      translationRegistry.decoderVersionSeen = freshDecoderVersion;
+      await persistTranslationRegistry();
+    }
+
     return catalogIndex;
   };
 
@@ -397,8 +417,12 @@ window.ScriptoriaModules.createTranslationsManager = (deps) => {
     }
 
     const cachedContent = await readStoredValue(`${translationContentCacheKeyPrefix}${translationId}`);
+    const installedRecord = getInstalledTranslations()[translationId];
+    const contentHashMatch = !entry.contentHash
+      || !installedRecord?.contentHash
+      || entry.contentHash === installedRecord.contentHash;
 
-    if (cachedContent?.books && Number(cachedContent.version) === Number(entry.version)) {
+    if (cachedContent?.books && Number(cachedContent.version) === Number(entry.version) && contentHashMatch) {
       entry.books = cachedContent.books;
       translationLibrary[translationId].books = cachedContent.books;
       offlineAvailableTranslations.add(translationId);
