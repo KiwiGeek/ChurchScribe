@@ -1930,13 +1930,6 @@ mobileWarningDismissButton.addEventListener("click", () => {
   sessionStorage.setItem("mobile-warning-dismissed", "1");
 });
 
-const betaBanner = document.querySelector("#beta-banner");
-const betaBannerDismiss = document.querySelector("#beta-banner-dismiss");
-
-betaBannerDismiss.addEventListener("click", () => {
-  betaBanner.classList.add("is-hidden");
-});
-
 // ── Header clock ─────────────────────────────────────────────────────────────
 // Shown only when the page is in fullscreen mode (CSS gates visibility via
 // @media (display-mode: fullscreen)).  The element is updated regardless of

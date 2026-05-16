@@ -611,7 +611,9 @@ h1 {
 }
 
 .panel-note-title {
-  max-width: 22ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .panel-note-edit-button {
@@ -3152,44 +3154,3 @@ body.is-pane-dragging {
 
 /* ===================== BETA BANNER ===================== */
 
-.beta-banner {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 16px;
-  user-select: none;
-  background: var(--accent);
-  color: var(--surface-strong);
-  flex-shrink: 0;
-}
-
-.beta-banner-text {
-  flex: 1;
-  margin: 0;
-  font-size: 0.85rem;
-  line-height: 1.4;
-}
-
-.beta-banner-dismiss {
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.8rem;
-  height: 1.8rem;
-  padding: 0;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.18);
-  color: inherit;
-  font: inherit;
-  font-size: 0.8rem;
-  cursor: pointer;
-  transition: background 160ms ease;
-}
-
-.beta-banner-dismiss:hover,
-.beta-banner-dismiss:focus-visible {
-  background: rgba(255, 255, 255, 0.3);
-  outline: none;
-}
