@@ -8,7 +8,7 @@
   "sourceType": "official",
   "version": 22,
   "contentUrl": "bibles/content/en/MSG/v22.json",
-  "contentHash": "sha256-053674b6520f7b796ada8275e4e391edb603d750d9d4586fa406add4eb8dced4",
+  "contentHash": "sha256-97c670b5e0b817b9f70a663cc65ae2e18e2eea7a6cb0ea5c79f6d848bd756495",
   "bookOrder": "protestant-66",
   "features": {
     "headings": true,

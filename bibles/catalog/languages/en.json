@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "languageTag": "en",
   "displayName": "English",
-  "catalogVersion": "2026-05-16T23:57:32.8450980\u002B00:00",
+  "catalogVersion": "2026-05-16T23:58:27.9114302\u002B00:00",
   "translations": [
     {
       "translationId": "en:AFV",
@@ -898,7 +898,7 @@
       "version": 22,
       "copyright": "THE MESSAGE: The Bible in Contemporary Language copyright \u00A9 1993, 2002, 2018 by Eugene H. Peterson. All rights reserved. Used by permission of NavPress. Represented by Tyndale House Publishers.",
       "downloadSizeBytes": 3335482,
-      "contentHash": "sha256-053674b6520f7b796ada8275e4e391edb603d750d9d4586fa406add4eb8dced4",
+      "contentHash": "sha256-97c670b5e0b817b9f70a663cc65ae2e18e2eea7a6cb0ea5c79f6d848bd756495",
       "manifestUrl": "bibles/catalog/translations/en/MSG.json"
     },
     {
