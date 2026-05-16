@@ -8,10 +8,10 @@
   "sourceType": "official",
   "version": 1,
   "contentUrl": "bibles/content/fr/TFM/v1.json",
-  "contentHash": "sha256-c3d8be22f81e99cc24aaee647788a6e936368401c3e6913aff198de5b955bf9a",
+  "contentHash": "sha256-73ebcbdaddac3066478d7a4bc9f7f1cb9f8aa4773c00198f2835fbd3db6257b0",
   "bookOrder": "protestant-66",
   "features": {
-    "headings": false,
+    "headings": true,
     "subheadings": false,
     "superscriptions": false,
     "html": false

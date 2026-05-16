@@ -8,13 +8,13 @@
   "sourceType": "official",
   "version": 12,
   "contentUrl": "bibles/content/en/EASY/v12.json",
-  "contentHash": "sha256-f505d195b0f38ea5b6ae6596714e4c5cd180539964054257999528671ac143a2",
+  "contentHash": "sha256-ce6e696f3425ce8e80d5dd3085d0bf7918aea10465693379f5336c88df391125",
   "bookOrder": "protestant-66",
   "features": {
-    "headings": false,
-    "subheadings": false,
+    "headings": true,
+    "subheadings": true,
     "superscriptions": false,
-    "html": false
+    "html": true
   },
   "updatedAt": "2026-05-10T23:52:51.3632005Z"
 }

@@ -8,13 +8,13 @@
   "sourceType": "official",
   "version": 18,
   "contentUrl": "bibles/content/en/GNTD/v18.json",
-  "contentHash": "sha256-133b8d5a13270cd7a4654f87374fa44270dd0409da7e46d7b112b02d9889d3c3",
+  "contentHash": "sha256-7047c4a5c58ccb6f01de01a7a2fc0f3f74f2d16d986839973148847a9fc8f8ae",
   "bookOrder": "protestant-66",
   "features": {
-    "headings": false,
-    "subheadings": false,
+    "headings": true,
+    "subheadings": true,
     "superscriptions": false,
-    "html": false
+    "html": true
   },
   "updatedAt": "2026-05-10T23:52:52.1853262Z"
 }

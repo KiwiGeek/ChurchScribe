@@ -8,11 +8,11 @@
   "sourceType": "official",
   "version": 3,
   "contentUrl": "bibles/content/fr/SGNEG79/v3.json",
-  "contentHash": "sha256-d7af2074d7c5371c4d3b3727bd93c9c904ddfe77c92fc21b1ac4768d9f777138",
+  "contentHash": "sha256-c4371d133fa3e21225e2cee3566e4b9b1b91162e6f8e6a98f4e133c5b7560187",
   "bookOrder": "protestant-66",
   "features": {
-    "headings": false,
-    "subheadings": false,
+    "headings": true,
+    "subheadings": true,
     "superscriptions": false,
     "html": false
   },

@@ -8,13 +8,13 @@
   "sourceType": "official",
   "version": 18,
   "contentUrl": "bibles/content/es/TLAI/v18.json",
-  "contentHash": "sha256-cd4c9c9cf13745011b7dbd8dca8ccd9fffcd732ed62c83ee2d7ce0d3d46ddf88",
+  "contentHash": "sha256-09465dcd83958a25dd646cdba8bb43cc636ec1d010863b390a62f5efa8dd151e",
   "bookOrder": "protestant-66",
   "features": {
-    "headings": false,
-    "subheadings": false,
+    "headings": true,
+    "subheadings": true,
     "superscriptions": false,
-    "html": false
+    "html": true
   },
   "updatedAt": "2026-05-10T23:54:27.9163760Z"
 }

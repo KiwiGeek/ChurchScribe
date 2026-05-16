@@ -8,13 +8,13 @@
   "sourceType": "official",
   "version": 19,
   "contentUrl": "bibles/content/es/NTV/v19.json",
-  "contentHash": "sha256-a3957a52ab6e9a4b456d7bbd5b6c27ceafc015212cfbe7561fbe2c9254f5f93e",
+  "contentHash": "sha256-b2e985ae523b2d02505ac05ea762f373a323987a676f3a5026d867ebc7058bd0",
   "bookOrder": "protestant-66",
   "features": {
-    "headings": false,
-    "subheadings": false,
+    "headings": true,
+    "subheadings": true,
     "superscriptions": false,
-    "html": false
+    "html": true
   },
   "updatedAt": "2026-05-10T23:54:26.7763900Z"
 }

@@ -8,13 +8,13 @@
   "sourceType": "official",
   "version": 3,
   "contentUrl": "bibles/content/en/AFINTLIT/v3.json",
-  "contentHash": "sha256-5af6061bdaa30acb44632a95a21153c23a7a67ba1c8af211cd7e4474a5c3eb75",
+  "contentHash": "sha256-e4e2807e09c1cf5123c8aa8834d3b010c3c6d25f762e3ffa502227afe2aecea6",
   "bookOrder": "protestant-66",
   "features": {
-    "headings": false,
+    "headings": true,
     "subheadings": false,
     "superscriptions": false,
-    "html": false
+    "html": true
   },
   "updatedAt": "2026-05-10T23:52:49.9057740Z"
 }

@@ -8,13 +8,13 @@
   "sourceType": "official",
   "version": 7,
   "contentUrl": "bibles/content/en/DARBY/v7.json",
-  "contentHash": "sha256-0affc588ab776a54be5ecddadb3204324be0d92d493557b3f731fec625f215eb",
+  "contentHash": "sha256-0863ceebe555edcff77c44bdd900a496a01dbc3606fa94d2a92671d138998303",
   "bookOrder": "protestant-66",
   "features": {
-    "headings": false,
-    "subheadings": false,
+    "headings": true,
+    "subheadings": true,
     "superscriptions": false,
-    "html": false
+    "html": true
   },
   "updatedAt": "2026-05-10T23:52:51.1921016Z"
 }

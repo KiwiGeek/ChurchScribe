@@ -8,13 +8,13 @@
   "sourceType": "official",
   "version": 19,
   "contentUrl": "bibles/content/es/NBLA/v19.json",
-  "contentHash": "sha256-0791fb67aae7ef2b75a67478d7a0ff11d246a0bcf41b0d48b1a160f6212bb9fe",
+  "contentHash": "sha256-b81bb48eaef1ab2963d947ac2f9b82a925b3a1b77545d05889cb54c24f9cbe2f",
   "bookOrder": "protestant-66",
   "features": {
-    "headings": false,
-    "subheadings": false,
+    "headings": true,
+    "subheadings": true,
     "superscriptions": false,
-    "html": false
+    "html": true
   },
   "updatedAt": "2026-05-10T23:54:26.5706746Z"
 }

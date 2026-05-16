@@ -8,13 +8,13 @@
   "sourceType": "official",
   "version": 5,
   "contentUrl": "bibles/content/en/GWC/v5.json",
-  "contentHash": "sha256-347d45c8904ff9c1b5699fb4a343f42cb38e61203b6745b29815dcfb62b90ae5",
+  "contentHash": "sha256-c84c659f4900aedabc129deefc097a0a41859d7a7908576b423a73ac647ce877",
   "bookOrder": "protestant-66",
   "features": {
-    "headings": false,
+    "headings": true,
     "subheadings": false,
     "superscriptions": false,
-    "html": false
+    "html": true
   },
   "updatedAt": "2026-05-10T23:52:52.4795179Z"
 }

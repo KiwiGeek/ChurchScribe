@@ -8,13 +8,13 @@
   "sourceType": "official",
   "version": 10,
   "contentUrl": "bibles/content/en/RV1895/v10.json",
-  "contentHash": "sha256-f0895934e4cfacd892eee8fc97307bdfd32dab3bdd5f8cc1c25ee8890e2a7432",
+  "contentHash": "sha256-7a03731a63ea229c40ffe24fa4714871ccfd0e0da0a3bc1abe50da3b0bef6493",
   "bookOrder": "protestant-66",
   "features": {
-    "headings": false,
-    "subheadings": false,
+    "headings": true,
+    "subheadings": true,
     "superscriptions": false,
-    "html": false
+    "html": true
   },
   "updatedAt": "2026-05-10T23:52:55.5837878Z"
 }

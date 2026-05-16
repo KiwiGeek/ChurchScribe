@@ -8,13 +8,13 @@
   "sourceType": "official",
   "version": 11,
   "contentUrl": "bibles/content/es/BHTI/v11.json",
-  "contentHash": "sha256-e9cc3c795b234babece2139aeedc4e85715d6df2d32ed0afdcdf49d106a8f1bc",
+  "contentHash": "sha256-3afc5e4b40736c2ec04929c0f1521e373124401ab6c44475bfddaa0e68d6405b",
   "bookOrder": "protestant-66",
   "features": {
-    "headings": false,
-    "subheadings": false,
+    "headings": true,
+    "subheadings": true,
     "superscriptions": false,
-    "html": false
+    "html": true
   },
   "updatedAt": "2026-05-10T23:54:25.5081717Z"
 }

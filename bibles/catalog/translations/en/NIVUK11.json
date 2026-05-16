@@ -8,13 +8,13 @@
   "sourceType": "official",
   "version": 25,
   "contentUrl": "bibles/content/en/NIVUK11/v25.json",
-  "contentHash": "sha256-0e88aefb2b29586a527c4df6903501c32659346f98a55b9b55187cdf924e2d92",
+  "contentHash": "sha256-76ea50e841cfcfc35279e595ce7e22a5f01069c6059dbd28cae8318556e93eb7",
   "bookOrder": "protestant-66",
   "features": {
-    "headings": false,
-    "subheadings": false,
+    "headings": true,
+    "subheadings": true,
     "superscriptions": false,
-    "html": false
+    "html": true
   },
   "updatedAt": "2026-05-10T23:52:54.3984304Z"
 }

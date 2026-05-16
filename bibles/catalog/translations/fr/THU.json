@@ -8,10 +8,10 @@
   "sourceType": "official",
   "version": 4,
   "contentUrl": "bibles/content/fr/THU/v4.json",
-  "contentHash": "sha256-dde83eb6d882319cd93f831f63f9fa07394aff5f97422df53637cb73cba0d11b",
+  "contentHash": "sha256-2a451e1970991b7f25fd5ddbaaa28fb1cf10dd5533208b1d98a558b8e571426d",
   "bookOrder": "protestant-66",
   "features": {
-    "headings": false,
+    "headings": true,
     "subheadings": false,
     "superscriptions": false,
     "html": false

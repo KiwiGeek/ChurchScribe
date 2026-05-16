@@ -8,13 +8,13 @@
   "sourceType": "official",
   "version": 12,
   "contentUrl": "bibles/content/en/GNBDK/v12.json",
-  "contentHash": "sha256-a107cb8517742a4b7bf63a00daacf67b13e6a02143534558eb5ee93304300c11",
+  "contentHash": "sha256-1ee547eb6607b91b6098dbab3fd79bbd81e9c0b6c1e147b18183f786a248b68e",
   "bookOrder": "protestant-66",
   "features": {
-    "headings": false,
-    "subheadings": false,
+    "headings": true,
+    "subheadings": true,
     "superscriptions": false,
-    "html": false
+    "html": true
   },
   "updatedAt": "2026-05-10T23:52:51.9690182Z"
 }

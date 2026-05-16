@@ -8,10 +8,10 @@
   "sourceType": "official",
   "version": 1,
   "contentUrl": "bibles/content/fr/BenFS/v1.json",
-  "contentHash": "sha256-a47df38805d69d97564700fb33cb94c5e545f1b30797dd45c8221d8ad31273ec",
+  "contentHash": "sha256-033104ac605e2180bf23d14db8209736647309016aa666bcf287bb4717f9036f",
   "bookOrder": "protestant-66",
   "features": {
-    "headings": false,
+    "headings": true,
     "subheadings": false,
     "superscriptions": false,
     "html": false

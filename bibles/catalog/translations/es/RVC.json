@@ -8,11 +8,11 @@
   "sourceType": "official",
   "version": 36,
   "contentUrl": "bibles/content/es/RVC/v36.json",
-  "contentHash": "sha256-18d0192e4c1aa7bbb6873194558d91285c90f8a1a8b504657ca3d6e6eb1b42c8",
+  "contentHash": "sha256-f5b363b3fa5b7c871e4b295769fb79065b60872113ec9224f9a0a5a2169b3918",
   "bookOrder": "protestant-66",
   "features": {
-    "headings": false,
-    "subheadings": false,
+    "headings": true,
+    "subheadings": true,
     "superscriptions": false,
     "html": false
   },

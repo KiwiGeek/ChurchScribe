@@ -8,13 +8,13 @@
   "sourceType": "official",
   "version": 13,
   "contentUrl": "bibles/content/en/GNBDC/v13.json",
-  "contentHash": "sha256-890f733ba61734a48eb27daf39bb522dd851eb33b9239379674ece0666d38334",
+  "contentHash": "sha256-e8845ff7a49ad95e8510201b9e42ea14d9def9903e62839db73030af1c393437",
   "bookOrder": "protestant-66",
   "features": {
-    "headings": false,
-    "subheadings": false,
+    "headings": true,
+    "subheadings": true,
     "superscriptions": false,
-    "html": false
+    "html": true
   },
   "updatedAt": "2026-05-10T23:52:51.8855127Z"
 }

@@ -8,10 +8,10 @@
   "sourceType": "official",
   "version": 3,
   "contentUrl": "bibles/content/fr/Sacy/v3.json",
-  "contentHash": "sha256-6627aac71de63c516e552b5ee9d68e0fa0a6cdb2c4cb323bd4122ca6e75b50dc",
+  "contentHash": "sha256-4106d72968345f6b1df6910f71e6e1e044f64b8f8aa518096cf31c84708759ff",
   "bookOrder": "protestant-66",
   "features": {
-    "headings": false,
+    "headings": true,
     "subheadings": false,
     "superscriptions": false,
     "html": false

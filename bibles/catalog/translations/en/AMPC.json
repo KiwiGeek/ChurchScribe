@@ -8,13 +8,13 @@
   "sourceType": "official",
   "version": 12,
   "contentUrl": "bibles/content/en/AMPC/v12.json",
-  "contentHash": "sha256-287643fc1fa1d790f36f85aed53d3557bc4b953b54fab3c237eb1fd68e74028b",
+  "contentHash": "sha256-755791e4d29c4d8d2fc614f1caa5206c434ed3b47005e5efc925a1794e2e4fba",
   "bookOrder": "protestant-66",
   "features": {
-    "headings": false,
+    "headings": true,
     "subheadings": false,
     "superscriptions": false,
-    "html": false
+    "html": true
   },
   "updatedAt": "2026-05-10T23:52:50.1755672Z"
 }

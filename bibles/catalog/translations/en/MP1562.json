@@ -8,11 +8,11 @@
   "sourceType": "official",
   "version": 1,
   "contentUrl": "bibles/content/en/MP1562/v1.json",
-  "contentHash": "sha256-c0847f31027f50f6162bf3316a5b1674535cc80cd3b4a3df4a4f7fd21541f9c8",
+  "contentHash": "sha256-3d2cfd8b1f07c948eaab83edbd24583568ccc8cd35dc47e0286c27d4df83e18a",
   "bookOrder": "protestant-66",
   "features": {
-    "headings": false,
-    "subheadings": false,
+    "headings": true,
+    "subheadings": true,
     "superscriptions": false,
     "html": false
   },

@@ -9,6 +9,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "CHAPITRE PREMIER.",
             "text": "LIVRE de la g\u00E9n\u00E9alogie de J\u00E9sus-Christ, fils de David, fils d\u2019Abraham."
           },
           {
@@ -114,6 +115,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "CHAPITRE II.",
             "text": "J\u00C9SUS \u00E9tant donc n\u00E9 dans Bethl\u00E9hem, ville de la tribu de Juda, du temps du roi H\u00E9rode, des mages vinrent de l\u2019Orient \u00E0 J\u00E9rusalem;"
           },
           {
@@ -211,6 +213,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "CHAPITRE III.",
             "text": "EN ce temps-l\u00E0 Jean-Baptiste vint pr\u00EAcher au d\u00E9sert de Jud\u00E9e,"
           },
           {
@@ -284,6 +287,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "CHAPITRE IV.",
             "text": "ALORS J\u00E9sus fut conduit par l\u2019Esprit dans le d\u00E9sert, pour y \u00EAtre tent\u00E9 par le diable;"
           },
           {
@@ -389,6 +393,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "CHAPITRE V.",
             "text": "J\u00C9SUS voyant tout ce peuple, monta sur une montagne, o\u00F9 s\u2019\u00E9tant assis, ses disciples s\u2019approch\u00E8rent de lui;"
           },
           {
@@ -586,6 +591,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "CHAPITRE VI.",
             "text": "PRENEZ, garde de ne faire pas vos bonnes \u0153uvres devant les hommes pour en \u00EAtre regard\u00E9s: autrement vous n\u2019en recevrez point la r\u00E9compense de votre P\u00E8re qui est dans les cieux."
           },
           {
@@ -727,6 +733,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "CHAPITRE VII.",
             "text": "NE jugez point, afin que vous ne soyez point jug\u00E9s."
           },
           {
@@ -848,6 +855,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "CHAPITRE VIII.",
             "text": "J\u00C9SUS \u00E9tant descendu de la montagne, une grande foule de peuple le suivit;"
           },
           {
@@ -989,6 +997,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "CHAPITRE IX.",
             "text": "J\u00C9SUS \u00E9tant mont\u00E9 dans une barque, repassa le lac, et vint en sa ville."
           },
           {
@@ -1146,6 +1155,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "CHAPITRE X.",
             "text": "ALORS J\u00E9sus ayant appel\u00E9 ses douze disciples, leur donna puissance sur les esprits impurs pour les chasser, et; pour gu\u00E9rir toutes sortes de langueurs et de maladies."
           },
           {
@@ -1319,6 +1329,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "CHAPITRE XI.",
             "text": "J\u00C9SUS ayant achev\u00E9 de donner ces instructions \u00E0 ses douze disciples, partit de l\u00E0 pour s\u2019en aller enseigner et pr\u00EAcher dans les villes d\u2019alentour."
           },
           {
@@ -1444,6 +1455,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "CHAPITRE XII.",
             "text": "EN ce temps-l\u00E0 J\u00E9sus passait le long des bl\u00E9s un jour de sabbat; et ses disciples ayant faim se mirent \u00E0 rompre des \u00E9pis, et \u00E0 en manger."
           },
           {
@@ -1649,6 +1661,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "CHAPITRE XIII.",
             "text": "CE m\u00EAme jour J\u00E9sus \u00E9tant sorti de la maison, s\u2019assit aupr\u00E8s de la mer."
           },
           {
@@ -1886,6 +1899,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "CHAPITRE XIV.",
             "text": "EN ce temps-l\u00E0 H\u00E9rode le t\u00E9trarque apprit ce qui se publiait de J\u00E9sus;"
           },
           {
@@ -2035,6 +2049,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "CHAPITRE XV.",
             "text": "ALORS des scribes et des pharisiens qui \u00E9taient venus de J\u00E9rusalem, s\u2019approch\u00E8rent de J\u00E9sus, et lui dirent:"
           },
           {
@@ -2196,6 +2211,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "CHAPITRE XVI.",
             "text": "ALORS les pharisiens et les saduc\u00E9ens vinrent \u00E0 lui pour le tenter, et ils le pri\u00E8rent de leur faire voir quelque prodige dans le ciel."
           },
           {
@@ -2313,6 +2329,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "CHAPITRE XVII.",
             "text": "SIX jours apr\u00E8s, J\u00E9sus ayant pris avec lui Pierre, Jacques, et Jean, son fr\u00E8re, les mena \u00E0 l\u2019\u00E9cart sur une haute montagne,"
           },
           {
@@ -2410,6 +2427,14 @@
           {
             "verse": 25,
             "text": "Des \u00E9trangers, r\u00E9pondit Pierre. J\u00E9sus lui dit: Les enfants en sont donc exempts."
+          },
+          {
+            "verse": 27,
+            "text": "Mais afin que nous ne les scandalisions point, allez-vous-en \u00E0 la mer, et jetez votre ligne, et le premier poisson que vous tirerez de l\u2019eau, prenez-le, et lui ouvrez la bouche; vous y trouverez une pi\u00E8ce d\u2019argent de quatre drachmes, que vous prendrez, et que vous leur donnerez pour moi et pour vous.",
+            "coversVerses": [
+              26,
+              27
+            ]
           }
         ]
       },
@@ -2418,6 +2443,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "CHAPITRE XVIII.",
             "text": "EN ce m\u00EAme temps les disciples s\u2019approch\u00E8rent de J\u00E9sus, et lui dirent: Qui est le plus grand dans le royaume des cieux?"
           },
           {
@@ -2563,6 +2589,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "CHAPITRE XIX.",
             "text": "J\u00C9SUS ayant achev\u00E9 ces discours, partit de Galil\u00E9e, et vint aux confins de la Jud\u00E9e, au del\u00E0 du Jourdain,"
           },
           {
@@ -2688,6 +2715,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "CHAPITRE XX.",
             "text": "LE royaume des cieux est semblable \u00E0 un p\u00E8re de famille, qui sortit d\u00E8s le grand matin, afin de louer des ouvriers pour travailler \u00E0 sa vigne:"
           },
           {
@@ -2829,6 +2857,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "CHAPITRE XXI.",
             "text": "LORSQU\u2019ILS approch\u00E8rent de J\u00E9rusalem, et qu\u2019ils furent arriv\u00E9s \u00E0 Bethphag\u00E9, pr\u00E8s de la montagne des Oliviers, J\u00E9sus envoya deux de ses disciples,"
           },
           {
@@ -3018,6 +3047,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "CHAPITRE XXI.",
             "text": "J\u00C9SUS parlant encore en paraboles, leur dit:"
           },
           {
@@ -3207,6 +3237,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "CHAPITRE XXIII.",
             "text": "ALORS J\u00E9sus parla au peuple et \u00E0 ses disciples,"
           },
           {
@@ -3368,6 +3399,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "CHAPITRE XXIV.",
             "text": "LORSQUE J\u00E9sus sortit du temple pour s\u2019en aller, ses disciples s\u2019approch\u00E8rent de lui, pour lui faire remarquer la structure et la grandeur de cet \u00E9difice."
           },
           {
@@ -3577,6 +3609,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "CHAPITRE XXV",
             "text": "ALORS le royaume des cieux sera semblable \u00E0 dix vierges, qui ayant pris leurs lampes, s\u2019en all\u00E8rent au-devant de l\u2019\u00E9poux et de l\u2019\u00E9pouse."
           },
           {
@@ -3766,6 +3799,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "CHAPITRE XXVI.",
             "text": "J\u00C9SUS ayant achev\u00E9 tous ces discours, dit \u00E0 ses disciples:"
           },
           {
@@ -4071,6 +4105,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "CHAPITRE XXVII.",
             "text": "LE matin \u00E9tant venu, tous les princes des pr\u00EAtres et les s\u00E9nateurs du peuple juif, tinrent conseil contre J\u00E9sus pour le faire mourir."
           },
           {
@@ -4340,6 +4375,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "CHAPITRE XXVIII.",
             "text": "MAIS cette semaine \u00E9tant pass\u00E9e, le premier jour de la suivante commen\u00E7ait \u00E0 peine \u00E0 luire, que Marie-Magdeleine et l\u2019autre Marie vinrent pour voir le s\u00E9pulcre."
           },
           {

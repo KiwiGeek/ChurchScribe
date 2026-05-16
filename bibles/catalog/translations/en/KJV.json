@@ -8,13 +8,13 @@
   "sourceType": "builtin",
   "version": 27,
   "contentUrl": "bibles/content/en/KJV/v27.json",
-  "contentHash": "sha256-e52a3a4c746d536794bf1a7ee1789a559b99dc379881410586dcb6a5d9fa65f9",
+  "contentHash": "sha256-25d0d0658b5dbc898654bdc3500c9488bed0f3de1816d2b4c83f45a6d1f08696",
   "bookOrder": "protestant-66",
   "features": {
-    "headings": false,
-    "subheadings": false,
+    "headings": true,
+    "subheadings": true,
     "superscriptions": false,
-    "html": false
+    "html": true
   },
   "updatedAt": "2026-05-10T23:52:52.7723287Z"
 }

@@ -149830,7 +149830,8 @@
           },
           {
             "verse": 16,
-            "text": "And he has on his garment and on his thigh written: KING OF KINGS AND Lord OF LORDS."
+            "text": "And he has on his garment and on his thigh written: KING OF KINGS AND Lord OF LORDS.",
+            "html": "And he has on his garment and on his thigh written: KING OF KINGS AND \u003Cspan class=\u0022verse-divine-name\u0022\u003ELord\u003C/span\u003E OF LORDS."
           },
           {
             "verse": 17,

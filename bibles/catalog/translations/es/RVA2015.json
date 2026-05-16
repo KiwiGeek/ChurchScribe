@@ -8,13 +8,13 @@
   "sourceType": "official",
   "version": 8,
   "contentUrl": "bibles/content/es/RVA2015/v8.json",
-  "contentHash": "sha256-316a7356568fa3d3fcc009935ecaec6176df5af4e4c22a80ab54e0e4e1186f15",
+  "contentHash": "sha256-f5f47b8d3a03ab4d9e657b1fb4072606cb2e1b970d9a4bd15771eb1926e5b648",
   "bookOrder": "protestant-66",
   "features": {
-    "headings": false,
-    "subheadings": false,
+    "headings": true,
+    "subheadings": true,
     "superscriptions": false,
-    "html": false
+    "html": true
   },
   "updatedAt": "2026-05-10T23:54:27.1717133Z"
 }

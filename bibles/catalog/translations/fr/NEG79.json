@@ -8,10 +8,10 @@
   "sourceType": "official",
   "version": 8,
   "contentUrl": "bibles/content/fr/NEG79/v8.json",
-  "contentHash": "sha256-2f3a24b05de62d7bf3734e181fd39fedc36eb8b1ad23f0f9ac00f68e979271ee",
+  "contentHash": "sha256-a9950b0b02887ab57797c328bed97c236cbb01f1dc16f6072ae0b32acb49455b",
   "bookOrder": "protestant-66",
   "features": {
-    "headings": false,
+    "headings": true,
     "subheadings": false,
     "superscriptions": false,
     "html": false

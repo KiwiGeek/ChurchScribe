@@ -8,13 +8,13 @@
   "sourceType": "official",
   "version": 12,
   "contentUrl": "bibles/content/fr/LSG/v12.json",
-  "contentHash": "sha256-96b591680a15c06331c01daaef22e0cf452f28afd0e574da38303509897717f5",
+  "contentHash": "sha256-883aa29b18f07d36be08cf41a4ad029632ca748d12add93db30d5bef09a03b08",
   "bookOrder": "protestant-66",
   "features": {
-    "headings": false,
+    "headings": true,
     "subheadings": false,
     "superscriptions": false,
-    "html": false
+    "html": true
   },
   "updatedAt": "2026-05-10T23:54:28.7172834Z"
 }

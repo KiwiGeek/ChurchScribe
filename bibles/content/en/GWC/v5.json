@@ -9,6 +9,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "The divine calling / The divine calling",
             "text": "I Paul was divinely chosen to be the Apostle of Jesus Christ. In my calling the will of God was made manifest, and in this high office and appointment I now address you who are in Corinth, and with me Sosthenes, brother in the faith."
           },
           {
@@ -45,6 +46,7 @@
           },
           {
             "verse": 10,
+            "heading": "No room for disunity in Christ / No room for disunity in Christ",
             "text": "Through this name of Jesus Christ our Lord, I urge you \u2014 for that is the secret of his name \u2014 to have one mind, one persuasion and precept amongst you, to be all of one mind with one idea. O let schisms and divisions be unknown to you, for your perfection is in unity."
           },
           {
@@ -60,6 +62,14 @@
             "text": "but Christ is not divided. I was not crucified for you, nor were you baptised into my name."
           },
           {
+            "verse": 15,
+            "text": "For this very reason I was careful not to baptise disciples personally amongst you. It is to me a cause of gratitude to God that I baptised only Crispus and Gaius,",
+            "coversVerses": [
+              14,
+              15
+            ]
+          },
+          {
             "verse": 16,
             "text": "and also the household of Stephanas \u2014 not another soul, I think, did I baptise, and purposely, that it might not seem that I was making disciples."
           },
@@ -69,11 +79,13 @@
           },
           {
             "verse": 18,
+            "heading": "The foolishness of worldly knowledge / The foolishness of worldly knowledge",
             "text": "Cleverness, human wisdom, intellectual strength do not accomplish the mighty works of the Gospel. Ours is the word of the cross; it saves us; there is in it the power of God; but to those who are in the power of death and subject to its ever-increasing dominion, this word appears as folly, as an impertinence."
           },
           {
             "verse": 19,
-            "text": "And so the word of the Bible comes true:\u2014 \u201CI will destroy the wisdom of the wise, I will make nothing of the intelligence of those who profess to know.\u201D (Isa 29:14.)"
+            "text": "And so the word of the Bible comes true:\u2014 \u201CI will destroy the wisdom of the wise, I will make nothing of the intelligence of those who profess to know.\u201D (Isa 29:14.)",
+            "html": "And so the word of the Bible comes true:\u2014 \u201CI will destroy the wisdom of the wise, I will make nothing of the intelligence of those who profess to know.\u201D \u003Cspan class=\u0022verse-added-words\u0022\u003E(Isa 29:14.)\u003C/span\u003E"
           },
           {
             "verse": 20,
@@ -121,7 +133,8 @@
           },
           {
             "verse": 31,
-            "text": "in order that as Jeremiah says, \u201CHe that glorieth, let him glory in the Lord.\u201D (Jer. 9:24.) By that saying the prophet referred to the distinction between the talents and qualities that are believed to belong to the flesh and the personal self, and the grace and power that flow from the Spirit only."
+            "text": "in order that as Jeremiah says, \u201CHe that glorieth, let him glory in the Lord.\u201D (Jer. 9:24.) By that saying the prophet referred to the distinction between the talents and qualities that are believed to belong to the flesh and the personal self, and the grace and power that flow from the Spirit only.",
+            "html": "in order that as Jeremiah says, \u201CHe that glorieth, let him glory in the Lord.\u201D \u003Cspan class=\u0022verse-added-words\u0022\u003E(Jer. 9:24.) \u003C/span\u003E By that saying the prophet referred to the distinction between the talents and qualities that are believed to belong to the flesh and the personal self, and the grace and power that flow from the Spirit only."
           }
         ]
       },
@@ -130,6 +143,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "The new wisdom / The new wisdom",
             "text": "So I never thought in coming amongst you to be able by my own persuasiveness, logic or rhetoric to make a message of God, a revelation of the mystery of His being, understood by you. It could never have come to you through such human means as that."
           },
           {
@@ -162,10 +176,12 @@
           },
           {
             "verse": 9,
-            "text": "They knew it not, \u201Cfor eye,\u201D says the scripture, \u201Chath not seen it, ear hath not heard it, the heart of mankind has not received the things that God makes ready for those that love Him.\u201D (Isa. 44:4.)"
+            "text": "They knew it not, \u201Cfor eye,\u201D says the scripture, \u201Chath not seen it, ear hath not heard it, the heart of mankind has not received the things that God makes ready for those that love Him.\u201D (Isa. 44:4.)",
+            "html": "They knew it not, \u201Cfor eye,\u201D says the scripture, \u201Chath not seen it, ear hath not heard it, the heart of mankind has not received the things that God makes ready for those that love Him.\u201D \u003Cspan class=\u0022verse-added-words\u0022\u003E(Isa. 44:4.)\u003C/span\u003E"
           },
           {
             "verse": 10,
+            "heading": "Deep things can only be apprehended spiritually / Deep things can only be apprehended spiritually",
             "text": "So it was through the Spirit, through revelation that we learned them. The very depths of God are searched by the Spirit, which also sheds light on all things; and the Spirit alone can know and reveal them, nought else;"
           },
           {
@@ -199,6 +215,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "Laying a true foundation / Laying a true foundation",
             "text": "And yet, I myself, brethren, did not speak to you as spiritually minded beings, possessing the mind of Christ, but I spoke to you as to carnal men, still entangled in the mind of the flesh, and in Christ the merest babes,"
           },
           {
@@ -212,6 +229,23 @@
           {
             "verse": 4,
             "text": "one of you saying that he is Paul\u2019s disciple, another that he is Apollos\u2019."
+          },
+          {
+            "verse": 6,
+            "text": "That is not the divine unity, wherein Paul planted and Apollos watered, and wherein all life and growth is of God. What is Paul or Apollos? Servants of your faith, each one according to the task assigned by God.",
+            "coversVerses": [
+              5,
+              6
+            ]
+          },
+          {
+            "verse": 9,
+            "text": "In this great oneness each receives the fulfilment and reward of his own function, sower and tiller all belong to one unity which is God\u2019s field and harvest, or God\u2019s building. In ourselves we are nothing.",
+            "coversVerses": [
+              7,
+              8,
+              9
+            ]
           },
           {
             "verse": 10,
@@ -230,6 +264,14 @@
             "text": "he shall certainly receive the appropriate reward of this faithlessness. The fire will burn up his work."
           },
           {
+            "verse": 15,
+            "text": "The great day of truth will dawn, and reveal his faithless evil work, and the havoc he has made of the Church. It will all be destroyed, all pass away, yet shall he himself thereby be saved.",
+            "coversVerses": [
+              14,
+              15
+            ]
+          },
+          {
             "verse": 16,
             "text": "For this is God\u2019s temple, God\u2019s building, the Spirit of God dwells here,"
           },
@@ -239,15 +281,18 @@
           },
           {
             "verse": 18,
+            "heading": "Self-deception to be guarded against / Self-deception to be guarded against",
             "text": "Cleverness and the wisdom of the world are not sufficient for these things. Thereby you may become self-deceived."
           },
           {
             "verse": 19,
-            "text": "And if one must become a fool in order to be wise, this is the wisest course, for the world\u2019s wisest is a species of folly. \u201CHe taketh the wise in their own craftiness\u201D (Job v. 13.)."
+            "text": "And if one must become a fool in order to be wise, this is the wisest course, for the world\u2019s wisest is a species of folly. \u201CHe taketh the wise in their own craftiness\u201D (Job v. 13.).",
+            "html": "And if one must become a fool in order to be wise, this is the wisest course, for the world\u2019s wisest is a species of folly. \u201CHe taketh the wise in their own craftiness\u201D \u003Cspan class=\u0022verse-added-words\u0022\u003E(Job v. 13.)\u003C/span\u003E."
           },
           {
             "verse": 20,
-            "text": "\u201CThe Lord knoweth the thoughts of man that they are vanity\u201D (Ps. 94:11.)."
+            "text": "\u201CThe Lord knoweth the thoughts of man that they are vanity\u201D (Ps. 94:11.).",
+            "html": "\u201CThe Lord knoweth the thoughts of man that they are vanity\u201D \u003Cspan class=\u0022verse-added-words\u0022\u003E(Ps. 94:11.)\u003C/span\u003E."
           },
           {
             "verse": 21,
@@ -268,6 +313,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "God is the judge / God is the judge",
             "text": "What need have we then of any other wisdom than this divine sort?"
           },
           {
@@ -275,11 +321,20 @@
             "text": "We are servants of Christ, we have the stewardship of God\u2019s mysteries. And as such we must be faithful."
           },
           {
+            "verse": 4,
+            "text": "It is small matter to me what men decide about me, what their criticisms may be. These human judgments and criticisms do not concern the truth of the Gospel. It is the day of the Lord that judges man, separating truth from fiction.",
+            "coversVerses": [
+              3,
+              4
+            ]
+          },
+          {
             "verse": 5,
             "text": "Therefore I do not even judge myself, I do not exercise my conscience over my degree of faithfulness or the reverse. But that is not my justification, I am not justified simply because my conscience is at rest, I am justified because God is judging me. Wait then for His judgment. It will come to pass \u2014 that severance of truth and falsehood, faith and faithlessness. Leave it to God and do not usurp his function before the time, when the light shall shine, when the darkness shall collapse, when the hidden purposes of the heart shall resolve themselves, and man\u2019s praise and honour shall come to him from God alone."
           },
           {
             "verse": 6,
+            "heading": "The apostles as an example / The apostles as an example",
             "text": "Have you learned from me and Apollos? and are you going to make these new acquisitions and possessions a thing to be conceited and self-sufficient about, a thing to judge others in, and put yourself above another? But indulge nothing beyond what is written in our teaching."
           },
           {
@@ -312,6 +367,7 @@
           },
           {
             "verse": 14,
+            "heading": "Paul as father rather than teacher / Paul as father rather than teacher",
             "text": "And yet I would not speak harshly to you and condemn you, but I appeal to you as to children whom I love."
           },
           {
@@ -349,14 +405,29 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "The sin of Corinth denounced / The sin of Corinth denounced",
             "text": "And something else clings close to this spirit of self-righteousness. Have you yourselves, you who belong to the Spirit and not to the flesh, have you rid yourselves of the sin which disgraces your ancient city and makes her a by-word, and the shameful traffic in immorality for which she is so notorious? Are you spotless? Is fornication a thing unknown in your midst, amongst your members? Or is the old leaven still at work in you too, who belong to the Church of God in Corinth, amongst the saints as well as in the gentile streets of the city?"
           },
           {
             "verse": 2,
-            "text": "You know that it has not yet been cast out. Why have you not \u201Cput away the evil from among you\u201D as Moses decrees in the law. (Deut. 22:24). In you this leaven has culminated in a manifestation of evil worse than anything heard of among the Gentiles, a scandal wherein a son has sinned against his own father and his father\u2019s wife."
+            "text": "You know that it has not yet been cast out. Why have you not \u201Cput away the evil from among you\u201D as Moses decrees in the law. (Deut. 22:24). In you this leaven has culminated in a manifestation of evil worse than anything heard of among the Gentiles, a scandal wherein a son has sinned against his own father and his father\u2019s wife.",
+            "html": "You know that it has not yet been cast out. Why have you not \u201Cput away the evil from among you\u201D as Moses decrees in the law. \u003Cspan class=\u0022verse-added-words\u0022\u003E(Deut. 22:24)\u003C/span\u003E. In you this leaven has culminated in a manifestation of evil worse than anything heard of among the Gentiles, a scandal wherein a son has sinned against his own father and his father\u2019s wife."
+          },
+          {
+            "verse": 8,
+            "text": "And all the time you believe yourselves to have achieved something! Under the law such offenders were taken out of the city by the whole congregation and stoned without the gate. In our spiritual church of faith this type and example should have taught you for ever to reject from your midst the spirit that works this evil and the persons who do it. But this sin has not been hidden from me. Absent in body, I have been present in spirit, and in that spirit I have already, as in your presence, as in the midst of the whole congregation, searched out and judged and given over to the devil from which it springs this old leaven of fornication and hell, thereby abandoning it to the doom that is coming on all flesh. For God is judging the flesh.",
+            "coversVerses": [
+              3,
+              4,
+              5,
+              6,
+              7,
+              8
+            ]
           },
           {
             "verse": 9,
+            "heading": "Separate yourselves / Separate yourselves",
             "text": "Therefore I wrote to you in a former Epistle to separate yourselves utterly from the fornication of the world,"
           },
           {
@@ -366,6 +437,14 @@
           {
             "verse": 11,
             "text": "But now I write to bid you beware of its presence in your very midst, beware of those so-called \u201Cbrothers\u201D in whom the spirit of the world still works, who though they be called brethren are still the fools of lust, of greed, of drunkenness, superstition and rage."
+          },
+          {
+            "verse": 13,
+            "text": "God judges the world, and His judgment comes apace; but now see that you judge the saints. \u201CPut away the evil from your midst.\u201D Let not the old leaven find its way back again. You had purged it out, your Church was like the new paschal loaf, eaten with the passion, eaten with the lamb of the sacrifice, in which no leaven is used. Now, our sacrifice is the paschal lamb and the unleavened bread, and the feast wherein they are partaken of is the spiritual Christ, crucified by the world, and the purity and freedom from the spirit of the world which accompany this sacrifice. Let us enjoy that feast, my brethren, untainted by the fermenting liquors of the world \u2014 the feast of sincerity and truth.",
+            "coversVerses": [
+              12,
+              13
+            ]
           }
         ]
       },
@@ -374,6 +453,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "The error of litigation in the Church / The error of litigation in the Church",
             "text": "Now another matter \u2014 the Greeks are devoted to litigation, it is a passion with them, but what has that to do with you? Are you going to haunt the law-courts of Corinth and with cases which you bring against one another!"
           },
           {
@@ -383,6 +463,16 @@
           {
             "verse": 3,
             "text": "That is capable of judging angels, and if you have it are you not even capable of settling these business disputes which arise amongst yourselves?"
+          },
+          {
+            "verse": 7,
+            "text": "Have you no one wise enough for that, but must you go to law with one another, and invoke the methods and assistance of a corrupt judicial system to get the better of your brother? Questions of everyday life then cannot be settled by the Church, but you must needs take them before those who know nothing of your faith, and whom the Church on that account esteems as of no account. Yet you bring your quarrels and disputes before them! And why do such disputes arise?",
+            "coversVerses": [
+              4,
+              5,
+              6,
+              7
+            ]
           },
           {
             "verse": 8,
@@ -402,6 +492,7 @@
           },
           {
             "verse": 12,
+            "heading": "Man not subordinate to physical nature / Man not subordinate to physical nature",
             "text": "True, I am free, I am independent, and can act as seems good to me, yet, though nothing is bad in itself, evil in its influence is dangerous. I am a free man, but I will not be mastered by any influences."
           },
           {
@@ -418,7 +509,8 @@
           },
           {
             "verse": 16,
-            "text": "Shall I take that which is spiritual and convert it into the very opposite, change the limbs of Christ into the flesh of a harlot? \u201CThey twain shall be of one flesh,\u201D says Moses (Gen 2:24), and so this awful substitution takes place, and in the place of Christ\u2019s body we find that of a harlot. Such then is their practice, this besetting sin of Corinth. Flee from it."
+            "text": "Shall I take that which is spiritual and convert it into the very opposite, change the limbs of Christ into the flesh of a harlot? \u201CThey twain shall be of one flesh,\u201D says Moses (Gen 2:24), and so this awful substitution takes place, and in the place of Christ\u2019s body we find that of a harlot. Such then is their practice, this besetting sin of Corinth. Flee from it.",
+            "html": "Shall I take that which is spiritual and convert it into the very opposite, change the limbs of Christ into the flesh of a harlot? \u201CThey twain shall be of one flesh,\u201D says Moses \u003Cspan class=\u0022verse-added-words\u0022\u003E(Gen 2:24)\u003C/span\u003E, and so this awful substitution takes place, and in the place of Christ\u2019s body we find that of a harlot. Such then is their practice, this besetting sin of Corinth. Flee from it."
           },
           {
             "verse": 17,
@@ -443,18 +535,64 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "Marriage and its ideal / Marriage and its ideal",
             "text": "Yes, my brethren, it is a good thing for both man and woman to be above all sexual intercourse. You wrote and asked me if that were good, and I answer yes."
+          },
+          {
+            "verse": 3,
+            "text": "But marriage exists to prevent fornication. It is a step towards chastity. The ideal is to rise above all physical union of the sexes. Perfect chastity is a higher condition than the married state, and the intercourse of married persons, of husband and wife, is condoned and allowed, not commanded. I would that all men had reached the condition with regard to these questions that the spirit has conferred as a gift on me; but, as it is, we must have marriage, and those that are married must follow its rules.",
+            "coversVerses": [
+              2,
+              3
+            ]
           },
           {
             "verse": 4,
             "text": "Husbands and wives, you are not masters of your own bodies. Each must do as the other has a right to demand in this important matter,"
           },
           {
+            "verse": 7,
+            "text": "and if by mutual consent you abstain from it altogether for a time, giving yourselves more thoroughly to prayer, and guarding against the entry of the spirit of evil through the avenue of indulgence, that is the best rule to observe.",
+            "coversVerses": [
+              5,
+              6,
+              7
+            ]
+          },
+          {
+            "verse": 9,
+            "heading": "Constancy in the truth / Constancy in the truth",
+            "text": "Now whether married or unmarried, my advice is \u2014 remain as you were when God first called you into the truth.",
+            "coversVerses": [
+              8,
+              9
+            ]
+          },
+          {
+            "verse": 13,
+            "text": "If married, do not seek separation. Husband and wife may not both be in the faith, nevertheless if the one to whom the truth has not yet come is agreeable to remain with the other, there should be no thought of separation.",
+            "coversVerses": [
+              10,
+              11,
+              12,
+              13
+            ]
+          },
+          {
             "verse": 14,
             "text": "Both will be sanctified by the presence of the truth in the household, and likewise the children also, and who knows? probably the one that has faith will save the other."
           },
           {
+            "verse": 16,
+            "text": "But if you were unmarried or widowed when the truth first came to you, then my advice is \u2014 do not change your state. Be as I am \u2014 and live a life of total abstinence from the claims of the body in this direction. But if this is beyond you, then marry; marriage is far better than unsuccessful efforts at this form of self-mastery. Now all this is only an expression of my own opinion, but the following is a commandment to all married persons. Let neither husband nor wife seek separation; or if they must be separated, let neither marry again whilst the other lives, but let them rather, if possible, be once more reconciled. That is the Lord\u2019s expressed command and no matter of opinion.",
+            "coversVerses": [
+              15,
+              16
+            ]
+          },
+          {
             "verse": 17,
+            "heading": "In other matters also / In other matters also",
             "text": "Further, in other matters besides marriage, I enjoin the same rule as that which I have just explained."
           },
           {
@@ -462,8 +600,24 @@
             "text": "After the truth has come to you, make no outward change in your manner of life, that is to say, in such matters as the circumcision or uncircumcision."
           },
           {
+            "verse": 20,
+            "text": "Let it not make the slightest difference what you were before you received the truth, for in the truth these differences are seen to be nothing, so remain as you always were in this matter. For the keeping of God\u2019s commandments is all that matters.",
+            "coversVerses": [
+              19,
+              20
+            ]
+          },
+          {
             "verse": 21,
             "text": "Similarly, if you were a slave when called, do not seek to obtain manumission, but even prefer to continue in the old calling."
+          },
+          {
+            "verse": 23,
+            "text": "You know now that you are Christ\u2019s freedman and bought out of slavery at a heavy price. That freedom is everything, for those that were of free birth when called are now the slaves of Christ. Let then neither bond nor free be in spirit the slaves of men; that is all the faith demands;",
+            "coversVerses": [
+              22,
+              23
+            ]
           },
           {
             "verse": 24,
@@ -471,11 +625,29 @@
           },
           {
             "verse": 25,
+            "heading": "Chastity a noble thing / Chastity a noble thing",
             "text": "Some are married when called into the faith; some have had wives, but have put them away; some are unmarried, and have never been married and have on no occasion indulged the sexual impulse, but are virgins."
           },
           {
             "verse": 26,
             "text": "To all these I repeat the same advice. Stay as you are, as you were before God called you;"
+          },
+          {
+            "verse": 28,
+            "text": "and this even applies to the last class, those who have never known sexual intercourse. To these I would give no definite command, and yet even here, I will give my opinion, and I will give it with the consciousness that in this matter I have been faithful myself, or rather that God in His infinite mercy has taken pity on the weakness of my flesh, and made me by His own power firm and trustworthy in the matter. Well, my opinion is that perfect chastity, abstention from marriage and all sexual intercourse is a noble thing in a man,",
+            "coversVerses": [
+              27,
+              28
+            ]
+          },
+          {
+            "verse": 31,
+            "text": "and the reason of that is that the world is changing, the end of the old order is near, and the doom of the physical approaches. We are called to attend to something higher than marriage and its cares. The whole outward form and manner of the universe is changing and passing away. Marriages, feastings, funerals, business and worldly matters may continue, but the time is short. Rise above them, and be as if they were not, even though you take part in them.",
+            "coversVerses": [
+              29,
+              30,
+              31
+            ]
           },
           {
             "verse": 32,
@@ -519,6 +691,17 @@
         "chapter": 8,
         "verses": [
           {
+            "verse": 4,
+            "heading": "Regarding meat offered to idols / Regarding meat offered to idols",
+            "text": "Now as to the question of obtaining meat which has been first sacrificed on one of the city altars (and meat is not often purchasable nowadays which has not been killed in this way). The idea of course in the minds of those who have been accustomed in the past to partake of these sacrifices is that there is some connection between the meat so sacrificed and the god to whom it has been rendered as a sacrifice. That is a very fixed idea in the minds of many, that to enter the precincts of the temples, purchase the sacrificial meat as prepared by the priests and their acolytes and take it home with you, is to subject yourself to all sorts of evil influences from the spirits, gods, devils who haunt these scenes and acts of worship.",
+            "coversVerses": [
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          {
             "verse": 5,
             "text": "Now recollect our point of view \u2014 that these gods or demons, however real they may be to those that believe in them, a vast congregation indeed of gods and masters of all kinds, so called and so believed, \u2014 well, all that world of supposed beings has nothing whatever to do with us, and their images are absolutely nothing at all."
           },
@@ -561,15 +744,35 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "Paul does not exercise his right to be paid / Paul does not exercise his right to be paid",
             "text": "And in relation to all these questions let that be your first thought. Do not think only of the freedom that your faith and knowledge give you. Remember that knowledge may make a man self-sufficient and self-important. It is love that builds. I for instance am free \u2014 I am an apostle. I have seen the Lord Jesus myself."
+          },
+          {
+            "verse": 5,
+            "text": "At Corinth, at any rate, my apostleship is unquestioned, because I have there a very certain witness to, and evidence of, the authenticity of my credentials; you yourselves are my credentials. I am the founder of your faith, your church. I repeat then that I have all the rights of this position.",
+            "coversVerses": [
+              2,
+              3,
+              4,
+              5
+            ]
           },
           {
             "verse": 6,
             "text": "I have the right to live on the gospel, yes, and to support a wife, if I so choose, on the gospel, to take her with me, as do the other apostles, and our Lord\u2019s brethren in the flesh, and Cephas also."
           },
           {
+            "verse": 8,
+            "text": "The vinedresser, the shepherd, the soldier earn their living by what they do. We have the same right ourselves.",
+            "coversVerses": [
+              7,
+              8
+            ]
+          },
+          {
             "verse": 9,
-            "text": "\u201CThou shalt not muzzle the ox that treadeth out the corn.\u201D (Deut. 25:4) These ideas are not my own \u2014 they are laid down in scripture."
+            "text": "\u201CThou shalt not muzzle the ox that treadeth out the corn.\u201D (Deut. 25:4) These ideas are not my own \u2014 they are laid down in scripture.",
+            "html": "\u201CThou shalt not muzzle the ox that treadeth out the corn.\u201D \u003Cspan class=\u0022verse-added-words\u0022\u003E(Deut. 25:4)\u003C/span\u003E These ideas are not my own \u2014 they are laid down in scripture."
           },
           {
             "verse": 10,
@@ -593,7 +796,8 @@
           },
           {
             "verse": 15,
-            "text": "But you know that I do not exercise the right and never have."
+            "heading": "The reason for his unwillingness to receive pay / The reason for his unwillingness to receive pay",
+            "text": "But you know that I do not exercise the right and never have. And why not? Well, that is my affair! At any rate, I am not writing this now preparatory to claiming any compensation in the future. Far from it \u2014 I would rather anything than that my special reason for satisfaction and self-congratulation should be taken away. What is that? you ask."
           },
           {
             "verse": 16,
@@ -609,6 +813,7 @@
           },
           {
             "verse": 19,
+            "heading": "What it means to be all things to all men / What it means to be all things to all men",
             "text": "And I declare I carry that principle through all that I do. I absolutely neglect my own point of view."
           },
           {
@@ -650,6 +855,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "Church membership no guarantee of perfection / Church membership no guarantee of perfection",
             "text": "The fact is, brethren, baptism and partaking of the bread and wine, and your membership in the Church of Christ show forth your status as the spiritually elect of God \u2014 but remember, you are not thereby perfected. There may yet come another falling away, as with those who were called in the old days in a similar manner to us."
           },
           {
@@ -666,15 +872,18 @@
           },
           {
             "verse": 5,
-            "text": "Now mark and learn the lesson. Many of those original founders of our faith \u201Cwere slain in the wilderness\u201D (Num. 14:16)."
+            "text": "Now mark and learn the lesson. Many of those original founders of our faith \u201Cwere slain in the wilderness\u201D (Num. 14:16).",
+            "html": "Now mark and learn the lesson. Many of those original founders of our faith \u201Cwere slain in the wilderness\u201D \u003Cspan class=\u0022verse-added-words\u0022\u003E(Num. 14:16)\u003C/span\u003E."
           },
           {
             "verse": 6,
-            "text": "The perfect will of God was not fulfilled in them and thereby we can discern the truth about ourselves, for they are types. They teach us not to lust, as some of them \u201Clusted\u201D (Num. 11:4, 34)."
+            "text": "The perfect will of God was not fulfilled in them and thereby we can discern the truth about ourselves, for they are types. They teach us not to lust, as some of them \u201Clusted\u201D (Num. 11:4, 34).",
+            "html": "The perfect will of God was not fulfilled in them and thereby we can discern the truth about ourselves, for they are types. They teach us not to lust, as some of them \u201Clusted\u201D \u003Cspan class=\u0022verse-added-words\u0022\u003E(Num. 11:4, 34)\u003C/span\u003E."
           },
           {
             "verse": 7,
-            "text": "Yes, our fathers took part in that great piece of history, they witnessed that divine manifestation of God, and yet though part of all that, they were not all elect. There took place in their midst a corresponding reprobation and apostacy of some. They worshipped idols, and made an image to Jehovah, and made a pagan rite of his sacrifice. \u201CThe people sat down to eat and drink and rose up to play.\u201D (Exod. 32:6)"
+            "text": "Yes, our fathers took part in that great piece of history, they witnessed that divine manifestation of God, and yet though part of all that, they were not all elect. There took place in their midst a corresponding reprobation and apostacy of some. They worshipped idols, and made an image to Jehovah, and made a pagan rite of his sacrifice. \u201CThe people sat down to eat and drink and rose up to play.\u201D (Exod. 32:6)",
+            "html": "Yes, our fathers took part in that great piece of history, they witnessed that divine manifestation of God, and yet though part of all that, they were not all elect. There took place in their midst a corresponding reprobation and apostacy of some. They worshipped idols, and made an image to Jehovah, and made a pagan rite of his sacrifice. \u201CThe people sat down to eat and drink and rose up to play.\u201D \u003Cspan class=\u0022verse-added-words\u0022\u003E(Exod. 32:6)\u003C/span\u003E"
           },
           {
             "verse": 8,
@@ -726,15 +935,19 @@
           },
           {
             "verse": 20,
-            "text": "we know that. But the heathen sacrifice \u201Cnot to God, but to devils.\u201D (Deut. 32:17)."
+            "text": "we know that. But the heathen sacrifice \u201Cnot to God, but to devils.\u201D (Deut. 32:17).",
+            "html": "we know that. But the heathen sacrifice \u201Cnot to God, but to devils.\u201D \u003Cspan class=\u0022verse-added-words\u0022\u003E(Deut. 32:17)\u003C/span\u003E."
           },
           {
             "verse": 21,
-            "text": "And to partake of the feasts by which these devils are worshipped is to lay yourself open to the strong influences that hang over such rites. Just as in that Israel which now bears the name of Israel after the flesh, the people who share in the sacrificial feast, share also in the Altar. Can we then, who take the cup of the Lord and partake of this feast, have anything whatever to do with the feasts of the devils? O beware of the subtle contaminating influence of idolatry! Our feast is a spiritual one; the words of blessing pronounced over the cup, and again over the bread, they mean our share in the blood of the Christ, our membership in the infinite body of the Christ, just as we all partake of the one loaf which is broken and given to all with the accompanying words of blessing, so are we all members of that one divine spiritual body. That is the meaning of our feast. Can such a feast as that have in it any taint of idolatry? Mark well the types I have spoken of, which the scriptures contain! Shall the table of the Lord (Mal. 1:7, 12) be polluted by you through intercourse with devils?"
+            "heading": "Pagan rites very different from the table of the Lord / Pagan rites very different from the table of the Lord",
+            "text": "And to partake of the feasts by which these devils are worshipped is to lay yourself open to the strong influences that hang over such rites. Just as in that Israel which now bears the name of Israel after the flesh, the people who share in the sacrificial feast, share also in the Altar. Can we then, who take the cup of the Lord and partake of this feast, have anything whatever to do with the feasts of the devils? O beware of the subtle contaminating influence of idolatry! Our feast is a spiritual one; the words of blessing pronounced over the cup, and again over the bread, they mean our share in the blood of the Christ, our membership in the infinite body of the Christ, just as we all partake of the one loaf which is broken and given to all with the accompanying words of blessing, so are we all members of that one divine spiritual body. That is the meaning of our feast. Can such a feast as that have in it any taint of idolatry? Mark well the types I have spoken of, which the scriptures contain! Shall the table of the Lord (Mal. 1:7, 12) be polluted by you through intercourse with devils?",
+            "html": "And to partake of the feasts by which these devils are worshipped is to lay yourself open to the strong influences that hang over such rites. Just as in that Israel which now bears the name of Israel after the flesh, the people who share in the sacrificial feast, share also in the Altar. Can we then, who take the cup of the Lord and partake of this feast, have anything whatever to do with the feasts of the devils? O beware of the subtle contaminating influence of idolatry! Our feast is a spiritual one; the words of blessing pronounced over the cup, and again over the bread, they mean our share in the blood of the Christ, our membership in the infinite body of the Christ, just as we all partake of the one loaf which is broken and given to all with the accompanying words of blessing, so are we all members of that one divine spiritual body. That is the meaning of our feast. Can such a feast as that have in it any taint of idolatry? Mark well the types I have spoken of, which the scriptures contain! Shall the table of the Lord \u003Cspan class=\u0022verse-added-words\u0022\u003E(Mal. 1:7, 12)\u003C/span\u003E be polluted by you through intercourse with devils?"
           },
           {
             "verse": 22,
-            "text": "Will you \u201Cprovoke him to jealousy with strange gods?\u201D (Deut. 32:16). What possible connection can there be between our spiritual feast and the table of devils?"
+            "text": "Will you \u201Cprovoke him to jealousy with strange gods?\u201D (Deut. 32:16). What possible connection can there be between our spiritual feast and the table of devils?",
+            "html": "Will you \u201Cprovoke him to jealousy with strange gods?\u201D \u003Cspan class=\u0022verse-added-words\u0022\u003E(Deut. 32:16)\u003C/span\u003E. What possible connection can there be between our spiritual feast and the table of devils?"
           },
           {
             "verse": 23,
@@ -749,6 +962,15 @@
             "text": "You are of course at liberty to purchase whatever you please where meat is sold, and ask no questions about it."
           },
           {
+            "verse": 27,
+            "text": "Similarly, you can dine with friends not of the faith, and eat whatever they set before you. That is our freedom. \u201CIs not the earth the Lord\u2019s and the fulness thereof?\u201D (Ps. 24:1).",
+            "html": "Similarly, you can dine with friends not of the faith, and eat whatever they set before you. That is our freedom. \u201CIs not the earth the Lord\u2019s and the fulness thereof?\u201D \u003Cspan class=\u0022verse-added-words\u0022\u003E(Ps. 24:1)\u003C/span\u003E.",
+            "coversVerses": [
+              26,
+              27
+            ]
+          },
+          {
             "verse": 28,
             "text": "But if your host inform you, \u201Cthis meat was sacrificed to such and such a god,\u201D then keep the rule of absolute abstention from idolatry."
           },
@@ -759,6 +981,14 @@
           {
             "verse": 30,
             "text": "and are able to give thanks therefore with a good conscience, but if you are really free, why should this action affect the conscience of another, and be misinterpreted? It is better not to eat of it where other people\u2019s consciences are at stake."
+          },
+          {
+            "verse": 32,
+            "text": "Seek not your own point of view, lean not to that, although you know yourself to be as free as Christ has made you in all such matters of eating and drinking, or whatever other things you may be doing, but seek the glory of the one God, seek to commend yourself to all men, whether your company be Jewish, Greek or those who are of the faith. O think not of yourselves, but of them!",
+            "coversVerses": [
+              31,
+              32
+            ]
           },
           {
             "verse": 33,
@@ -775,11 +1005,24 @@
           },
           {
             "verse": 2,
+            "heading": "Paul\u2019s views on woman in the church / Paul\u2019s views on woman in the church",
             "text": "You do remember and mark my words, I know, and you do keep the rules and the instructions which I lay down. I commend you as an obedient flock, and therefore listen now to another rule, a tradition I wish to be observed in our churches."
           },
           {
             "verse": 3,
             "text": "Let men be bareheaded at our meetings, but let the women still wear the head-covering, as has always been the custom, and not thinking themselves free, as they begin to do, appear bareheaded like to men."
+          },
+          {
+            "verse": 9,
+            "text": "And why? There is a reason. If a woman is to appear bareheaded like a man, then let her cut her hair, and wear it in the way that men wear theirs. That would be ugly, you say, and I agree. There is then a difference between the man and the woman; and what is our interpretation of it? Mine is this. Man stands for God; but woman stands for man. The head of the man is the type of Christ governing the body, and the head of Christ is God. The man then in every way stands as the type of the divine, the image and likeness of God, and with unveiled head he stands in the presence of God.",
+            "coversVerses": [
+              4,
+              5,
+              6,
+              7,
+              8,
+              9
+            ]
           },
           {
             "verse": 10,
@@ -794,11 +1037,21 @@
             "text": "In the second chapter of Genesis the difference made between the creation of man and of woman lies, as I interpret it, in these two different types, the one of God, the other of man;"
           },
           {
+            "verse": 15,
+            "text": "and so I advise you to keep the old custom whereby men wear their hair short, and bare their heads in prayer or preaching, but women wear their hair long, and in praying or in preaching they keep their heads covered.",
+            "coversVerses": [
+              13,
+              14,
+              15
+            ]
+          },
+          {
             "verse": 16,
             "text": "I advise you, I say, to keep this rule, but if you intend to argue the point with me \u2014 then I declare I am ignorant of any such custom, and the churches of God know it not!"
           },
           {
             "verse": 17,
+            "heading": "Divisions and abuses at the Lord\u2019s table / Divisions and abuses at the Lord\u2019s table",
             "text": "Now in this next point I cannot add any commendation to the advice I am going to give you, for the reason that things are far from well, and that you are receiving harm where you ought to get only good."
           },
           {
@@ -810,11 +1063,20 @@
             "text": "because these divisions, it would seem, have a part to play in our faith, whereby the false are separated from the true, and true faith is tried and tested."
           },
           {
+            "verse": 21,
+            "text": "Similarly taking food and drink in common, arriving at this meal hungry and thirsty, is no part of our faith. To dine all together is not to eat the supper of the Lord, especially when some are far better provided than others, and there are great differences in the way you fare at this common feast, and excess even and want are found seated at the same table.",
+            "coversVerses": [
+              20,
+              21
+            ]
+          },
+          {
             "verse": 22,
             "text": "I like not such customs as that. Why not take your meals in the ordinary way at home? To eat and drink in such a way is to hasten the doom that is coming on all flesh \u2014 that doom and judgment of the flesh which is seen in the sickness, the ill-health and the death that still is found amongst your numbers. Now through the eternal body and blood of the Christ we are released from that fate and judgment that come upon the flesh. We look forward to the appearance and coming of the eternal Christ, and we show forth that peculiar death of his which overcame death and releases us from it."
           },
           {
             "verse": 23,
+            "heading": "The last supper described / The last supper described",
             "text": "That is what the Lord Jesus meant by his words at that last supper the night on which they took him, when he handed the cup to his disciples, and broke the bread for them. I taught you his words and his action on that occasion, as they were given me by those who were present."
           },
           {
@@ -822,7 +1084,16 @@
             "text": "After taking the bread, he gave thanks, spoke the usual blessing, and handed it to them, saying, \u201CThis is my body, which is surrendered on your behalf. In future, when you break bread thus, and give thanks, remember my body, remember me.\u201D"
           },
           {
+            "verse": 26,
+            "text": "In handing the cup after dinner, he said, \u201CThis is the new covenant, sealed in my blood. In future, whenever you take wine thus together, think of this new covenant, remember my blood.\u201D",
+            "coversVerses": [
+              25,
+              26
+            ]
+          },
+          {
             "verse": 27,
+            "heading": "Its spiritual meaning explained / Its spiritual meaning explained",
             "text": "Do you then my brethren, when you come together, eating and drinking, with the intention of carrying out his injunction, and recalling his words, do you really discern beneath this semblance and type of bread and wine the eternal body of Christ to which we belong? Do you really celebrate that wondrous death of his, which differed from all other deaths in that it is to be followed by his second coming and eternal presence in the world?"
           },
           {
@@ -832,6 +1103,22 @@
           {
             "verse": 29,
             "text": "But if you discerned that infinite eternal body, if you understood the meaning of Christ\u2019s death in the flesh, and what is signified by the shedding of his blood, and the giving up of his mortal life and material body \u2014"
+          },
+          {
+            "verse": 31,
+            "text": "then, my brethren, there would not be so much sickness and disease and death in your midst as there still is.",
+            "coversVerses": [
+              30,
+              31
+            ]
+          },
+          {
+            "verse": 33,
+            "text": "You would not be bound up with the world in the common doom of perishing mortality, but by first judging yourselves, you would then escape the general ruin.",
+            "coversVerses": [
+              32,
+              33
+            ]
           },
           {
             "verse": 34,
@@ -844,6 +1131,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "The different functions of the Spirit / The different functions of the Spirit",
             "text": "Now as to the phenomena of your faith which show in a special way the presence of God and the action of the Spirit. Recollect this Spirit is one. Many of you are moved far beyond your ordinary capacity, and do things which in your own strength would be utterly impossible to you, \u2014 you prophesy, teach, heal, speak with tongues, and perform wonders, marvels \u2014 and this is not yourselves, it is the Spirit by which you are possessed."
           },
           {
@@ -851,7 +1139,26 @@
             "text": "But recollect, my brethren, there is nothing in this similar to those possessions by spirits you were once familiar with in the old religions. At one time that worship was part of your life. You were carried away willy-nilly as you were led in the service of these dumb idols."
           },
           {
+            "verse": 5,
+            "text": "And because this type of worship was so familiar to you, I bid you remember that, if anyone is possessed and cries out a curse on Jesus, such possession you will know comes not from God, whilst on the other hand to acknowledge Jesus as Lord can never be done except by those to whom the Spirit has been imparted. Now this Spirit, as I say, is one, absolutely one, throughout all its manifestations, and that is why all those phenomena which represent to us its operations are so mutually harmonious and complementary.",
+            "coversVerses": [
+              3,
+              4,
+              5
+            ]
+          },
+          {
+            "verse": 8,
+            "text": "One man may evidence one kind of gift or service, one man\u2019s sphere of usefulness or inspiration may differ entirely from another\u2019s, but he will not differ in the spirit.",
+            "coversVerses": [
+              6,
+              7,
+              8
+            ]
+          },
+          {
             "verse": 9,
+            "heading": "The oneness of the Spirit / The oneness of the Spirit",
             "text": "It is the same Spirit, the same Lord, the same God which imparts, ordains, inspires, possesses."
           },
           {
@@ -871,12 +1178,40 @@
             "text": "In the unity of the same organism there cannot be inharmonious contradictory parts."
           },
           {
+            "verse": 16,
+            "text": "Hand cannot say to foot, I have no need of you. Ear and eye are different members and have different functions, but what if the ear said to the eye, \u201Cbecause I am different from you, we belong to different bodies,\u201D would it be true? And so all of us were baptised into one vast body, the infinite Christ, \u2014 Jews, Greeks, slaves, and free \u2014 and we all drank the wine of the one Spirit. Hence these different gifts, functions and offices which operate in us. This very variety constitutes the essential being of the Spirit, because the Spirit includes all.",
+            "coversVerses": [
+              14,
+              15,
+              16
+            ]
+          },
+          {
             "verse": 17,
             "text": "If the body were all eye, where would the hearing be? If it were all ear, where would the eyebrow be?"
           },
           {
+            "verse": 21,
+            "text": "Every part is beautifully formed to assist and be complementary to the others; none is otiose, negligible or useless,",
+            "coversVerses": [
+              18,
+              19,
+              20,
+              21
+            ]
+          },
+          {
             "verse": 22,
             "text": "but on the contrary those very parts which are held in least honour often have the most important functions,"
+          },
+          {
+            "verse": 25,
+            "text": "and the visible parts of the body which form its beauty are the most dependent on the organs which are not seen and are less esteemed.",
+            "coversVerses": [
+              23,
+              24,
+              25
+            ]
           },
           {
             "verse": 26,
@@ -908,6 +1243,24 @@
         "chapter": 13,
         "verses": [
           {
+            "verse": 11,
+            "heading": "The way of perfection \u2014 love / The way of perfection \u2014 love",
+            "text": "And the way I will show you is the way of perfection. I may have knowledge, but it is still fragmentary, I read as it were on a mirror the reflections which I cannot yet quite make out. I prophesy partially, not fully and perfectly, and so is it with other gifts of the kind, tongues and healing and so on. These are, as it were, but the infancy of the Spirit, its first faint babblings and lispings, but love is full, complete, perfect. Here and now it is the all-inclusive, towards which all these other gifts point, and when love is fully come, there will be an end of these partial utterances of the Spirit. Therefore love is above all things necessary. What are all these other gifts without it? What is the speaking with tongues, the utterances of men or angels, without it? Merely a repetition of the old religions with the clashing of cymbals and beating of gongs. And what does it avail to prophesy, to have an intellect which can grapple with all mysteries and knowledge, and to have so powerful a faith as to be able to work miracles with it, if love is not the crown, the aim, the end of it all? It is all worthless. And to give away all your possessions without love, and to embrace martyrdom and the stake without love \u2014 how empty, how vain and worthless! For love includes all that is good \u2014 all patience, kindness, tolerance, forbearance, faith and hope; and love is antidote to all evil, all jealousy, and boasting, all ugliness, selfishness, ill-temper, evil thinking. Love can never take any pleasure in these things, the joy of love comes from truth. And so it shall come to pass that all other things will change, pass, and be no more, but love will remain. All that is partial, imperfect, incomplete must have an end, but love will never fail.",
+            "coversVerses": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11
+            ]
+          },
+          {
             "verse": 12,
             "text": "In that perfect day of love we shall see face to face, we shall know then as now we are known,"
           },
@@ -922,19 +1275,54 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "Of speaking with tongues / Of speaking with tongues",
             "text": "I told you to desire the greatest gifts, and that is why I bid you earnestly to pursue love, but of those other spiritual things of which I have spoken, in my opinion the best, the most useful, is prophecy or preaching."
+          },
+          {
+            "verse": 4,
+            "text": "And why? Because it instructs and builds and strengthens. To utter a spiritual language known only to God is to hold converse indeed with God, to allow the Spirit itself to utter its own mysteries, and that is good.",
+            "coversVerses": [
+              2,
+              3,
+              4
+            ]
           },
           {
             "verse": 5,
             "text": "I would have you all to speak with such tongues as that; but this spiritual language, the tongue of God, needs interpretation; and through that interpretation man is blessed with something that comforts, consoles, and builds him up."
           },
           {
+            "verse": 7,
+            "text": "Prophecy does this, interpreting to others the language of heaven, and building the Church on earth. Therefore is it a greater gift to prophesy than to speak the new tongues of the Spirit, for such words make the Church. The new tongues require interpretation. I shall be no help to you unless I reveal something to you, increase your knowledge of things divine, and act as a prophet and teacher. All tongues and languages and voices on earth have meaning.",
+            "coversVerses": [
+              6,
+              7
+            ]
+          },
+          {
             "verse": 8,
             "text": "Even the trumpet, made of brass merely, can summon men to battle, the flute and the pipe can move men most variously. But what if their sounds be not understood? What if their stops and notes be so uncertainly handled that there is no recognition of their meaning? Who will arm himself then for the fray?"
           },
           {
+            "verse": 10,
+            "text": "And of the different languages which men talk, there is not one which is without meaning and interpretation. We call those \u201Cforeign\u201D tongues which we cannot understand, and them that speak them \u201Cforeigners.\u201D So it is with the language of heaven, the tongue that the Spirit speaks with spiritual utterings.",
+            "coversVerses": [
+              9,
+              10
+            ]
+          },
+          {
             "verse": 11,
+            "heading": "To speak with the understanding is of first importance / To speak with the understanding is of first importance",
             "text": "It sounds strange and barbarous in the ears of those who do not understand it. It needs interpretation, and for those who understand it not, you do but speak into the air, not into their minds."
+          },
+          {
+            "verse": 13,
+            "text": "If you be anxious and desirous for proofs of your spirituality, for the gifts and wonders of the Spirit and its activities, then let this desire for an overflowing measure of it in your hearts end always in the furthering of that great spiritual goal, the aim, as I have said, of all the operations of the Spirit, the building up of the Church, of the infinite body of the Christ.",
+            "coversVerses": [
+              12,
+              13
+            ]
           },
           {
             "verse": 14,
@@ -966,7 +1354,8 @@
           },
           {
             "verse": 21,
-            "text": "Yes, God says, \u201CWith other lips and a strange tongue will I speak to this people, and yet will they not hearken to me.\u201D (Is. 28: 11-12)"
+            "text": "Yes, God says, \u201CWith other lips and a strange tongue will I speak to this people, and yet will they not hearken to me.\u201D (Is. 28: 11-12)",
+            "html": "Yes, God says, \u201CWith other lips and a strange tongue will I speak to this people, and yet will they not hearken to me.\u201D \u003Cspan class=\u0022verse-added-words\u0022\u003E(Is. 28: 11-12)\u003C/span\u003E"
           },
           {
             "verse": 22,
@@ -982,10 +1371,12 @@
           },
           {
             "verse": 25,
-            "text": "the thoughts of his own heart are laid bare to him, he is convicted and judged and made to cry out in his own soul, \u201Csurely God is in you\u201D (Is. 45:14)."
+            "text": "the thoughts of his own heart are laid bare to him, he is convicted and judged and made to cry out in his own soul, \u201Csurely God is in you\u201D (Is. 45:14).",
+            "html": "the thoughts of his own heart are laid bare to him, he is convicted and judged and made to cry out in his own soul, \u201Csurely God is in you\u201D \u003Cspan class=\u0022verse-added-words\u0022\u003E(Is. 45:14)\u003C/span\u003E."
           },
           {
             "verse": 26,
+            "heading": "The need for orderliness / The need for orderliness",
             "text": "To this great aim let all your worship tend; let psalm, teaching, revelation, tongues and their interpretation be subject to order and arrangement, and so help to build the church."
           },
           {
@@ -1005,12 +1396,30 @@
             "text": "and let the rest listen in silence, and distinguish carefully the truth of the words spoken; and where one or other is moved by revelation to speak, give place to him and let the first be silent."
           },
           {
+            "verse": 32,
+            "text": "For everyone of you, and not a few only, is able to prophesy, and to do this for the good of all, for there is nothing unruly in the spirit of prophecy. It is subject to him who has the understanding of it,",
+            "coversVerses": [
+              31,
+              32
+            ]
+          },
+          {
             "verse": 33,
             "text": "and in the churches of God all is order and peace. There is no disorder in the divine being."
           },
           {
             "verse": 34,
             "text": "Therefore also the women are not to speak in your assemblies. This is the tradition of the law, and it must be still observed. You may think otherwise, you may even be doing otherwise in your churches. But it is forbidden."
+          },
+          {
+            "verse": 38,
+            "text": "Are you the originators and only recipients of the Gospel? Did it not come first to me, and through me to you? And I tell you that the Lord has given a commandment about these things. Perhaps you do not understand it or recognise it? Then you show yourselves to be without the pale of God\u2019s ruling and guidance. Woman can learn and question and speak at home, not in public now.",
+            "coversVerses": [
+              35,
+              36,
+              37,
+              38
+            ]
           },
           {
             "verse": 39,
@@ -1027,6 +1436,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "The \u201Cheart and soul\u201D of Paul\u2019s gospel / The \u201Cheart and soul\u201D of Paul\u2019s gospel",
             "text": "Now for the fundamental truth of my teaching, \u2014 not mine, but what I received, the same that was given to me, and that I handed on to you, \u2014"
           },
           {
@@ -1071,7 +1481,18 @@
           },
           {
             "verse": 12,
+            "heading": "The Christ did conquer death / The Christ did conquer death",
             "text": "Then what means this contention amongst some of you that the dead do not rise?"
+          },
+          {
+            "verse": 16,
+            "text": "But the Christ did rise. For death came through Adam, it came through a man, and through a man must come eternal life. If in Adam all die, then must death be conquered where it began, in a man. So rose the Christ from the dead. But if you say there is no resurrection from the dead, then neither did the Christ rise from the dead, and the whole of our teaching collapses,",
+            "coversVerses": [
+              13,
+              14,
+              15,
+              16
+            ]
           },
           {
             "verse": 17,
@@ -1090,6 +1511,14 @@
             "text": "But the Christ has risen, and his rising is the commencement of a similar resurrection for the whole world."
           },
           {
+            "verse": 22,
+            "text": "His re-appearance after death is like the first fruits of a mighty harvest.",
+            "coversVerses": [
+              21,
+              22
+            ]
+          },
+          {
             "verse": 23,
             "text": "The increase and growth of this vast divine process will first include all who belong to him, when his eternal presence will become apparent throughout the world;"
           },
@@ -1098,12 +1527,32 @@
             "text": "and this process will continue till \u201Cthe end\u201D when there shall exist not one single power, influence or authority that moves contrary to His will, but everything will be subordinate to the infinite God and Father of All, the Creator."
           },
           {
+            "verse": 27,
+            "text": "Everything that opposes must be reversed and subdued just there where it arose, namely in man on earth, until there be nothing left that opposes, and until death itself has been completely obliterated. That will be the end, when death is ended, and God is All-in-all, and even the Christ that saves and redeems exists only as the eternally perfect son subject to the infinite Father, there being no more enemies from which to save and redeem us, thus fulfilling the meaning of the Scriptures. For the reign of the Christ will continue on earth for a finite period, namely, until \u201CHe has made his enemies his foot-stool\u201D (Ps. 110:1), until all finite death-conditioned things are overruled. \u201CHe hath put all things under his feet\u201D (Ps. 8:6).",
+            "html": "Everything that opposes must be reversed and subdued just there where it arose, namely in man on earth, until there be nothing left that opposes, and until death itself has been completely obliterated. That will be the end, when death is ended, and God is All-in-all, and even the Christ that saves and redeems exists only as the eternally perfect son subject to the infinite Father, there being no more enemies from which to save and redeem us, thus fulfilling the meaning of the Scriptures. For the reign of the Christ will continue on earth for a finite period, namely, until \u201CHe has made his enemies his foot-stool\u201D \u003Cspan class=\u0022verse-added-words\u0022\u003E(Ps. 110:1)\u003C/span\u003E, until all finite death-conditioned things are overruled. \u201CHe hath put all things under his feet\u201D \u003Cspan class=\u0022verse-added-words\u0022\u003E(Ps. 8:6)\u003C/span\u003E.",
+            "coversVerses": [
+              25,
+              26,
+              27
+            ]
+          },
+          {
             "verse": 28,
             "text": "All things, but not the Christ himself, for though the Christ has appeared amidst these things, he is not their subject, he is not conditioned by them, he is eternally, spiritually royal, existing only as subject to God, the All-in-all."
           },
           {
             "verse": 29,
             "text": "That is the only significance of that practice which obtains amongst some of you, whereby the living are baptised on behalf of those already dead. It means that this progressive victory over death will ultimately include all who have died. The purpose of the Christ penetrates far beyond the little sphere of this life. But if you think that the Christ only comes to you on earth and for this life, what significance has this rite of baptism on behalf of those already beyond its pale? Unless they too are changed by the infinite operation of the Christ life, the rite is meaningless. And if the dead rise not, if there be no such victory and struggle at work, what is the significance of present struggles?"
+          },
+          {
+            "verse": 32,
+            "text": "I have faced the beasts in the circus before the crowd at Ephesus, I have run every risk, endured every danger, and won through them successfully \u2014 that is your boast, and the glory which you accord me for my service of the Christ; but if in this daily death of mine there is no underlying meaning, if it does not mean that even now Christ in me is fighting his victory over death, and successfully putting it under his feet and rescuing me from it, then what is the use of it all? I would rather say with the disobedient \u201CLet us eat and drink; for to-morrow we shall die\u201D (Is. 22:13) for there is no longer any meaning in my struggles. Beware! Do not let sleep overtake you, and your spiritual perception be cheated and fade.",
+            "html": "I have faced the beasts in the circus before the crowd at Ephesus, I have run every risk, endured every danger, and won through them successfully \u2014 that is your boast, and the glory which you accord me for my service of the Christ; but if in this daily death of mine there is no underlying meaning, if it does not mean that even now Christ in me is fighting his victory over death, and successfully putting it under his feet and rescuing me from it, then what is the use of it all? I would rather say with the disobedient \u201CLet us eat and drink; for to-morrow we shall die\u201D \u003Cspan class=\u0022verse-added-words\u0022\u003E(Is. 22:13)\u003C/span\u003E for there is no longer any meaning in my struggles. Beware! Do not let sleep overtake you, and your spiritual perception be cheated and fade.",
+            "coversVerses": [
+              30,
+              31,
+              32
+            ]
           },
           {
             "verse": 33,
@@ -1115,6 +1564,7 @@
           },
           {
             "verse": 35,
+            "heading": "Paul explains the resurrection / Paul explains the resurrection",
             "text": "And now you ask me, How? What is that body which dies not, but comes again?"
           },
           {
@@ -1131,6 +1581,7 @@
           },
           {
             "verse": 39,
+            "heading": "Different kinds of bodies / Different kinds of bodies",
             "text": "We see every type and pattern of shape and form given to various existences as their bodies, we see the elements of flesh and blood taking on the form of every type of being, man, beast, fish, bird \u2014 all distinct and separate entities with appropriate bodies."
           },
           {
@@ -1142,7 +1593,17 @@
             "text": "The sun, moon and stars are glorious bodies, each with its own distinct glory and splendour."
           },
           {
+            "verse": 44,
+            "text": "And the Spirit has in a similar manner its own appropriate distinct body, the spiritual species can by no possibility overrun into and mix with a distinct species of earthly things. Hence the contrast so difficult to grasp in the resurrection of the dead, whereby the spiritual species with its appropriate body appears in substitution of the former human expression of life. On the one hand weakness, corruption, dishonour, comparable to the body of a seed which rots and dissolves beneath the layer of soil; and on the other hand power, glory and incorruption, of which the green shapely stalk of corn may be taken as a simile. But the absolute distinctness of species on earth is a lesson to us, whereby the mind grasps the significance of the great spiritual category of things wholly distinct from the earthy. These things possess spiritual bodies and have no connection with earthy bodies. Their glory is distinct.",
+            "coversVerses": [
+              42,
+              43,
+              44
+            ]
+          },
+          {
             "verse": 45,
+            "heading": "The distinction between Adam and Christ / The distinction between Adam and Christ",
             "text": "This is the distinction implied by the Bible between Adam, \u201Cformed of the dust of the ground,\u201D who became \u201Ca living soul,\u201D and that other man who is wholly spiritual with a spiritual body,"
           },
           {
@@ -1162,6 +1623,14 @@
             "text": "We have borne that image which is the appearance of an earthy physical man, we shall also bear that distinct heavenly stamp, the peculiar spiritual mode of being."
           },
           {
+            "verse": 51,
+            "text": "For physical flesh and its laws are remote from the life and laws of the kingdom of God. Do not think that one can pass over into and inherit the other. Nature knows of no such amalgamation as that throughout her infinite being.",
+            "coversVerses": [
+              50,
+              51
+            ]
+          },
+          {
             "verse": 52,
             "text": "Rather there must be a total and absolute change, a complete reversal of the mode of being, which is what the Scriptures imply by \u201Cthe sounding of the last trump,\u201D when in a timeless instant the spiritual order of being,"
           },
@@ -1171,11 +1640,13 @@
           },
           {
             "verse": 54,
-            "text": "That is the moment at which death draws back its foot; it is at the coming of that new body and life and organism which declare and express the immortality and being of Spirit. Then is it that the words come true: \u201CHe hath swallowed up death in victory\u201D (Is. 25:8)."
+            "text": "That is the moment at which death draws back its foot; it is at the coming of that new body and life and organism which declare and express the immortality and being of Spirit. Then is it that the words come true: \u201CHe hath swallowed up death in victory\u201D (Is. 25:8).",
+            "html": "That is the moment at which death draws back its foot; it is at the coming of that new body and life and organism which declare and express the immortality and being of Spirit. Then is it that the words come true: \u201CHe hath swallowed up death in victory\u201D \u003Cspan class=\u0022verse-added-words\u0022\u003E(Is. 25:8)\u003C/span\u003E."
           },
           {
             "verse": 55,
-            "text": "\u201CWhere is thy sting, O death? Where is thy victory, O grave?\u201D (Hos. 13:14),"
+            "text": "\u201CWhere is thy sting, O death? Where is thy victory, O grave?\u201D (Hos. 13:14),",
+            "html": "\u201CWhere is thy sting, O death? Where is thy victory, O grave?\u201D \u003Cspan class=\u0022verse-added-words\u0022\u003E(Hos. 13:14)\u003C/span\u003E,"
           },
           {
             "verse": 56,
@@ -1196,6 +1667,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "Helpful directions and greetings / Helpful directions and greetings",
             "text": "Finally, as to the fund \u2014 I have given instructions to the churches in Galatia about this collection, which is to be used by the church at Jerusalem, and I repeat the same instructions to you."
           },
           {
@@ -1211,12 +1683,29 @@
             "text": "If the sum is a large one, I shall accompany this mission myself."
           },
           {
+            "verse": 7,
+            "text": "For I intend to be with you shortly. I hope possibly to winter with you, at any rate, if the Lord permit, to be with you for a considerable time, not merely to visit you, en route for somewhere else. And I hope that some of you will accompany me when I leave. I shall come by way of Macedonia.",
+            "coversVerses": [
+              5,
+              6,
+              7
+            ]
+          },
+          {
             "verse": 8,
             "text": "At present I remain at Ephesus until Pentecost."
           },
           {
             "verse": 9,
             "text": "The door is open here, wide open, and much work is being done, but the opposition is great."
+          },
+          {
+            "verse": 11,
+            "text": "If Timothy comes to you, let him not feel that he is unwelcome, be generous and hospitable, for it is the Lord\u2019s work that both he and I together pursue; and send him again to me with your kind thoughts, for I need him here.",
+            "coversVerses": [
+              10,
+              11
+            ]
           },
           {
             "verse": 12,
@@ -1239,6 +1728,14 @@
             "text": "They have set themselves to that task and it was a joy to me that they came here."
           },
           {
+            "verse": 18,
+            "text": "Listen to them, and be guided by them, I pray you, and by all who work with them. Stephanas, Fortunatus and Achaicus refreshed my spirit and yours too by their presence, which made up for your absence. Remember such workers as these.",
+            "coversVerses": [
+              17,
+              18
+            ]
+          },
+          {
             "verse": 19,
             "text": "Greetings are sent to you with this from the churches of Asia, from Aquila and his wife, Priscilla, and the church which assembles in their house."
           },
@@ -1252,7 +1749,8 @@
           },
           {
             "verse": 22,
-            "text": "Let him that loves not the Lord be anathema, MARAN ATHA."
+            "text": "Let him that loves not the Lord be anathema, MARAN ATHA.",
+            "html": "Let him that loves not the Lord be anathema, \u003Cspan class=\u0022verse-added-words\u0022\u003EMARAN ATHA\u003C/span\u003E."
           },
           {
             "verse": 23,
@@ -1279,6 +1777,7 @@
           },
           {
             "verse": 3,
+            "heading": "The divine comfort / The divine comfort",
             "text": "How good, how full of blessedness is the God and Father of our Lord Jesus Christ. Comfort dwells with Him, in all ways His nature awakes the sense of compassion, and with it strength and comfort."
           },
           {
@@ -1315,10 +1814,20 @@
           },
           {
             "verse": 12,
+            "heading": "Paul boasts of his love for them / Paul boasts of his love for them",
             "text": "Now the only boast I have in myself for this is simply my pure and free conscience which knows that I live and act in the world not on the lines of man\u2019s carnal wisdom, but by His grace, and this is especially the case in my relations with you."
           },
           {
+            "verse": 14,
+            "text": "You yourselves are my boast, and I am yours, you know it already; I have no other thoughts, no other motive than that (you have known it always and always will know it), even what I write to you now that I have no boast, no claim to aught in the day of the Lord Jesus but the love that is common to us both, the love we bear one another.",
+            "coversVerses": [
+              13,
+              14
+            ]
+          },
+          {
             "verse": 15,
+            "heading": "The reason for the change in his plans / The reason for the change in his plans",
             "text": "With this deep confidence in my heart, it was my desire on the former occasion to come to you as I wrote, to come for the second time and renew the joy we had before in meeting."
           },
           {
@@ -1364,11 +1873,20 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "He does not wish to reiterate censure / He does not wish to reiterate censure",
             "text": "So I would not and could not come to you again in sorrow and reproof."
           },
           {
             "verse": 2,
             "text": "Why should I inflict pain on that which is my joy? And why should that bring me pain which was to be my joy?"
+          },
+          {
+            "verse": 4,
+            "text": "And indeed I wrote that letter with only one intention in my mind. It was that after I had said what I had to say by letter I might then be able to come to you with all that put behind us, and receive that joy from our meeting and association together which I know you share abundantly with me.",
+            "coversVerses": [
+              3,
+              4
+            ]
           },
           {
             "verse": 5,
@@ -1377,6 +1895,15 @@
           {
             "verse": 6,
             "text": "Your own knowledge of his wrong-doing is quite enough punishment for him;"
+          },
+          {
+            "verse": 9,
+            "text": "therefore remember him kindly, be gracious and forgiving towards him; for excessive mortification and punishment only completes a man\u2019s downfall. And remember that in doing so, you represent my feelings also.",
+            "coversVerses": [
+              7,
+              8,
+              9
+            ]
           },
           {
             "verse": 10,
@@ -1400,6 +1927,7 @@
           },
           {
             "verse": 15,
+            "heading": "The fragrance of Christian truth / The fragrance of Christian truth",
             "text": "Through me the fragrance of the knowledge of God is filling the world, like the sweet savour of incense and sacrifice. It is the divine freshness of life in the Christ which forms this fragrance and which makes men whole, and continually points onward to an ever increasing measure of life, and all its infinite possibilities, when released from fate and death."
           },
           {
@@ -1437,6 +1965,7 @@
           },
           {
             "verse": 6,
+            "heading": "The old covenant of the law / The old covenant of the law",
             "text": "Now the old covenant defined and elaborated the doom of sin, and showed the inevitableness of death as its penalty. That was its truth, and hence its glory. And we read that the man appointed to serve this absolute covenant of sin\u2019s reward was yet invested with divine glory. That doom was engraven, we read, in letters on stone tables, and it slew."
           },
           {
@@ -1456,12 +1985,32 @@
             "text": "That was the reason, as is commonly interpreted, of the veil which Moses placed on his face."
           },
           {
+            "verse": 14,
+            "text": "The children of Israel, because of that veil, never saw the light of the old covenant fade out and vanish into nothing. Had not the veil been there, they would have looked right on to the end of this covenant of finiteness and death, and so discerned its spiritual sense, but that veil represents the hardening of their hearts and the dimness of their eyes, whereby they cannot discern the spiritual sense of the scriptures.",
+            "coversVerses": [
+              11,
+              12,
+              13,
+              14
+            ]
+          },
+          {
             "verse": 15,
             "text": "When Moses is read in their synagogues, the veil is on their hearts still."
           },
           {
             "verse": 16,
             "text": "For the real meaning of that ministry is a spiritual one. As the light of the old covenant which defines the doom of sin fades and dwindles and at last dies away to nothing, the dawn of the new covenant rises and broadens."
+          },
+          {
+            "verse": 18,
+            "heading": "The new covenant of the Spirit / The new covenant of the Spirit",
+            "text": "For the glory of the new (of righteousness) far exceeds the old (of death). It is that glory which we behold when we look beyond the end of the finite and transitory and behold the eternal splendour of that which abides and never passes away. Then, like Moses, who in the divine presence removed the veil again which he had worn in the presence of the people, so we behold the glory of the Lord; and, looking, are changed \u2014 changed from the perishable and mortal \u2014 into the image of His glory, ever deepening and broadening from glory to glory, the image that is to say of the eternal Spirit. For when the Bible says \u201CWhen Moses went in to the Lord, he took off the veil,\u201D (Exo 34:34) the Lord there means the Spirit \u2014 the Spirit which has reached us, the Spirit which has freed us from the law of sin and death.",
+            "html": "For the glory of the new (of righteousness) far exceeds the old (of death). It is that glory which we behold when we look beyond the end of the finite and transitory and behold the eternal splendour of that which abides and never passes away. Then, like Moses, who in the divine presence removed the veil again which he had worn in the presence of the people, so we behold the glory of the Lord; and, looking, are changed \u2014 changed from the perishable and mortal \u2014 into the image of His glory, ever deepening and broadening from glory to glory, the image that is to say of the eternal Spirit. For when the Bible says \u201CWhen Moses went in to the Lord, he took off the veil,\u201D \u003Cspan class=\u0022verse-added-words\u0022\u003E(Exo 34:34)\u003C/span\u003E the Lord there means the Spirit \u2014 the Spirit which has reached us, the Spirit which has freed us from the law of sin and death.",
+            "coversVerses": [
+              17,
+              18
+            ]
           }
         ]
       },
@@ -1470,6 +2019,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "Love has freed him from fear and sin / Love has freed him from fear and sin",
             "text": "So long as I am a minister of such a covenant as this, I will never fear."
           },
           {
@@ -1494,6 +2044,7 @@
           },
           {
             "verse": 7,
+            "heading": "The spaciousness of true living / The spaciousness of true living",
             "text": "What if this treasure appear to be contained in a vessel of earth? That fact will but serve to make clearer the infinite power of God, without any second or competitor in any efforts we ourselves may try to make."
           },
           {
@@ -1518,7 +2069,8 @@
           },
           {
             "verse": 13,
-            "text": "\u201CI believed and therefore I spake\u201D (Ps. 116:10). I know that there was in the writer of those words the same Spirit that utters itself now. I too believe, and however ardently the wicked may wish my death, I speak,"
+            "text": "\u201CI believed and therefore I spake\u201D (Ps. 116:10). I know that there was in the writer of those words the same Spirit that utters itself now. I too believe, and however ardently the wicked may wish my death, I speak,",
+            "html": "\u201CI believed and therefore I spake\u201D \u003Cspan class=\u0022verse-added-words\u0022\u003E(Ps. 116:10)\u003C/span\u003E. I know that there was in the writer of those words the same Spirit that utters itself now. I too believe, and however ardently the wicked may wish my death, I speak,"
           },
           {
             "verse": 14,
@@ -1530,6 +2082,7 @@
           },
           {
             "verse": 16,
+            "heading": "In it is neither fatigue nor failure / In it is neither fatigue nor failure",
             "text": "There is no thought of fatigue or failure or surrender here; the outward man begins to give place before the advent of that inner man who is for ever renewed, even whilst the outer man shows the evidences of death."
           },
           {
@@ -1546,12 +2099,36 @@
         "chapter": 5,
         "verses": [
           {
+            "verse": 2,
+            "text": "The groans which we are sometimes compelled to utter whilst abiding in this tabernacle are but the expression of a longing \u2014 we desire and we utterly need that heavenly covering to replace this earthly;",
+            "coversVerses": [
+              1,
+              2
+            ]
+          },
+          {
             "verse": 3,
             "text": "and when we get that new kind of body, we shall no longer like Adam and Eve be found to be naked. We shall be clothed at last, clothed in life, clothed in immortality."
           },
           {
             "verse": 4,
             "text": "We are naked enough in this mortal flesh; and our great need is not to take anything more off, as some regard the stripping of the soul by death \u2014"
+          },
+          {
+            "verse": 6,
+            "text": "but to put something on, to be so embraced and enfolded by the infinite life that the mortal may be wrung out of us for good and all. Already we have in our midst the earnest of this immortal Spirit. It is God\u2019s infinite work, He is now bringing it all to pass, and has wrought us for this purpose, and for this end, namely, this change from the mortal to the divine. There is no need, no reason for despondency or sorrow; our sojourn in the body merely means exile from the Lord,",
+            "coversVerses": [
+              5,
+              6
+            ]
+          },
+          {
+            "verse": 8,
+            "text": "but we live and walk by faith, and so by that faith we are full of a deep conviction and of courage and goodwill in the knowledge that this exiled condition of mortality has been reversed.",
+            "coversVerses": [
+              7,
+              8
+            ]
           },
           {
             "verse": 9,
@@ -1563,6 +2140,7 @@
           },
           {
             "verse": 11,
+            "heading": "The true self and the physical ego / The true self and the physical ego",
             "text": "This process of the manifestation of the true self as it appears in the eyes of God continues apace, but it is not understood by men, so we have to be gentle and persuasive with them; yet I believe that in your mind I am known for what I am in the truth."
           },
           {
@@ -1599,6 +2177,7 @@
           },
           {
             "verse": 20,
+            "heading": "The Christ reconciles man to God / The Christ reconciles man to God",
             "text": "It is as the minister of this word of reconciliation that I find my office and function, calling you all by means of this word to the reconciliation, acting as its bearer and agent, and on behalf of the Christ inviting you and encouraging you to be reconciled to God."
           },
           {
@@ -1616,7 +2195,8 @@
           },
           {
             "verse": 2,
-            "text": "It is for now, it is here. \u201CIn an acceptable time have I heard thee, in a day of salvation have I helped thee\u201D (Is. 99:8). What is that \u201Cacceptable time,\u201D that \u201Cday\u201D but the day which has now dawned on us?"
+            "text": "It is for now, it is here. \u201CIn an acceptable time have I heard thee, in a day of salvation have I helped thee\u201D (Is. 99:8). What is that \u201Cacceptable time,\u201D that \u201Cday\u201D but the day which has now dawned on us?",
+            "html": "It is for now, it is here. \u201CIn an acceptable time have I heard thee, in a day of salvation have I helped thee\u201D \u003Cspan class=\u0022verse-added-words\u0022\u003E(Is. 99:8)\u003C/span\u003E. What is that \u201Cacceptable time,\u201D that \u201Cday\u201D but the day which has now dawned on us?"
           },
           {
             "verse": 3,
@@ -1652,7 +2232,16 @@
           },
           {
             "verse": 11,
+            "heading": "Now, cast out all that obscures the ideal / Now, cast out all that obscures the ideal",
             "text": "Something has opened my heart to you, Corinthians,"
+          },
+          {
+            "verse": 13,
+            "text": "and shown me yourselves and your destiny in a larger room, in a grand perspective \u2014 free from all the cavil and pettiness of the world\u2019s slander. Now do the same for me, my brethren. O grasp the secret of my purpose, the breadth of my career and vision; behold its vast import, and do not lay upon yourselves the cruel limitations of the world\u2019s misapprehension and deceit and slander. Away with all that!",
+            "coversVerses": [
+              12,
+              13
+            ]
           },
           {
             "verse": 14,
@@ -1664,15 +2253,18 @@
           },
           {
             "verse": 16,
-            "text": "Cast out all that obscures that fair, spacious and exalted temple of the living God, that building which you are! The workings of devilish influences and the power of idolatry have no room or footing here."
+            "text": "Cast out all that obscures that fair, spacious and exalted temple of the living God, that building which you are! The workings of devilish influences and the power of idolatry have no room or footing here. I will walk in their midst, says God, I will dwell among them, (Lev. 26:11-12) I will be their God, they shall be my people.",
+            "html": "Cast out all that obscures that fair, spacious and exalted temple of the living God, that building which you are! The workings of devilish influences and the power of idolatry have no room or footing here. I will walk in their midst, says God, \u003Cbr/\u003E I will dwell among them, \u003Cspan class=\u0022verse-added-words\u0022\u003E(Lev. 26:11-12)\u003C/span\u003E \u003Cbr/\u003E I will be their God, they shall be my people."
           },
           {
             "verse": 17,
-            "text": "Therefore come out from the midst of them,"
+            "text": "Therefore come out from the midst of them, Be separate, saith the Lord, (Is. 52:11) Touch not the unclean thing. And I will accept you,",
+            "html": "Therefore come out from the midst of them, \u003Cbr/\u003E Be separate, saith the Lord, \u003Cspan class=\u0022verse-added-words\u0022\u003E(Is. 52:11)\u003C/span\u003E \u003Cbr/\u003E Touch not the unclean thing. \u003Cbr/\u003E And I will accept you,"
           },
           {
             "verse": 18,
-            "text": "and will be to you a father,"
+            "text": "and will be to you a father, And you shall be my sons and daughters, Saith the Lord omnipotent. (II Sam. 7:14)",
+            "html": "and will be to you a father, And you shall be my sons and daughters, \u003Cbr/\u003E Saith the Lord omnipotent. \u003Cspan class=\u0022verse-added-words\u0022\u003E(II Sam. 7:14) \u003C/span\u003E"
           }
         ]
       },
@@ -1696,7 +2288,16 @@
             "text": "I have much boldness in speaking to you. I know that in my own heart all trace of condemnation toward you is absent, for in the Christ we live and suffer together as one."
           },
           {
+            "verse": 6,
+            "text": "I cannot express to you the great gladness and joy of my heart on meeting Titus in Macedonia.",
+            "coversVerses": [
+              5,
+              6
+            ]
+          },
+          {
             "verse": 7,
+            "heading": "Paul\u2019s suffering relieved by good news / Paul\u2019s suffering relieved by good news",
             "text": "I was oppressed beyond measure, fightings without, and fears within \u2014 my flesh had no rest, in every possible direction loomed danger and difficulty, and God delivered me, even as He delivers the meek and hears the cry of the helpless. Titus came to me with news of you; and my heart was comforted and strengthened, nay, it overflows with gratitude and joy, as I remember your utter loyalty, and perfect devotion. All my sufferings lifted in the understanding of your love which his news brought to me."
           },
           {
@@ -1741,6 +2342,15 @@
         "chapter": 8,
         "verses": [
           {
+            "verse": 2,
+            "heading": "The liberality of the churches / The liberality of the churches",
+            "text": "Out of the midst of all their persecutions and afflictions the heart of the churches of Macedonia has been preserved so fresh and fearless that the surplus of their joy and gladness has taken the form of a bountiful gift to God.",
+            "coversVerses": [
+              1,
+              2
+            ]
+          },
+          {
             "verse": 3,
             "text": "Their utter poverty too in respect of worldly needs and aspirations has contributed to this gift."
           },
@@ -1754,6 +2364,7 @@
           },
           {
             "verse": 6,
+            "heading": "The fund in relation to true wealth / The fund in relation to true wealth",
             "text": "Titus administered this fund and its collection, and he was so much impressed and encouraged by the Macedonians in the carrying out of this task, that I bade him continue this work which he had begun in Greece, and complete it by also attending to the fund which you are making;"
           },
           {
@@ -1773,8 +2384,42 @@
             "text": "the way he gave up all has brought you great riches, and now is the time to show how genuine is the love which has been opened to you."
           },
           {
+            "verse": 12,
+            "text": "My opinion is that the time has now arrived for this fund and collection to be completed, and for your final gifts to be made.",
+            "coversVerses": [
+              11,
+              12
+            ]
+          },
+          {
+            "verse": 14,
+            "heading": "Giving creates abundance / Giving creates abundance",
+            "text": "I know that you have already given sums to it, and your good will and desire to give has long been shown. Complete the matter now, and since you have this desire, give now what you can afford. Our giving is not the kind that injures and depletes oneself in order to confer largess on another; but it illustrates a law of fairness.",
+            "coversVerses": [
+              13,
+              14
+            ]
+          },
+          {
             "verse": 15,
-            "text": "\u201CHe that gathered little had no lack, and he that gathered much had nothing over\u201D (Ex. 16:18)."
+            "text": "\u201CHe that gathered little had no lack, and he that gathered much had nothing over\u201D (Ex. 16:18).",
+            "html": "\u201CHe that gathered little had no lack, and he that gathered much had nothing over\u201D \u003Cspan class=\u0022verse-added-words\u0022\u003E(Ex. 16:18)\u003C/span\u003E."
+          },
+          {
+            "verse": 17,
+            "text": "This principle goes so deep that in our faith what you have in abundance will minister to that where-with they are less well provided, whilst that which fills them to overflowing will supply all that you can want in the same direction. So wonderful is the spiritual manna of the word.",
+            "coversVerses": [
+              16,
+              17
+            ]
+          },
+          {
+            "verse": 19,
+            "text": "I thank God that Titus has the same feeling with me about this fund. My invitation to him to go to you about it chimed in with the plans and wishes he had already formulated in his own mind. So I am sending him, and with him that brother whose name has become famous throughout the churches for his service to the gospel. This brother was elected by the churches to travel with me in connection with this fund.",
+            "coversVerses": [
+              18,
+              19
+            ]
           },
           {
             "verse": 20,
@@ -1782,10 +2427,12 @@
           },
           {
             "verse": 21,
-            "text": "I seek \u201Cfavour and a good understanding in the sight of God and man\u201D (Prov. 3:4), and I am glad the churches have elected so well-known a man to help me, for the outsiders are sure to criticise my administration of this bounty."
+            "text": "I seek \u201Cfavour and a good understanding in the sight of God and man\u201D (Prov. 3:4), and I am glad the churches have elected so well-known a man to help me, for the outsiders are sure to criticise my administration of this bounty.",
+            "html": "I seek \u201Cfavour and a good understanding in the sight of God and man\u201D \u003Cspan class=\u0022verse-added-words\u0022\u003E(Prov. 3:4)\u003C/span\u003E, and I am glad the churches have elected so well-known a man to help me, for the outsiders are sure to criticise my administration of this bounty."
           },
           {
             "verse": 22,
+            "heading": "The mission of three / The mission of three",
             "text": "This man then and Titus I am sending to receive the collection, and along with them a third brother who has so often served me with the utmost willingness, and is now more than ever eager to do so because of the confidence he has in you. Thus then I recommend this mission of three who are coming to you to receive the fund."
           },
           {
@@ -1803,6 +2450,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "The fund is not a requisition but a blessing / The fund is not a requisition but a blessing",
             "text": "I do not think there is any need for me to say more about your part in this fund."
           },
           {
@@ -1827,7 +2475,8 @@
           },
           {
             "verse": 7,
-            "text": "\u201CGod loveth a cheerful giver\u201D (Prov. 22:8). He can make you abound in everything that is good."
+            "text": "\u201CGod loveth a cheerful giver\u201D (Prov. 22:8). He can make you abound in everything that is good.",
+            "html": "\u201CGod loveth a cheerful giver\u201D \u003Cspan class=\u0022verse-added-words\u0022\u003E(Prov. 22:8)\u003C/span\u003E. He can make you abound in everything that is good."
           },
           {
             "verse": 8,
@@ -1835,11 +2484,22 @@
           },
           {
             "verse": 9,
-            "text": "\u201CHe hath dispersed, he hath given to the poor; his righteousness endureth for ever\u201D (Ps. 112:9)."
+            "text": "\u201CHe hath dispersed, he hath given to the poor; his righteousness endureth for ever\u201D (Ps. 112:9).",
+            "html": "\u201CHe hath dispersed, he hath given to the poor; his righteousness endureth for ever\u201D \u003Cspan class=\u0022verse-added-words\u0022\u003E(Ps. 112:9)\u003C/span\u003E."
           },
           {
             "verse": 10,
-            "text": "It is He who supplies \u201Cthe seed to the sower, and the bread to the eater\u201D (Is. 55:10)."
+            "text": "It is He who supplies \u201Cthe seed to the sower, and the bread to the eater\u201D (Is. 55:10).",
+            "html": "It is He who supplies \u201Cthe seed to the sower, and the bread to the eater\u201D \u003Cspan class=\u0022verse-added-words\u0022\u003E(Is. 55:10)\u003C/span\u003E."
+          },
+          {
+            "verse": 13,
+            "text": "He shall multiply what you have in Him, your seed and your fruit, and the perfection from which they flow. Those riches grow for those who are simple and honest in heart, and the greatest possession is that gratitude which we feel to God, and that is the secret of this fund which I have organised. It does not merely fill the want of churches elsewhere, it is the sure and abounding fruit of great gratitude to God in our midst. Those receiving it will praise God the more joyfully when they realise the test which this contribution has put you to, when they see your obedience and common acknowledgement of the gospel of the Christ, when they feel the simplicity of heart with which the gift is made to themselves and which is present also in all your dealings towards others,",
+            "coversVerses": [
+              11,
+              12,
+              13
+            ]
           },
           {
             "verse": 14,
@@ -1856,6 +2516,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "The spirit in which Paul works / The spirit in which Paul works",
             "text": "As for myself, Paul, I would do all things in the spirit of my profession, that is to say in a spirit of meekness and gentleness which underlies all the manifestations of the Christ \u2014 yes, that is the spirit in which I work, for it is the only way in which the Christ works."
           },
           {
@@ -1879,8 +2540,27 @@
             "text": "I have weapons too at my command only waiting for the fulfilment of your own obedience to make retaliation and reprisals for all that deviates from the true obedience."
           },
           {
+            "verse": 10,
+            "text": "Now look at that which is really \u201Cface to face,\u201D and \u201Cpresent\u201D \u2014 as they cast in my teeth my absence, and the weightiness of my epistles when I am away from you, and the insignificance of my presence when I come before you \u2014 if your life is in Christ, is not mine there too?",
+            "coversVerses": [
+              7,
+              8,
+              9,
+              10
+            ]
+          },
+          {
             "verse": 11,
             "text": "And do not my deeds when present proceed from that same source as my words in absence? Does it require strong words from me to terrify you into subjection from a distance?"
+          },
+          {
+            "verse": 13,
+            "heading": "The source of his authority / The source of his authority",
+            "text": "Is not the authority, of which they say I make too much and boast immoderately, is it not given me by God for your building up \u2014 not for your ruin \u2014 and does it fail me, does it ever make me ashamed of it? Does it not justify itself? I do not presume to judge my own capacities, and to set myself up over against other teachers, and compare my merits with theirs. For my own capacities do not enter into this question. I measure myself by the rule that God has established in me, not by vague standards that have never been and never can be subjected to a true reckoning and computation. My standard is the measuring rod and line of the perfect builder, and that same rule passes as far as to you, and passes on, too, beyond you to other lands which lie further off still. I shall go on, I hope and believe, to those more distant ones, even as I came to you.",
+            "coversVerses": [
+              12,
+              13
+            ]
           },
           {
             "verse": 14,
@@ -1896,7 +2576,8 @@
           },
           {
             "verse": 17,
-            "text": "In fine, \u201Clet him that glorieth, glory in the Lord.\u201D (Jer. 9:24)"
+            "text": "In fine, \u201Clet him that glorieth, glory in the Lord.\u201D (Jer. 9:24)",
+            "html": "In fine, \u201Clet him that glorieth, glory in the Lord.\u201D \u003Cspan class=\u0022verse-added-words\u0022\u003E(Jer. 9:24)\u003C/span\u003E"
           },
           {
             "verse": 18,
@@ -1909,7 +2590,17 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "Paul feels he has to boast / Paul feels he has to boast",
             "text": "None whatever \u2014 and yet bear with me a little my brethren. Endure a little foolish boasting on my part."
+          },
+          {
+            "verse": 4,
+            "text": "The spirit of our profession is forbearance and gentleness. Then bear with me a little, as if I too were numbered amongst those of the world who approve themselves. Are you not only too ready to bear with it and to give ear and endure, when others recount their wonderful demonstrations and marks of apostleship, and listen to them even when it is another Jesus they preach, a different spirit which you are receiving, and not the same gospel that I gave you \u2014 do you not still bear with them, and even rather enjoy the catalogues they give you of their sufferings, and adventures, of their visions and revelations, all in proof of the doctrine they bring? Then listen also to me, bear also with me awhile, for I am jealous over you, moved towards you, as it were, with the divine jealousy. I betrothed you to one husband, presenting you to the Christ as unsullied and virgin in the faith, and now I fear lest the reasonings of the Serpent intervene and take captive your minds as they did Eve\u2019s, and adulterate your purity and your simple hold on the Christ. Let me then recommend myself awhile,",
+            "coversVerses": [
+              2,
+              3,
+              4
+            ]
           },
           {
             "verse": 5,
@@ -1921,7 +2612,18 @@
           },
           {
             "verse": 7,
+            "heading": "The reason why he preached without pay / The reason why he preached without pay",
             "text": "But the very things which I did specially for your sake they wrest to their own point of view, and bring against me \u2014 that you never paid me a salary, never kept me out of your funds,"
+          },
+          {
+            "verse": 11,
+            "text": "that I preached the gospel in independence, as a free gift, that I humbled myself, and would not be paid anything for my services, but rather was helped by other churches in Asia, and laid no burden upon you? Was this sin in me?",
+            "coversVerses": [
+              8,
+              9,
+              10,
+              11
+            ]
           },
           {
             "verse": 12,
@@ -1937,7 +2639,17 @@
           },
           {
             "verse": 15,
-            "text": "and his servants, be sure, will do the same; if they can remain hidden, they will be in the guise of servants of this new perfection. Beware of them, and listen to my defence. Not one of them can say that any of the grounds I have for your confidence and trust is false or untrue."
+            "heading": "He boasts in self-defence / He boasts in self-defence",
+            "text": "and his servants, be sure, will do the same; if they can remain hidden, they will be in the guise of servants of this new perfection. Beware of them, and listen to my defence. Not one of them can say that any of the grounds I have for your confidence and trust is false or untrue. My boasting none can refute, no one in Achaia can gainsay it."
+          },
+          {
+            "verse": 18,
+            "text": "Call me then foolish, if I boast, but hear me for once whilst I enumerate my own deeds in the apostleship and like them boast of my extreme spirituality and the privileges and powers conferred on me by God. I speak as a fool, and not according to the Lord. Yet hear me.",
+            "coversVerses": [
+              16,
+              17,
+              18
+            ]
           },
           {
             "verse": 19,
@@ -1957,6 +2669,7 @@
           },
           {
             "verse": 23,
+            "heading": "He boasts that his martyrdom exceeds theirs / He boasts that his martyrdom exceeds theirs",
             "text": "And as to those remarkable evidences they show of all the persecutions and cruelties they have endured according to the scriptures in the service of the suffering Messiah, I too bring forward the catalogue of my afflictions, and boldly claim a more excessive degree of martyrdom than they, more labours than they (I speak as a fool), more imprisonments, more blows, more hair-breadth escapes than they."
           },
           {
@@ -1966,6 +2679,15 @@
           {
             "verse": 25,
             "text": "Have I not been thrice scourged by the Romans? Yes, and I have been stoned once, shipwrecked thrice, passed twenty-four hours in the open sea at the mercy of the waves."
+          },
+          {
+            "verse": 28,
+            "text": "I have journeyed far afield, and the dangers I might enumerate would far out-distance the adventures they have suffered. In the field or the city, by land or by sea, by river or in the haunts of brigands I have run countless risks, and at the hands of my own nation, or amongst foreign nations and cities, at the hands of false brethren too and traitors, I have passed through grave trials. Oh I have been an apostle above measure! What signs of martyrdom and crucifixion that they produce can I not parallel from my own experience, and indeed outmatch and vanquish altogether \u2014 in watchings, hunger, thirst, fasting, cold and nakedness; not to mention this daily anxiety for all the churches.",
+            "coversVerses": [
+              26,
+              27,
+              28
+            ]
           },
           {
             "verse": 29,
@@ -1978,6 +2700,14 @@
           {
             "verse": 31,
             "text": "Before God and the Father of our Lord Jesus Christ, who is blessed for evermore, I do not lie."
+          },
+          {
+            "verse": 33,
+            "text": "At Damascus they let me down from the city wall in a basket when the Governor was clamouring for my arrest and capture, and so the tale of my adventures continues. I will boast if they boast. It seems that I must say something to my own credit, something to offset their own credentials, and magnify my own office and person as a spiritual leader.",
+            "coversVerses": [
+              32,
+              33
+            ]
           }
         ]
       },
@@ -1986,7 +2716,17 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "He boasts the greatness of his revelation / He boasts the greatness of his revelation",
             "text": "And so I come now to the visions and revelations vouchsafed to me, which have been numerous and impressive. I speak as a fool."
+          },
+          {
+            "verse": 4,
+            "text": "There exists a man in Christ, \u2014 and whether this man were in the body or not, I will not take upon me to speculate, but leave such matters in the hands of God \u2014 but as to this man who lives in Christ, I will say that on a certain date now fourteen years ago he was caught up to the third heaven. This is not a seemly form of boasting, my brethren, but it appears that one must do it to retain one\u2019s character as a messenger of the Spirit. On another occasion this same man whose being is in the Christ \u2014 and again whether in the flesh or no I will not speculate but leave the matter to the All-knowing \u2014 such a man was caught up into Paradise, and heard words spoken which cannot be uttered by human lips and which it is sacrilegious to disclose.",
+            "coversVerses": [
+              2,
+              3,
+              4
+            ]
           },
           {
             "verse": 5,
@@ -1995,6 +2735,15 @@
           {
             "verse": 6,
             "text": "For the greatness of these revelations has been indeed beyond measure wonderful, and were I to boast of them, I should speak no longer as a fool, but as wise \u2014 but as true, for the revelation was truth. But I forbear, for experience teaches me that on account of these revelations men look curiously upon me, as something more than I seem, as other than my words and appearance show me to be, and therefore I am slow to speak of them, for the vastness of this revelation has little to do with this outward man, myself, whom the world knows, but with the spiritual man who dwells in Christ. Hence to haunt this carnal man, and for-ever to check his boasting and self-sufficiency came an angel of Satan, one of his servants and messengers, to dog my steps, and harass me continually."
+          },
+          {
+            "verse": 8,
+            "heading": "The persecuting \u201Cthorn\u201D / The persecuting \u201Cthorn\u201D",
+            "text": "Therefore I once three times cried out to God that this persecuting thorn might leave me,",
+            "coversVerses": [
+              7,
+              8
+            ]
           },
           {
             "verse": 9,
@@ -2006,6 +2755,7 @@
           },
           {
             "verse": 11,
+            "heading": "Paul\u2019s desire to spend and be spent for them / Paul\u2019s desire to spend and be spent for them",
             "text": "All this has been the speech of a fool, \u2014 but of one who has been driven to it because of your failure to defend him before his enemies. You know yourselves that whatever claims to apostleship may be put forward and enlarged upon by others, my own are more striking than any;"
           },
           {
@@ -2055,7 +2805,9 @@
         "verses": [
           {
             "verse": 1,
-            "text": "Now that I am coming to you for the third time, \u201Cat the mouth of two or three witnesses shall every matter be established.\u201D (Deut 19:15)"
+            "heading": "The test of true discipleship / The test of true discipleship",
+            "text": "Now that I am coming to you for the third time, \u201Cat the mouth of two or three witnesses shall every matter be established.\u201D (Deut 19:15)",
+            "html": "Now that I am coming to you for the third time, \u201Cat the mouth of two or three witnesses shall every matter be established.\u201D \u003Cspan class=\u0022verse-added-words\u0022\u003E(Deut 19:15)\u003C/span\u003E"
           },
           {
             "verse": 2,
@@ -2126,11 +2878,30 @@
           },
           {
             "verse": 3,
+            "heading": "Adoption to sonship through Jesus Christ / Adoption to sonship through Jesus Christ",
             "text": "Blessed be He from whom our blessings flow, even the God and Father of Jesus Christ our Lord."
           },
           {
             "verse": 4,
             "text": "Prior to the existence of this physical universe, His blessing was upon us in a spiritual sphere in the heavenly world in Christ, and that blessing was the blessing of Spirit."
+          },
+          {
+            "verse": 8,
+            "text": "There in the spiritual Christ, we, as perfect and without spot or blame before Him, were sought out and chosen to be His sons, foreseen and foreknown as such, an adoption which even now is coming to pass through Jesus Christ, as the good pleasure of His will unfolds itself, whereby he is adorned with the manifestation of this grace, the grace that becomes our own in the beloved one, through whom it works, grace that is now delivering us from sin, and putting off the chains from us through the victory so dearly purchased with his own blood by the Christ.",
+            "coversVerses": [
+              5,
+              6,
+              7,
+              8
+            ]
+          },
+          {
+            "verse": 10,
+            "text": "Infinite and far-reaching beyond the bounds of all mortal vision is the wealth and power of that grace, so abundant in its wisdom and understanding, whereby there opens to the inner eye the wondrous revelation of His will, of His ever benevolent purpose, forseen and fore-ordained in the Christ, which the gathering up and unfolding of the ages was to effect,",
+            "coversVerses": [
+              9,
+              10
+            ]
           },
           {
             "verse": 11,
@@ -2150,6 +2921,7 @@
           },
           {
             "verse": 15,
+            "heading": "Paul\u2019s prayer for their enlightenment / Paul\u2019s prayer for their enlightenment",
             "text": "Since I learned that this faith is now ruling in your midst, and that your love is now extended in the faith towards other churches,"
           },
           {
@@ -2162,15 +2934,26 @@
           },
           {
             "verse": 18,
-            "text": "and illuminate your inner vision, the eyes of your heart, thereby explaining and opening to you the full nature of his calling and its aim and expectation, revealing too what an abundance of glory is implied in this \u201Cinheritance of the saints\u201D (Deut. 33:3),"
+            "text": "and illuminate your inner vision, the eyes of your heart, thereby explaining and opening to you the full nature of his calling and its aim and expectation, revealing too what an abundance of glory is implied in this \u201Cinheritance of the saints\u201D (Deut. 33:3),",
+            "html": "and illuminate your inner vision, the eyes of your heart, thereby explaining and opening to you the full nature of his calling and its aim and expectation, revealing too what an abundance of glory is implied in this \u201Cinheritance of the saints\u201D \u003Cspan class=\u0022verse-added-words\u0022\u003E(Deut. 33:3)\u003C/span\u003E,"
           },
           {
             "verse": 19,
             "text": "and unfolding to your apprehension the extraordinary power which reacts from him upon all who believe. It is the enormous overmastering supremacy which the Christ showed forth, which operated in him, raising him from the dead."
           },
           {
+            "verse": 21,
+            "text": "This power established the Christ \u201Cat his right hand\u201D (Ps. 110:1) in spiritual spheres supreme in every way, untouched, unimpeded by the innumerable authorities, influences, powers, potentates of the world, having power over all other names to which authority is lent not only in this age, but in the next.",
+            "html": "This power established the Christ \u201Cat his right hand\u201D \u003Cspan class=\u0022verse-added-words\u0022\u003E(Ps. 110:1)\u003C/span\u003E in spiritual spheres supreme in every way, untouched, unimpeded by the innumerable authorities, influences, powers, potentates of the world, having power over all other names to which authority is lent not only in this age, but in the next.",
+            "coversVerses": [
+              20,
+              21
+            ]
+          },
+          {
             "verse": 22,
-            "text": "God has \u201Cput all things under his feet\u201D (Ps. 8:6), made him the head of all things for the Church,"
+            "text": "God has \u201Cput all things under his feet\u201D (Ps. 8:6), made him the head of all things for the Church,",
+            "html": "God has \u201Cput all things under his feet\u201D \u003Cspan class=\u0022verse-added-words\u0022\u003E(Ps. 8:6)\u003C/span\u003E, made him the head of all things for the Church,"
           },
           {
             "verse": 23,
@@ -2183,6 +2966,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "Their former darkness / Their former darkness",
             "text": "You, however, were deprived of life, involved in transgressions and contradiction of His law, in sins and errors,"
           },
           {
@@ -2223,6 +3007,7 @@
           },
           {
             "verse": 11,
+            "heading": "Christ has cancelled all that alienates from him / Christ has cancelled all that alienates from him",
             "text": "Your condition as Gentiles was a condition of dependence on the flesh \u2014 in that character you were designated as uncircumcised by those tribes of Israel calling themselves the circumcision in allusion to the physical rite so called."
           },
           {
@@ -2231,7 +3016,8 @@
           },
           {
             "verse": 13,
-            "text": "You had no share in all that, you had no hope, no God. But now, not in the world where this unfriended condition was your lot, but in Christ Jesus you that were \u201Cfar off\u201D have become \u201Cnear\u201D (Is. 57:19) and the blood of the Christ accomplished it."
+            "text": "You had no share in all that, you had no hope, no God. But now, not in the world where this unfriended condition was your lot, but in Christ Jesus you that were \u201Cfar off\u201D have become \u201Cnear\u201D (Is. 57:19) and the blood of the Christ accomplished it.",
+            "html": "You had no share in all that, you had no hope, no God. But now, not in the world where this unfriended condition was your lot, but in Christ Jesus you that were \u201Cfar off\u201D have become \u201Cnear\u201D \u003Cspan class=\u0022verse-added-words\u0022\u003E(Is. 57:19)\u003C/span\u003E and the blood of the Christ accomplished it."
           },
           {
             "verse": 14,
@@ -2247,7 +3033,8 @@
           },
           {
             "verse": 17,
-            "text": "And where did he do all this but on the cross where the hate was nailed and slain? And so he came, when the reconciliation was made, and preached peace, \u201Cpeace, peace to him that is far off, and to him that is near\u201D (Is. 57:19)."
+            "text": "And where did he do all this but on the cross where the hate was nailed and slain? And so he came, when the reconciliation was made, and preached peace, \u201Cpeace, peace to him that is far off, and to him that is near\u201D (Is. 57:19).",
+            "html": "And where did he do all this but on the cross where the hate was nailed and slain? And so he came, when the reconciliation was made, and preached peace, \u201Cpeace, peace to him that is far off, and to him that is near\u201D \u003Cspan class=\u0022verse-added-words\u0022\u003E(Is. 57:19)\u003C/span\u003E."
           },
           {
             "verse": 18,
@@ -2276,7 +3063,17 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "The Gentiles, too, inherit the promise / The Gentiles, too, inherit the promise",
             "text": "Now I Paul am in bonds, the prisoner of the Christ, not of men, imprisoned for the sake of you, the Gentiles."
+          },
+          {
+            "verse": 4,
+            "text": "I have once formerly written on this subject, and you have heard of it. I have explained the grace which God imparted peculiarly to me for your benefit, and the revelation made known to me about you.",
+            "coversVerses": [
+              2,
+              3,
+              4
+            ]
           },
           {
             "verse": 5,
@@ -2316,6 +3113,7 @@
           },
           {
             "verse": 14,
+            "heading": "The full dimensions of the Christ / The full dimensions of the Christ",
             "text": "Knowing all this, the infinite Father is approached by me continually in prayer for you \u2014"
           },
           {
@@ -2353,6 +3151,7 @@
         "verses": [
           {
             "verse": 1,
+            "heading": "Admonition / Admonition",
             "text": "Worthily then should you live \u2014 a life worthy so exalted a calling as this. In my bonds I call on you to remember it, and whilst your calling is so exalted,"
           },
           {

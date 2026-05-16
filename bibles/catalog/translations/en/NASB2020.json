@@ -8,13 +8,13 @@
   "sourceType": "official",
   "version": 12,
   "contentUrl": "bibles/content/en/NASB2020/v12.json",
-  "contentHash": "sha256-826ecd2c513ccb67e616eee1ee687230c791158fd029830d23570d76be9836b4",
+  "contentHash": "sha256-eb6d4b630374206b20cf02042a8fa5058c21381abe5fc0adb2be3c979044dbd6",
   "bookOrder": "protestant-66",
   "features": {
-    "headings": false,
-    "subheadings": false,
+    "headings": true,
+    "subheadings": true,
     "superscriptions": false,
-    "html": false
+    "html": true
   },
   "updatedAt": "2026-05-10T23:52:53.9774437Z"
 }

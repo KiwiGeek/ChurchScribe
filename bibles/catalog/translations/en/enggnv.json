@@ -8,13 +8,13 @@
   "sourceType": "official",
   "version": 3,
   "contentUrl": "bibles/content/en/enggnv/v3.json",
-  "contentHash": "sha256-4d57d44e27feee9493e38e1eb4b771c75e171e52e2cf186b66a9357f3a29fe97",
+  "contentHash": "sha256-6e2ca60cf29b03b87d4c93e7fd36e842158fe4e47982cb818d65dda1cc23f752",
   "bookOrder": "protestant-66",
   "features": {
     "headings": false,
     "subheadings": false,
     "superscriptions": false,
-    "html": false
+    "html": true
   },
   "updatedAt": "2026-05-10T23:52:52.2516859Z"
 }
