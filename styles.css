@@ -183,6 +183,26 @@ body::before {
   }
 }
 
+/* ── Fullscreen toggle button ────────────────────────────────────────────── */
+.fullscreen-toggle {
+  padding: 0.62rem 0.72rem;
+}
+
+/* Show expand icon in normal mode, hide compress icon */
+.fullscreen-toggle .icon-compress {
+  display: none;
+}
+
+/* In fullscreen mode: swap icons */
+@media (display-mode: fullscreen) {
+  .fullscreen-toggle .icon-expand {
+    display: none;
+  }
+  .fullscreen-toggle .icon-compress {
+    display: inline;
+  }
+}
+
 .eyebrow,
 .panel-kicker,
 .header-copy,
@@ -2692,6 +2712,11 @@ body.is-pane-dragging {
   .theme-toggle {
     width: 100%;
     justify-content: space-between;
+  }
+
+  .fullscreen-toggle {
+    width: auto;
+    flex-shrink: 0;
   }
 
   .header-controls {

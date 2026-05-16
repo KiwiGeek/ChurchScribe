@@ -1976,6 +1976,31 @@ betaBannerDismiss.addEventListener("click", () => {
   }
 }
 
+// ── Fullscreen toggle ─────────────────────────────────────────────────────────
+{
+  const fullscreenBtn = document.querySelector("#fullscreen-button");
+
+  if (fullscreenBtn) {
+    fullscreenBtn.addEventListener("click", () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch((err) => {
+          console.warn("[Fullscreen] request failed:", err);
+        });
+      } else {
+        document.exitFullscreen();
+      }
+    });
+
+    document.addEventListener("fullscreenchange", () => {
+      if (document.fullscreenElement) {
+        fullscreenBtn.setAttribute("aria-label", "Exit full screen");
+      } else {
+        fullscreenBtn.setAttribute("aria-label", "Enter full screen");
+      }
+    });
+  }
+}
+
 // Online/offline window listeners and the post-reconnect cloud-sync replay
 // live inside core/connectivity.js now.
 window.ScriptoriaModules.createConnectivityWatcher({
