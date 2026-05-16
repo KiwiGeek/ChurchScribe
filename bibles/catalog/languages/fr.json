@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "languageTag": "fr",
   "displayName": "French",
-  "catalogVersion": "2026-05-16T22:57:13.1054453\u002B00:00",
+  "catalogVersion": "2026-05-16T23:04:09.5036844\u002B00:00",
   "translations": [
     {
       "translationId": "fr:BCC1923",
@@ -14,6 +14,7 @@
       "version": 9,
       "copyright": "Mise \u00E0 disposition par mission-web.com",
       "downloadSizeBytes": 3622490,
+      "contentHash": "sha256-1f547c26d9c46eeb9c806d3b83e31bda2215de10ae10584d1ef41a83de1278d2",
       "manifestUrl": "bibles/catalog/translations/fr/BCC1923.json"
     },
     {
@@ -26,6 +27,7 @@
       "version": 13,
       "copyright": "\u00A9 Soci\u00E9t\u00E9 biblique fran\u00E7aise - Bibli\u0027O 1997",
       "downloadSizeBytes": 4950689,
+      "contentHash": "sha256-33bcbc2b689330a400e5a188a8bc2ad4393f70077194cb60edb2b67630700b41",
       "manifestUrl": "bibles/catalog/translations/fr/BFC.json"
     },
     {
@@ -38,6 +40,7 @@
       "version": 1,
       "copyright": "MissionAssist \u00A9 2021",
       "downloadSizeBytes": 1059753,
+      "contentHash": "sha256-033104ac605e2180bf23d14db8209736647309016aa666bcf287bb4717f9036f",
       "manifestUrl": "bibles/catalog/translations/fr/BenFS.json"
     },
     {
@@ -50,6 +53,7 @@
       "version": 9,
       "copyright": "Texte libre de droits",
       "downloadSizeBytes": 3498307,
+      "contentHash": "sha256-f77bf6fdfa0a8c497264f1d020f2e9d1bfcf05990e46f4cfd32271c5cd13e241",
       "manifestUrl": "bibles/catalog/translations/fr/JND.json"
     },
     {
@@ -62,6 +66,7 @@
       "version": 17,
       "copyright": "La Bible du Semeur\u00AE\nTexte copyright \u00A9 1992, 1999, 2015 Biblica, Inc.\u00AE\nUtilis\u00E9 avec la permission de Biblica, Inc.\u00AE Tous droits r\u00E9serv\u00E9s.",
       "downloadSizeBytes": 4478762,
+      "contentHash": "sha256-bd764b159df7da0487830274851e25602be4aa8dbcecee3ec795807b02337d6f",
       "manifestUrl": "bibles/catalog/translations/fr/BDS.json"
     },
     {
@@ -74,6 +79,7 @@
       "version": 5,
       "copyright": "Soci\u00E9t\u00E9 biblique fran\u00E7aise \u2013 Bibli\u0027O, 2004",
       "downloadSizeBytes": 6491221,
+      "contentHash": "sha256-f3597914709fbe57b6edfa737b4ccfc5f1f761dad76faf7cd0e70f0d411ef604",
       "manifestUrl": "bibles/catalog/translations/fr/BEX.json"
     },
     {
@@ -86,6 +92,7 @@
       "version": 10,
       "copyright": "Soci\u00E9t\u00E9 Biblique de Gen\u00E8ve \u00A9 2007",
       "downloadSizeBytes": 3548075,
+      "contentHash": "sha256-dbdfdd82850c99240bfd45c87eb4d93647ed6bb1b84493b78a2f7debbbd2934c",
       "manifestUrl": "bibles/catalog/translations/fr/S21.json"
     },
     {
@@ -98,6 +105,7 @@
       "version": 12,
       "copyright": "",
       "downloadSizeBytes": 4008787,
+      "contentHash": "sha256-883aa29b18f07d36be08cf41a4ad029632ca748d12add93db30d5bef09a03b08",
       "manifestUrl": "bibles/catalog/translations/fr/LSG.json"
     },
     {
@@ -110,6 +118,7 @@
       "version": 6,
       "copyright": "",
       "downloadSizeBytes": 3289723,
+      "contentHash": "sha256-6e0a70c941455bf7fb7d89f458f06440d67513a55697dc98b156a22e01e838c6",
       "manifestUrl": "bibles/catalog/translations/fr/FMAR.json"
     },
     {
@@ -122,6 +131,7 @@
       "version": 3,
       "copyright": "\u00A9 MVH Solutions 2024-2026",
       "downloadSizeBytes": 375149,
+      "contentHash": "sha256-002117557dfe6cea686da800550858dcc1ddafa3dabc8bfcf68cefc22057d107",
       "manifestUrl": "bibles/catalog/translations/fr/JXLFR.json"
     },
     {
@@ -134,6 +144,7 @@
       "version": 11,
       "copyright": "Nouvelle Bible Segond \u00A9 Soci\u00E9t\u00E9 biblique fran\u00E7aise-Bibli\u0027O, 2002\nPremi\u00E8re \u00E9dition de la Bible d\u2019\u00E9tude : sous la direction de Henri Blocher, Jean-Claude Dubs\u2020, Mario Echtler\u2020, Jean-Claude Verrecchia,\ncoordination Didier Fougeras.",
       "downloadSizeBytes": 7620034,
+      "contentHash": "sha256-f96b14357c8ebf161dd6b01ba6fcc9e0010c9a27c1c5f4702fd9ee6962d9a2ee",
       "manifestUrl": "bibles/catalog/translations/fr/NBS.json"
     },
     {
@@ -146,6 +157,7 @@
       "version": 8,
       "copyright": "1979 Soci\u00E9t\u00E9 Biblique de Gen\u00E8ve, Reproduit avec aimable autorisation. Tous droits r\u00E9serv\u00E9s.",
       "downloadSizeBytes": 3105717,
+      "contentHash": "sha256-a9950b0b02887ab57797c328bed97c236cbb01f1dc16f6072ae0b32acb49455b",
       "manifestUrl": "bibles/catalog/translations/fr/NEG79.json"
     },
     {
@@ -158,6 +170,7 @@
       "version": 7,
       "copyright": "Soci\u00E9t\u00E9 biblique fran\u00E7aise \u2013 Bibli\u0027O, 2019",
       "downloadSizeBytes": 5317756,
+      "contentHash": "sha256-d43d74fc9c60a28fa8b0adc8849c535583765569d024e69a6deee98a4e1bc919",
       "manifestUrl": "bibles/catalog/translations/fr/NFC.json"
     },
     {
@@ -170,6 +183,7 @@
       "version": 6,
       "copyright": "Nouvelle version Segond r\u00E9vis\u00E9e (Bible \u00E0 la colombe) \u00A9 Soci\u00E9t\u00E9 biblique fran\u00E7aise \u2013 Bibli\u2019O, 1978",
       "downloadSizeBytes": 5386979,
+      "contentHash": "sha256-02166ce5af99ca261e82b54d7db9e47af0381549c6bd227ce421f700c96e47b3",
       "manifestUrl": "bibles/catalog/translations/fr/NVS78P.json"
     },
     {
@@ -182,6 +196,7 @@
       "version": 6,
       "copyright": "",
       "downloadSizeBytes": 3093030,
+      "contentHash": "sha256-9db76f80ec5ae862eb3841205768c8b02db0aa1e81030b2655866681686aac52",
       "manifestUrl": "bibles/catalog/translations/fr/OST.json"
     },
     {
@@ -194,6 +209,7 @@
       "version": 15,
       "copyright": "\u00A9 2000 Soci\u00E9t\u00E9 biblique fran\u00E7aise - Bibli\u0027O",
       "downloadSizeBytes": 4515884,
+      "contentHash": "sha256-be0241af368c92a13fc08c659d1057e63832bac82bbb75a24e4d0c868743736e",
       "manifestUrl": "bibles/catalog/translations/fr/PDV2017.json"
     },
     {
@@ -206,6 +222,7 @@
       "version": 4,
       "copyright": "Publi\u00E9s par Strangeways et Walden \u00E0 Londres en 1864.",
       "downloadSizeBytes": 110630,
+      "contentHash": "sha256-2a451e1970991b7f25fd5ddbaaa28fb1cf10dd5533208b1d98a558b8e571426d",
       "manifestUrl": "bibles/catalog/translations/fr/THU.json"
     },
     {
@@ -218,6 +235,7 @@
       "version": 1,
       "copyright": "\u00A9 Wycliffe Bible Translators, Inc. All rights reserved. (Active)",
       "downloadSizeBytes": 706436,
+      "contentHash": "sha256-73ebcbdaddac3066478d7a4bc9f7f1cb9f8aa4773c00198f2835fbd3db6257b0",
       "manifestUrl": "bibles/catalog/translations/fr/TFM.json"
     },
     {
@@ -230,6 +248,7 @@
       "version": 3,
       "copyright": "1979 Soci\u00E9t\u00E9 Biblique de Gen\u00E8ve",
       "downloadSizeBytes": 3436994,
+      "contentHash": "sha256-c4371d133fa3e21225e2cee3566e4b9b1b91162e6f8e6a98f4e133c5b7560187",
       "manifestUrl": "bibles/catalog/translations/fr/SGNEG79.json"
     },
     {
@@ -242,6 +261,7 @@
       "version": 3,
       "copyright": "historical text maintained by the British and Foreign Bible Society",
       "downloadSizeBytes": 107109,
+      "contentHash": "sha256-4106d72968345f6b1df6910f71e6e1e044f64b8f8aa518096cf31c84708759ff",
       "manifestUrl": "bibles/catalog/translations/fr/Sacy.json"
     }
   ]

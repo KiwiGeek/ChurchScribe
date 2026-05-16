@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "languageTag": "en",
   "displayName": "English",
-  "catalogVersion": "2026-05-16T22:57:13.1052838\u002B00:00",
+  "catalogVersion": "2026-05-16T23:04:09.5035165\u002B00:00",
   "translations": [
     {
       "translationId": "en:AFV",
@@ -14,6 +14,7 @@
       "version": 2,
       "copyright": "Copyright \u00A9 2007, 2009, 2010, 2011 York Publishing Company\nAll rights reserved.\nAll Scripture may be freely quoted except for brief excerpts for review purposes, no part of this publication may be reproduced or used in any form or by any means\u2014electronic or mechanical, including photocopying, recording or information storage and retrieval systems, or use of hermeneutical conclusions of copyright owner.",
       "downloadSizeBytes": 3738199,
+      "contentHash": "sha256-7a0f18240030a0d0879a5acef35e9414a1f01341d0331805dd704ca1a1f2f23c",
       "manifestUrl": "bibles/catalog/translations/en/AFV.json"
     },
     {
@@ -26,6 +27,7 @@
       "version": 3,
       "copyright": "Copyright \u00A9 2026 Michael Adeyemi Adegbola. This Scripture text is licensed under the Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0).",
       "downloadSizeBytes": 937015,
+      "contentHash": "sha256-00c004fdc650a9289297a637efc40eb0833f9ff93bc206b863f6653e5e115af0",
       "manifestUrl": "bibles/catalog/translations/en/AFINTEXP.json"
     },
     {
@@ -38,6 +40,7 @@
       "version": 3,
       "copyright": "https://www.wordbiblicalministries.org Copyright \u00A9 2026 Michael Adeyemi Adegbola. This Scripture text is licensed under the Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0).",
       "downloadSizeBytes": 894656,
+      "contentHash": "sha256-e4e2807e09c1cf5123c8aa8834d3b010c3c6d25f762e3ffa502227afe2aecea6",
       "manifestUrl": "bibles/catalog/translations/en/AFINTLIT.json"
     },
     {
@@ -50,6 +53,7 @@
       "version": 25,
       "copyright": "",
       "downloadSizeBytes": 2993881,
+      "contentHash": "sha256-bc5e42fe9755a7df9abc425335f0b63402fbe89532b5e04c84087b674a530a07",
       "manifestUrl": "bibles/catalog/translations/en/ASV.json"
     },
     {
@@ -62,6 +66,7 @@
       "version": 11,
       "copyright": "Amplified\u00AE Bible\nCopyright \u00A9 2015 by\nThe Lockman Foundation, La Habra, CA 90631\nAll rights reserved. http://www.lockman.org",
       "downloadSizeBytes": 4143536,
+      "contentHash": "sha256-a11d0fac5f90ed90756e37d099712accd95e856f8cc646f5539d70231c8ae0e5",
       "manifestUrl": "bibles/catalog/translations/en/AMP.json"
     },
     {
@@ -74,6 +79,7 @@
       "version": 12,
       "copyright": "1954, 1958, 1962, 1964, 1965, 1987 by The Lockman Foundation",
       "downloadSizeBytes": 3340283,
+      "contentHash": "sha256-755791e4d29c4d8d2fc614f1caa5206c434ed3b47005e5efc925a1794e2e4fba",
       "manifestUrl": "bibles/catalog/translations/en/AMPC.json"
     },
     {
@@ -86,6 +92,7 @@
       "version": 5,
       "copyright": "Public Domain",
       "downloadSizeBytes": 3497014,
+      "contentHash": "sha256-5d9e44415201624165e783fe486aaf16b55e4c0ae94ec073666dc389f2120f1d",
       "manifestUrl": "bibles/catalog/translations/en/BSB.json"
     },
     {
@@ -98,6 +105,7 @@
       "version": 10,
       "copyright": "",
       "downloadSizeBytes": 3382280,
+      "contentHash": "sha256-404a59fab5518626a1d1be9b9558cb35904eaddb033e41643366480c0be0d8fb",
       "manifestUrl": "bibles/catalog/translations/en/CPDV.json"
     },
     {
@@ -110,6 +118,7 @@
       "version": 36,
       "copyright": "\u00A9 2017 Holman Bible Publishers",
       "downloadSizeBytes": 4944726,
+      "contentHash": "sha256-0be630aa1f89e74311e3e3f9d82dff2c9d059d273865d1ee458dc9736da712c1",
       "manifestUrl": "bibles/catalog/translations/en/CSB.json"
     },
     {
@@ -122,6 +131,7 @@
       "version": 5,
       "copyright": "\u00A9 2024, Holman Bible Publishers",
       "downloadSizeBytes": 4908522,
+      "contentHash": "sha256-1dff18d5772c64a30fcc56e294ebae6c65eda1cf941591b7061d8c1ce651df0d",
       "manifestUrl": "bibles/catalog/translations/en/CSBA.json"
     },
     {
@@ -134,6 +144,7 @@
       "version": 20,
       "copyright": "2011 Common English Bible. All rights reserved.",
       "downloadSizeBytes": 4082122,
+      "contentHash": "sha256-d0e7cd3de168e670a12be8d34d09c65c1d1dad4e60770462de850be5b74e5405",
       "manifestUrl": "bibles/catalog/translations/en/CEB.json"
     },
     {
@@ -146,6 +157,7 @@
       "version": 7,
       "copyright": "\u00A9 1998 by Messianic Jewish Publishers and Resources. Used by permission.",
       "downloadSizeBytes": 3154138,
+      "contentHash": "sha256-e017e05cd14d3def35fbf191685a3d3a030ddc43b46cd6b13ca267f4577442ce",
       "manifestUrl": "bibles/catalog/translations/en/CJB.json"
     },
     {
@@ -158,6 +170,7 @@
       "version": 14,
       "copyright": "Contemporary English Version, Second Edition (CEV\u00AE)\n\u00A9 2006 American Bible Society. All rights reserved.",
       "downloadSizeBytes": 3702215,
+      "contentHash": "sha256-ea0289a0ba240fcc4a4276d2f3b4bcaf2b9c92c3af75543c0b4b488bda4ef6e9",
       "manifestUrl": "bibles/catalog/translations/en/CEV.json"
     },
     {
@@ -170,6 +183,7 @@
       "version": 14,
       "copyright": "\u00A9 British and Foreign Bible Society 2012",
       "downloadSizeBytes": 3772311,
+      "contentHash": "sha256-db4f5266164a67742928de91488242f753b103dd4f7da1b52f47ad6ffa563dc8",
       "manifestUrl": "bibles/catalog/translations/en/CEVUK.json"
     },
     {
@@ -182,6 +196,7 @@
       "version": 14,
       "copyright": "Contemporary English Version, Second Edition (CEV\u00AE)\n\u00A9 2006 American Bible Society. All rights reserved.",
       "downloadSizeBytes": 4269472,
+      "contentHash": "sha256-bd2ca13f77c2a10950b619a5e8f94df82fb39818004011059525e0f4cd086a0f",
       "manifestUrl": "bibles/catalog/translations/en/CEVDCI.json"
     },
     {
@@ -194,6 +209,7 @@
       "version": 7,
       "copyright": "First published in 1890. This edition is maintained by the British and Foreign Bible Society.",
       "downloadSizeBytes": 2956952,
+      "contentHash": "sha256-0863ceebe555edcff77c44bdd900a496a01dbc3606fa94d2a92671d138998303",
       "manifestUrl": "bibles/catalog/translations/en/DARBY.json"
     },
     {
@@ -206,6 +222,7 @@
       "version": 26,
       "copyright": "An historical text. In 1955 the Douay-Rheims Challoner Bible received the Imprimatur \u2720 of the English Catholic Church from the Archbishop of Westminster.",
       "downloadSizeBytes": 3495275,
+      "contentHash": "sha256-fea28eca5e321f794acfe6ec479da45bbdab643e2eb0f1c609643c96aba87784",
       "manifestUrl": "bibles/catalog/translations/en/DRC1752.json"
     },
     {
@@ -218,6 +235,7 @@
       "version": 12,
       "copyright": "MissionAssist 2018-2024",
       "downloadSizeBytes": 4164608,
+      "contentHash": "sha256-ce6e696f3425ce8e80d5dd3085d0bf7918aea10465693379f5336c88df391125",
       "manifestUrl": "bibles/catalog/translations/en/EASY.json"
     },
     {
@@ -230,6 +248,7 @@
       "version": 22,
       "copyright": "The Holy Bible, English Standard Version\u00AE (ESV\u00AE), copyright \u00A9 2001 by Crossway, a publishing ministry of Good News Publishers.",
       "downloadSizeBytes": 4929627,
+      "contentHash": "sha256-0faf24bffade16f9a222b062695aaba2a4225082c5fd337c30b928f06cbab717",
       "manifestUrl": "bibles/catalog/translations/en/ESV.json"
     },
     {
@@ -242,6 +261,7 @@
       "version": 1,
       "copyright": "English word for word translation of Orthodox Yiddish Tanakh (OYTANAKH)\n\u00A9 Artists for Israel International, 2025",
       "downloadSizeBytes": 2508786,
+      "contentHash": "sha256-79ca3bc08b9bb81357d9185e7e771747c990b5356c5c9237ca83b3f885117f66",
       "manifestUrl": "bibles/catalog/translations/en/OYTNKHEG.json"
     },
     {
@@ -254,6 +274,7 @@
       "version": 2,
       "copyright": "Evangelical Heritage Version \u00A9 The Wartburg Project, 2021",
       "downloadSizeBytes": 3680125,
+      "contentHash": "sha256-148a1ca4dd2cc7a960d89ba84aa3792b7fca6a0b9ed70aa26b04056924563e13",
       "manifestUrl": "bibles/catalog/translations/en/EHV.json"
     },
     {
@@ -266,6 +287,7 @@
       "version": 7,
       "copyright": "Copyright \u00A92023 InterVarsity Press",
       "downloadSizeBytes": 1014090,
+      "contentHash": "sha256-f3e469ed32f2e4adf25b31c0fe6e0d3e88b47dc5888a06092b7f454615c13525",
       "manifestUrl": "bibles/catalog/translations/en/FNVNT.json"
     },
     {
@@ -278,6 +300,7 @@
       "version": 12,
       "copyright": "Dr. Jonathan Gallagher. Released under Creative Commons Attribution-ShareAlike 4.0 Unported License. Version 4.3. For corrections send email to jonathangallagherfbv@gmail.com",
       "downloadSizeBytes": 3379334,
+      "contentHash": "sha256-1df92b959a1e2a0966d90fab722d72eecb76002185195b221a45876f8d7b50d3",
       "manifestUrl": "bibles/catalog/translations/en/FBV.json"
     },
     {
@@ -290,6 +313,7 @@
       "version": 3,
       "copyright": "PUBLIC DOMAIN",
       "downloadSizeBytes": 2825474,
+      "contentHash": "sha256-6e2ca60cf29b03b87d4c93e7fd36e842158fe4e47982cb818d65dda1cc23f752",
       "manifestUrl": "bibles/catalog/translations/en/enggnv.json"
     },
     {
@@ -302,6 +326,7 @@
       "version": 15,
       "copyright": "GOD\u0027S WORD\u00AE Translation \u00A91995, 2003, 2013, 2014, 2019, 2020 by God\u0027s Word to the Nations Mission Society. All rights reserved.",
       "downloadSizeBytes": 3340983,
+      "contentHash": "sha256-fc67afc58182ab3e4ba1d91685f8363ceaad01b67df4fcaa29764e14b65cbb92",
       "manifestUrl": "bibles/catalog/translations/en/GW.json"
     },
     {
@@ -314,6 +339,7 @@
       "version": 18,
       "copyright": "Good News Bible. Scripture taken from the Good News Bible (r) (Today\u0027s English Version Second Edition, UK/British Edition). Copyright \u00A9 1992 British \u0026 Foreign Bible Society. Used by permission.",
       "downloadSizeBytes": 3529561,
+      "contentHash": "sha256-10b36bafdfecb454de71e0b7521469edbf689b8150a1f0989c9e656d6be30489",
       "manifestUrl": "bibles/catalog/translations/en/GNBUK.json"
     },
     {
@@ -326,6 +352,7 @@
       "version": 12,
       "copyright": "Good News Bible with Deuterocanonicals/Apocrypha. Scripture taken from the Good News Bible (r) (Today\u0027s English Version Second Edition, UK/British Edition). Copyright \u00A9 1992 British \u0026 Foreign Bible Society. Used by permission.",
       "downloadSizeBytes": 4012147,
+      "contentHash": "sha256-1ee547eb6607b91b6098dbab3fd79bbd81e9c0b6c1e147b18183f786a248b68e",
       "manifestUrl": "bibles/catalog/translations/en/GNBDK.json"
     },
     {
@@ -338,6 +365,7 @@
       "version": 13,
       "copyright": "Good News Bible. Scripture taken from the Good News Bible (r) (Today\u0027s English Version Second Edition, UK/British Edition). Copyright \u00A9 1992 British \u0026 Foreign Bible Society. Used by permission.",
       "downloadSizeBytes": 4178950,
+      "contentHash": "sha256-e8845ff7a49ad95e8510201b9e42ea14d9def9903e62839db73030af1c393437",
       "manifestUrl": "bibles/catalog/translations/en/GNBDC.json"
     },
     {
@@ -350,6 +378,7 @@
       "version": 17,
       "copyright": "Good News Translation\u00AE (Today\u2019s English Version, Second Edition)\n\u00A9 1992 American Bible Society. All rights reserved.\nBible text from the Good News Translation (GNT) is not to be reproduced in copies or otherwise by any means except as permitted in writing by American Bible Society, 101 North Independence Mall East, Floor 8, Philadelphia, PA 19106-2155 (www.americanbible.org).\nLICENSEE shall reproduce the following trademark and trademark notice on the copyright page of each copy of the Licensed Products: \u00AE",
       "downloadSizeBytes": 3523655,
+      "contentHash": "sha256-b728c5999bbb0422c143cc9eb937438ef1c7caf6262357a9d537db3a282bc195",
       "manifestUrl": "bibles/catalog/translations/en/GNT.json"
     },
     {
@@ -362,6 +391,7 @@
       "version": 18,
       "copyright": "Good News Translation\u00AE (Today\u2019s English Version, Second Edition)\n\u00A9 1992 American Bible Society. All rights reserved.\nBible text from the Good News Translation (GNT) is not to be reproduced in copies or otherwise by any means except as permitted in writing by American Bible Society, 101 North Independence Mall East, Floor 8, Philadelphia, PA 19106-2155 (www.americanbible.org).\nLICENSEE shall reproduce the following trademark and trademark notice on the copyright page of each copy of the Licensed Products: \u00AE",
       "downloadSizeBytes": 4172384,
+      "contentHash": "sha256-7047c4a5c58ccb6f01de01a7a2fc0f3f74f2d16d986839973148847a9fc8f8ae",
       "manifestUrl": "bibles/catalog/translations/en/GNTD.json"
     },
     {
@@ -374,6 +404,7 @@
       "version": 22,
       "copyright": "\u00A9 1999, 2000, 2002, 2003, 2009 by Holman Bible Publishers, Nashville, Tennessee. All rights reserved.",
       "downloadSizeBytes": 3900928,
+      "contentHash": "sha256-b03a6c08cd3737a6c50f030ee0f90982dd872e2808a29c1b4ce0a004699195d6",
       "manifestUrl": "bibles/catalog/translations/en/HCSB.json"
     },
     {
@@ -386,6 +417,7 @@
       "version": 11,
       "copyright": "\u00A9 1987, 2004 Bible League International",
       "downloadSizeBytes": 3602875,
+      "contentHash": "sha256-ea2a82a6d31e9c3c7a86c3649b1a9ab2e301a2b399583649b3af7f9c9b19b017",
       "manifestUrl": "bibles/catalog/translations/en/ERV.json"
     },
     {
@@ -398,6 +430,7 @@
       "version": 4,
       "copyright": "Copyright \u00A9 2015 by Tommy Nelson\u2122, a Division of Thomas Nelson, Inc. All rights reserved. Used by permission.",
       "downloadSizeBytes": 3143463,
+      "contentHash": "sha256-a6fda4dc1481f63925ae67d5b6a65052f2cd5a2d233055a257db504fac82180b",
       "manifestUrl": "bibles/catalog/translations/en/ICB.json"
     },
     {
@@ -410,6 +443,7 @@
       "version": 4,
       "copyright": "Translated by Rev John Jones (Ioan Tegid).Published at Oxford in 1830, second edition 1842.",
       "downloadSizeBytes": 178102,
+      "contentHash": "sha256-3034085414069efd026e95168c8eb81d7acbc899608f07de56ab1fa861d3d788",
       "manifestUrl": "bibles/catalog/translations/en/TEG.json"
     },
     {
@@ -422,6 +456,7 @@
       "version": 5,
       "copyright": "The Jubilee Bible 2000 (JUB) by Ransom Press International",
       "downloadSizeBytes": 3255000,
+      "contentHash": "sha256-b143da5b6d63ed8d9be8650670902280ab4eae4d49fcfc9c4d3216f4458bc973",
       "manifestUrl": "bibles/catalog/translations/en/JUB.json"
     },
     {
@@ -434,6 +469,7 @@
       "version": 27,
       "copyright": "Rights in the Authorized (King James) Version in the United Kingdom are vested in the Crown. Published by permission of the Crown\u2019s patentee, Cambridge University Press.",
       "downloadSizeBytes": 3153775,
+      "contentHash": "sha256-25d0d0658b5dbc898654bdc3500c9488bed0f3de1816d2b4c83f45a6d1f08696",
       "manifestUrl": "bibles/catalog/translations/en/KJV.json"
     },
     {
@@ -446,6 +482,7 @@
       "version": 9,
       "copyright": "King James Version 1611, spelling, punctuation and text formatting modernized by ABS in 1962; typesetting \u00A9 2010 American Bible Society.",
       "downloadSizeBytes": 4065597,
+      "contentHash": "sha256-8a266f4241e9731deac6178eaf31d087bad192a2c5ffc304a306d1f26b05056f",
       "manifestUrl": "bibles/catalog/translations/en/KJVAAE.json"
     },
     {
@@ -458,6 +495,7 @@
       "version": 9,
       "copyright": "King James Version 1611, spelling, punctuation and text formatting modernized by ABS in 1962; typesetting \u00A9 2010 American Bible Society.",
       "downloadSizeBytes": 3542782,
+      "contentHash": "sha256-7269ee5052169b7171bf28cfe72d857e954818c3645efbee134a056a207cc453",
       "manifestUrl": "bibles/catalog/translations/en/KJVAE.json"
     },
     {
@@ -470,6 +508,7 @@
       "version": 12,
       "copyright": "Legacy Standard Bible - LSB\nCopyright \u00A9 2021 by The Lockman Foundation\nA Corporation Not for Profit, La Habra, California\nAll Rights Reserved\nThe \u0022Legacy Standard Bible\u0022 and \u0022LSB\u0022 are trademarks registered in the United States Patent and Trademark Office by The Lockman Foundation.\nManaged in Partnership with Three Sixteen Publishing, Inc. www.316Publishing.com\nRequests for quotations, reprints, or other permission requests, must be directed to and approved in writing by Three Sixteen Publishing, www.316publishing.com",
       "downloadSizeBytes": 3681768,
+      "contentHash": "sha256-75d240ae895d8b8ff9aa59eefe8521bfd1c781f772444860a54d816580f6b755",
       "manifestUrl": "bibles/catalog/translations/en/LSB.json"
     },
     {
@@ -482,6 +521,7 @@
       "version": 10,
       "copyright": "2012 by Baker Publishing Group. Lexham is a registered trademark of Baker Publishing Group. BakerPublishingGroup.com.",
       "downloadSizeBytes": 3602436,
+      "contentHash": "sha256-ed02f9e49b82f2c74c5a5a09fe328ef891368b27cdd3453c8c4ec3ec0bb227dc",
       "manifestUrl": "bibles/catalog/translations/en/LEB.json"
     },
     {
@@ -494,6 +534,7 @@
       "version": 1,
       "copyright": "The Literal Standard Version of The Holy Bible is a registered copyright of Covenant Press and the Covenant Christian Coalition (\u00A9 2020), but has been subsequently released under the Creative Commons Attribution-ShareAlike license (CC BY-SA) per our desire to provide God\u2019s word freely. Covenant Press requests that the text remain unaltered in the English language and that translations based on the LSV maintain the same spirit of faithfulness to the original Hebrew, Aramaic, and Greek text. Attribution of minor citations for personal or non-commercial use can be provided as simply \u201CLSV\u201D or \u201CLiteral Standard Version.\u201D Citations for commercial use, or distribution of the entire LSV Bible or entire book(s) of the LSV Bible, must be fully attributed and include both \u201CLiteral Standard Version (LSV)\u201D and the name of our organization. Covenant Press is soliciting partnerships with Bible publishers that are interested in the LSV project. For queries about partnering with us, please email the translation team at covenantpress@ccc.one. To learn more, visit lsvbible.com. The purpose behind the LSV is to provide readers with a modern, easy-to-read, literal, and accurate translation of the Bible that is free to read, distribute, and translate from. We pray that God will use the LSV to illuminate the hearts and minds of multitudes with the good news that His Son Jesus Christ came in the flesh, died for our sins as a substitutionary sacrifice, rose bodily from the dead, and is coming back again.",
       "downloadSizeBytes": 2843167,
+      "contentHash": "sha256-80682e6c07cd51b74093815d84e7e51c6b366aae36b40fbe473626716a4643f1",
       "manifestUrl": "bibles/catalog/translations/en/LSV.json"
     },
     {
@@ -506,6 +547,7 @@
       "version": 1,
       "copyright": "First published in England in 1562.",
       "downloadSizeBytes": 353997,
+      "contentHash": "sha256-3d2cfd8b1f07c948eaab83edbd24583568ccc8cd35dc47e0286c27d4df83e18a",
       "manifestUrl": "bibles/catalog/translations/en/MP1562.json"
     },
     {
@@ -518,6 +560,7 @@
       "version": 1,
       "copyright": "First published 1696, improved 1698.",
       "downloadSizeBytes": 333722,
+      "contentHash": "sha256-58c5778405ef23365751cca779dbac72766df675071cbead18cac0f9a008ec22",
       "manifestUrl": "bibles/catalog/translations/en/MP1696.json"
     },
     {
@@ -530,6 +573,7 @@
       "version": 6,
       "copyright": "The Holy Bible, Modern English Version Copyright \u00A9 2024, 2017, 2014 by United Bible Association. Published and distributed by Charisma House. All rights reserved.",
       "downloadSizeBytes": 3577980,
+      "contentHash": "sha256-4ac15caccc94c20809532a4a4f4ab31e56a6815cb1ce8252f3f7b7f46e662275",
       "manifestUrl": "bibles/catalog/translations/en/MEV.json"
     },
     {
@@ -542,6 +586,7 @@
       "version": 12,
       "copyright": "NEW AMERICAN STANDARD BIBLE\u00AE NASB\u00AE\nCopyright \u00A9 1960, 1971, 1977,1995, 2020 by The Lockman Foundation\nA Corporation Not for Profit\nLa Habra, CA\nAll Rights Reserved\nwww.lockman.org",
       "downloadSizeBytes": 3794331,
+      "contentHash": "sha256-eb6d4b630374206b20cf02042a8fa5058c21381abe5fc0adb2be3c979044dbd6",
       "manifestUrl": "bibles/catalog/translations/en/NASB2020.json"
     },
     {
@@ -554,6 +599,7 @@
       "version": 16,
       "copyright": "NEW AMERICAN STANDARD BIBLE\u00AE\nCopyright \u00A9 1960, 1962, 1963, 1968, 1971, 1972, 1973, 1975, 1977, 1995 by THE LOCKMAN FOUNDATION\nA Corporation Not for Profit\nLA HABRA, CA\nAll Rights Reserved\nhttp://www.lockman.org",
       "downloadSizeBytes": 3282542,
+      "contentHash": "sha256-c0626796314a438b67d57f84e9c06087b1fd08aecab6f655a92cf507e4f8bbd1",
       "manifestUrl": "bibles/catalog/translations/en/NASB1995.json"
     },
     {
@@ -566,6 +612,7 @@
       "version": 11,
       "copyright": "The Holy Bible, New Century Version, Copyright \u00A9 2005 Thomas Nelson. All rights reserved.",
       "downloadSizeBytes": 3053248,
+      "contentHash": "sha256-02ac8815eabb7f1e784e7db1c38618098225c68321bef226a75114e526fe7b10",
       "manifestUrl": "bibles/catalog/translations/en/NCV.json"
     },
     {
@@ -578,6 +625,7 @@
       "version": 16,
       "copyright": "1996 - 2007 by Biblical Studies Press, LLC",
       "downloadSizeBytes": 9143007,
+      "contentHash": "sha256-1fcd22618cde05406db58a7f76376615a204bce06da8c2d3d96c3720de45d242",
       "manifestUrl": "bibles/catalog/translations/en/NET.json"
     },
     {
@@ -590,6 +638,7 @@
       "version": 11,
       "copyright": "Holy Bible, New International Reader\u2019s Version\u00AE, NIrV\u00AE\nCopyright \u00A9 1995, 1996, 1998, 2014 by Biblica, Inc.\u00AE\nUsed by permission. All rights reserved worldwide.",
       "downloadSizeBytes": 3488979,
+      "contentHash": "sha256-a29fec72b3e9289a1bfc2335ddb60490ac4ead012b88cec7f0c25736a2943c08",
       "manifestUrl": "bibles/catalog/translations/en/NIrV.json"
     },
     {
@@ -602,6 +651,7 @@
       "version": 36,
       "copyright": "The Holy Bible, New International Version\u00AE NIV\u00AE\nCopyright \u00A9 1973, 1978, 1984, 2011 by Biblica, Inc.\u00AE\nUsed by Permission of Biblica, Inc.\u00AE All rights reserved worldwide.",
       "downloadSizeBytes": 3460914,
+      "contentHash": "sha256-bce8c799212e272de25014d59498cf04f22f776df4fe9fb5391b19c7ad9d5f0a",
       "manifestUrl": "bibles/catalog/translations/en/NIV11.json"
     },
     {
@@ -614,6 +664,7 @@
       "version": 25,
       "copyright": "The Holy Bible, New International Version\u00AE (Anglicised), NIV\u00AE\nCopyright \u00A9 1979, 1984, 2011 by Biblica, Inc.\u00AE\nUsed by permission of Biblica, Inc.\u00AE All rights reserved worldwide.",
       "downloadSizeBytes": 3457112,
+      "contentHash": "sha256-76ea50e841cfcfc35279e595ce7e22a5f01069c6059dbd28cae8318556e93eb7",
       "manifestUrl": "bibles/catalog/translations/en/NIVUK11.json"
     },
     {
@@ -626,6 +677,7 @@
       "version": 19,
       "copyright": "The Holy Bible, New King James Version, Copyright \u00A9 1982 Thomas Nelson. All rights reserved.",
       "downloadSizeBytes": 3934821,
+      "contentHash": "sha256-f105c47a84f8d1856a35f62ad4c870a3ff319a9c3c08c4150986b52488ab8904",
       "manifestUrl": "bibles/catalog/translations/en/NKJV.json"
     },
     {
@@ -638,6 +690,7 @@
       "version": 22,
       "copyright": "Holy Bible, New Living Translation, copyright \u00A9 1996, 2004, 2015 by Tyndale House Foundation. All rights reserved. Used by permission of Tyndale House Publishers, Carol Stream, Illinois 60188. All rights reserved.",
       "downloadSizeBytes": 3588760,
+      "contentHash": "sha256-dcd6e15db1e6a1758b24598290b2f1c13058d9095d9473bdcf37225f85ff4d16",
       "manifestUrl": "bibles/catalog/translations/en/NLT.json"
     },
     {
@@ -650,6 +703,7 @@
       "version": 2,
       "copyright": "Holy Bible, New Living Translation Catholic Edition, copyright \u00A9 2016 by Tyndale House Foundation. All rights reserved. Used by permission of Tyndale House Publishers, Carol Stream, Illinois 60188. All rights reserved.",
       "downloadSizeBytes": 4084368,
+      "contentHash": "sha256-f6b62fab263bc7ff4aaa331f51fac1e1b36da1b133c42212af163e575e5f762c",
       "manifestUrl": "bibles/catalog/translations/en/NLTCE.json"
     },
     {
@@ -662,6 +716,7 @@
       "version": 4,
       "copyright": "Text copyright \u00A9 2000-2018 TOV Rose\nFor more information about the NMV, details about why the names of God are notated and translated as they are, or to learn about the special markings and translations used in this text, click below.\nFollow the instructions and you will receive the free e-book by email.",
       "downloadSizeBytes": 3836110,
+      "contentHash": "sha256-9e96ddc11408543c282bf3c25a550a0398f4f41a84f7d25fa40dd548c10706e9",
       "manifestUrl": "bibles/catalog/translations/en/NMV.json"
     },
     {
@@ -674,6 +729,7 @@
       "version": 6,
       "copyright": "New Revised Standard Version of the Bible, copyright \u00A9 1989 Division of Christian Education of the National Council of the Churches of Christ in the USA. Used by permission. All rights reserved.",
       "downloadSizeBytes": 3978598,
+      "contentHash": "sha256-40970affea838078444136f623968404b5a4b430f71b3fb0a4083a818c1d66eb",
       "manifestUrl": "bibles/catalog/translations/en/NRSVCI.json"
     },
     {
@@ -686,6 +742,7 @@
       "version": 10,
       "copyright": "New Revised Standard Version Updated Edition, copyright \u00A9 2021 National Council of the Churches of Christ in the United States of America. Used by permission. All rights reserved worldwide.",
       "downloadSizeBytes": 5044180,
+      "contentHash": "sha256-54ec1946541cacd53ab7c1036cb2019650edb59ab3d3f5a4a961bec1feff4957",
       "manifestUrl": "bibles/catalog/translations/en/NRSVUE.json"
     },
     {
@@ -698,6 +755,7 @@
       "version": 12,
       "copyright": "\u00A9 2021, Wycliffe Bible Translators, Inc. All rights reserved.",
       "downloadSizeBytes": 1072199,
+      "contentHash": "sha256-4dec6f82428e32e19995d55182cb6fc49e59720be1414167e8034fd6be6f36b8",
       "manifestUrl": "bibles/catalog/translations/en/PEV.json"
     },
     {
@@ -710,6 +768,7 @@
       "version": 7,
       "copyright": "maintained by the British and Foreign Bible Society",
       "downloadSizeBytes": 328248,
+      "contentHash": "sha256-24995cbcc9c7d3eb0dbea4f85654d510736918dfedde12bd1d0fc413a5be89bc",
       "manifestUrl": "bibles/catalog/translations/en/MP1650.json"
     },
     {
@@ -722,6 +781,7 @@
       "version": 3,
       "copyright": "Radiate\u2122 New Testament\nCopyright \u00A9 1995, 1996, 1998, 2014, 2020 by Biblica, Inc.\nUsed with permission. All rights reserved worldwide.",
       "downloadSizeBytes": 786538,
+      "contentHash": "sha256-04a08653740a8a786192e0cd29e2aa385a28307a4d4a541a656960e2abad0b28",
       "manifestUrl": "bibles/catalog/translations/en/RAD.json"
     },
     {
@@ -734,6 +794,7 @@
       "version": 10,
       "copyright": "Division of Christian Education of the National Council of the Churches of Christ in the United States of America",
       "downloadSizeBytes": 3389113,
+      "contentHash": "sha256-aeae05740ae9475a10dd9ddc5803fe83f283a6277f632f5ea66e47d9493eedcb",
       "manifestUrl": "bibles/catalog/translations/en/RSV.json"
     },
     {
@@ -746,6 +807,7 @@
       "version": 6,
       "copyright": "Division of Christian Education of the National Council of the Churches of Christ in the United States of America",
       "downloadSizeBytes": 3988611,
+      "contentHash": "sha256-5a37b78314ed036c8cd80881deaaa47a40f21618028a8e87d49e1982ea9184d1",
       "manifestUrl": "bibles/catalog/translations/en/RSVCI.json"
     },
     {
@@ -758,6 +820,7 @@
       "version": 11,
       "copyright": "Division of Christian Education of the National Council of the Churches of Christ in the United States of America",
       "downloadSizeBytes": 4067566,
+      "contentHash": "sha256-d93857417fdc26db0a3fcbf1854432bd13ff88c5922ede2d6ce43ff05840e19f",
       "manifestUrl": "bibles/catalog/translations/en/RSV-C.json"
     },
     {
@@ -770,6 +833,7 @@
       "version": 10,
       "copyright": "maintained by the British and Foreign Bible Society",
       "downloadSizeBytes": 2985623,
+      "contentHash": "sha256-9be03a016dff640530811b96ff1177594886ed4687fba0f7da1013b8f76657cb",
       "manifestUrl": "bibles/catalog/translations/en/RV1885.json"
     },
     {
@@ -782,6 +846,7 @@
       "version": 10,
       "copyright": "historical text maintained by the British and Foreign Bible Society",
       "downloadSizeBytes": 3769137,
+      "contentHash": "sha256-7a03731a63ea229c40ffe24fa4714871ccfd0e0da0a3bc1abe50da3b0bef6493",
       "manifestUrl": "bibles/catalog/translations/en/RV1895.json"
     },
     {
@@ -794,6 +859,7 @@
       "version": 4,
       "copyright": "First published by the Church of Scotland in 1781.",
       "downloadSizeBytes": 170645,
+      "contentHash": "sha256-19fdbca6b2dc697d93ed857d47d53aa2915cbae5294a7c5e69592589e007e86e",
       "manifestUrl": "bibles/catalog/translations/en/MP1781.json"
     },
     {
@@ -806,6 +872,7 @@
       "version": 5,
       "copyright": "Translated in 1916, published in 1937.",
       "downloadSizeBytes": 95189,
+      "contentHash": "sha256-c84c659f4900aedabc129deefc097a0a41859d7a7908576b423a73ac647ce877",
       "manifestUrl": "bibles/catalog/translations/en/GWC.json"
     },
     {
@@ -818,6 +885,7 @@
       "version": 10,
       "copyright": "The Books of the Bible\u2122\nCopyright \u00A9 1973, 1978, 1984, 2011 by Biblica, Inc.\u00AE\nUsed by permission. All rights reserved worldwide.",
       "downloadSizeBytes": 865540,
+      "contentHash": "sha256-57600654b69a50c7568ae6b5370066b4ac63908e762547f632aae561b6dcd056",
       "manifestUrl": "bibles/catalog/translations/en/BOOKS.json"
     },
     {
@@ -830,6 +898,7 @@
       "version": 22,
       "copyright": "THE MESSAGE: The Bible in Contemporary Language copyright \u00A9 1993, 2002, 2018 by Eugene H. Peterson. All rights reserved. Used by permission of NavPress. Represented by Tyndale House Publishers.",
       "downloadSizeBytes": 3335482,
+      "contentHash": "sha256-053674b6520f7b796ada8275e4e391edb603d750d9d4586fa406add4eb8dced4",
       "manifestUrl": "bibles/catalog/translations/en/MSG.json"
     },
     {
@@ -842,6 +911,7 @@
       "version": 2,
       "copyright": "a. The New Testament for Everyone, Third Edition. Copyright \u00A9 2011, 2018, 2019 by Nicholas Thomas Wright, The Society for Promoting Christian Knowledge. All rights reserved. Published by Zondervan, 2023.",
       "downloadSizeBytes": 821137,
+      "contentHash": "sha256-de3de393dfa301220e48d3197498bf679089af127ce16115b3d49b70d779ded4",
       "manifestUrl": "bibles/catalog/translations/en/NTFE.json"
     },
     {
@@ -854,6 +924,7 @@
       "version": 10,
       "copyright": "THE ORTHODOX JEWISH BIBLE\nFOURTH EDITION REVISED \u00A9 Artists For Israel Intl Inc., 2002-2011, 2021, 2024.",
       "downloadSizeBytes": 3735203,
+      "contentHash": "sha256-f92d8e1f3bbd7c97f55c339f89d9f4242653155e6bf630259a4b931a051edb32",
       "manifestUrl": "bibles/catalog/translations/en/TOJB2011.json"
     },
     {
@@ -866,6 +937,7 @@
       "version": 10,
       "copyright": "The Passion Translation\u00AE is a registered trademark of Passion \u0026 Fire Ministries, Inc. Copyright \u00A9 2020 Passion \u0026 Fire Ministries, Inc.",
       "downloadSizeBytes": 4255055,
+      "contentHash": "sha256-4a47681be578cd31aaece051a11c21f78778f086326ebae676de4e66bbb9ab84",
       "manifestUrl": "bibles/catalog/translations/en/TPT.json"
     },
     {
@@ -878,6 +950,7 @@
       "version": 8,
       "copyright": "Copyright\u00A9 1993 \u2013 2015 by the Institute for Scripture Research (ISR). All rights reserved.",
       "downloadSizeBytes": 2952086,
+      "contentHash": "sha256-627253575f0ba24f6c5d03d40aa1f24dfcf15a377ff441091097b59de6e697dd",
       "manifestUrl": "bibles/catalog/translations/en/TS2009.json"
     },
     {
@@ -890,6 +963,7 @@
       "version": 9,
       "copyright": "Copyright \u00A9 2022 Robert Adam Boyd",
       "downloadSizeBytes": 897012,
+      "contentHash": "sha256-bb95daef5e0516f5e04905fd97402087a030cdf06f14e9b18af5a90efa919c31",
       "manifestUrl": "bibles/catalog/translations/en/TCENT.json"
     },
     {
@@ -902,6 +976,7 @@
       "version": 1,
       "copyright": "English Interlinear of the Orthodox Yiddish Brit Chadasha\n\u00A9 AFII Artists For Israel International, 2024",
       "downloadSizeBytes": 754082,
+      "contentHash": "sha256-8831f1108cb0c5cf5e637da407e818ff1da9fedba1fbd54a70e1ce66211d1b59",
       "manifestUrl": "bibles/catalog/translations/en/OYBCENGL.json"
     },
     {
@@ -914,6 +989,7 @@
       "version": 1,
       "copyright": "English word for word translation of Orthodox Yiddish Torah (OYTORAH)\n\u00A9 Artists for Israel International, 2024",
       "downloadSizeBytes": 546079,
+      "contentHash": "sha256-b6b0ef13c1ce3048a8c959899c8ad7e29560b8ed05198b6a1d878480631d68a6",
       "manifestUrl": "bibles/catalog/translations/en/OYTORHEG.json"
     },
     {
@@ -926,6 +1002,7 @@
       "version": 12,
       "copyright": "Copyright \u00A9 2014 - Messianic Jewish Family Bible Society",
       "downloadSizeBytes": 2980653,
+      "contentHash": "sha256-8b179ac16e20869498e175d81621f3575ee1557c3e3ed14b56d9d92ac84a464d",
       "manifestUrl": "bibles/catalog/translations/en/TLV.json"
     },
     {
@@ -938,6 +1015,7 @@
       "version": 98,
       "copyright": "PUBLIC DOMAIN. \u0022World English Bible\u0022 is trademark of eBible.org.",
       "downloadSizeBytes": 5021633,
+      "contentHash": "sha256-9c5e9464b234fc893cae8c76bbd695c5298177943ccf62a8164039d4230850de",
       "manifestUrl": "bibles/catalog/translations/en/WEBBE.json"
     },
     {
@@ -950,6 +1028,7 @@
       "version": 81,
       "copyright": "PUBLIC DOMAIN (not copyrighted)",
       "downloadSizeBytes": 3802490,
+      "contentHash": "sha256-cdd8230c11a5d887439e66d9ed1638ef751dac5b50b916eb9abfc1fda487d513",
       "manifestUrl": "bibles/catalog/translations/en/engWEBUS.json"
     },
     {
@@ -962,6 +1041,7 @@
       "version": 96,
       "copyright": "PUBLIC DOMAIN",
       "downloadSizeBytes": 4301574,
+      "contentHash": "sha256-40b99f6c29e8c45b902c45270d4a13692738575c37e93aa5ff5cb6bb451fabbf",
       "manifestUrl": "bibles/catalog/translations/en/WMB.json"
     },
     {
@@ -974,6 +1054,7 @@
       "version": 98,
       "copyright": "PUBLIC DOMAIN. \u0022World Messianic Bible\u0022 is a trademark.",
       "downloadSizeBytes": 4305344,
+      "contentHash": "sha256-94ef7623b3cec25a34db8b91a8f678fa26b2fb170fccfb589c83a7e7889cc8a3",
       "manifestUrl": "bibles/catalog/translations/en/WMBBE.json"
     },
     {
@@ -986,6 +1067,7 @@
       "version": 4,
       "copyright": "Wycliffe\u2019s Bible with Modern Spelling \u00A92017\nWycliffe\u2019s Apocrypha \u00A92013, 2015\nWycliffe\u2019s Bible \u00A9 2012, 2015\nWycliffe\u2019s New Testament \u00A92001, 2011\nWycliffe\u2019s Old Testament \u00A92001, 2010",
       "downloadSizeBytes": 3844275,
+      "contentHash": "sha256-abef6f86e5357a9280d89f18b81de0790c52011e64e716c10f9d55371c1b1ce7",
       "manifestUrl": "bibles/catalog/translations/en/WBMS.json"
     },
     {
@@ -998,6 +1080,7 @@
       "version": 10,
       "copyright": "Copyright 2024 Y\u0027all Version Bible Society.",
       "downloadSizeBytes": 3191015,
+      "contentHash": "sha256-779facd5a2e38d86058fc889313ceb932c06fc11ba13fa3b87707c83128d059b",
       "manifestUrl": "bibles/catalog/translations/en/YALL.json"
     },
     {
@@ -1010,6 +1093,7 @@
       "version": 7,
       "copyright": "maintained by the British and Foreign Bible Society",
       "downloadSizeBytes": 3115176,
+      "contentHash": "sha256-cc8ac30c5898f77198cc96f7607bf5b785a71ef63c320a30a84067e83cdca6aa",
       "manifestUrl": "bibles/catalog/translations/en/YLT98.json"
     }
   ]

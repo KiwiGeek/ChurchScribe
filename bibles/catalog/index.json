@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
-  "catalogVersion": "2026-05-16T22:57:13.1104283\u002B00:00",
+  "catalogVersion": "2026-05-16T23:04:09.5187040\u002B00:00",
+  "decoderVersion": 7,
   "defaultBuiltinIds": [
     "en:KJV"
   ],
