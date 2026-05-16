@@ -927,6 +927,34 @@ window.ScriptoriaModules.createTranslationsManager = (deps) => {
     }
   };
 
+  // Silently re-downloads any installed official translation whose cached content is
+  // missing or stale (version bump, content hash change, or decoder version wipe).
+  // Runs in the background — the UI is already interactive when this fires.
+  const updateInstalledTranslationsInBackground = () => {
+    const toUpdate = getInstalledOfficialIds().filter((translationId) => {
+      const entry = getTranslationEntry(translationId);
+      return entry && (entry.hasUpdate || !offlineAvailableTranslations.has(translationId));
+    });
+
+    if (toUpdate.length === 0) {
+      return;
+    }
+
+    console.info(`[Cache] Background-updating ${toUpdate.length} translation(s).`);
+
+    void (async () => {
+      for (const translationId of toUpdate) {
+        try {
+          await ensureTranslationLoaded(translationId);
+        } catch (err) {
+          console.warn(`[Cache] Failed to background-update "${translationId}":`, err);
+        }
+      }
+      await refreshOfflineTranslationAvailability();
+      populateTranslationSelect();
+    })();
+  };
+
   // TODO: Remove migrateBuiltinBibles once enough time has passed that no user
   // would still have un-migrated "builtin" entries (~November 2026).
   const initializeTranslations = async () => {
@@ -943,6 +971,7 @@ window.ScriptoriaModules.createTranslationsManager = (deps) => {
     offlineAvailableTranslations,
     validateTranslationData,
     initializeTranslations,
+    updateInstalledTranslationsInBackground,
     refreshOfflineTranslationAvailability,
     ensureTranslationLoaded,
     populateTranslationSelect,

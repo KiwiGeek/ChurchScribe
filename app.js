@@ -1714,6 +1714,7 @@ translationsManagerApiRef = translationsManagerApi;
 const {
   offlineAvailableTranslations,
   initializeTranslations,
+  updateInstalledTranslationsInBackground,
   refreshOfflineTranslationAvailability,
   ensureTranslationLoaded,
   validateTranslationData,
@@ -1889,6 +1890,7 @@ const bootstrap = async () => {
   // happen before populateTranslationSelect so the initial render is accurate.
   await refreshOfflineTranslationAvailability();
   populateTranslationSelect();
+  updateInstalledTranslationsInBackground();
   applyThemeMode(await getPreferredTheme(), { rerender: false });
   applyPaneOrder(await getPreferredPaneOrder());
   applySplit(await getPreferredSplit());
