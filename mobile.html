@@ -739,12 +739,37 @@
       max-height: 85vh;
     }
 
+    .mob-sheet-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 0 0 4px;
+    }
+
     .mob-sheet-title {
       font-size: 17px;
       font-weight: 700;
       font-family: var(--font-heading);
       color: var(--text);
-      margin: 0 0 16px;
+      margin: 0;
+    }
+
+    .mob-sheet-close {
+      border: 0;
+      background: transparent;
+      color: var(--accent);
+      font-size: 14px;
+      font-family: var(--font-body);
+      font-weight: 700;
+      padding: 4px 0;
+      cursor: pointer;
+    }
+
+    .mob-settings-close-hint {
+      font-size: 12px;
+      color: var(--muted);
+      margin: 0 0 14px;
     }
 
     .mob-settings-section {
@@ -758,6 +783,10 @@
       letter-spacing: 0.8px;
       color: var(--muted);
       margin: 0 0 8px;
+    }
+
+    .mob-settings-label--spaced {
+      margin-top: 12px;
     }
 
     .mob-settings-row {
@@ -787,6 +816,33 @@
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238c4b2f'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: right 6px center;
+    }
+
+    .mob-theme-toggle-group {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      padding: 4px 0 2px;
+    }
+
+    .mob-theme-toggle {
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      background: var(--ghost-surface);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 11px 10px;
+      text-align: center;
+      cursor: pointer;
+      min-height: 44px;
+    }
+
+    .mob-theme-toggle[aria-pressed="true"] {
+      background: var(--surface-accent);
+      border-color: var(--accent);
+      color: var(--accent);
     }
 
     .mob-settings-help {
@@ -823,6 +879,155 @@
       border-color: rgba(161, 75, 60, 0.25);
     }
 
+    .mob-settings-search {
+      width: 100%;
+      box-sizing: border-box;
+      border-radius: 10px;
+      border: 0.5px solid var(--border);
+      background: var(--select-surface);
+      color: var(--text);
+      font-size: 14px;
+      font-family: var(--font-body);
+      padding: 10px 12px;
+      margin: 8px 0 10px;
+    }
+
+    .mob-settings-disclosure {
+      margin-top: 12px;
+      border: 0.5px solid var(--border);
+      border-radius: 10px;
+      background: var(--ghost-surface);
+      padding: 10px;
+    }
+
+    .mob-settings-disclosure > summary {
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+      list-style: none;
+    }
+
+    .mob-settings-disclosure > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .mob-settings-disclosure > summary::after {
+      content: "▾";
+      float: right;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 1px;
+    }
+
+    .mob-settings-disclosure[open] > summary::after {
+      content: "▴";
+    }
+
+    .mob-settings-disclosure .mob-settings-help {
+      margin-top: 8px;
+    }
+
+    .mob-settings-list-scroll {
+      max-height: 160px;
+      overflow-y: auto;
+      padding-right: 2px;
+    }
+
+    .mob-settings-list-scroll--available {
+      max-height: 220px;
+    }
+
+    .mob-language-pill-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0 0 8px;
+    }
+
+    .mob-language-pill-wrap .translation-language-pill {
+      border: 0.5px solid var(--border);
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--text);
+      font-size: 12px;
+      font-family: var(--font-body);
+      padding: 6px 10px;
+    }
+
+    .mob-language-pill-wrap .translation-language-pill[aria-pressed="true"] {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--surface-accent);
+    }
+
+    .mob-settings-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 8px;
+    }
+
+    .mob-settings-list-item,
+    .mob-settings-list .translation-list-item {
+      border: 0.5px solid var(--border);
+      border-radius: 10px;
+      background: var(--ghost-surface);
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .mob-settings-list-meta,
+    .mob-settings-list .translation-list-item-info {
+      min-width: 0;
+      display: grid;
+      gap: 2px;
+    }
+
+    .mob-settings-list-code,
+    .mob-settings-list .translation-list-item-code {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .mob-settings-list-label,
+    .mob-settings-list .translation-list-item-label {
+      font-size: 13px;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .mob-settings-mini-btn,
+    .mob-settings-list .ghost-button {
+      border: 0.5px solid var(--border);
+      border-radius: 9px;
+      background: var(--surface);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      font-family: var(--font-body);
+      padding: 9px 10px;
+      min-height: 36px;
+      white-space: nowrap;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .mob-settings-mini-btn--danger,
+    .mob-settings-list .ghost-button--danger {
+      color: var(--red-letter);
+      border-color: rgba(161, 75, 60, 0.25);
+    }
+
     /* ── Colour theme swatch grid ────────────────────────────────────────────── */
     .mob-color-theme-grid {
       display: flex;
@@ -841,6 +1046,39 @@
       transition: transform 100ms, border-color 100ms, box-shadow 100ms;
       outline: none;
       flex-shrink: 0;
+      position: relative;
+      overflow: visible;
+    }
+
+    .mob-color-swatch-mode {
+      --mob-dark-badge-bg: #141414;
+      --mob-dark-badge-text: #f1f1f1;
+      position: absolute;
+      right: -4px;
+      bottom: -4px;
+      min-width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      border: 1px solid var(--surface-strong);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 9px;
+      line-height: 14px;
+      text-align: center;
+      font-weight: 700;
+      padding: 0 3px;
+      box-sizing: border-box;
+    }
+
+    .mob-color-swatch--dark .mob-color-swatch-mode {
+      background: var(--mob-dark-badge-bg);
+      color: var(--mob-dark-badge-text);
+    }
+
+    .mob-color-swatch--both .mob-color-swatch-mode {
+      background: var(--surface-accent);
+      color: var(--accent);
+      border-color: var(--accent);
     }
 
     .mob-color-swatch:active {
@@ -998,7 +1236,11 @@
   <div class="mob-sheet-backdrop" id="settings-sheet" hidden role="dialog" aria-label="Settings" aria-modal="true">
     <div class="mob-sheet mob-settings-sheet">
       <div class="mob-sheet-handle" aria-hidden="true"></div>
-      <h2 class="mob-sheet-title">Settings</h2>
+      <div class="mob-sheet-title-row">
+        <h2 class="mob-sheet-title">Settings</h2>
+        <button id="mob-settings-close-btn" class="mob-sheet-close" type="button" aria-label="Close settings">Done</button>
+      </div>
+      <p class="mob-settings-close-hint">Tap Done or outside this panel to close.</p>
       <div id="settings-sheet-content"></div>
     </div>
   </div>

@@ -33,6 +33,11 @@ const colorThemeStorageKey       = "service-notes-color-theme";
 const colorThemeMirrorStorageKey = "service-notes-color-theme-mirror";
 const lastBookChapterStorageKey  = "service-notes-last-book-chapter";
 const onboardingStorageKey       = "service-notes-onboarding-seen";
+const THEME_MODE_OPTIONS = [
+  { value: "system", label: "System" },
+  { value: "light", label: "Light" },
+  { value: "dark", label: "Dark" }
+];
 
 // ── Utility functions ─────────────────────────────────────────────────────────
 const translationLibrary = {};
@@ -247,6 +252,7 @@ const sheetGotoBtn       = document.querySelector("#sheet-goto-btn");
 
 const settingsSheet        = document.querySelector("#settings-sheet");
 const settingsSheetContent = document.querySelector("#settings-sheet-content");
+const mobSettingsCloseBtn  = document.querySelector("#mob-settings-close-btn");
 
 // Conflict-resolution elements (hidden; auto-resolved below)
 const syncConflictDialog       = document.querySelector("#sync-conflict-dialog");
@@ -867,33 +873,71 @@ const renderSettingsSheet = () => {
   const modeVal           = themeApi?.getCurrentThemeMode?.() ?? "system";
   const currentColorTheme = themeApi?.getCurrentColorThemeId?.() ?? "default";
   const allThemes         = window.colorThemes || [];
+  const getThemeSupportMode = (supportsValue) => {
+    if (supportsValue === "dark") return "dark";
+    if (supportsValue === "both") return "both";
+    return "light";
+  };
+  const themeSupportMeta = {
+    light: { label: "light mode only", badge: "L" },
+    dark: { label: "dark mode only", badge: "D" },
+    both: { label: "light and dark mode", badge: "L/D" }
+  };
+  const modeButtons = THEME_MODE_OPTIONS.map(({ value, label }) => `
+    <button
+      type="button"
+      class="mob-theme-toggle"
+      data-theme-mode="${value}"
+      aria-pressed="${modeVal === value}">
+      ${label}
+    </button>
+  `).join("");
 
   // Build swatch grid — two-tone circles using the first two swatches of each theme
   const swatchGrid = allThemes.map((theme) => {
     const c0 = theme.swatches?.[0] ?? "#ccc";
     const c1 = theme.swatches?.[1] ?? "#888";
     const isActive = theme.id === currentColorTheme;
-    return `<button class="mob-color-swatch${isActive ? " active" : ""}"
+    const supports = getThemeSupportMode(theme.supports);
+    const supportLabel = themeSupportMeta[supports].label;
+    const supportBadge = themeSupportMeta[supports].badge;
+    return `<button class="mob-color-swatch mob-color-swatch--${supports}${isActive ? " active" : ""}"
               data-color-theme="${escapeHtml(theme.id)}"
-              aria-label="${escapeHtml(theme.name)}"
+              aria-label="${escapeHtml(`${theme.name} (${supportLabel})`)}"
               aria-pressed="${isActive}"
               style="background: linear-gradient(135deg, ${c0} 50%, ${c1} 50%)"
-              title="${escapeHtml(theme.name)}"></button>`;
+              title="${escapeHtml(`${theme.name} — ${supportLabel}`)}">
+              <span class="mob-color-swatch-mode" aria-hidden="true">${supportBadge}</span>
+            </button>`;
   }).join("");
 
   settingsSheetContent.innerHTML = `
     <div class="mob-settings-section">
       <p class="mob-settings-label">Appearance</p>
-      <div class="mob-settings-row">
-        <span>Light / dark</span>
-        <select id="mob-theme-select" class="mob-inline-select">
-          <option value="system" ${modeVal === "system" ? "selected" : ""}>System</option>
-          <option value="light"  ${modeVal === "light"  ? "selected" : ""}>Light</option>
-          <option value="dark"   ${modeVal === "dark"   ? "selected" : ""}>Dark</option>
-        </select>
+      <div class="mob-theme-toggle-group" id="mob-theme-toggle-group" role="group" aria-label="Theme mode selection">
+        ${modeButtons}
       </div>
-      <p class="mob-settings-label" style="margin-top:12px">Colour theme</p>
-      <div class="mob-color-theme-grid" id="mob-color-theme-grid">${swatchGrid}</div>
+      <p class="mob-settings-label mob-settings-label--spaced" id="mob-color-theme-label">Color theme</p>
+      <div class="mob-color-theme-grid" id="mob-color-theme-grid" aria-labelledby="mob-color-theme-label">${swatchGrid}</div>
+    </div>
+    <div class="mob-settings-section">
+      <p class="mob-settings-label">Translations</p>
+      <p class="mob-settings-label mob-settings-label--spaced">Installed</p>
+      <p class="mob-settings-help" id="installed-translations-empty-note" hidden>No translations installed.</p>
+      <div class="mob-settings-list-scroll">
+        <ul id="installed-translation-list" class="mob-settings-list" aria-label="Installed translations"></ul>
+      </div>
+      <details class="mob-settings-disclosure" id="mob-translation-adder">
+        <summary>Add translation</summary>
+        <p class="mob-settings-help">Search and install from the catalog.</p>
+        <input id="mob-translation-search" class="mob-settings-search" type="search" placeholder="Search available translations" aria-label="Search available translations" autocomplete="off">
+        <div id="translation-language-pills" class="mob-language-pill-wrap"></div>
+        <p class="mob-settings-label mob-settings-label--spaced">Available</p>
+        <p class="mob-settings-help" id="available-translations-empty-note" hidden>No translations found for this filter.</p>
+        <div class="mob-settings-list-scroll mob-settings-list-scroll--available">
+          <ul id="available-translation-list" class="mob-settings-list" aria-label="Available translations"></ul>
+        </div>
+      </details>
     </div>
     <div class="mob-settings-section">
       <p class="mob-settings-label">Sync &amp; Storage</p>
@@ -926,8 +970,14 @@ const renderSettingsSheet = () => {
     </div>
   `;
 
-  document.querySelector("#mob-theme-select")?.addEventListener("change", (e) => {
-    applyThemeMode?.(e.target.value);
+  document.querySelector("#mob-theme-toggle-group")?.addEventListener("click", (e) => {
+    const button = e.target.closest("[data-theme-mode]");
+    if (!button) return;
+    const selectedMode = button.dataset.themeMode;
+    applyThemeMode?.(selectedMode);
+    document.querySelectorAll("#mob-theme-toggle-group .mob-theme-toggle").forEach((toggle) => {
+      toggle.setAttribute("aria-pressed", String(toggle.dataset.themeMode === selectedMode));
+    });
   });
 
   document.querySelector("#mob-color-theme-grid")?.addEventListener("click", (e) => {
@@ -941,6 +991,53 @@ const renderSettingsSheet = () => {
       s.setAttribute("aria-pressed", isNowActive);
     });
   });
+
+  document.querySelector("#mob-translation-search")?.addEventListener("input", (event) => {
+    translationsManagerApiRef?.setAvailableTranslationSearch?.(event.target.value);
+  });
+
+  document.querySelector("#available-translation-list")?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-install-official-translation]");
+    if (!button) return;
+    if (!translationsManagerApiRef?.installOfficialTranslation) return;
+
+    const translationId = button.dataset.installOfficialTranslation;
+    const label = translationLibrary[translationId]?.label ?? translationId;
+    const originalLabel = button.textContent;
+    button.disabled = true;
+    button.textContent = "Installing…";
+
+    void translationsManagerApiRef.installOfficialTranslation(translationId).then(() => {
+      showTransientStatus(`"${label}" installed.`);
+    }).catch((err) => {
+      button.disabled = false;
+      button.textContent = originalLabel;
+      window.alert(`Couldn't install translation: ${err.message}`);
+    });
+  });
+
+  document.querySelector("#installed-translation-list")?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-uninstall-translation]");
+    if (!button) return;
+    if (!translationsManagerApiRef?.uninstallTranslation) return;
+
+    const translationId = button.dataset.uninstallTranslation;
+    const label = translationLibrary[translationId]?.label ?? translationId;
+
+    if (!window.confirm(`Uninstall "${label}"? You can reinstall it from Available.`)) {
+      return;
+    }
+
+    void translationsManagerApiRef.uninstallTranslation(translationId).catch((err) => {
+      window.alert(`Couldn't uninstall translation: ${err.message}`);
+    });
+  });
+
+  if (translationsManagerApiRef?.renderTranslationsPanel) {
+    void translationsManagerApiRef.renderTranslationsPanel().catch((err) => {
+      console.warn("[Mobile] Failed to render translations panel:", err);
+    });
+  }
 
   document.querySelector("#mob-sync-now")?.addEventListener("click", async () => {
     showTransientStatus("Syncing…");
@@ -974,6 +1071,10 @@ const renderSettingsSheet = () => {
 
 settingsSheet?.addEventListener("click", (e) => {
   if (e.target === settingsSheet) settingsSheet.hidden = true;
+});
+
+mobSettingsCloseBtn?.addEventListener("click", () => {
+  settingsSheet.hidden = true;
 });
 
 mobSettingsBtn?.addEventListener("click", () => {
