@@ -595,6 +595,11 @@
       background: var(--surface-strong);
       border-top: 0.5px solid var(--border);
       flex-shrink: 0;
+      /* Extend the tab bar background into the iOS home-indicator safe area so
+         it fills the gap rather than leaving a bare strip below the tabs. The
+         tab buttons themselves keep their normal padding; only the background
+         bleeds downward. */
+      padding-bottom: env(safe-area-inset-bottom);
     }
 
     .mob-tab {
