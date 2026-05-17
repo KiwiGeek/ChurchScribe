@@ -899,11 +899,11 @@ const renderSettingsSheet = () => {
   settingsSheetContent.innerHTML = `
     <div class="mob-settings-section">
       <p class="mob-settings-label">Appearance</p>
-      <div class="mob-theme-toggle-group" id="mob-theme-toggle-group">
+      <div class="mob-theme-toggle-group" id="mob-theme-toggle-group" role="group" aria-label="Theme mode selection">
         ${modeButtons}
       </div>
-      <p class="mob-settings-label mob-settings-label--spaced">Color theme</p>
-      <div class="mob-color-theme-grid" id="mob-color-theme-grid">${swatchGrid}</div>
+      <p class="mob-settings-label mob-settings-label--spaced" id="mob-color-theme-label">Color theme</p>
+      <div class="mob-color-theme-grid" id="mob-color-theme-grid" aria-labelledby="mob-color-theme-label">${swatchGrid}</div>
     </div>
     <div class="mob-settings-section">
       <p class="mob-settings-label">Translations</p>
