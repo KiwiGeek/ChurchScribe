@@ -33,6 +33,11 @@ const colorThemeStorageKey       = "service-notes-color-theme";
 const colorThemeMirrorStorageKey = "service-notes-color-theme-mirror";
 const lastBookChapterStorageKey  = "service-notes-last-book-chapter";
 const onboardingStorageKey       = "service-notes-onboarding-seen";
+const THEME_MODE_OPTIONS = [
+  { value: "system", label: "System" },
+  { value: "light", label: "Light" },
+  { value: "dark", label: "Dark" }
+];
 
 // ── Utility functions ─────────────────────────────────────────────────────────
 const translationLibrary = {};
@@ -868,11 +873,7 @@ const renderSettingsSheet = () => {
   const modeVal           = themeApi?.getCurrentThemeMode?.() ?? "system";
   const currentColorTheme = themeApi?.getCurrentColorThemeId?.() ?? "default";
   const allThemes         = window.colorThemes || [];
-  const modeButtons = [
-    { value: "system", label: "System" },
-    { value: "light", label: "Light" },
-    { value: "dark", label: "Dark" }
-  ].map(({ value, label }) => `
+  const modeButtons = THEME_MODE_OPTIONS.map(({ value, label }) => `
     <button
       type="button"
       class="mob-theme-toggle"
@@ -978,12 +979,15 @@ const renderSettingsSheet = () => {
     if (!translationsManagerApiRef?.installOfficialTranslation) return;
 
     const translationId = button.dataset.installOfficialTranslation;
+    const originalLabel = button.textContent;
     button.disabled = true;
     button.textContent = "Installing…";
 
     void translationsManagerApiRef.installOfficialTranslation(translationId).then(() => {
       showTransientStatus(`"${translationId}" installed.`);
     }).catch((err) => {
+      button.disabled = false;
+      button.textContent = originalLabel;
       window.alert(`Couldn't install translation: ${err.message}`);
     });
   });
