@@ -251,6 +251,10 @@
     const msalInst = await getMsalInstance();
     const accounts = msalInst.getAllAccounts();
 
+    console.log("[OneDrive] attemptSilentReconnect; accounts found =", accounts.length);
+    console.log("[OneDrive] MSAL localStorage keys =",
+      Object.keys(localStorage).filter((k) => k.toLowerCase().includes("msal")));
+
     if (!accounts.length) {
       throw new Error("No OneDrive account found. Please connect first.");
     }
@@ -260,7 +264,8 @@
       accessToken = result.accessToken;
       const email = await fetchUserEmail().catch(() => "");
       return { email };
-    } catch {
+    } catch (err) {
+      console.log("[OneDrive] acquireTokenSilent failed:", err?.message);
       throw new Error("Silent reconnect failed. Please connect manually.");
     }
   };

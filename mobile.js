@@ -1043,6 +1043,18 @@ if (syncConflictDialog) {
 
 // ── Bootstrap ─────────────────────────────────────────────────────────────────
 const bootstrap = async () => {
+  // Drain any debug entries written by app.js (index.html) into this console
+  // so they're visible in Eruda even though index.html redirected too fast.
+  try {
+    const stored = JSON.parse(localStorage.getItem("_scriptoria_debug") || "[]");
+    if (stored.length) {
+      console.group("[Debug] Logs from index.html (persisted via localStorage)");
+      stored.forEach((entry) => console.log(entry));
+      console.groupEnd();
+      localStorage.removeItem("_scriptoria_debug");
+    }
+  } catch { /* ignore */ }
+
   await migrateFromLegacyDatabase();
 
   // ── Theme controller ──────────────────────────────────────────────────────
