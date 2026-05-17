@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Scriptoria</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2a2118">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <script>
+    // Redirect back to desktop if someone opens this on a non-mobile device
+    // (unless ?mobile=1 forces the mobile view, e.g. for testing)
+    (function () {
+      if (new URLSearchParams(location.search).has('mobile')) { return; }
+      var isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+      var smallestDimension = Math.min(window.screen.width, window.screen.height);
+      if (!isTouchDevice || smallestDimension > 480) {
+        location.replace('index.html?desktop=1');
+      }
+    })();
+  </script>
+  <script>
+    // Apply saved theme before first paint to avoid flash
+    (function () {
+      var themeMirrorKey = "service-notes-theme-mirror";
+      var colorThemeMirrorKey = "service-notes-color-theme-mirror";
+      try {
+        var storedMode = localStorage.getItem(themeMirrorKey) || "system";
+        var resolvedTheme = storedMode === "system"
+          ? (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+          : (storedMode === "dark" ? "dark" : "light");
+        document.documentElement.dataset.theme = resolvedTheme;
+        var storedColorTheme = localStorage.getItem(colorThemeMirrorKey);
+        if (storedColorTheme && storedColorTheme !== "default") {
+          document.documentElement.dataset.colorTheme = storedColorTheme;
+        } else {
+          document.documentElement.removeAttribute("data-color-theme");
+        }
+      } catch {
+        document.documentElement.dataset.theme = "light";
+      }
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Manrope:wght@400;500;600;700&family=Orbitron:wght@400;700&family=Cinzel:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* ── Mobile layout overrides ──────────────────────────────────────── */
+    html, body {
+      height: 100%;
+      height: 100dvh;
+      overflow: hidden;
+    }
+
+    body {
+      height: 100dvh;
+    }
+
+    /* Safe-area insets for notched phones */
+    #mob-app {
+      display: flex;
+      flex-direction: column;
+      height: 100dvh;
+      overflow: hidden;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    /* ── Header ─────────────────────────────────────────────────────────── */
+    .mob-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 10px 14px;
+      padding-top: calc(10px + env(safe-area-inset-top));
+      background: var(--surface-strong);
+      border-bottom: 0.5px solid var(--border);
+      flex-shrink: 0;
+      user-select: none;
+    }
+
+    .mob-header h1 {
+      font-family: var(--font-heading);
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0;
+      letter-spacing: 0.2px;
+      flex: 1;
+      text-align: center;
+    }
+
+    .mob-icon-btn {
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: var(--text);
+      flex-shrink: 0;
+      transition: background 120ms;
+    }
+
+    .mob-icon-btn:active {
+      background: var(--surface-accent);
+    }
+
+    .mob-icon-btn svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+    }
+
+    /* ── Sync status bar ─────────────────────────────────────────────────── */
+    .mob-sync-bar {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 14px;
+      font-size: 11px;
+      font-weight: 500;
+      flex-shrink: 0;
+    }
+
+    .mob-sync-bar--connected {
+      background: rgba(140, 75, 47, 0.06);
+      color: var(--accent);
+      border-bottom: 0.5px solid rgba(140, 75, 47, 0.12);
+    }
+
+    [data-theme="dark"] .mob-sync-bar--connected {
+      background: rgba(241, 176, 107, 0.06);
+      border-bottom-color: rgba(241, 176, 107, 0.12);
+    }
+
+    .mob-sync-bar--error {
+      background: rgba(161, 75, 60, 0.06);
+      color: var(--red-letter);
+      border-bottom: 0.5px solid rgba(161, 75, 60, 0.15);
+    }
+
+    .mob-sync-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      flex-shrink: 0;
+    }
+
+    /* ── Views container ─────────────────────────────────────────────────── */
+    #mob-views {
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .mob-view {
+      display: none;
+      flex-direction: column;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .mob-view.active {
+      display: flex;
+    }
+
+    /* ── Bible view ──────────────────────────────────────────────────────── */
+    .mob-bible-pickers {
+      display: flex;
+      gap: 6px;
+      padding: 9px 12px 8px;
+      background: var(--surface-accent);
+      border-bottom: 0.5px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .mob-bible-pickers select {
+      flex: 1;
+      font-size: 12px;
+      font-family: var(--font-body);
+      padding: 6px 24px 6px 8px;
+      border-radius: 9px;
+      border: 0.5px solid var(--select-border);
+      background: var(--select-surface);
+      color: var(--text);
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238c4b2f'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 7px center;
+    }
+
+    [data-theme="dark"] .mob-bible-pickers select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23f1b06b'/%3E%3C/svg%3E");
+    }
+
+    #translation-select {
+      flex: 2;
+    }
+
+    .mob-search-bar {
+      padding: 7px 12px;
+      border-bottom: 0.5px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .mob-search-bar input {
+      width: 100%;
+      font-size: 13px;
+      font-family: var(--font-body);
+      padding: 7px 10px;
+      border-radius: 10px;
+      border: 0.5px solid var(--select-border);
+      background: var(--input-surface);
+      color: var(--text);
+      box-sizing: border-box;
+    }
+
+    .mob-search-bar input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--focus-ring);
+    }
+
+    #verse-display {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 12px 14px 20px;
+    }
+
+    #verse-reference {
+      font-size: 11px;
+      font-style: italic;
+      color: var(--muted);
+      margin: 0 0 10px;
+    }
+
+    #chapter-text {
+      font-size: 14px;
+      line-height: 1.75;
+      color: var(--text);
+    }
+
+    /* Verse numbers from the viewer module */
+    #chapter-text .verse-number {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--accent);
+      vertical-align: super;
+      margin-right: 3px;
+      user-select: none;
+    }
+
+    #chapter-text .verse-highlight {
+      background: rgba(140, 75, 47, 0.1);
+      border-radius: 3px;
+      padding: 1px 2px;
+    }
+
+    [data-theme="dark"] #chapter-text .verse-highlight {
+      background: rgba(241, 176, 107, 0.12);
+    }
+
+    #verse-translation {
+      font-size: 11px;
+      color: var(--muted);
+      margin: 12px 0 0;
+      text-align: right;
+      font-style: italic;
+    }
+
+    /* Search results */
+    #scripture-search-results {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    #scripture-search-results.is-hidden {
+      display: none;
+    }
+
+    /* ── Notes view (list + connect prompt) ─────────────────────────────── */
+    .mob-notes-filter-bar {
+      padding: 7px 12px;
+      border-bottom: 0.5px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .mob-filter-input {
+      width: 100%;
+      font-size: 13px;
+      font-family: var(--font-body);
+      padding: 7px 10px;
+      border-radius: 10px;
+      border: 0.5px solid var(--select-border);
+      background: var(--input-surface);
+      color: var(--text);
+      box-sizing: border-box;
+    }
+
+    .mob-filter-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--focus-ring);
+    }
+
+    .mob-notes-list {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .mob-note-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border: none;
+      border-bottom: 0.5px solid var(--border);
+      background: transparent;
+      width: 100%;
+      text-align: left;
+      cursor: pointer;
+      transition: background 100ms;
+    }
+
+    .mob-note-card:active {
+      background: var(--surface-accent);
+    }
+
+    .mob-note-card-inner {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .mob-note-type-chip {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 20px;
+      background: rgba(140, 75, 47, 0.1);
+      color: var(--accent);
+      margin-bottom: 3px;
+    }
+
+    [data-theme="dark"] .mob-note-type-chip {
+      background: rgba(241, 176, 107, 0.12);
+    }
+
+    .mob-note-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin: 0 0 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .mob-note-meta {
+      font-size: 12px;
+      color: var(--muted);
+      margin: 0 0 1px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .mob-note-date {
+      font-size: 11px;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .mob-note-arrow {
+      color: var(--border);
+      flex-shrink: 0;
+    }
+
+    .mob-notes-empty {
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+      padding: 32px 20px;
+      margin: 0;
+    }
+
+    /* Connect prompt */
+    .mob-connect-hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 36px 24px 24px;
+      text-align: center;
+    }
+
+    .mob-connect-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 18px;
+      background: rgba(140, 75, 47, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      color: var(--accent);
+    }
+
+    [data-theme="dark"] .mob-connect-icon {
+      background: rgba(241, 176, 107, 0.1);
+    }
+
+    .mob-connect-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0 0 8px;
+    }
+
+    .mob-connect-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin: 0 0 20px;
+    }
+
+    .mob-connect-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 0.5px solid var(--border);
+      background: var(--ghost-surface);
+      color: var(--text);
+      font-size: 14px;
+      font-family: var(--font-body);
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 8px;
+      transition: background 120ms;
+    }
+
+    .mob-connect-btn:active {
+      background: var(--surface-accent);
+    }
+
+    .mob-connect-btn svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    /* ── Note detail view ────────────────────────────────────────────────── */
+    .mob-note-detail-header {
+      padding: 12px 14px;
+      background: var(--surface-accent);
+      border-bottom: 0.5px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .mob-detail-type {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--accent);
+      margin: 0 0 4px;
+    }
+
+    .mob-detail-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0 0 6px;
+      font-family: var(--font-heading);
+      line-height: 1.3;
+    }
+
+    .mob-detail-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 6px;
+    }
+
+    .mob-detail-chip {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 20px;
+      background: var(--ghost-surface);
+      color: var(--text);
+      border: 0.5px solid var(--border);
+    }
+
+    .mob-detail-date {
+      font-size: 11px;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .mob-note-detail-body {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .mob-note-content {
+      padding: 14px 14px 32px;
+      font-size: 14px;
+      line-height: 1.75;
+      color: var(--text);
+    }
+
+    .mob-note-content p {
+      margin: 0 0 10px;
+    }
+
+    .mob-note-content h1, .mob-note-content h2, .mob-note-content h3 {
+      font-family: var(--font-heading);
+      color: var(--text);
+      margin: 16px 0 6px;
+    }
+
+    .mob-note-content h2 {
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .mob-note-content blockquote {
+      border-left: 3px solid var(--blockquote-border);
+      margin: 10px 0;
+      padding: 6px 12px;
+      color: var(--blockquote-text);
+      font-style: italic;
+    }
+
+    .mob-note-content ul, .mob-note-content ol {
+      padding-left: 20px;
+      margin: 8px 0;
+    }
+
+    .mob-note-content li {
+      margin-bottom: 4px;
+    }
+
+    /* Scripture ref links within notes */
+    .mob-note-content a[data-scripture],
+    .mob-note-content a.scripture-ref,
+    .mob-scripture-ref {
+      color: var(--accent);
+      text-decoration: underline;
+      text-decoration-style: dotted;
+      text-underline-offset: 2px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .mob-note-content a {
+      color: var(--accent);
+    }
+
+    .mob-note-empty {
+      color: var(--muted);
+      font-style: italic;
+      font-size: 14px;
+    }
+
+    /* Embedded images — constrain to viewport width */
+    .mob-note-content img {
+      max-width: 100%;
+      height: auto;
+      border-radius: var(--radius-md);
+    }
+
+    /* ── Bottom tab bar ───────────────────────────────────────────────────── */
+    .mob-tabbar {
+      display: flex;
+      background: var(--surface-strong);
+      border-top: 0.5px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .mob-tab {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      padding: 8px 0 10px;
+      font-size: 10px;
+      font-family: var(--font-body);
+      font-weight: 600;
+      color: var(--muted);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      letter-spacing: 0.2px;
+      transition: color 120ms;
+    }
+
+    .mob-tab svg {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.8;
+    }
+
+    .mob-tab.active {
+      color: var(--accent);
+    }
+
+    /* ── Scripture reference bottom sheet ────────────────────────────────── */
+    /* Default: hidden. The [hidden] attribute has zero specificity so a class
+       rule with display:flex would override it — instead we default to none
+       and only apply flex when the attribute is absent. */
+    .mob-sheet-backdrop {
+      display: none;
+    }
+
+    .mob-sheet-backdrop:not([hidden]) {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 100;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .mob-sheet {
+      width: 100%;
+      background: var(--surface-strong);
+      border-radius: 20px 20px 0 0;
+      padding: 0 16px calc(16px + env(safe-area-inset-bottom));
+      max-height: 72vh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .mob-sheet-handle {
+      width: 36px;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--border);
+      margin: 10px auto 14px;
+    }
+
+    .mob-sheet-ref {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+      margin: 0 0 10px;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      font-family: var(--font-heading);
+    }
+
+    .mob-sheet-verse {
+      display: flex;
+      gap: 7px;
+      margin-bottom: 8px;
+      align-items: baseline;
+    }
+
+    .mob-sheet-vnum {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--accent);
+      min-width: 16px;
+      flex-shrink: 0;
+    }
+
+    .mob-sheet-vtext {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text);
+    }
+
+    .mob-sheet-translation {
+      font-size: 11px;
+      color: var(--muted);
+      margin: 10px 0 6px;
+      font-style: italic;
+    }
+
+    .mob-sheet-more {
+      font-size: 11px;
+      color: var(--muted);
+      margin: 8px 0 0;
+      font-style: italic;
+    }
+
+    .mob-sheet-goto {
+      display: block;
+      width: 100%;
+      padding: 10px 14px;
+      margin-top: 12px;
+      border-radius: 10px;
+      border: 0.5px solid var(--border);
+      background: transparent;
+      color: var(--accent);
+      font-size: 13px;
+      font-family: var(--font-body);
+      font-weight: 600;
+      text-align: center;
+      cursor: pointer;
+      transition: background 120ms;
+    }
+
+    .mob-sheet-goto:active {
+      background: var(--surface-accent);
+    }
+
+    /* ── Settings bottom sheet ───────────────────────────────────────────── */
+    .mob-settings-sheet {
+      max-height: 85vh;
+    }
+
+    .mob-sheet-title {
+      font-size: 17px;
+      font-weight: 700;
+      font-family: var(--font-heading);
+      color: var(--text);
+      margin: 0 0 16px;
+    }
+
+    .mob-settings-section {
+      margin-bottom: 20px;
+    }
+
+    .mob-settings-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--muted);
+      margin: 0 0 8px;
+    }
+
+    .mob-settings-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 0;
+      border-bottom: 0.5px solid var(--border);
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    .mob-settings-value {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .mob-inline-select {
+      font-size: 13px;
+      font-family: var(--font-body);
+      padding: 4px 24px 4px 8px;
+      border-radius: 8px;
+      border: 0.5px solid var(--select-border);
+      background: var(--select-surface);
+      color: var(--text);
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238c4b2f'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 6px center;
+    }
+
+    .mob-settings-help {
+      font-size: 13px;
+      color: var(--muted);
+      margin: 0 0 10px;
+      line-height: 1.5;
+    }
+
+    .mob-settings-action {
+      display: block;
+      width: 100%;
+      padding: 11px 14px;
+      margin-bottom: 8px;
+      border-radius: 10px;
+      border: 0.5px solid var(--border);
+      background: var(--ghost-surface);
+      color: var(--text);
+      font-size: 14px;
+      font-family: var(--font-body);
+      font-weight: 600;
+      text-align: center;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 120ms;
+    }
+
+    .mob-settings-action:active {
+      background: var(--surface-accent);
+    }
+
+    .mob-settings-action--danger {
+      color: var(--red-letter);
+      border-color: rgba(161, 75, 60, 0.25);
+    }
+
+    /* ── Colour theme swatch grid ────────────────────────────────────────────── */
+    .mob-color-theme-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      padding: 6px 0 4px;
+    }
+
+    .mob-color-swatch {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 2.5px solid transparent;
+      cursor: pointer;
+      padding: 0;
+      transition: transform 100ms, border-color 100ms, box-shadow 100ms;
+      outline: none;
+      flex-shrink: 0;
+    }
+
+    .mob-color-swatch:active {
+      transform: scale(0.88);
+    }
+
+    .mob-color-swatch.active {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--surface-strong), 0 0 0 4.5px var(--accent);
+    }
+
+    /* ── Landscape: split-view when reading a note ───────────────────────── */
+    @media (orientation: landscape) and (max-height: 500px) {
+      #mob-app.note-detail-mode #mob-views {
+        flex-direction: row;
+      }
+
+      #mob-app.note-detail-mode #bible-view {
+        display: flex !important;
+        flex: 4;
+        border-right: 0.5px solid var(--border);
+      }
+
+      /* Slim down Bible pickers in split view */
+      #mob-app.note-detail-mode .mob-bible-pickers {
+        flex-wrap: wrap;
+        gap: 4px;
+        padding: 6px 10px;
+      }
+
+      #mob-app.note-detail-mode .mob-bible-pickers select {
+        font-size: 11px;
+      }
+
+      #mob-app.note-detail-mode #chapter-text {
+        font-size: 13px;
+      }
+
+      #mob-app.note-detail-mode #note-detail-view {
+        display: flex !important;
+        flex: 6;
+      }
+
+      #mob-app.note-detail-mode .mob-note-content {
+        font-size: 13px;
+      }
+
+      #mob-app.note-detail-mode .mob-note-detail-header {
+        padding: 8px 12px;
+      }
+
+      #mob-app.note-detail-mode .mob-detail-title {
+        font-size: 14px;
+      }
+
+      /* Hide notes list and tab bar in split mode */
+      #mob-app.note-detail-mode #notes-view,
+      #mob-app.note-detail-mode .mob-tabbar {
+        display: none !important;
+      }
+
+      /* Show a thin back chevron in the header instead */
+      #mob-app.note-detail-mode #mob-back-btn {
+        display: flex !important;
+      }
+    }
+
+    /* Ensure the search bar stretches in split view */
+    @media (orientation: landscape) {
+      .mob-search-bar input {
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- ── App shell ──────────────────────────────────────────────────────── -->
+  <div id="mob-app">
+
+    <!-- Header -->
+    <header class="mob-header" id="mob-header">
+      <button class="mob-icon-btn" id="mob-back-btn" hidden aria-label="Back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </button>
+      <h1 id="mob-title">Scriptoria</h1>
+      <button class="mob-icon-btn" id="mob-settings-btn" aria-label="Settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+      </button>
+    </header>
+
+    <!-- Sync status bar -->
+    <div class="mob-sync-bar" id="mob-sync-bar" hidden aria-live="polite">
+      <span class="mob-sync-dot" aria-hidden="true"></span>
+      <span id="mob-sync-bar-text"></span>
+    </div>
+
+    <!-- Views -->
+    <div id="mob-views">
+
+      <!-- Bible view -->
+      <div id="bible-view" class="mob-view active" aria-label="Bible reader">
+        <div class="mob-bible-pickers">
+          <select id="translation-select" aria-label="Translation"></select>
+          <select id="book-select" aria-label="Book"></select>
+          <select id="chapter-select" aria-label="Chapter"></select>
+        </div>
+        <div class="mob-search-bar">
+          <input type="search" id="scripture-search-input" placeholder="Search scriptures…" aria-label="Scripture search" autocomplete="off">
+        </div>
+        <article id="verse-display" aria-live="polite">
+          <p id="verse-reference"></p>
+          <div id="chapter-text"></div>
+          <p id="verse-translation"></p>
+        </article>
+        <div id="scripture-search-results" class="is-hidden" aria-live="polite" aria-label="Scripture search results"></div>
+      </div>
+
+      <!-- Notes view (list or connect prompt, rendered by JS) -->
+      <div id="notes-view" class="mob-view" aria-label="Notes"></div>
+
+      <!-- Note detail view -->
+      <div id="note-detail-view" class="mob-view" aria-label="Note detail">
+        <div class="mob-note-detail-header" id="note-detail-header"></div>
+        <div class="mob-note-detail-body" id="note-detail-body"></div>
+      </div>
+
+    </div>
+
+    <!-- Bottom tab bar -->
+    <nav class="mob-tabbar" id="mob-tabbar" aria-label="Navigation">
+      <button class="mob-tab active" data-tab="bible" aria-label="Bible reader">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+        Bible
+      </button>
+      <button class="mob-tab" id="mob-notes-tab" data-tab="notes" aria-label="Notes">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        Notes
+      </button>
+    </nav>
+
+  </div>
+
+  <!-- ── Scripture reference bottom sheet ──────────────────────────────── -->
+  <div class="mob-sheet-backdrop" id="scripture-sheet" hidden role="dialog" aria-label="Scripture reference" aria-modal="true">
+    <div class="mob-sheet" id="scripture-sheet-inner">
+      <div class="mob-sheet-handle" aria-hidden="true"></div>
+      <p id="sheet-ref-label" class="mob-sheet-ref"></p>
+      <div id="sheet-verse-content" class="mob-sheet-verses"></div>
+      <p id="sheet-translation-label" class="mob-sheet-translation"></p>
+      <button id="sheet-goto-btn" class="mob-sheet-goto">View in Bible reader →</button>
+    </div>
+  </div>
+
+  <!-- ── Settings bottom sheet ─────────────────────────────────────────── -->
+  <div class="mob-sheet-backdrop" id="settings-sheet" hidden role="dialog" aria-label="Settings" aria-modal="true">
+    <div class="mob-sheet mob-settings-sheet">
+      <div class="mob-sheet-handle" aria-hidden="true"></div>
+      <h2 class="mob-sheet-title">Settings</h2>
+      <div id="settings-sheet-content"></div>
+    </div>
+  </div>
+
+  <!-- ── Hidden conflict-resolution elements required by cloud-sync.js ── -->
+  <!-- On mobile we auto-resolve conflicts to "use cloud" — these elements
+       exist only to satisfy the module's expected DOM, and are never shown. -->
+  <dialog id="sync-conflict-dialog" style="display:none!important">
+    <p id="conflict-dialog-title"></p>
+    <p id="conflict-dialog-description"></p>
+    <p id="conflict-local-time"></p>
+    <p id="conflict-remote-time"></p>
+    <button id="conflict-keep-local-button"></button>
+    <button id="conflict-use-cloud-button"></button>
+    <div id="first-sync-actions">
+      <button id="first-sync-keep-local-button"></button>
+      <button id="first-sync-use-cloud-button"></button>
+      <button id="first-sync-cancel-button"></button>
+    </div>
+  </dialog>
+
+  <!-- Hidden elements required for notes/model.js compatibility -->
+  <div id="note-meta-fields" hidden aria-hidden="true"></div>
+  <div id="note-editor" hidden aria-hidden="true"></div>
+
+  <!-- ── Scripts ────────────────────────────────────────────────────────── -->
+  <script src="version.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@azure/msal-browser@2.39.0/lib/msal-browser.min.js" integrity="sha384-HtsDY8wVihpnviltxuJhKpX0ahqMUgvnzrXcW39KBNui4JooW+YJb1YxvQmNoFDZ" crossorigin="anonymous" async defer></script>
+
+  <!-- Storage providers -->
+  <script src="storage/noopprovider.js"></script>
+  <script src="storage/nullprovider.js"></script>
+  <script src="storage/localdrive.js"></script>
+  <script src="storage/gdrive.js"></script>
+  <script src="storage/onedrive.js"></script>
+
+  <!-- Colour themes -->
+  <script src="themes/default.js"></script>
+  <script src="themes/amber-warmth.js"></script>
+  <script src="themes/arctic-frost.js"></script>
+  <script src="themes/aurora-borealis.js"></script>
+  <script src="themes/autumn-harvest.js"></script>
+  <script src="themes/azure-sky.js"></script>
+  <script src="themes/blood-moon.js"></script>
+  <script src="themes/candlelight.js"></script>
+  <script src="themes/cherry-blossom.js"></script>
+  <script src="themes/cherry-noir.js"></script>
+  <script src="themes/coastal-breeze.js"></script>
+  <script src="themes/coffee-house.js"></script>
+  <script src="themes/copper-craft.js"></script>
+  <script src="themes/coral-reef.js"></script>
+  <script src="themes/crimson-faith.js"></script>
+  <script src="themes/cyberpunk.js"></script>
+  <script src="themes/deep-space.js"></script>
+  <script src="themes/desert-bloom.js"></script>
+  <script src="themes/ember-glow.js"></script>
+  <script src="themes/forest-vespers.js"></script>
+  <script src="themes/fuchsia-faith.js"></script>
+  <script src="themes/golden-hour.js"></script>
+  <script src="themes/graphite.js"></script>
+  <script src="themes/hot-pink.js"></script>
+  <script src="themes/indigo-depths.js"></script>
+  <script src="themes/ivory-grace.js"></script>
+  <script src="themes/lavender-grace.js"></script>
+  <script src="themes/linen-sunlit.js"></script>
+  <script src="themes/marigold.js"></script>
+  <script src="themes/midnight-cathedral.js"></script>
+  <script src="themes/mint-fresh.js"></script>
+  <script src="themes/monochrome.js"></script>
+  <script src="themes/morning-mist.js"></script>
+  <script src="themes/neon-sermon.js"></script>
+  <script src="themes/neon-tokyo.js"></script>
+  <script src="themes/northern-lights.js"></script>
+  <script src="themes/ocean-executive.js"></script>
+  <script src="themes/olive-grove.js"></script>
+  <script src="themes/papyrus-script.js"></script>
+  <script src="themes/peach-blossom.js"></script>
+  <script src="themes/pine-grove.js"></script>
+  <script src="themes/plum-twilight.js"></script>
+  <script src="themes/renaissance.js"></script>
+  <script src="themes/retro-arcade.js"></script>
+  <script src="themes/rose-garden.js"></script>
+  <script src="themes/royal-purple.js"></script>
+  <script src="themes/saffron-spice.js"></script>
+  <script src="themes/sage-chapel.js"></script>
+  <script src="themes/sand-dune.js"></script>
+  <script src="themes/sepia-memoir.js"></script>
+  <script src="themes/slate-clean.js"></script>
+  <script src="themes/solar-flare.js"></script>
+  <script src="themes/spring-meadow.js"></script>
+  <script src="themes/steel-resolve.js"></script>
+  <script src="themes/storm-grey.js"></script>
+  <script src="themes/sunset-revival.js"></script>
+  <script src="themes/tangerine-dream.js"></script>
+  <script src="themes/teal-modern.js"></script>
+  <script src="themes/terracotta-sun.js"></script>
+  <script src="themes/twilight-prayer.js"></script>
+  <script src="themes/velvet-night.js"></script>
+  <script src="themes/void-scripture.js"></script>
+  <script src="themes/volcanic-rock.js"></script>
+  <script src="themes/controller.js"></script>
+
+  <!-- Notes model (no DOM dependencies) -->
+  <script src="notes/model.js"></script>
+
+  <!-- Settings note-types (needed for ensureSelectedTypeForManager) -->
+  <script src="settings/note-types.js"></script>
+
+  <!-- Translation + scripture modules -->
+  <script src="translations/manager.js"></script>
+  <script src="scripture/aliases.js"></script>
+  <script src="scripture/references.js"></script>
+  <script src="scripture/viewer.js"></script>
+  <script src="scripture/search.js"></script>
+
+  <!-- Sync modules -->
+  <script src="sync/status.js"></script>
+  <script src="sync/payloads.js"></script>
+  <script src="sync/cloud-sync.js"></script>
+
+  <!-- Mobile controller -->
+  <script src="mobile.js"></script>
+</body>
+</html>

@@ -3,6 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    (function () {
+      var params = new URLSearchParams(location.search);
+      // ?mobile=1  — force the mobile view (useful for testing on a desktop browser)
+      if (params.has('mobile')) { location.replace('mobile.html?mobile=1'); return; }
+      // ?desktop=1 — force the desktop view (bypass auto-redirect on a real phone)
+      if (params.has('desktop')) { return; }
+      // Auto-redirect: touch device whose smallest screen dimension is ≤ 480 px.
+      // Checking the smallest dimension means both portrait and landscape redirect.
+      var isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+      var smallestDimension = Math.min(window.screen.width, window.screen.height);
+      if (isTouchDevice && smallestDimension <= 480) {
+        location.replace('mobile.html');
+      }
+    })();
+  </script>
   <title>Scriptoria</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#2a2118">

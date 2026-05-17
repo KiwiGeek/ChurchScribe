@@ -55,9 +55,11 @@ const FONTS_CACHE = "scriptoria-fonts-v1";
 const PRECACHE_URLS = [
   "./",
   "index.html",
+  "mobile.html",
   "styles.css",
   "version.js",
   "app.js",
+  "mobile.js",
   "manifest.json",
   "embed/base.js",
   "embed/image.js",
