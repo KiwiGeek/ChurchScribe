@@ -282,7 +282,7 @@ h1 {
 
 .pane-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) 20px minmax(320px, 0.8fr);
+  grid-template-columns: minmax(0, 1.2fr) 20px minmax(0, 0.8fr);
   gap: 0;
   align-items: stretch;
   flex: 1;
@@ -2616,177 +2616,20 @@ body.is-pane-dragging {
   user-select: none;
 }
 
-@media (max-width: 980px) {
-.app-header,
-.pane-grid {
-    grid-template-columns: 1fr;
-    display: grid;
-  }
-
-  .pane-divider {
-    display: none;
-  }
-
-  .app-header,
-  .header-actions {
-    align-items: start;
-  }
-
-  .header-controls {
-    justify-content: flex-start;
-  }
-
-  .header-copy {
-    text-align: left;
-  }
-
-  .panel {
-    min-height: 0;
-  }
-
-  .note-editor {
-    min-height: 0;
-  }
-
-  .type-manager-layout,
-  .settings-layout,
-  .note-browser-layout,
-  .note-browser-toolbar,
-  .metadata-field-row,
-  .display-field-grid,
-  .alias-row {
-    grid-template-columns: 1fr;
-  }
-
-  .onboarding-content-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .onboarding-step-meta {
-    align-items: start;
-  }
-}
-
-@media (max-width: 640px) {
-  .app-shell {
-    padding-top: 20px;
-    padding-bottom: 16px;
-    padding-left: 10px;
-    padding-right: 10px;
-  }
-
-  .panel-header,
-  .toolbar,
-  .note-meta-bar,
-  .note-meta,
-  .verse-picker {
-    padding-left: 18px;
-    padding-right: 18px;
-  }
-
-  .note-meta {
-    grid-template-columns: 1fr;
-  }
-
-  .overflow-menu {
-    width: 100%;
-  }
-
-  .inline-action-menu {
-    width: 100%;
-  }
-
-  .settings-tab-nav {
-    width: 100%;
-  }
-
-  .overflow-menu summary,
-  .inline-action-menu summary,
-  .overflow-menu-panel,
-  .overflow-action {
-    width: 100%;
-  }
-
-  .verse-picker {
-    grid-template-columns: 1fr;
-  }
-
-  .note-editor,
-  .verse-display,
-  .scripture-search-results {
-    margin-left: 18px;
-    margin-right: 18px;
-  }
-
-  .panel-footer {
-    padding-left: 18px;
-    padding-right: 18px;
-  }
-
-  .panel-header {
-    align-items: start;
-    flex-direction: column;
-  }
-
-  .note-actions,
-  .note-switcher-header {
-    width: 100%;
-    flex-direction: column;
-    align-items: start;
-  }
-
-  .inline-field {
-    width: 100%;
-    justify-content: space-between;
-  }
-
-  .theme-toggle {
-    width: 100%;
-    justify-content: space-between;
-  }
-
-  .fullscreen-toggle {
-    width: auto;
-    flex-shrink: 0;
-  }
-
-  .header-controls {
-    width: 100%;
-  }
-
-  .onboarding-dialog {
-    width: calc(100% - 12px);
-  }
-
-  .onboarding-layout {
-    gap: 14px;
-  }
-
-  .onboarding-hero-card,
-  .onboarding-panel,
-  .onboarding-callout-card {
-    padding: 16px;
-  }
-
-  .onboarding-step-dots {
-    width: 100%;
-    justify-content: flex-start;
-  }
-
-  .onboarding-actions {
-    grid-template-columns: 1fr 1fr;
-    justify-items: stretch;
-  }
-
-  .onboarding-progress {
-    grid-column: 1 / -1;
-    order: -1;
-  }
-
-  .onboarding-actions button {
-    width: 100%;
-  }
-}
+/*
+ * The responsive layout-collapse breakpoints (formerly @media max-width: 980px
+ * and @media max-width: 640px) have been removed.
+ *
+ * Previously these rules collapsed the two-panel layout to a single column and
+ * reorganised the toolbar when the browser window was narrowed. Now that small
+ * screens are redirected to the dedicated mobile view (mobile.html), a desktop
+ * user who narrows their window has made a deliberate choice — we respect that
+ * and let the layout stay as-is rather than second-guessing them.
+ *
+ * If a future "compact editor mode" is introduced (see GitHub issue: Compact
+ * editor mode for narrow desktop windows) these breakpoints are where that
+ * work would live. Until then, the desktop layout is unconditionally two-panel.
+ */
 
 /* ===================== UI SETTINGS PANEL ===================== */
 
@@ -3128,58 +2971,20 @@ body.is-pane-dragging {
 }
 
 /* ===================== MOBILE WARNING ===================== */
-
-.mobile-warning {
-  display: none;
-}
-
-@media (max-width: 980px) {
-  .mobile-warning {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 16px;
-    background: var(--accent);
-    color: var(--surface-strong);
-    position: fixed;
-    top: 0;
-    user-select: none;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-  }
-}
-
-.mobile-warning-text {
-  flex: 1;
-  margin: 0;
-  font-size: 0.85rem;
-  line-height: 1.4;
-}
-
-.mobile-warning-dismiss {
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.8rem;
-  height: 1.8rem;
-  padding: 0;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.18);
-  color: inherit;
-  font: inherit;
-  font-size: 0.8rem;
-  cursor: pointer;
-  transition: background 160ms ease;
-}
-
-.mobile-warning-dismiss:hover,
-.mobile-warning-dismiss:focus-visible {
-  background: rgba(255, 255, 255, 0.3);
-  outline: none;
-}
+/*
+ * The mobile-warning banner has been removed. Small-screen visitors are now
+ * redirected to the dedicated mobile view (mobile.html) before the desktop
+ * app loads, so the banner is no longer needed.
+ *
+ * The class definitions below are intentionally kept so that the banner can
+ * be reintroduced quickly if ever needed (e.g. for a new unsupported-browser
+ * notice or a beta-feature callout). To re-enable, restore the HTML element
+ * in index.html and the sessionStorage logic in app.js.
+ *
+ * .mobile-warning          { ... }
+ * .mobile-warning-text     { ... }
+ * .mobile-warning-dismiss  { ... }
+ */
 
 /* ===================== BETA BANNER ===================== */
 

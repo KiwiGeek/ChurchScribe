@@ -58,18 +58,21 @@ window.ScriptoriaModules.createPaneLayout = (deps) => {
   // Reshape the grid columns to put `currentPaneSplit` worth of width on the
   // notes side and the rest on the scripture side, swapping which side gets
   // which fraction depending on pane order.  The 20px middle column is the
-  // divider's gutter.  minmax(320px, …) on the scripture side keeps the
-  // verse picker readable even at extreme split values.
+  // divider's gutter.  Both content columns use minmax(0, …) so neither has a
+  // hard pixel minimum — they shrink gracefully at any window width rather than
+  // overflowing the container and creating a blank strip on the right.  The
+  // split is clamped to [0.2, 0.8] so a drag can never push either panel to
+  // effectively zero by accident.
   const applySplit = (fraction) => {
     currentPaneSplit = Math.max(0.2, Math.min(0.8, fraction));
     const isScriptureFirst = paneGrid.dataset.order === "scripture-first";
 
     if (isScriptureFirst) {
       paneGrid.style.gridTemplateColumns =
-        `minmax(0, ${1 - currentPaneSplit}fr) 20px minmax(320px, ${currentPaneSplit}fr)`;
+        `minmax(0, ${1 - currentPaneSplit}fr) 20px minmax(0, ${currentPaneSplit}fr)`;
     } else {
       paneGrid.style.gridTemplateColumns =
-        `minmax(0, ${currentPaneSplit}fr) 20px minmax(320px, ${1 - currentPaneSplit}fr)`;
+        `minmax(0, ${currentPaneSplit}fr) 20px minmax(0, ${1 - currentPaneSplit}fr)`;
     }
   };
 

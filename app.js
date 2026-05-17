@@ -80,8 +80,6 @@ const firstSyncKeepLocalButton = document.querySelector("#first-sync-keep-local-
 const firstSyncUseCloudButton = document.querySelector("#first-sync-use-cloud-button");
 const firstSyncCancelButton = document.querySelector("#first-sync-cancel-button");
 const aboutVersionInfo = document.querySelector("#about-version-info");
-const mobileWarning = document.querySelector("#mobile-warning");
-const mobileWarningDismissButton = document.querySelector("#mobile-warning-dismiss");
 const onboardingDialog = document.querySelector("#onboarding-dialog");
 const onboardingStepKicker = document.querySelector("#onboarding-step-kicker");
 const onboardingStepTitle = document.querySelector("#onboarding-step-title");
@@ -1921,15 +1919,6 @@ void bootstrap();
 // The verseDisplay "copy" listener lives inside scripture/viewer.js now.
 // The pane-divider mousedown listener moved into layout/panes.js (it's wired
 // up at module construction time).
-
-if (sessionStorage.getItem("mobile-warning-dismissed")) {
-  mobileWarning.classList.add("is-hidden");
-}
-
-mobileWarningDismissButton.addEventListener("click", () => {
-  mobileWarning.classList.add("is-hidden");
-  sessionStorage.setItem("mobile-warning-dismissed", "1");
-});
 
 // ── Header clock ─────────────────────────────────────────────────────────────
 // Shown only when the page is in fullscreen mode (CSS gates visibility via
