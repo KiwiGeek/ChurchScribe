@@ -1899,8 +1899,12 @@ const bootstrap = async () => {
   applyColorTheme(await getPreferredColorTheme());
   await restoreCloudSyncSettings();
   activeProvider.waitForReady(() => {
+    console.log("[app.js] waitForReady fired; mobile-auth-return flag =",
+      sessionStorage.getItem("scriptoria-mobile-auth-return"));
+
     const handleMobileReturn = () => {
       if (sessionStorage.getItem("scriptoria-mobile-auth-return")) {
+        console.log("[app.js] Mobile return flag found — redirecting to mobile.html");
         sessionStorage.removeItem("scriptoria-mobile-auth-return");
         location.replace("mobile.html");
         return true;
@@ -1910,6 +1914,8 @@ const bootstrap = async () => {
 
     void reconnectCloud()
       .then(() => {
+        console.log("[app.js] reconnectCloud resolved; hasActiveSession =",
+          activeProvider.hasActiveSession());
         // If this load was triggered by a mobile OneDrive auth redirect, the
         // token is now cached — hand control back to mobile.html.
         if (handleMobileReturn()) return;
@@ -1917,7 +1923,8 @@ const bootstrap = async () => {
           renderSettings();
         }
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log("[app.js] reconnectCloud rejected:", err?.message);
         // Even if reconnect failed, if this was a mobile auth redirect we still
         // need to return to mobile.html (it will show "not connected" there).
         handleMobileReturn();

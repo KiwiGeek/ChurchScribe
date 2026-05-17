@@ -1310,9 +1310,12 @@ const bootstrap = async () => {
 
   // Attempt silent cloud reconnect
   activeProvider.waitForReady(async () => {
+    console.log("[Mobile] waitForReady fired; provider =", cloudSyncSettings.provider,
+      "; hasActiveSession =", activeProvider.hasActiveSession());
     try {
       await syncCloudApi.reconnectCloud();
       mobileState.isCloudConnected = activeProvider.hasActiveSession();
+      console.log("[Mobile] reconnectCloud resolved; isCloudConnected =", mobileState.isCloudConnected);
 
       if (mobileState.isCloudConnected) {
         showTransientStatus("Pulling latest notes…");
@@ -1322,7 +1325,7 @@ const bootstrap = async () => {
         await restoreWorkspace();
       }
     } catch (err) {
-      console.warn("[Mobile] Cloud reconnect failed:", err);
+      console.warn("[Mobile] Cloud reconnect failed:", err?.message ?? err);
       mobileState.isCloudConnected = false;
     }
     updateSyncBar();

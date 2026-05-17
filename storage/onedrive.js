@@ -177,6 +177,7 @@
     // cached token.  The page navigates away during loginRedirect so this
     // function effectively never returns in the normal case.
     if (window.location.pathname.endsWith("mobile.html")) {
+      console.log("[OneDrive] Mobile path detected — using loginRedirect");
       // Clear any stale MSAL interaction lock from a previous interrupted
       // attempt.  MSAL writes interaction_status=redirect to sessionStorage
       // before navigating; if the user cancelled or the page reloaded, that
@@ -191,8 +192,10 @@
       msalInstancePromise = null;
       const freshInst = await getMsalInstance();
 
+      console.log("[OneDrive] Planting mobile-auth-return flag, calling loginRedirect");
       sessionStorage.setItem("scriptoria-mobile-auth-return", "1");
       await freshInst.loginRedirect({ scopes, prompt: "select_account" });
+      console.log("[OneDrive] loginRedirect resolved (page should have navigated away)");
       // loginRedirect navigates the page away; the line below is unreachable
       // in normal operation, but satisfies connectCloud()'s destructuring
       // in the rare race where the Promise resolves before the tab unloads.
