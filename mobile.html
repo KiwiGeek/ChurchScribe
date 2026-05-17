@@ -1051,6 +1051,8 @@
     }
 
     .mob-color-swatch-mode {
+      --mob-dark-badge-bg: #141414;
+      --mob-dark-badge-text: #f1f1f1;
       position: absolute;
       right: -4px;
       bottom: -4px;
@@ -1069,8 +1071,8 @@
     }
 
     .mob-color-swatch--dark .mob-color-swatch-mode {
-      background: #141414;
-      color: #f1f1f1;
+      background: var(--mob-dark-badge-bg);
+      color: var(--mob-dark-badge-text);
     }
 
     .mob-color-swatch--both .mob-color-swatch-mode {

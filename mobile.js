@@ -873,6 +873,16 @@ const renderSettingsSheet = () => {
   const modeVal           = themeApi?.getCurrentThemeMode?.() ?? "system";
   const currentColorTheme = themeApi?.getCurrentColorThemeId?.() ?? "default";
   const allThemes         = window.colorThemes || [];
+  const getThemeSupportMode = (supportsValue) => {
+    if (supportsValue === "dark") return "dark";
+    if (supportsValue === "both") return "both";
+    return "light";
+  };
+  const themeSupportMeta = {
+    light: { label: "light mode only", badge: "L" },
+    dark: { label: "dark mode only", badge: "D" },
+    both: { label: "light and dark mode", badge: "L/D" }
+  };
   const modeButtons = THEME_MODE_OPTIONS.map(({ value, label }) => `
     <button
       type="button"
@@ -888,9 +898,9 @@ const renderSettingsSheet = () => {
     const c0 = theme.swatches?.[0] ?? "#ccc";
     const c1 = theme.swatches?.[1] ?? "#888";
     const isActive = theme.id === currentColorTheme;
-    const supports = theme.supports === "dark" ? "dark" : theme.supports === "both" ? "both" : "light";
-    const supportLabel = supports === "both" ? "light and dark mode" : supports === "dark" ? "dark mode only" : "light mode only";
-    const supportBadge = supports === "both" ? "L/D" : supports === "dark" ? "D" : "L";
+    const supports = getThemeSupportMode(theme.supports);
+    const supportLabel = themeSupportMeta[supports].label;
+    const supportBadge = themeSupportMeta[supports].badge;
     return `<button class="mob-color-swatch mob-color-swatch--${supports}${isActive ? " active" : ""}"
               data-color-theme="${escapeHtml(theme.id)}"
               aria-label="${escapeHtml(`${theme.name} (${supportLabel})`)}"
