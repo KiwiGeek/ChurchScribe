@@ -990,6 +990,35 @@ h1 {
   background: #fff;
 }
 
+.pdf-embed-status {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-content: center;
+  gap: 10px;
+  padding: 18px;
+  background: color-mix(in srgb, var(--surface-strong) 92%, transparent);
+  color: var(--text);
+  line-height: 1.4;
+  text-align: center;
+}
+
+.pdf-embed-status[hidden] {
+  display: none;
+}
+
+.pdf-embed-status-text {
+  max-width: 34ch;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.pdf-embed-progress {
+  width: min(260px, 100%);
+  accent-color: var(--accent);
+}
+
 .pdf-embed-fallback {
   display: flex;
   justify-content: flex-end;

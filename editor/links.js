@@ -336,7 +336,11 @@ window.ScriptoriaModules.createEditorLinks = (deps) => {
 
   const findLinkBlock = (link) => {
     const block = link.closest("p, div, h2, h3, h4, h5, h6, li, blockquote");
-    return (block && block !== noteEditor) ? block : null;
+    if (block && block !== noteEditor) {
+      return block;
+    }
+
+    return link.parentElement === noteEditor ? link : null;
   };
 
   const processUrlEmbeds = (scope = null) => {
@@ -355,9 +359,13 @@ window.ScriptoriaModules.createEditorLinks = (deps) => {
         return;
       }
 
-      const cloned = block.cloneNode(true);
-      cloned.querySelectorAll("a").forEach((anchor) => anchor.remove());
-      const remainingText = cloned.textContent.trim();
+      const remainingText = block.matches?.("a[data-auto-url-link='true']")
+        ? ""
+        : (() => {
+            const cloned = block.cloneNode(true);
+            cloned.querySelectorAll("a").forEach((anchor) => anchor.remove());
+            return cloned.textContent.trim();
+          })();
 
       if (remainingText) {
         return;

@@ -23,6 +23,7 @@ window.ScriptoriaModules.createEditorMedia = (deps) => {
     refreshTableUi,
     jumpToScripture,
     imageEmbedClass,
+    pdfEmbedClass,
     embedBaseClass,
     windowObject,
     documentObject
@@ -35,6 +36,13 @@ window.ScriptoriaModules.createEditorMedia = (deps) => {
 
   let savedSelectionForImageInsert = null;
 
+  const readFileAsDataUrl = (file) => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (event) => resolve(event.target.result);
+    reader.onerror = () => reject(reader.error ?? new Error("Unable to read file."));
+    reader.readAsDataURL(file);
+  });
+
   const getTopLevelEditorBlock = (node) => {
     let block = node;
 
@@ -45,9 +53,8 @@ window.ScriptoriaModules.createEditorMedia = (deps) => {
     return block && block !== noteEditor ? block : null;
   };
 
-  const insertImageAtCaret = (src, width = imageEmbedClass.DEFAULT_WIDTH) => {
+  const insertEmbedAtCaret = (embed) => {
     noteEditor.focus();
-    const embed = new imageEmbedClass().create(src, { width });
     const emptyParagraph = documentObject.createElement("p");
     emptyParagraph.innerHTML = "<br>";
 
@@ -88,6 +95,15 @@ window.ScriptoriaModules.createEditorMedia = (deps) => {
     saveActiveNote();
   };
 
+  const insertImageAtCaret = (src, width = imageEmbedClass.DEFAULT_WIDTH) => {
+    insertEmbedAtCaret(new imageEmbedClass().create(src, { width }));
+  };
+
+  const insertPdfAtCaret = (src, options = {}) => {
+    const dataUrl = pdfEmbedClass.normalizeDataUrl(src);
+    insertEmbedAtCaret(new pdfEmbedClass().create(dataUrl, options));
+  };
+
   const processImageFiles = (files) => {
     [...files].forEach((file) => {
       if (!file.type.startsWith("image/")) {
@@ -101,6 +117,22 @@ window.ScriptoriaModules.createEditorMedia = (deps) => {
       };
 
       reader.readAsDataURL(file);
+    });
+  };
+
+  const processPdfFiles = (files) => {
+    [...files].forEach((file) => {
+      if (!pdfEmbedClass.isPdfFile(file)) {
+        return;
+      }
+
+      readFileAsDataUrl(file)
+        .then((dataUrl) => {
+          insertPdfAtCaret(dataUrl, { sourceName: file.name });
+        })
+        .catch((error) => {
+          console.warn("Unable to insert dropped PDF.", error);
+        });
     });
   };
 
@@ -427,9 +459,10 @@ window.ScriptoriaModules.createEditorMedia = (deps) => {
       return;
     }
 
-    const imageFiles = [...event.dataTransfer.files].filter((file) => file.type.startsWith("image/"));
+    const droppedFiles = [...event.dataTransfer.files];
+    const mediaFiles = droppedFiles.filter((file) => file.type.startsWith("image/") || pdfEmbedClass.isPdfFile(file));
 
-    if (!imageFiles.length) {
+    if (!mediaFiles.length) {
       return;
     }
 
@@ -443,7 +476,13 @@ window.ScriptoriaModules.createEditorMedia = (deps) => {
       selection.addRange(dropRange);
     }
 
-    processImageFiles(imageFiles);
+    mediaFiles.forEach((file) => {
+      if (file.type.startsWith("image/")) {
+        processImageFiles([file]);
+      } else if (pdfEmbedClass.isPdfFile(file)) {
+        processPdfFiles([file]);
+      }
+    });
   };
 
   const handleClick = (event) => {
@@ -579,11 +618,14 @@ window.ScriptoriaModules.createEditorMedia = (deps) => {
     noteEditor.addEventListener("click", handleClick);
     noteEditor.addEventListener("contextmenu", handleContextMenu);
     noteEditor.addEventListener("mousedown", handleResizeMouseDown);
+    noteEditor.addEventListener("scriptoria:embed-updated", saveActiveNote);
   };
 
   return {
     insertImageAtCaret,
+    insertPdfAtCaret,
     processImageFiles,
+    processPdfFiles,
     sanitizePastedHtml,
     attach
   };

@@ -1092,6 +1092,7 @@ window.ScriptoriaModules.createEditorMedia({
   refreshTableUi,
   jumpToScripture,
   imageEmbedClass: ImageEmbed,
+  pdfEmbedClass: PdfEmbed,
   embedBaseClass: EmbedBase,
   windowObject: window,
   documentObject: document
