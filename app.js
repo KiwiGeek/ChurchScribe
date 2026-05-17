@@ -738,7 +738,7 @@ const applyCompactEditorState = () => {
   }
 };
 
-// Workspace logic — normaliseCloudSyncSettings, ensureWorkspaceConsistency,
+// Workspace logic — normalizeCloudSyncSettings, ensureWorkspaceConsistency,
 // migrateFromLegacyDatabase, migrateLegacyNotes, and restoreWorkspace are all
 // provided by core/workspace.js; see that file for the single source of truth.
 const workspaceApi = window.ScriptoriaModules.createWorkspace({
