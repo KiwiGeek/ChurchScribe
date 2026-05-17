@@ -186,9 +186,9 @@
     // opened tabs, so MSAL's popup flow can never postMessage the token back to
     // the calling tab.  Use loginRedirect instead: the page navigates to
     // Microsoft, authenticates, and returns directly to mobile.html (which is
-    // now a registered redirect URI in Azure).  MSAL on mobile.html processes
-    // the auth code during initialize() and the token is immediately available
-    // for attemptSilentReconnect on the fresh page load.
+    // now a registered redirect URI in Azure).  getMsalInstance() calls
+    // handleRedirectPromise() after initialize(), which exchanges the auth code
+    // for a token; attemptSilentReconnect then finds it on the fresh page load.
     if (window.location.pathname.endsWith("mobile.html")) {
       // Clear any stale MSAL interaction lock from a previous interrupted
       // attempt so retries don't throw interaction_in_progress.
@@ -254,9 +254,6 @@
     const msalInst = await getMsalInstance();
     const accounts = msalInst.getAllAccounts();
 
-    console.log("[OneDrive] attemptSilentReconnect — accounts found:", accounts.length);
-    console.log("[OneDrive] localStorage MSAL keys:", Object.keys(localStorage).filter((k) => k.toLowerCase().includes("msal")));
-
     if (!accounts.length) {
       throw new Error("No OneDrive account found. Please connect first.");
     }
@@ -264,11 +261,9 @@
     try {
       const result = await msalInst.acquireTokenSilent({ scopes, account: accounts[0] });
       accessToken = result.accessToken;
-      console.log("[OneDrive] acquireTokenSilent succeeded");
       const email = await fetchUserEmail().catch(() => "");
       return { email };
-    } catch (err) {
-      console.log("[OneDrive] acquireTokenSilent failed:", err?.message ?? err);
+    } catch {
       throw new Error("Silent reconnect failed. Please connect manually.");
     }
   };
