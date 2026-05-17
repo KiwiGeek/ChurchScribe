@@ -247,6 +247,7 @@ const sheetGotoBtn       = document.querySelector("#sheet-goto-btn");
 
 const settingsSheet        = document.querySelector("#settings-sheet");
 const settingsSheetContent = document.querySelector("#settings-sheet-content");
+const mobSettingsCloseBtn  = document.querySelector("#mob-settings-close-btn");
 
 // Conflict-resolution elements (hidden; auto-resolved below)
 const syncConflictDialog       = document.querySelector("#sync-conflict-dialog");
@@ -867,6 +868,19 @@ const renderSettingsSheet = () => {
   const modeVal           = themeApi?.getCurrentThemeMode?.() ?? "system";
   const currentColorTheme = themeApi?.getCurrentColorThemeId?.() ?? "default";
   const allThemes         = window.colorThemes || [];
+  const modeButtons = [
+    { value: "system", label: "System" },
+    { value: "light", label: "Light" },
+    { value: "dark", label: "Dark" }
+  ].map(({ value, label }) => `
+    <button
+      type="button"
+      class="mob-theme-toggle"
+      data-theme-mode="${value}"
+      aria-pressed="${modeVal === value}">
+      ${label}
+    </button>
+  `).join("");
 
   // Build swatch grid — two-tone circles using the first two swatches of each theme
   const swatchGrid = allThemes.map((theme) => {
@@ -884,16 +898,22 @@ const renderSettingsSheet = () => {
   settingsSheetContent.innerHTML = `
     <div class="mob-settings-section">
       <p class="mob-settings-label">Appearance</p>
-      <div class="mob-settings-row">
-        <span>Light / dark</span>
-        <select id="mob-theme-select" class="mob-inline-select">
-          <option value="system" ${modeVal === "system" ? "selected" : ""}>System</option>
-          <option value="light"  ${modeVal === "light"  ? "selected" : ""}>Light</option>
-          <option value="dark"   ${modeVal === "dark"   ? "selected" : ""}>Dark</option>
-        </select>
+      <div class="mob-theme-toggle-group" id="mob-theme-toggle-group">
+        ${modeButtons}
       </div>
-      <p class="mob-settings-label" style="margin-top:12px">Colour theme</p>
+      <p class="mob-settings-label" style="margin-top:12px">Color theme</p>
       <div class="mob-color-theme-grid" id="mob-color-theme-grid">${swatchGrid}</div>
+    </div>
+    <div class="mob-settings-section">
+      <p class="mob-settings-label">Translations</p>
+      <input id="mob-translation-search" class="mob-settings-search" type="search" placeholder="Search available translations" aria-label="Search available translations" autocomplete="off">
+      <div id="translation-language-pills" class="mob-color-theme-grid"></div>
+      <p class="mob-settings-label" style="margin-top:12px">Installed</p>
+      <p class="mob-settings-help" id="installed-translations-empty-note" hidden>No translations installed.</p>
+      <ul id="installed-translation-list" class="mob-settings-list" aria-label="Installed translations"></ul>
+      <p class="mob-settings-label" style="margin-top:12px">Available</p>
+      <p class="mob-settings-help" id="available-translations-empty-note" hidden>No translations found for this filter.</p>
+      <ul id="available-translation-list" class="mob-settings-list" aria-label="Available translations"></ul>
     </div>
     <div class="mob-settings-section">
       <p class="mob-settings-label">Sync &amp; Storage</p>
@@ -926,8 +946,14 @@ const renderSettingsSheet = () => {
     </div>
   `;
 
-  document.querySelector("#mob-theme-select")?.addEventListener("change", (e) => {
-    applyThemeMode?.(e.target.value);
+  document.querySelector("#mob-theme-toggle-group")?.addEventListener("click", (e) => {
+    const button = e.target.closest("[data-theme-mode]");
+    if (!button) return;
+    const selectedMode = button.dataset.themeMode;
+    applyThemeMode?.(selectedMode);
+    document.querySelectorAll("#mob-theme-toggle-group .mob-theme-toggle").forEach((toggle) => {
+      toggle.setAttribute("aria-pressed", String(toggle.dataset.themeMode === selectedMode));
+    });
   });
 
   document.querySelector("#mob-color-theme-grid")?.addEventListener("click", (e) => {
@@ -941,6 +967,49 @@ const renderSettingsSheet = () => {
       s.setAttribute("aria-pressed", isNowActive);
     });
   });
+
+  document.querySelector("#mob-translation-search")?.addEventListener("input", (event) => {
+    translationsManagerApiRef?.setAvailableTranslationSearch?.(event.target.value);
+  });
+
+  document.querySelector("#available-translation-list")?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-install-official-translation]");
+    if (!button) return;
+    if (!translationsManagerApiRef?.installOfficialTranslation) return;
+
+    const translationId = button.dataset.installOfficialTranslation;
+    button.disabled = true;
+    button.textContent = "Installing…";
+
+    void translationsManagerApiRef.installOfficialTranslation(translationId).then(() => {
+      showTransientStatus(`"${translationId}" installed.`);
+    }).catch((err) => {
+      window.alert(`Couldn't install translation: ${err.message}`);
+    });
+  });
+
+  document.querySelector("#installed-translation-list")?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-uninstall-translation]");
+    if (!button) return;
+    if (!translationsManagerApiRef?.uninstallTranslation) return;
+
+    const translationId = button.dataset.uninstallTranslation;
+    const label = translationLibrary[translationId]?.label ?? translationId;
+
+    if (!window.confirm(`Uninstall "${label}"? You can reinstall it from Available.`)) {
+      return;
+    }
+
+    void translationsManagerApiRef.uninstallTranslation(translationId).catch((err) => {
+      window.alert(`Couldn't uninstall translation: ${err.message}`);
+    });
+  });
+
+  if (translationsManagerApiRef?.renderTranslationsPanel) {
+    void translationsManagerApiRef.renderTranslationsPanel().catch((err) => {
+      console.warn("[Mobile] Failed to render translations panel:", err);
+    });
+  }
 
   document.querySelector("#mob-sync-now")?.addEventListener("click", async () => {
     showTransientStatus("Syncing…");
@@ -974,6 +1043,10 @@ const renderSettingsSheet = () => {
 
 settingsSheet?.addEventListener("click", (e) => {
   if (e.target === settingsSheet) settingsSheet.hidden = true;
+});
+
+mobSettingsCloseBtn?.addEventListener("click", () => {
+  settingsSheet.hidden = true;
 });
 
 mobSettingsBtn?.addEventListener("click", () => {
