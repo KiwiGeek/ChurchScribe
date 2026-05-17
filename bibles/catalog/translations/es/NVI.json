@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "translationId": "es:NVI-S",
-  "code": "NVI-S",
+  "translationId": "es:NVI",
+  "code": "NVI",
   "label": "Nueva Versi\u00F3n Internacional - Espa\u00F1ol",
   "languageTag": "es",
   "languageCode3": "spa",
   "sourceType": "official",
   "version": 25,
-  "contentUrl": "bibles/content/es/NVI-S/v25.json",
-  "contentHash": "sha256-aebc48dbb899de7756646c95a28a2f3c511c7d2bc92f6c0759bfe72766c093aa",
+  "contentUrl": "bibles/content/es/NVI/v25.json",
+  "contentHash": "sha256-a5fc3c78b62c907b98f6ae9783a99f680937c9ed74cd95817f2c32aa88967cfb",
   "bookOrder": "protestant-66",
   "features": {
     "headings": true,

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "translationId": "es:NVIs",
+  "code": "NVIs",
+  "label": "La Santa Biblia, Nueva Versi\u00F3n Internacional Simplificada",
+  "languageTag": "es",
+  "languageCode3": "spa",
+  "sourceType": "official",
+  "version": 4,
+  "contentUrl": "bibles/content/es/NVIs/v4.json",
+  "contentHash": "sha256-e1466257121f872c1cae62ccc6fd37700c1e75adfeb47a120488a7e2e270a0c7",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": true,
+    "subheadings": true,
+    "superscriptions": false,
+    "html": true
+  },
+  "updatedAt": "2026-05-10T23:54:26.8965256Z"
+}

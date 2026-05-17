@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "languageTag": "es",
   "displayName": "Spanish",
-  "catalogVersion": "2026-05-16T23:58:27.9115976\u002B00:00",
+  "catalogVersion": "2026-05-17T00:19:29.1646265\u002B00:00",
   "translations": [
     {
       "translationId": "es:JBS",
@@ -213,8 +213,8 @@
       "manifestUrl": "bibles/catalog/translations/es/LSB.json"
     },
     {
-      "translationId": "es:NVI-S",
-      "code": "NVI-S",
+      "translationId": "es:NVIs",
+      "code": "NVIs",
       "label": "La Santa Biblia, Nueva Versi\u00F3n Internacional Simplificada",
       "sourceType": "official",
       "languageTag": "es",
@@ -222,8 +222,8 @@
       "version": 4,
       "copyright": "Nueva Versi\u00F3n Internacional Simplificada\n\u00A9 2019 por Biblica, Inc.\u00AE\nReservados todos los derechos en todo el mundo.\nNueva Versi\u00F3n Internacional Simplificada\nCopyright \u00A9 2019 by Biblica, Inc.\u00AE\nAll rights reserved worldwide.",
       "downloadSizeBytes": 823728,
-      "contentHash": "sha256-aebc48dbb899de7756646c95a28a2f3c511c7d2bc92f6c0759bfe72766c093aa",
-      "manifestUrl": "bibles/catalog/translations/es/NVI-S.json"
+      "contentHash": "sha256-e1466257121f872c1cae62ccc6fd37700c1e75adfeb47a120488a7e2e270a0c7",
+      "manifestUrl": "bibles/catalog/translations/es/NVIs.json"
     },
     {
       "translationId": "es:NBLA",
@@ -265,8 +265,8 @@
       "manifestUrl": "bibles/catalog/translations/es/NTV.json"
     },
     {
-      "translationId": "es:NVI-S",
-      "code": "NVI-S",
+      "translationId": "es:NVI",
+      "code": "NVI",
       "label": "Nueva Versi\u00F3n Internacional - Espa\u00F1ol",
       "sourceType": "official",
       "languageTag": "es",
@@ -274,8 +274,8 @@
       "version": 25,
       "copyright": "Santa Biblia, Nueva Versi\u00F3n Internacional\u00AE NVI\u00AE | \u00A9 1999, 2015, 2022 por Biblica, Inc. | Usado con permiso. Reservados todos los derechos en todo el mundo.",
       "downloadSizeBytes": 3619321,
-      "contentHash": "sha256-aebc48dbb899de7756646c95a28a2f3c511c7d2bc92f6c0759bfe72766c093aa",
-      "manifestUrl": "bibles/catalog/translations/es/NVI-S.json"
+      "contentHash": "sha256-a5fc3c78b62c907b98f6ae9783a99f680937c9ed74cd95817f2c32aa88967cfb",
+      "manifestUrl": "bibles/catalog/translations/es/NVI.json"
     },
     {
       "translationId": "es:NTBIZ",
