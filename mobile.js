@@ -902,17 +902,17 @@ const renderSettingsSheet = () => {
       <div class="mob-theme-toggle-group" id="mob-theme-toggle-group">
         ${modeButtons}
       </div>
-      <p class="mob-settings-label" style="margin-top:12px">Color theme</p>
+      <p class="mob-settings-label mob-settings-label--spaced">Color theme</p>
       <div class="mob-color-theme-grid" id="mob-color-theme-grid">${swatchGrid}</div>
     </div>
     <div class="mob-settings-section">
       <p class="mob-settings-label">Translations</p>
       <input id="mob-translation-search" class="mob-settings-search" type="search" placeholder="Search available translations" aria-label="Search available translations" autocomplete="off">
       <div id="translation-language-pills" class="mob-color-theme-grid"></div>
-      <p class="mob-settings-label" style="margin-top:12px">Installed</p>
+      <p class="mob-settings-label mob-settings-label--spaced">Installed</p>
       <p class="mob-settings-help" id="installed-translations-empty-note" hidden>No translations installed.</p>
       <ul id="installed-translation-list" class="mob-settings-list" aria-label="Installed translations"></ul>
-      <p class="mob-settings-label" style="margin-top:12px">Available</p>
+      <p class="mob-settings-label mob-settings-label--spaced">Available</p>
       <p class="mob-settings-help" id="available-translations-empty-note" hidden>No translations found for this filter.</p>
       <ul id="available-translation-list" class="mob-settings-list" aria-label="Available translations"></ul>
     </div>
