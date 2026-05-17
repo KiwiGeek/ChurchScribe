@@ -519,7 +519,7 @@ const setView = (view) => {
 
   // Header
   mobBackBtn.hidden = !inNoteDetail;
-  mobTitle.textContent = view === "bible" ? "Scriptoria" : "Notes";
+  mobTitle.textContent = view === "bible" ? "Scriptoria" : "Entries";
 };
 
 const renderMobileApp = () => {
