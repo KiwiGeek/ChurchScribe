@@ -959,6 +959,7 @@ const openCompactFormatPanel = () => {
 
 const closeCompactVersePicker = () => {
   versePicker?.classList.remove("is-compact-expanded");
+  compactReferenceChip?.setAttribute("aria-expanded", "false");
 };
 
 const applyCompactEditorState = () => {
@@ -1986,13 +1987,24 @@ const setupCompactEditorMode = () => {
 
   if (compactReferenceChip && versePicker) {
     compactReferenceChip.addEventListener("click", () => {
-      versePicker.classList.toggle("is-compact-expanded");
+      const isExpanded = versePicker.classList.toggle("is-compact-expanded");
+      compactReferenceChip.setAttribute("aria-expanded", isExpanded ? "true" : "false");
     });
 
     compactVersePickerClose?.addEventListener("click", () => {
       closeCompactVersePicker();
     });
   }
+
+  compactFormatPanel?.addEventListener("click", (event) => {
+    const clickedButton = event.target.closest(".tool-button");
+
+    if (!clickedButton || clickedButton.id === "color-picker-trigger") {
+      return;
+    }
+
+    closeCompactFormatPanel();
+  });
 
   [translationSelect, bookSelect, chapterSelect].forEach((select) => {
     select?.addEventListener("change", () => {
