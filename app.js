@@ -130,7 +130,11 @@ const colorThemeMirrorStorageKey = "service-notes-color-theme-mirror";
 const lastBookChapterStorageKey = "service-notes-last-book-chapter";
 const onboardingStorageKey = "service-notes-onboarding-seen";
 const autoCloudSyncDelayMs = 10000;
+// Compact mode is meant for narrow desktop panes while keeping the full editor available.
 const compactEditorThresholdPx = 900;
+const chapterLabelPrefixPattern = /^Chapter\s+/i;
+let compactResizeFrame = null;
+let compactEditorActive = null;
 
 // noOpProvider — defensive fallback used as the initial value of activeProvider
 // and whenever providerRegistry lookup misses.  Lives in storage/noopprovider.js
@@ -923,10 +927,11 @@ const updateCompactReferenceChip = () => {
     return;
   }
 
-  const translationLabel = translationSelect.selectedOptions[0]?.textContent?.trim() || translationSelect.value || "";
+  const getSelectLabel = (select) => select.selectedOptions[0]?.textContent?.trim() || select.value || "";
+  const translationLabel = getSelectLabel(translationSelect);
   const book = bookSelect.value || "";
   const chapterLabel = chapterSelect.selectedOptions[0]?.textContent || "";
-  const chapterNumber = chapterLabel.replace(/^Chapter\s+/i, "").trim();
+  const chapterNumber = chapterLabel.replace(chapterLabelPrefixPattern, "").trim();
   const reference = `${book}${chapterNumber ? ` ${chapterNumber}` : ""}`.trim();
   const chipLabel = `${translationLabel}${reference ? ` · ${reference}` : ""}`.trim();
 
@@ -958,6 +963,12 @@ const closeCompactVersePicker = () => {
 
 const applyCompactEditorState = () => {
   const isCompact = window.innerWidth <= compactEditorThresholdPx;
+
+  if (compactEditorActive === isCompact) {
+    return;
+  }
+
+  compactEditorActive = isCompact;
   document.body.classList.toggle("is-compact-editor", isCompact);
 
   if (compactFormatMenu) {
@@ -1963,6 +1974,10 @@ const setupCompactEditorMode = () => {
     });
 
     document.addEventListener("click", (event) => {
+      if (!compactEditorActive) {
+        return;
+      }
+
       if (!compactFormatMenu.contains(event.target)) {
         closeCompactFormatPanel();
       }
@@ -1992,7 +2007,16 @@ const setupCompactEditorMode = () => {
     verseReferenceObserver.observe(verseReference, { childList: true, subtree: true, characterData: true });
   }
 
-  window.addEventListener("resize", applyCompactEditorState);
+  window.addEventListener("resize", () => {
+    if (compactResizeFrame !== null) {
+      window.cancelAnimationFrame(compactResizeFrame);
+    }
+
+    compactResizeFrame = window.requestAnimationFrame(() => {
+      compactResizeFrame = null;
+      applyCompactEditorState();
+    });
+  });
   updateCompactReferenceChip();
   applyCompactEditorState();
 };

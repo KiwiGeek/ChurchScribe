@@ -39,6 +39,7 @@
   --radius-xl: 28px;
   --radius-lg: 20px;
   --radius-md: 14px;
+  --compact-format-panel-viewport-gap: 88px;
 }
 
 [data-theme="dark"] {
@@ -2652,7 +2653,7 @@ body.is-compact-editor .compact-format-button {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  width: min(360px, calc(100vw - 88px));
+  width: min(360px, calc(100vw - var(--compact-format-panel-viewport-gap)));
   padding: 10px;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
