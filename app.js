@@ -1899,45 +1899,11 @@ const bootstrap = async () => {
   applyColorTheme(await getPreferredColorTheme());
   await restoreCloudSyncSettings();
   activeProvider.waitForReady(() => {
-    // Persist debug entries to localStorage so they survive the redirect to
-    // mobile.html where they can be read via Eruda.
-    const dbgLog = (msg) => {
-      try {
-        const key = "_scriptoria_debug";
-        const existing = JSON.parse(localStorage.getItem(key) || "[]");
-        existing.push(`[${new Date().toISOString()}] ${msg}`);
-        localStorage.setItem(key, JSON.stringify(existing.slice(-20)));
-      } catch { /* ignore */ }
-    };
+    void reconnectCloud();
 
-    dbgLog(`[app.js] waitForReady fired; provider=${cloudSyncSettings.provider}; mobile-auth-return flag=${sessionStorage.getItem("scriptoria-mobile-auth-return")}; URL=${location.href}`);
-
-    const handleMobileReturn = () => {
-      if (sessionStorage.getItem("scriptoria-mobile-auth-return")) {
-        dbgLog("[app.js] Mobile return flag found — redirecting to mobile.html");
-        sessionStorage.removeItem("scriptoria-mobile-auth-return");
-        location.replace("mobile.html");
-        return true;
-      }
-      return false;
-    };
-
-    void reconnectCloud()
-      .then(() => {
-        dbgLog(`[app.js] reconnectCloud resolved; hasActiveSession=${activeProvider.hasActiveSession()}`);
-        // If this load was triggered by a mobile OneDrive auth redirect, the
-        // token is now cached — hand control back to mobile.html.
-        if (handleMobileReturn()) return;
-        if (settingsDialog.open) {
-          renderSettings();
-        }
-      })
-      .catch((err) => {
-        dbgLog(`[app.js] reconnectCloud rejected: ${err?.message}`);
-        // Even if reconnect failed, if this was a mobile auth redirect we still
-        // need to return to mobile.html (it will show "not connected" there).
-        handleMobileReturn();
-      });
+    if (settingsDialog.open) {
+      renderSettings();
+    }
   });
   await restoreWorkspace();
 

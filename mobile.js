@@ -1043,24 +1043,6 @@ if (syncConflictDialog) {
 
 // ── Bootstrap ─────────────────────────────────────────────────────────────────
 const bootstrap = async () => {
-  // Drain any debug entries written by index.html into this console
-  // so they're visible in Eruda even though index.html redirected too fast.
-  try {
-    const idxLog   = localStorage.getItem("_debug_indexhtml");
-    const grdLog   = localStorage.getItem("_debug_guard");
-    const appLogs  = JSON.parse(localStorage.getItem("_scriptoria_debug") || "[]");
-
-    console.group("[Debug] Data from index.html");
-    console.log("index.html ran?", idxLog ? JSON.parse(idxLog) : "NO — index.html never loaded");
-    console.log("guard state:",    grdLog ? JSON.parse(grdLog)  : "NO — guard code never ran");
-    appLogs.forEach((entry) => console.log(entry));
-    console.groupEnd();
-
-    localStorage.removeItem("_debug_indexhtml");
-    localStorage.removeItem("_debug_guard");
-    localStorage.removeItem("_scriptoria_debug");
-  } catch { /* ignore */ }
-
   await migrateFromLegacyDatabase();
 
   // ── Theme controller ──────────────────────────────────────────────────────
@@ -1328,12 +1310,9 @@ const bootstrap = async () => {
 
   // Attempt silent cloud reconnect
   activeProvider.waitForReady(async () => {
-    console.log("[Mobile] waitForReady fired; provider =", cloudSyncSettings.provider,
-      "; hasActiveSession =", activeProvider.hasActiveSession());
     try {
       await syncCloudApi.reconnectCloud();
       mobileState.isCloudConnected = activeProvider.hasActiveSession();
-      console.log("[Mobile] reconnectCloud resolved; isCloudConnected =", mobileState.isCloudConnected);
 
       if (mobileState.isCloudConnected) {
         showTransientStatus("Pulling latest notes…");
@@ -1343,7 +1322,7 @@ const bootstrap = async () => {
         await restoreWorkspace();
       }
     } catch (err) {
-      console.warn("[Mobile] Cloud reconnect failed:", err?.message ?? err);
+      console.warn("[Mobile] Cloud reconnect failed:", err);
       mobileState.isCloudConnected = false;
     }
     updateSyncBar();

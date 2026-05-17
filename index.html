@@ -3,34 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- TEMPORARY: debug console — remove before next release -->
-  <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-  <script>eruda.init();</script>
   <script>
     (function () {
-      // DEBUG: record that index.html ran and what the URL looks like
-      try {
-        localStorage.setItem('_debug_indexhtml',
-          JSON.stringify({ ts: new Date().toISOString(), href: location.href,
-            search: location.search, hash: location.hash }));
-      } catch(e) {}
-
       var params = new URLSearchParams(location.search);
       // ?mobile=1  — force the mobile view (useful for testing on a desktop browser)
       if (params.has('mobile')) { location.replace('mobile.html?mobile=1'); return; }
       // ?desktop=1 — force the desktop view (bypass auto-redirect on a real phone)
       if (params.has('desktop')) { return; }
-      // MSAL (OneDrive auth) uses index.html as its redirect URI so that only
-      // one URI needs to be registered in the Azure App Registration.  When the
-      // auth popup lands here it carries ?code=...&state=... in the query string.
-      // We must NOT redirect away before MSAL processes those params — the popup
-      // would lose the auth code and the token handshake would fail.
-      try {
-        localStorage.setItem('_debug_guard',
-          JSON.stringify({ hasCode: params.has('code'), hasState: params.has('state'),
-            hashHasCode: location.hash.includes('code='), ts: new Date().toISOString() }));
-      } catch(e) {}
-      if (params.has('code') || params.has('state')) { return; }
       // Auto-redirect: touch device whose smallest screen dimension is ≤ 480 px.
       // Checking the smallest dimension means both portrait and landscape redirect.
       var isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);

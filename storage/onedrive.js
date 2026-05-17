@@ -73,14 +73,16 @@
               auth: {
                 clientId,
                 authority,
-                // Always redirect to the base directory (strip the filename)
-                // so the URI matches what is registered in the Azure App
-                // Registration regardless of which page initiated the auth
-                // flow (index.html, mobile.html, etc.).
-                // e.g. https://kiwigeek.github.io/ChurchScribe/mobile.html
-                //   →  https://kiwigeek.github.io/ChurchScribe/
-                redirectUri: window.location.origin +
-                  window.location.pathname.replace(/[^/]+$/, "")
+                // Use the full pathname so each page gets its own registered
+                // redirect URI.  mobile.html is registered directly in Azure,
+                // so Microsoft redirects straight back to it after auth — no
+                // index.html detour required.  All other pages (index.html etc.)
+                // fall back to the directory URI which is also registered.
+                redirectUri: window.location.origin + (
+                  window.location.pathname.endsWith("mobile.html")
+                    ? window.location.pathname
+                    : window.location.pathname.replace(/[^/]+$/, "")
+                )
               },
               cache: {
                 cacheLocation: "localStorage",
@@ -166,24 +168,16 @@
   };
 
   const connect = async () => {
-    const msalInst = await getMsalInstance();
-
     // On mobile browsers, window.opener is nulled out by the browser on newly
     // opened tabs, so MSAL's popup flow can never postMessage the token back to
-    // the calling tab.  Detect mobile.html and use loginRedirect instead: the
-    // tab navigates to Microsoft, authenticates, returns to index.html (which
-    // processes the token), then a sessionStorage flag causes index.html to
-    // redirect back to mobile.html where attemptSilentReconnect picks up the
-    // cached token.  The page navigates away during loginRedirect so this
-    // function effectively never returns in the normal case.
+    // the calling tab.  Use loginRedirect instead: the page navigates to
+    // Microsoft, authenticates, and returns directly to mobile.html (which is
+    // now a registered redirect URI in Azure).  MSAL on mobile.html processes
+    // the auth code during initialize() and the token is immediately available
+    // for attemptSilentReconnect on the fresh page load.
     if (window.location.pathname.endsWith("mobile.html")) {
-      console.log("[OneDrive] Mobile path detected — using loginRedirect");
       // Clear any stale MSAL interaction lock from a previous interrupted
-      // attempt.  MSAL writes interaction_status=redirect to sessionStorage
-      // before navigating; if the user cancelled or the page reloaded, that
-      // entry remains and causes subsequent loginRedirect calls to throw
-      // interaction_in_progress.  Wiping the relevant keys and forcing a fresh
-      // MSAL instance avoids the lock.
+      // attempt so retries don't throw interaction_in_progress.
       for (const key of Object.keys(sessionStorage)) {
         if (key.includes("msal") || key.includes("interaction")) {
           sessionStorage.removeItem(key);
@@ -191,17 +185,12 @@
       }
       msalInstancePromise = null;
       const freshInst = await getMsalInstance();
-
-      console.log("[OneDrive] Planting mobile-auth-return flag, calling loginRedirect");
-      sessionStorage.setItem("scriptoria-mobile-auth-return", "1");
       await freshInst.loginRedirect({ scopes, prompt: "select_account" });
-      console.log("[OneDrive] loginRedirect resolved (page should have navigated away)");
-      // loginRedirect navigates the page away; the line below is unreachable
-      // in normal operation, but satisfies connectCloud()'s destructuring
-      // in the rare race where the Promise resolves before the tab unloads.
+      // Page navigates away above; unreachable in normal operation.
       return { email: "" };
     }
 
+    const msalInst = await getMsalInstance();
     try {
       const result = await msalInst.acquireTokenPopup({ scopes, prompt: "select_account" });
       accessToken = result.accessToken;
@@ -251,10 +240,6 @@
     const msalInst = await getMsalInstance();
     const accounts = msalInst.getAllAccounts();
 
-    console.log("[OneDrive] attemptSilentReconnect; accounts found =", accounts.length);
-    console.log("[OneDrive] MSAL localStorage keys =",
-      Object.keys(localStorage).filter((k) => k.toLowerCase().includes("msal")));
-
     if (!accounts.length) {
       throw new Error("No OneDrive account found. Please connect first.");
     }
@@ -264,8 +249,7 @@
       accessToken = result.accessToken;
       const email = await fetchUserEmail().catch(() => "");
       return { email };
-    } catch (err) {
-      console.log("[OneDrive] acquireTokenSilent failed:", err?.message);
+    } catch {
       throw new Error("Silent reconnect failed. Please connect manually.");
     }
   };
