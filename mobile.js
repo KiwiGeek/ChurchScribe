@@ -1309,10 +1309,14 @@ const bootstrap = async () => {
   await restoreWorkspace();
 
   // Attempt silent cloud reconnect
+  console.log("[Mobile] bootstrap — URL on load:", location.href);
+  console.log("[Mobile] bootstrap — provider:", cloudSyncSettings.provider);
+
   activeProvider.waitForReady(async () => {
     try {
       await syncCloudApi.reconnectCloud();
       mobileState.isCloudConnected = activeProvider.hasActiveSession();
+      console.log("[Mobile] reconnect done — isCloudConnected:", mobileState.isCloudConnected);
 
       if (mobileState.isCloudConnected) {
         showTransientStatus("Pulling latest notes…");
