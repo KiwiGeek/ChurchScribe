@@ -60,13 +60,14 @@
       height: 100dvh;
     }
 
-    /* Safe-area insets for notched phones */
     #mob-app {
       display: flex;
       flex-direction: column;
       height: 100dvh;
       overflow: hidden;
-      padding-bottom: env(safe-area-inset-bottom);
+      /* No padding-bottom here — the tab bar handles the safe-area inset
+         itself via its own padding-bottom: env(safe-area-inset-bottom),
+         so its background fills the home-indicator strip directly. */
     }
 
     /* ── Header ─────────────────────────────────────────────────────────── */
