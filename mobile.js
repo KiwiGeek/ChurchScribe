@@ -979,12 +979,13 @@ const renderSettingsSheet = () => {
     if (!translationsManagerApiRef?.installOfficialTranslation) return;
 
     const translationId = button.dataset.installOfficialTranslation;
+    const label = translationLibrary[translationId]?.label ?? translationId;
     const originalLabel = button.textContent;
     button.disabled = true;
     button.textContent = "Installing…";
 
     void translationsManagerApiRef.installOfficialTranslation(translationId).then(() => {
-      showTransientStatus(`"${translationId}" installed.`);
+      showTransientStatus(`"${label}" installed.`);
     }).catch((err) => {
       button.disabled = false;
       button.textContent = originalLabel;
