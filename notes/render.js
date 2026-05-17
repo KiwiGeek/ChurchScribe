@@ -23,33 +23,12 @@ window.ScriptoriaModules.createNotesRender = (deps) => {
     noteBrowserSelectedNoteIdRef
   } = deps;
 
-  const getNoteDisplayTitle = (note) => {
-    const type = deps.getNoteTypeById(note.typeId);
-    const preferredField = type.fields.find((field) => field.id === type.cardTitleFieldId) ?? null;
-    const titleValue = preferredField ? note.metadata[preferredField.id]?.trim() : "";
-
-    if (titleValue) {
-      return titleValue;
-    }
-
-    return deps.formatNoteDate(note.createdAt);
-  };
-
-  const getNoteDisplayMeta = (note) => {
-    const type = deps.getNoteTypeById(note.typeId);
-    const secondaryField = type.fields.find((field) => field.id === type.cardSubtitleFieldId) ?? null;
-    const secondaryValue = secondaryField ? note.metadata[secondaryField.id]?.trim() : "";
-
-    return secondaryValue || "";
-  };
-
-  const getNoteSearchableText = (note) => {
-    const metadataText = Object.values(note.metadata)
-      .filter((value) => typeof value === "string" && value.trim())
-      .join(" ");
-    const contentText = note.content.replace(/<[^>]+>/g, " ");
-    return [getNoteDisplayTitle(note), getNoteDisplayMeta(note), metadataText, contentText].join(" ").toLowerCase();
-  };
+  // Delegate to the shared display helpers (notes/display.js).
+  const { getNoteDisplayTitle, getNoteDisplayMeta, getNoteSearchableText } =
+    window.ScriptoriaModules.createNotesDisplay({
+      getNoteTypeById: deps.getNoteTypeById,
+      formatNoteDate: deps.formatNoteDate
+    });
 
   const renderNoteTypeOptions = () => {
     const showTypeChoices = workspace.noteTypes.length > 1;

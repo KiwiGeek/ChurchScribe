@@ -14,11 +14,7 @@
 
 'use strict';
 
-// ── Storage constants (must match desktop app.js) ─────────────────────────────
-const legacyDbName               = "churchscribe-db";
-const dbName                     = "scriptoria-db";
-const dbVersion                  = 1;
-const dbStoreName                = "kv";
+// ── Storage constants ─────────────────────────────────────────────────────────
 const workspaceStorageKey        = "service-notes-workspace";
 const notesStorageKey            = "service-notes";
 const legacyNotesStorageKey      = "service-notes-content";
@@ -47,6 +43,17 @@ const createId      = (prefix) => `${prefix}-${crypto.randomUUID()}`;
 const formatSyncTimestamp = (v) => v ? new Date(v).toLocaleString() : "Not synced yet";
 const normalizeFieldLabel = (v) => v.trim().toLowerCase();
 
+// Storage helpers and IndexedDB utilities — provided by core/storage.js.
+const {
+  openDatabase,
+  readStoredValue,
+  writeStoredValue,
+  deleteStoredValue,
+  migrateLegacyPreference,
+  readMirroredPreference,
+  writeMirroredPreference
+} = window.ScriptoriaStorage;
+
 const debounce = (fn, delay) => {
   let timer = null;
   return (...args) => {
@@ -60,137 +67,6 @@ const escapeHtml = (str) => {
   d.textContent = String(str ?? "");
   return d.innerHTML;
 };
-
-// ── IndexedDB helpers ─────────────────────────────────────────────────────────
-let dbPromise;
-
-const openDatabase = () => {
-  if (!("indexedDB" in window)) {
-    return Promise.reject(new Error("IndexedDB is not available in this browser."));
-  }
-  if (!dbPromise) {
-    dbPromise = new Promise((resolve, reject) => {
-      const request = window.indexedDB.open(dbName, dbVersion);
-      request.onupgradeneeded = () => {
-        const db = request.result;
-        if (!db.objectStoreNames.contains(dbStoreName)) {
-          db.createObjectStore(dbStoreName, { keyPath: "key" });
-        }
-      };
-      request.onsuccess = () => resolve(request.result);
-      request.onerror  = () => reject(request.error);
-    });
-  }
-  return dbPromise;
-};
-
-const readStoredValue = async (key) => {
-  const db = await openDatabase();
-  return new Promise((resolve, reject) => {
-    const tx      = db.transaction(dbStoreName, "readonly");
-    const request = tx.objectStore(dbStoreName).get(key);
-    request.onsuccess = () => resolve(request.result?.value);
-    request.onerror   = () => reject(request.error);
-  });
-};
-
-const writeStoredValue = async (key, value) => {
-  const db = await openDatabase();
-  return new Promise((resolve, reject) => {
-    const tx      = db.transaction(dbStoreName, "readwrite");
-    const request = tx.objectStore(dbStoreName).put({ key, value });
-    request.onsuccess = () => resolve();
-    request.onerror   = () => reject(request.error);
-  });
-};
-
-const deleteStoredValue = async (key) => {
-  const db = await openDatabase();
-  return new Promise((resolve, reject) => {
-    const tx      = db.transaction(dbStoreName, "readwrite");
-    const request = tx.objectStore(dbStoreName).delete(key);
-    request.onsuccess = () => resolve();
-    request.onerror   = () => reject(request.error);
-  });
-};
-
-const migrateLegacyPreference = async (key, parser = (v) => v) => {
-  const existing = await readStoredValue(key);
-  if (typeof existing !== "undefined") return existing;
-  const legacy = window.localStorage.getItem(key);
-  if (legacy === null) return undefined;
-  const parsed = parser(legacy);
-  await writeStoredValue(key, parsed);
-  window.localStorage.removeItem(key);
-  return parsed;
-};
-
-const readMirroredPreference = (key) => {
-  try { return window.localStorage.getItem(key); } catch { return null; }
-};
-
-const writeMirroredPreference = (key, value) => {
-  try {
-    if (value == null) { window.localStorage.removeItem(key); return; }
-    window.localStorage.setItem(key, String(value));
-  } catch { /* ignore */ }
-};
-
-// ── Legacy DB migration (same as desktop) ─────────────────────────────────────
-const migrateFromLegacyDatabase = async () => {
-  if (typeof window.indexedDB.databases !== "function") return;
-  const databases = await window.indexedDB.databases();
-  if (!databases.some((db) => db.name === legacyDbName)) return;
-
-  const legacyDb = await new Promise((resolve) => {
-    const req = window.indexedDB.open(legacyDbName);
-    req.onsuccess = () => resolve(req.result);
-    req.onerror   = () => resolve(null);
-  });
-  if (!legacyDb) return;
-
-  try {
-    if (!legacyDb.objectStoreNames.contains(dbStoreName)) return;
-    const records = await new Promise((resolve, reject) => {
-      const tx  = legacyDb.transaction(dbStoreName, "readonly");
-      const req = tx.objectStore(dbStoreName).getAll();
-      req.onsuccess = () => resolve(req.result);
-      req.onerror   = () => reject(req.error);
-    });
-    if (!records.length) return;
-    const hasNewData = (await readStoredValue(workspaceStorageKey)) !== undefined;
-    if (hasNewData) return;
-    const newDb = await openDatabase();
-    await new Promise((resolve, reject) => {
-      const tx    = newDb.transaction(dbStoreName, "readwrite");
-      const store = tx.objectStore(dbStoreName);
-      records.forEach((r) => store.put(r));
-      tx.oncomplete = resolve;
-      tx.onerror    = () => reject(tx.error);
-    });
-    console.info("[Mobile/Migration] Migrated data from churchscribe-db.");
-  } catch (err) {
-    console.error("[Mobile/Migration] Failed:", err);
-  } finally {
-    legacyDb.close();
-  }
-};
-
-// ── Cloud sync settings normaliser ───────────────────────────────────────────
-const normalizeCloudSyncSettings = (value = {}) => ({
-  provider:              typeof value.provider === "string" ? value.provider : "none",
-  pollIntervalSeconds:   Number(value.pollIntervalSeconds) || 60,
-  status:                typeof value.status === "string" && value.status ? value.status : "Not connected",
-  lastSyncAt:            typeof value.lastSyncAt === "string" ? value.lastSyncAt : null,
-  localSettingsUpdatedAt: typeof value.localSettingsUpdatedAt === "string" ? value.localSettingsUpdatedAt : null,
-  connectedEmail:        typeof value.connectedEmail === "string" ? value.connectedEmail : "",
-  remoteSettingsFileId:  typeof value.remoteSettingsFileId === "string" ? value.remoteSettingsFileId : "",
-  remoteNoteFileIds:     (value.remoteNoteFileIds && typeof value.remoteNoteFileIds === "object" && !Array.isArray(value.remoteNoteFileIds)) ? value.remoteNoteFileIds : {},
-  remoteWorkspaceFileId: typeof value.remoteWorkspaceFileId === "string" ? value.remoteWorkspaceFileId : "",
-  remoteWorkspaceParentId: typeof value.remoteWorkspaceParentId === "string" ? value.remoteWorkspaceParentId : "",
-  lastError:             typeof value.lastError === "string" ? value.lastError : "",
-  providerSettings:      (value.providerSettings && typeof value.providerSettings === "object" && !Array.isArray(value.providerSettings)) ? value.providerSettings : {}
-});
 
 // ── App-level state ───────────────────────────────────────────────────────────
 const workspace = {
@@ -365,139 +241,9 @@ const updateSaveStatus = (msg) => {
   if (typeof msg === "string") showTransientStatus(msg);
 };
 
-// ── Workspace consistency (same logic as app.js) ──────────────────────────────
-const ensureWorkspaceConsistency = () => {
-  if (!Array.isArray(workspace.noteTypes) || !workspace.noteTypes.length) {
-    workspace.noteTypes = [createDefaultNoteType()];
-  }
-
-  workspace.noteTypes = workspace.noteTypes.map((type, i) => {
-    const norm = {
-      id:   typeof type.id === "string"   && type.id   ? type.id   : createId("type"),
-      name: typeof type.name === "string" && type.name.trim() ? type.name.trim() : `Type ${i + 1}`,
-      fields: Array.isArray(type.fields)
-        ? type.fields.map((f, fi) => ({
-            id:          typeof f.id    === "string" && f.id    ? f.id    : createId("field"),
-            label:       typeof f.label === "string" && f.label.trim() ? f.label.trim() : `Field ${fi + 1}`,
-            placeholder: typeof f.placeholder === "string" ? f.placeholder : ""
-          }))
-        : []
-    };
-    norm.cardTitleFieldId = typeof type.cardTitleFieldId === "string"
-      ? (type.cardTitleFieldId === "" || norm.fields.some((f) => f.id === type.cardTitleFieldId)
-          ? type.cardTitleFieldId
-          : getSuggestedCardTitleFieldId(norm))
-      : getSuggestedCardTitleFieldId(norm);
-    norm.cardSubtitleFieldId = typeof type.cardSubtitleFieldId === "string"
-      ? (type.cardSubtitleFieldId === "" || norm.fields.some((f) => f.id === type.cardSubtitleFieldId)
-          ? type.cardSubtitleFieldId
-          : getDefaultCardSubtitleFieldId(norm))
-      : getDefaultCardSubtitleFieldId(norm);
-    return norm;
-  });
-
-  const firstType = workspace.noteTypes[0];
-
-  workspace.notes = Array.isArray(workspace.notes)
-    ? workspace.notes.map((note) => {
-        const resolvedType = getNoteTypeById(note.typeId) ?? firstType;
-        return {
-          id:        typeof note.id === "string" && note.id ? note.id : createId("note"),
-          typeId:    resolvedType.id,
-          metadata:  buildMetadataForType(resolvedType, typeof note.metadata === "object" && note.metadata ? note.metadata : {}),
-          content:   typeof note.content === "string" ? note.content : "",
-          createdAt: typeof note.createdAt === "string" ? note.createdAt : new Date().toISOString(),
-          updatedAt: typeof note.updatedAt === "string" ? note.updatedAt : new Date().toISOString()
-        };
-      })
-    : [];
-
-  if (!workspace.notes.length) {
-    workspace.notes = [createEmptyNote(firstType.id, buildMetadataForType(firstType))];
-  }
-  if (!workspace.notes.some((n) => n.id === workspace.activeNoteId)) {
-    workspace.activeNoteId = workspace.notes[0].id;
-  }
-  if (!workspace.noteTypes.some((t) => t.id === workspace.selectedNewNoteTypeId)) {
-    workspace.selectedNewNoteTypeId = getActiveNote().typeId;
-  }
-
-  ensureSelectedTypeForManager();
-
-  workspace.customBookAliases = typeof workspace.customBookAliases === "object" && workspace.customBookAliases
-    ? Object.fromEntries(Object.entries(workspace.customBookAliases).map(([book, aliases]) => [
-        book,
-        Array.isArray(aliases)
-          ? aliases.filter((a) => typeof a === "string").map((a) => a.trim()).filter(Boolean)
-          : []
-      ]))
-    : {};
-
-  workspace.updatedAt = typeof workspace.updatedAt === "string" ? workspace.updatedAt : null;
-};
-
-// ── Workspace restore ─────────────────────────────────────────────────────────
-const migrateLegacyNotes = (savedNotes, legacyNotes) => {
-  const defaultType = createDefaultNoteType();
-  const [titleField, speakerField] = defaultType.fields;
-  const migratedNotes = [];
-
-  if (Array.isArray(savedNotes) && savedNotes.length) {
-    savedNotes.forEach((note) => {
-      migratedNotes.push({
-        id: typeof note.id === "string" && note.id ? note.id : createId("note"),
-        typeId: defaultType.id,
-        metadata: {
-          [titleField.id]:  typeof note.title   === "string" ? note.title   : "",
-          [speakerField.id]: typeof note.speaker === "string" ? note.speaker : ""
-        },
-        content:   typeof note.content   === "string" ? note.content   : "",
-        createdAt: typeof note.createdAt === "string" ? note.createdAt : new Date().toISOString(),
-        updatedAt: typeof note.updatedAt === "string" ? note.updatedAt : new Date().toISOString()
-      });
-    });
-  } else if (typeof legacyNotes === "string" && legacyNotes) {
-    migratedNotes.push({
-      ...createEmptyNote(defaultType.id, { [titleField.id]: "", [speakerField.id]: "" }),
-      content: legacyNotes
-    });
-  } else {
-    migratedNotes.push(createEmptyNote(defaultType.id, buildMetadataForType(defaultType)));
-  }
-
-  workspace.noteTypes             = [defaultType];
-  workspace.notes                 = migratedNotes;
-  workspace.activeNoteId          = migratedNotes[0].id;
-  workspace.selectedNewNoteTypeId = defaultType.id;
-  ensureWorkspaceConsistency();
-};
-
-const restoreWorkspace = async () => {
-  const savedWorkspace = await readStoredValue(workspaceStorageKey);
-  const savedNotes     = await migrateLegacyPreference(notesStorageKey, JSON.parse);
-  const legacyNotes    = await migrateLegacyPreference(legacyNotesStorageKey);
-
-  if (savedWorkspace) {
-    workspace.noteTypes             = savedWorkspace.noteTypes;
-    workspace.notes                 = savedWorkspace.notes;
-    workspace.activeNoteId          = savedWorkspace.activeNoteId;
-    workspace.selectedNewNoteTypeId = savedWorkspace.selectedNewNoteTypeId;
-    workspace.customBookAliases     = savedWorkspace.customBookAliases ?? {};
-    workspace.updatedAt             = savedWorkspace.updatedAt ?? null;
-  } else if (savedNotes || legacyNotes) {
-    migrateLegacyNotes(savedNotes ?? null, legacyNotes);
-  } else {
-    const defaultType = createDefaultNoteType();
-    workspace.noteTypes             = [defaultType];
-    workspace.notes                 = [createEmptyNote(defaultType.id, buildMetadataForType(defaultType))];
-    workspace.activeNoteId          = workspace.notes[0].id;
-    workspace.selectedNewNoteTypeId = defaultType.id;
-  }
-
-  ensureWorkspaceConsistency();
-  buildBookAliasMap();
-  renderMobileApp();
-};
+// Workspace logic — normalizeCloudSyncSettings, ensureWorkspaceConsistency,
+// migrateFromLegacyDatabase, migrateLegacyNotes, and restoreWorkspace are all
+// provided by core/workspace.js (wired up in bootstrap below).
 
 // ── Mobile UI ─────────────────────────────────────────────────────────────────
 
@@ -1144,6 +890,40 @@ if (syncConflictDialog) {
 
 // ── Bootstrap ─────────────────────────────────────────────────────────────────
 const bootstrap = async () => {
+  // Create workspace API first so migrateFromLegacyDatabase can run immediately.
+  // All notes-model deps are forwarded via thunks that resolve to the let
+  // bindings populated after the modules are created below.
+  const workspaceApi = window.ScriptoriaModules.createWorkspace({
+    workspace,
+    workspaceStorageKey,
+    notesStorageKey,
+    legacyNotesStorageKey,
+    createId,
+    createDefaultNoteType:        () => createDefaultNoteType(),
+    createEmptyNote:              (...a) => createEmptyNote(...a),
+    buildMetadataForType:         (...a) => buildMetadataForType(...a),
+    getNoteTypeById:              (...a) => getNoteTypeById(...a),
+    getActiveNote:                () => getActiveNote(),
+    getSuggestedCardTitleFieldId: (...a) => getSuggestedCardTitleFieldId(...a),
+    getDefaultCardSubtitleFieldId: (...a) => getDefaultCardSubtitleFieldId(...a),
+    ensureSelectedTypeForManager: () => ensureSelectedTypeForManager?.(),
+    readStoredValue,
+    migrateLegacyPreference,
+    openDatabase,
+    buildBookAliasMap:  () => buildBookAliasMap?.(),
+    renderWorkspace:    () => renderMobileApp(),
+    persistWorkspace:   () => {},   // read-only on mobile
+    updateSaveStatus,
+    refreshSaveStatus:  () => {}    // no save-status bar on mobile
+  });
+
+  const {
+    normalizeCloudSyncSettings,
+    ensureWorkspaceConsistency,
+    migrateFromLegacyDatabase,
+    restoreWorkspace
+  } = workspaceApi;
+
   await migrateFromLegacyDatabase();
 
   // ── Theme controller ──────────────────────────────────────────────────────
@@ -1218,21 +998,13 @@ const bootstrap = async () => {
 
   ensureSelectedTypeForManager = settingsNoteTypes.ensureSelectedTypeForManager;
 
-  // ── Note display helpers (inline — no notes/render.js dependency) ─────────
-  getNoteDisplayTitle = (note) => {
-    if (!note) return "";
-    const type  = getNoteTypeById(note.typeId);
-    const field = type?.fields.find((f) => f.id === type.cardTitleFieldId) ?? null;
-    const value = field ? note.metadata[field.id]?.trim() : "";
-    return value || formatNoteDate(note.createdAt);
-  };
-
-  getNoteDisplayMeta = (note) => {
-    if (!note) return "";
-    const type  = getNoteTypeById(note.typeId);
-    const field = type?.fields.find((f) => f.id === type.cardSubtitleFieldId) ?? null;
-    return field ? (note.metadata[field.id]?.trim() ?? "") : "";
-  };
+  // ── Note display helpers — delegate to notes/display.js ──────────────────
+  const displayApi = window.ScriptoriaModules.createNotesDisplay({
+    getNoteTypeById: (...a) => getNoteTypeById(...a),
+    formatNoteDate:  (...a) => formatNoteDate(...a)
+  });
+  getNoteDisplayTitle = displayApi.getNoteDisplayTitle;
+  getNoteDisplayMeta  = displayApi.getNoteDisplayMeta;
 
   // ── Translations manager ──────────────────────────────────────────────────
   let viewerApiRef = null;   // late-bound after viewer is created
