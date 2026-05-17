@@ -73,7 +73,14 @@
               auth: {
                 clientId,
                 authority,
-                redirectUri: window.location.origin + window.location.pathname
+                // Always redirect to the base directory (strip the filename)
+                // so the URI matches what is registered in the Azure App
+                // Registration regardless of which page initiated the auth
+                // flow (index.html, mobile.html, etc.).
+                // e.g. https://kiwigeek.github.io/ChurchScribe/mobile.html
+                //   →  https://kiwigeek.github.io/ChurchScribe/
+                redirectUri: window.location.origin +
+                  window.location.pathname.replace(/[^/]+$/, "")
               },
               cache: {
                 cacheLocation: "localStorage",
