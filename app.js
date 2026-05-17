@@ -1899,19 +1899,29 @@ const bootstrap = async () => {
   applyColorTheme(await getPreferredColorTheme());
   await restoreCloudSyncSettings();
   activeProvider.waitForReady(() => {
-    void reconnectCloud().then(() => {
-      // If this load was triggered by a mobile OneDrive auth redirect, the token
-      // is now cached — hand control back to mobile.html.
+    const handleMobileReturn = () => {
       if (sessionStorage.getItem("scriptoria-mobile-auth-return")) {
         sessionStorage.removeItem("scriptoria-mobile-auth-return");
         location.replace("mobile.html");
-        return;
+        return true;
       }
+      return false;
+    };
 
-      if (settingsDialog.open) {
-        renderSettings();
-      }
-    });
+    void reconnectCloud()
+      .then(() => {
+        // If this load was triggered by a mobile OneDrive auth redirect, the
+        // token is now cached — hand control back to mobile.html.
+        if (handleMobileReturn()) return;
+        if (settingsDialog.open) {
+          renderSettings();
+        }
+      })
+      .catch(() => {
+        // Even if reconnect failed, if this was a mobile auth redirect we still
+        // need to return to mobile.html (it will show "not connected" there).
+        handleMobileReturn();
+      });
   });
   await restoreWorkspace();
 

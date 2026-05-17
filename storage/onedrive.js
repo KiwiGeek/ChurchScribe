@@ -174,12 +174,29 @@
     // tab navigates to Microsoft, authenticates, returns to index.html (which
     // processes the token), then a sessionStorage flag causes index.html to
     // redirect back to mobile.html where attemptSilentReconnect picks up the
-    // cached token.  This function never resolves in that path — the page
-    // navigates away.
+    // cached token.  The page navigates away during loginRedirect so this
+    // function effectively never returns in the normal case.
     if (window.location.pathname.endsWith("mobile.html")) {
+      // Clear any stale MSAL interaction lock from a previous interrupted
+      // attempt.  MSAL writes interaction_status=redirect to sessionStorage
+      // before navigating; if the user cancelled or the page reloaded, that
+      // entry remains and causes subsequent loginRedirect calls to throw
+      // interaction_in_progress.  Wiping the relevant keys and forcing a fresh
+      // MSAL instance avoids the lock.
+      for (const key of Object.keys(sessionStorage)) {
+        if (key.includes("msal") || key.includes("interaction")) {
+          sessionStorage.removeItem(key);
+        }
+      }
+      msalInstancePromise = null;
+      const freshInst = await getMsalInstance();
+
       sessionStorage.setItem("scriptoria-mobile-auth-return", "1");
-      await msalInst.loginRedirect({ scopes, prompt: "select_account" });
-      return;
+      await freshInst.loginRedirect({ scopes, prompt: "select_account" });
+      // loginRedirect navigates the page away; the line below is unreachable
+      // in normal operation, but satisfies connectCloud()'s destructuring
+      // in the rare race where the Promise resolves before the tab unloads.
+      return { email: "" };
     }
 
     try {

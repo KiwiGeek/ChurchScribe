@@ -999,6 +999,11 @@ const initiateCloudConnect = async (providerId) => {
       }
     } catch (err) {
       console.error("[Mobile] Connect failed:", err);
+      // Reset provider back to "none" so the connect prompt reappears instead
+      // of showing the notes list (which would hide the connect buttons).
+      cloudSyncSettings.provider = "none";
+      activeProvider = window.NoOpProvider;
+      await persistCloudSyncSettings();
       showTransientStatus("Connection failed — please try again.");
     }
 
