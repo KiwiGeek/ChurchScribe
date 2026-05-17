@@ -85,9 +85,9 @@
             <p class="active-note-meta panel-note-meta" id="active-note-meta"></p>
           </div>
           <div class="note-actions">
-            <button class="ghost-button" id="note-details-button" type="button">Entry Details…</button>
+            <button class="ghost-button" id="note-details-button" type="button" title="Entry details" aria-label="Entry details">Entry Details…</button>
             <details class="overflow-menu">
-              <summary class="ghost-button">Actions ▾</summary>
+              <summary class="ghost-button" id="note-actions-menu-button" title="Actions menu" aria-label="Actions menu">Actions ▾</summary>
               <div class="overflow-menu-panel">
                 <div id="new-note-actions"></div>
                 <button class="ghost-button overflow-action" id="manage-notes-button" type="button">Open Library</button>
@@ -101,23 +101,29 @@
           <div class="metadata-summary" id="metadata-summary"></div>
         </div>
 
-        <div class="toolbar" role="toolbar" aria-label="Rich text controls">
-          <button class="tool-button" type="button" data-command="bold" aria-label="Bold"><strong>B</strong></button>
-          <button class="tool-button" type="button" data-command="italic" aria-label="Italic"><em>I</em></button>
-          <button class="tool-button" type="button" data-command="underline" aria-label="Underline"><span class="underline">U</span></button>
-          <button class="tool-button" type="button" data-command="insertUnorderedList" aria-label="Bullet list">• List</button>
-          <button class="tool-button" type="button" data-command="insertOrderedList" aria-label="Numbered list">1. List</button>
-          <button class="tool-button" type="button" data-block="h2" aria-label="Heading">Heading</button>
-          <button class="tool-button" type="button" data-block="blockquote" aria-label="Quote">Quote</button>
-          <button class="tool-button" type="button" data-command="removeFormat" aria-label="Clear formatting">Reset</button>
-          <div class="color-picker-wrapper" id="color-picker-wrapper">
-            <button class="tool-button color-picker-trigger" type="button" id="color-picker-trigger" aria-label="Text color" aria-expanded="false" aria-haspopup="true">
-              <span class="color-button-a">A</span><span class="color-button-swatch" id="color-button-swatch"></span>
-            </button>
-            <div class="color-picker-dropdown" id="color-picker-dropdown" hidden role="dialog" aria-label="Text color"></div>
+        <div class="toolbar" id="note-toolbar" role="toolbar" aria-label="Rich text controls">
+          <div class="toolbar-controls" id="toolbar-controls">
+            <button class="tool-button" type="button" data-command="bold" aria-label="Bold"><strong>B</strong></button>
+            <button class="tool-button" type="button" data-command="italic" aria-label="Italic"><em>I</em></button>
+            <button class="tool-button" type="button" data-command="underline" aria-label="Underline"><span class="underline">U</span></button>
+            <button class="tool-button" type="button" data-command="insertUnorderedList" aria-label="Bullet list">• List</button>
+            <button class="tool-button" type="button" data-command="insertOrderedList" aria-label="Numbered list">1. List</button>
+            <button class="tool-button" type="button" data-block="h2" aria-label="Heading">Heading</button>
+            <button class="tool-button" type="button" data-block="blockquote" aria-label="Quote">Quote</button>
+            <button class="tool-button" type="button" data-command="removeFormat" aria-label="Clear formatting">Reset</button>
+            <div class="color-picker-wrapper" id="color-picker-wrapper">
+              <button class="tool-button color-picker-trigger" type="button" id="color-picker-trigger" aria-label="Text color" aria-expanded="false" aria-haspopup="true">
+                <span class="color-button-a">A</span><span class="color-button-swatch" id="color-button-swatch"></span>
+              </button>
+              <div class="color-picker-dropdown" id="color-picker-dropdown" hidden role="dialog" aria-label="Text color"></div>
+            </div>
+            <button class="tool-button" type="button" id="insert-table-button" aria-label="Insert table">Table</button>
+            <button class="tool-button" type="button" id="insert-image-button" aria-label="Insert image">Image</button>
           </div>
-          <button class="tool-button" type="button" id="insert-table-button" aria-label="Insert table">Table</button>
-          <button class="tool-button" type="button" id="insert-image-button" aria-label="Insert image">Image</button>
+          <div class="compact-format-menu" id="compact-format-menu" hidden>
+            <button class="ghost-button compact-format-button" id="compact-format-button" type="button" aria-haspopup="true" aria-expanded="false">⋯ Format</button>
+            <div class="compact-format-panel" id="compact-format-panel" hidden></div>
+          </div>
         </div>
         <input type="file" id="insert-image-file" accept="image/*" multiple hidden>
 
@@ -156,6 +162,8 @@
           </div>
         </div>
 
+        <button class="compact-reference-chip" id="compact-reference-chip" type="button" hidden aria-expanded="false"></button>
+
         <form class="verse-picker" id="verse-picker">
           <label class="field">
             <span>Translation</span>
@@ -175,6 +183,9 @@
           <label class="field verse-search-field">
             <input type="search" id="scripture-search-input" placeholder="Scripture Search…" aria-label="Scripture search" autocomplete="off">
           </label>
+          <div class="compact-verse-picker-actions">
+            <button class="ghost-button" id="compact-verse-picker-close" type="button">Done</button>
+          </div>
         </form>
 
         <article class="verse-display" id="verse-display" aria-live="polite">
