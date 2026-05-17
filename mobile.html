@@ -892,6 +892,75 @@
       margin: 8px 0 10px;
     }
 
+    .mob-settings-disclosure {
+      margin-top: 12px;
+      border: 0.5px solid var(--border);
+      border-radius: 10px;
+      background: var(--ghost-surface);
+      padding: 10px;
+    }
+
+    .mob-settings-disclosure > summary {
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+      list-style: none;
+    }
+
+    .mob-settings-disclosure > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .mob-settings-disclosure > summary::after {
+      content: "▾";
+      float: right;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 1px;
+    }
+
+    .mob-settings-disclosure[open] > summary::after {
+      content: "▴";
+    }
+
+    .mob-settings-disclosure .mob-settings-help {
+      margin-top: 8px;
+    }
+
+    .mob-settings-list-scroll {
+      max-height: 160px;
+      overflow-y: auto;
+      padding-right: 2px;
+    }
+
+    .mob-settings-list-scroll--available {
+      max-height: 220px;
+    }
+
+    .mob-language-pill-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 0 0 8px;
+    }
+
+    .mob-language-pill-wrap .translation-language-pill {
+      border: 0.5px solid var(--border);
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--text);
+      font-size: 12px;
+      font-family: var(--font-body);
+      padding: 6px 10px;
+    }
+
+    .mob-language-pill-wrap .translation-language-pill[aria-pressed="true"] {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--surface-accent);
+    }
+
     .mob-settings-list {
       list-style: none;
       margin: 0;
@@ -977,6 +1046,37 @@
       transition: transform 100ms, border-color 100ms, box-shadow 100ms;
       outline: none;
       flex-shrink: 0;
+      position: relative;
+      overflow: visible;
+    }
+
+    .mob-color-swatch-mode {
+      position: absolute;
+      right: -4px;
+      bottom: -4px;
+      min-width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      border: 1px solid var(--surface-strong);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 9px;
+      line-height: 14px;
+      text-align: center;
+      font-weight: 700;
+      padding: 0 3px;
+      box-sizing: border-box;
+    }
+
+    .mob-color-swatch--dark .mob-color-swatch-mode {
+      background: #141414;
+      color: #f1f1f1;
+    }
+
+    .mob-color-swatch--both .mob-color-swatch-mode {
+      background: var(--surface-accent);
+      color: var(--accent);
+      border-color: var(--accent);
     }
 
     .mob-color-swatch:active {

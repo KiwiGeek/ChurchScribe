@@ -888,12 +888,17 @@ const renderSettingsSheet = () => {
     const c0 = theme.swatches?.[0] ?? "#ccc";
     const c1 = theme.swatches?.[1] ?? "#888";
     const isActive = theme.id === currentColorTheme;
-    return `<button class="mob-color-swatch${isActive ? " active" : ""}"
+    const supports = theme.supports === "dark" ? "dark" : theme.supports === "both" ? "both" : "light";
+    const supportLabel = supports === "both" ? "light and dark mode" : supports === "dark" ? "dark mode only" : "light mode only";
+    const supportBadge = supports === "both" ? "L/D" : supports === "dark" ? "D" : "L";
+    return `<button class="mob-color-swatch mob-color-swatch--${supports}${isActive ? " active" : ""}"
               data-color-theme="${escapeHtml(theme.id)}"
-              aria-label="${escapeHtml(theme.name)}"
+              aria-label="${escapeHtml(`${theme.name} (${supportLabel})`)}"
               aria-pressed="${isActive}"
               style="background: linear-gradient(135deg, ${c0} 50%, ${c1} 50%)"
-              title="${escapeHtml(theme.name)}"></button>`;
+              title="${escapeHtml(`${theme.name} — ${supportLabel}`)}">
+              <span class="mob-color-swatch-mode" aria-hidden="true">${supportBadge}</span>
+            </button>`;
   }).join("");
 
   settingsSheetContent.innerHTML = `
@@ -907,14 +912,22 @@ const renderSettingsSheet = () => {
     </div>
     <div class="mob-settings-section">
       <p class="mob-settings-label">Translations</p>
-      <input id="mob-translation-search" class="mob-settings-search" type="search" placeholder="Search available translations" aria-label="Search available translations" autocomplete="off">
-      <div id="translation-language-pills" class="mob-color-theme-grid"></div>
       <p class="mob-settings-label mob-settings-label--spaced">Installed</p>
       <p class="mob-settings-help" id="installed-translations-empty-note" hidden>No translations installed.</p>
-      <ul id="installed-translation-list" class="mob-settings-list" aria-label="Installed translations"></ul>
-      <p class="mob-settings-label mob-settings-label--spaced">Available</p>
-      <p class="mob-settings-help" id="available-translations-empty-note" hidden>No translations found for this filter.</p>
-      <ul id="available-translation-list" class="mob-settings-list" aria-label="Available translations"></ul>
+      <div class="mob-settings-list-scroll">
+        <ul id="installed-translation-list" class="mob-settings-list" aria-label="Installed translations"></ul>
+      </div>
+      <details class="mob-settings-disclosure" id="mob-translation-adder">
+        <summary>Add translation</summary>
+        <p class="mob-settings-help">Search and install from the catalog.</p>
+        <input id="mob-translation-search" class="mob-settings-search" type="search" placeholder="Search available translations" aria-label="Search available translations" autocomplete="off">
+        <div id="translation-language-pills" class="mob-language-pill-wrap"></div>
+        <p class="mob-settings-label mob-settings-label--spaced">Available</p>
+        <p class="mob-settings-help" id="available-translations-empty-note" hidden>No translations found for this filter.</p>
+        <div class="mob-settings-list-scroll mob-settings-list-scroll--available">
+          <ul id="available-translation-list" class="mob-settings-list" aria-label="Available translations"></ul>
+        </div>
+      </details>
     </div>
     <div class="mob-settings-section">
       <p class="mob-settings-label">Sync &amp; Storage</p>
