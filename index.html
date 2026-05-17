@@ -8,6 +8,13 @@
   <script>eruda.init();</script>
   <script>
     (function () {
+      // DEBUG: record that index.html ran and what the URL looks like
+      try {
+        localStorage.setItem('_debug_indexhtml',
+          JSON.stringify({ ts: new Date().toISOString(), href: location.href,
+            search: location.search, hash: location.hash }));
+      } catch(e) {}
+
       var params = new URLSearchParams(location.search);
       // ?mobile=1  — force the mobile view (useful for testing on a desktop browser)
       if (params.has('mobile')) { location.replace('mobile.html?mobile=1'); return; }
@@ -18,6 +25,11 @@
       // auth popup lands here it carries ?code=...&state=... in the query string.
       // We must NOT redirect away before MSAL processes those params — the popup
       // would lose the auth code and the token handshake would fail.
+      try {
+        localStorage.setItem('_debug_guard',
+          JSON.stringify({ hasCode: params.has('code'), hasState: params.has('state'),
+            hashHasCode: location.hash.includes('code='), ts: new Date().toISOString() }));
+      } catch(e) {}
       if (params.has('code') || params.has('state')) { return; }
       // Auto-redirect: touch device whose smallest screen dimension is ≤ 480 px.
       // Checking the smallest dimension means both portrait and landscape redirect.

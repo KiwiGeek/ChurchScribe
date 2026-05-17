@@ -1043,16 +1043,22 @@ if (syncConflictDialog) {
 
 // ── Bootstrap ─────────────────────────────────────────────────────────────────
 const bootstrap = async () => {
-  // Drain any debug entries written by app.js (index.html) into this console
+  // Drain any debug entries written by index.html into this console
   // so they're visible in Eruda even though index.html redirected too fast.
   try {
-    const stored = JSON.parse(localStorage.getItem("_scriptoria_debug") || "[]");
-    if (stored.length) {
-      console.group("[Debug] Logs from index.html (persisted via localStorage)");
-      stored.forEach((entry) => console.log(entry));
-      console.groupEnd();
-      localStorage.removeItem("_scriptoria_debug");
-    }
+    const idxLog   = localStorage.getItem("_debug_indexhtml");
+    const grdLog   = localStorage.getItem("_debug_guard");
+    const appLogs  = JSON.parse(localStorage.getItem("_scriptoria_debug") || "[]");
+
+    console.group("[Debug] Data from index.html");
+    console.log("index.html ran?", idxLog ? JSON.parse(idxLog) : "NO — index.html never loaded");
+    console.log("guard state:",    grdLog ? JSON.parse(grdLog)  : "NO — guard code never ran");
+    appLogs.forEach((entry) => console.log(entry));
+    console.groupEnd();
+
+    localStorage.removeItem("_debug_indexhtml");
+    localStorage.removeItem("_debug_guard");
+    localStorage.removeItem("_scriptoria_debug");
   } catch { /* ignore */ }
 
   await migrateFromLegacyDatabase();
