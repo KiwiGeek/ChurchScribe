@@ -720,6 +720,12 @@ h1 {
   padding: 0 20px 12px;
 }
 
+.toolbar-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 .table-toolbar {
   display: flex;
   flex-wrap: wrap;
@@ -1345,6 +1351,12 @@ h1 {
   gap: 14px;
   padding: 0 20px 12px;
   user-select: none;
+}
+
+.compact-reference-chip,
+.compact-verse-picker-actions,
+.compact-format-menu {
+  display: none;
 }
 
 .verse-search-field {
@@ -2614,6 +2626,112 @@ button.about-link--block {
 body.is-pane-dragging {
   cursor: col-resize;
   user-select: none;
+}
+
+body.is-compact-editor .compact-format-menu {
+  display: block;
+}
+
+body.is-compact-editor .toolbar {
+  position: relative;
+}
+
+body.is-compact-editor .toolbar > .toolbar-controls {
+  display: none;
+}
+
+body.is-compact-editor .compact-format-button {
+  min-width: auto;
+}
+
+.compact-format-panel {
+  position: absolute;
+  right: 20px;
+  top: calc(100% - 4px);
+  z-index: 30;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: min(360px, calc(100vw - 88px));
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-strong);
+  box-shadow: var(--shadow);
+}
+
+body.is-compact-editor .compact-reference-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 0 20px 12px;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--ghost-surface);
+  color: var(--text);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+body.is-compact-editor .compact-reference-chip::after {
+  content: "▾";
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+body.is-compact-editor .verse-picker {
+  display: none;
+}
+
+body.is-compact-editor .verse-picker.is-compact-expanded {
+  display: grid;
+}
+
+body.is-compact-editor .compact-verse-picker-actions {
+  display: flex;
+  justify-content: flex-end;
+  grid-column: 1 / -1;
+}
+
+body.is-compact-editor #note-meta-bar {
+  display: none;
+}
+
+body.is-compact-editor #note-details-button,
+body.is-compact-editor #note-actions-menu-button {
+  min-width: 2.1rem;
+  width: 2.1rem;
+  padding-inline: 0;
+  font-size: 0;
+}
+
+body.is-compact-editor #note-details-button::before {
+  content: "ⓘ";
+  font-size: 1rem;
+}
+
+body.is-compact-editor #note-actions-menu-button::before {
+  content: "⋯";
+  font-size: 1.25rem;
+}
+
+body.is-compact-editor .panel-footer {
+  display: none;
+}
+
+body.is-compact-editor .note-panel::before {
+  content: "";
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  z-index: 2;
+  width: 0.56rem;
+  height: 0.56rem;
+  border-radius: 999px;
+  background: var(--muted);
 }
 
 /*

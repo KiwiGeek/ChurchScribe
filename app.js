@@ -15,9 +15,17 @@ const activeNoteMeta = document.querySelector("#active-note-meta");
 const noteMetaBar = document.querySelector("#note-meta-bar");
 const metadataSummary = document.querySelector("#metadata-summary");
 const noteMetaFields = document.querySelector("#note-meta-fields");
+const noteToolbar = document.querySelector("#note-toolbar");
+const toolbarControls = document.querySelector("#toolbar-controls");
+const compactFormatMenu = document.querySelector("#compact-format-menu");
+const compactFormatButton = document.querySelector("#compact-format-button");
+const compactFormatPanel = document.querySelector("#compact-format-panel");
 const translationSelect = document.querySelector("#translation-select");
 const bookSelect = document.querySelector("#book-select");
 const chapterSelect = document.querySelector("#chapter-select");
+const versePicker = document.querySelector("#verse-picker");
+const compactReferenceChip = document.querySelector("#compact-reference-chip");
+const compactVersePickerClose = document.querySelector("#compact-verse-picker-close");
 const verseReference = document.querySelector("#verse-reference");
 const chapterText = document.querySelector("#chapter-text");
 const verseTranslation = document.querySelector("#verse-translation");
@@ -122,6 +130,7 @@ const colorThemeMirrorStorageKey = "service-notes-color-theme-mirror";
 const lastBookChapterStorageKey = "service-notes-last-book-chapter";
 const onboardingStorageKey = "service-notes-onboarding-seen";
 const autoCloudSyncDelayMs = 10000;
+const compactEditorThresholdPx = 900;
 
 // noOpProvider — defensive fallback used as the initial value of activeProvider
 // and whenever providerRegistry lookup misses.  Lives in storage/noopprovider.js
@@ -907,6 +916,72 @@ const updateSaveStatus = (message) => {
   });
 
   saveStatus.append(localText, syncButton);
+};
+
+const updateCompactReferenceChip = () => {
+  if (!compactReferenceChip) {
+    return;
+  }
+
+  const translationLabel = translationSelect.selectedOptions[0]?.textContent?.trim() || translationSelect.value || "";
+  const book = bookSelect.value || "";
+  const chapterLabel = chapterSelect.selectedOptions[0]?.textContent || "";
+  const chapterNumber = chapterLabel.replace(/^Chapter\s+/i, "").trim();
+  const reference = `${book}${chapterNumber ? ` ${chapterNumber}` : ""}`.trim();
+  const chipLabel = `${translationLabel}${reference ? ` · ${reference}` : ""}`.trim();
+
+  compactReferenceChip.textContent = chipLabel || "Reference";
+  compactReferenceChip.title = chipLabel || "Reference";
+};
+
+const closeCompactFormatPanel = () => {
+  if (!compactFormatPanel || !compactFormatButton) {
+    return;
+  }
+
+  compactFormatPanel.hidden = true;
+  compactFormatButton.setAttribute("aria-expanded", "false");
+};
+
+const openCompactFormatPanel = () => {
+  if (!compactFormatPanel || !compactFormatButton) {
+    return;
+  }
+
+  compactFormatPanel.hidden = false;
+  compactFormatButton.setAttribute("aria-expanded", "true");
+};
+
+const closeCompactVersePicker = () => {
+  versePicker?.classList.remove("is-compact-expanded");
+};
+
+const applyCompactEditorState = () => {
+  const isCompact = window.innerWidth <= compactEditorThresholdPx;
+  document.body.classList.toggle("is-compact-editor", isCompact);
+
+  if (compactFormatMenu) {
+    compactFormatMenu.hidden = !isCompact;
+  }
+
+  if (compactReferenceChip) {
+    compactReferenceChip.hidden = !isCompact;
+  }
+
+  if (toolbarControls && compactFormatPanel && noteToolbar && compactFormatMenu) {
+    if (isCompact) {
+      if (toolbarControls.parentElement !== compactFormatPanel) {
+        compactFormatPanel.append(toolbarControls);
+      }
+    } else if (toolbarControls.parentElement !== noteToolbar) {
+      noteToolbar.insertBefore(toolbarControls, compactFormatMenu);
+    }
+  }
+
+  if (!isCompact) {
+    closeCompactFormatPanel();
+    closeCompactVersePicker();
+  }
 };
 
 const migrateLegacyNotes = (savedNotes, legacyNotes) => {
@@ -1876,6 +1951,53 @@ document.addEventListener("drop", (event) => {
     });
   });
 });
+
+const setupCompactEditorMode = () => {
+  if (compactFormatButton && compactFormatPanel && compactFormatMenu) {
+    compactFormatButton.addEventListener("click", () => {
+      if (compactFormatPanel.hidden) {
+        openCompactFormatPanel();
+      } else {
+        closeCompactFormatPanel();
+      }
+    });
+
+    document.addEventListener("click", (event) => {
+      if (!compactFormatMenu.contains(event.target)) {
+        closeCompactFormatPanel();
+      }
+    });
+  }
+
+  if (compactReferenceChip && versePicker) {
+    compactReferenceChip.addEventListener("click", () => {
+      versePicker.classList.toggle("is-compact-expanded");
+    });
+
+    compactVersePickerClose?.addEventListener("click", () => {
+      closeCompactVersePicker();
+    });
+  }
+
+  [translationSelect, bookSelect, chapterSelect].forEach((select) => {
+    select?.addEventListener("change", () => {
+      updateCompactReferenceChip();
+    });
+  });
+
+  if (verseReference) {
+    const verseReferenceObserver = new MutationObserver(() => {
+      updateCompactReferenceChip();
+    });
+    verseReferenceObserver.observe(verseReference, { childList: true, subtree: true, characterData: true });
+  }
+
+  window.addEventListener("resize", applyCompactEditorState);
+  updateCompactReferenceChip();
+  applyCompactEditorState();
+};
+
+setupCompactEditorMode();
 
 
 // buildBookAliasMap has moved to scripture/aliases.js (and is re-exposed via
