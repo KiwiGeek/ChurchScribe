@@ -2651,7 +2651,7 @@ body.is-compact-editor .compact-format-button {
   left: 0;
   top: calc(100% + 8px);
   z-index: 30;
-  display: block;
+  display: none;
   width: min(300px, calc(100vw - var(--compact-format-panel-viewport-gap)));
   max-height: min(50vh, 320px);
   overflow-y: auto;
@@ -2660,6 +2660,10 @@ body.is-compact-editor .compact-format-button {
   border-radius: var(--radius-md);
   background: var(--surface-strong);
   box-shadow: var(--shadow);
+}
+
+.compact-format-panel:not([hidden]) {
+  display: block;
 }
 
 body.is-compact-editor .compact-reference-chip {
