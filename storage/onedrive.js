@@ -86,11 +86,25 @@
               },
               cache: {
                 cacheLocation: "localStorage",
-                storeAuthStateInCookie: false
+                // Store auth state (PKCE code verifier, nonce, state) in cookies
+                // as well as sessionStorage.  iOS Safari clears sessionStorage
+                // when the app navigates away to Microsoft's login domain and back,
+                // so without this the code verifier is gone on return and
+                // handleRedirectPromise() silently fails to exchange the auth code.
+                storeAuthStateInCookie: true
               }
             });
 
-            instance.initialize().then(() => resolve(instance)).catch(reject);
+            // initialize() sets up the MSAL instance; handleRedirectPromise()
+            // must then be called explicitly on every page load that participates
+            // in a redirect flow.  Without it the auth code in the URL hash is
+            // never exchanged for a token, getAllAccounts() stays empty, and
+            // silent reconnect fails.  storeAuthStateInCookie keeps the PKCE
+            // code verifier alive across iOS Safari's sessionStorage wipe.
+            instance.initialize()
+              .then(() => instance.handleRedirectPromise())
+              .then(() => resolve(instance))
+              .catch(reject);
             return;
           }
 
