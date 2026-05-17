@@ -168,6 +168,20 @@
   const connect = async () => {
     const msalInst = await getMsalInstance();
 
+    // On mobile browsers, window.opener is nulled out by the browser on newly
+    // opened tabs, so MSAL's popup flow can never postMessage the token back to
+    // the calling tab.  Detect mobile.html and use loginRedirect instead: the
+    // tab navigates to Microsoft, authenticates, returns to index.html (which
+    // processes the token), then a sessionStorage flag causes index.html to
+    // redirect back to mobile.html where attemptSilentReconnect picks up the
+    // cached token.  This function never resolves in that path — the page
+    // navigates away.
+    if (window.location.pathname.endsWith("mobile.html")) {
+      sessionStorage.setItem("scriptoria-mobile-auth-return", "1");
+      await msalInst.loginRedirect({ scopes, prompt: "select_account" });
+      return;
+    }
+
     try {
       const result = await msalInst.acquireTokenPopup({ scopes, prompt: "select_account" });
       accessToken = result.accessToken;

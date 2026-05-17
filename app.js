@@ -1899,11 +1899,19 @@ const bootstrap = async () => {
   applyColorTheme(await getPreferredColorTheme());
   await restoreCloudSyncSettings();
   activeProvider.waitForReady(() => {
-    void reconnectCloud();
+    void reconnectCloud().then(() => {
+      // If this load was triggered by a mobile OneDrive auth redirect, the token
+      // is now cached — hand control back to mobile.html.
+      if (sessionStorage.getItem("scriptoria-mobile-auth-return")) {
+        sessionStorage.removeItem("scriptoria-mobile-auth-return");
+        location.replace("mobile.html");
+        return;
+      }
 
-    if (settingsDialog.open) {
-      renderSettings();
-    }
+      if (settingsDialog.open) {
+        renderSettings();
+      }
+    });
   });
   await restoreWorkspace();
 
