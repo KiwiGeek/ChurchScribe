@@ -127,7 +127,7 @@ window.ScriptoriaModules.createScriptureAliases = (deps) => {
     "I John",
     "II John",
     "III John"
-  ]);
+  ].map((alias) => normalizeAliasForRegex(alias)));
 
   // For books not in BOOK_ALIASES (e.g. apocryphal books in some translations),
   // synthesize a small set of likely abbreviations from the canonical name.
@@ -137,7 +137,7 @@ window.ScriptoriaModules.createScriptureAliases = (deps) => {
     if (Object.prototype.hasOwnProperty.call(BOOK_ALIASES, book)) {
       BOOK_ALIASES[book].forEach((alias) => aliases.add(alias));
       BOOK_ALIASES[book].forEach((alias) => {
-        if (!alias.endsWith(".") && !NON_ABBREVIATED_BUILTIN_ALIASES.has(alias)) {
+        if (!alias.endsWith(".") && !NON_ABBREVIATED_BUILTIN_ALIASES.has(normalizeAliasForRegex(alias))) {
           aliases.add(`${alias}.`);
         }
       });
