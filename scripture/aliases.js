@@ -113,6 +113,7 @@ window.ScriptoriaModules.createScriptureAliases = (deps) => {
 
     if (Object.prototype.hasOwnProperty.call(BOOK_ALIASES, book)) {
       BOOK_ALIASES[book].forEach((alias) => aliases.add(alias));
+      BOOK_ALIASES[book].forEach((alias) => aliases.add(`${alias}.`));
       return [...aliases];
     }
 
@@ -154,16 +155,22 @@ window.ScriptoriaModules.createScriptureAliases = (deps) => {
     }
 
     bookAliasMap.clear();
+    const regexAliasSet = new Set();
     Object.keys(currentBooks).forEach((book) => {
       getEffectiveAliasesForBook(book).forEach((alias) => {
         addBookAlias(alias, book);
+        const regexAlias = alias.toLowerCase().replace(/\s+/g, " ").trim();
+
+        if (regexAlias) {
+          regexAliasSet.add(regexAlias);
+        }
       });
     });
 
     // Sort longest-first so e.g. "1 Cor" matches before "1 C" in regex
     // alternation; if the shorter alias came first, the regex engine would
     // match it greedily and miss the more specific one.
-    const aliasPattern = [...bookAliasMap.keys()]
+    const aliasPattern = [...regexAliasSet]
       .sort((left, right) => right.length - left.length)
       .map((alias) => escapeRegExp(alias))
       .join("|");
