@@ -107,6 +107,27 @@ window.ScriptoriaModules.createScriptureAliases = (deps) => {
     "Jude":            ["Jud", "Jd"],
     "Revelation":      ["Rev", "Rv"],
   };
+  const NON_ABBREVIATED_BUILTIN_ALIASES = new Set([
+    "I Samuel",
+    "II Samuel",
+    "I Kings",
+    "II Kings",
+    "I Chronicles",
+    "II Chronicles",
+    "Psalm",
+    "Song of Songs",
+    "I Corinthians",
+    "II Corinthians",
+    "I Thessalonians",
+    "II Thessalonians",
+    "I Timothy",
+    "II Timothy",
+    "I Peter",
+    "II Peter",
+    "I John",
+    "II John",
+    "III John"
+  ]);
 
   // For books not in BOOK_ALIASES (e.g. apocryphal books in some translations),
   // synthesize a small set of likely abbreviations from the canonical name.
@@ -116,7 +137,7 @@ window.ScriptoriaModules.createScriptureAliases = (deps) => {
     if (Object.prototype.hasOwnProperty.call(BOOK_ALIASES, book)) {
       BOOK_ALIASES[book].forEach((alias) => aliases.add(alias));
       BOOK_ALIASES[book].forEach((alias) => {
-        if (!alias.endsWith(".")) {
+        if (!alias.endsWith(".") && !NON_ABBREVIATED_BUILTIN_ALIASES.has(alias)) {
           aliases.add(`${alias}.`);
         }
       });
