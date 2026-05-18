@@ -28,6 +28,8 @@ window.ScriptoriaModules.createScriptureAliases = (deps) => {
 
   const normalizeBookName = (value) =>
     value.toLowerCase().replace(/\./g, "").replace(/\s+/g, " ").trim();
+  const normalizeAliasForRegex = (value) =>
+    value.toLowerCase().replace(/\s+/g, " ").trim();
 
   const addBookAlias = (alias, canonicalBook) => {
     const normalizedAlias = normalizeBookName(alias);
@@ -113,7 +115,11 @@ window.ScriptoriaModules.createScriptureAliases = (deps) => {
 
     if (Object.prototype.hasOwnProperty.call(BOOK_ALIASES, book)) {
       BOOK_ALIASES[book].forEach((alias) => aliases.add(alias));
-      BOOK_ALIASES[book].forEach((alias) => aliases.add(`${alias}.`));
+      BOOK_ALIASES[book].forEach((alias) => {
+        if (!alias.endsWith(".")) {
+          aliases.add(`${alias}.`);
+        }
+      });
       return [...aliases];
     }
 
@@ -159,7 +165,7 @@ window.ScriptoriaModules.createScriptureAliases = (deps) => {
     Object.keys(currentBooks).forEach((book) => {
       getEffectiveAliasesForBook(book).forEach((alias) => {
         addBookAlias(alias, book);
-        const regexAlias = alias.toLowerCase().replace(/\s+/g, " ").trim();
+        const regexAlias = normalizeAliasForRegex(alias);
 
         if (regexAlias) {
           regexAliasSet.add(regexAlias);
