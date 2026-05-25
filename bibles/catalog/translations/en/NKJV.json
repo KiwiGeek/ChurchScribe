@@ -8,7 +8,7 @@
   "sourceType": "official",
   "version": 19,
   "contentUrl": "bibles/content/en/NKJV/v19.json",
-  "contentHash": "sha256-f105c47a84f8d1856a35f62ad4c870a3ff319a9c3c08c4150986b52488ab8904",
+  "contentHash": "sha256-3c2736db4cd38f7b0dc9e698d8af0512c87fc34f77da6490c1c0326e2e062e7a",
   "bookOrder": "protestant-66",
   "features": {
     "headings": true,

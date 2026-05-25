@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "languageTag": "en",
   "displayName": "English",
-  "catalogVersion": "2026-05-17T00:19:29.1644724\u002B00:00",
+  "catalogVersion": "2026-05-25T13:24:42.3670114\u002B00:00",
   "translations": [
     {
       "translationId": "en:AFV",
@@ -677,7 +677,7 @@
       "version": 19,
       "copyright": "The Holy Bible, New King James Version, Copyright \u00A9 1982 Thomas Nelson. All rights reserved.",
       "downloadSizeBytes": 3934821,
-      "contentHash": "sha256-f105c47a84f8d1856a35f62ad4c870a3ff319a9c3c08c4150986b52488ab8904",
+      "contentHash": "sha256-3c2736db4cd38f7b0dc9e698d8af0512c87fc34f77da6490c1c0326e2e062e7a",
       "manifestUrl": "bibles/catalog/translations/en/NKJV.json"
     },
     {
@@ -1025,10 +1025,10 @@
       "sourceType": "official",
       "languageTag": "en",
       "languageCode3": "eng",
-      "version": 81,
+      "version": 82,
       "copyright": "PUBLIC DOMAIN (not copyrighted)",
-      "downloadSizeBytes": 3802490,
-      "contentHash": "sha256-cdd8230c11a5d887439e66d9ed1638ef751dac5b50b916eb9abfc1fda487d513",
+      "downloadSizeBytes": 3802525,
+      "contentHash": "sha256-f0c6b9e9b71dd757125990ea0b2d88e37aab52b6adba8ab657d42520f8f6c2a6",
       "manifestUrl": "bibles/catalog/translations/en/engWEBUS.json"
     },
     {
@@ -1077,10 +1077,10 @@
       "sourceType": "official",
       "languageTag": "en",
       "languageCode3": "eng",
-      "version": 10,
+      "version": 11,
       "copyright": "Copyright 2024 Y\u0027all Version Bible Society.",
-      "downloadSizeBytes": 3191015,
-      "contentHash": "sha256-779facd5a2e38d86058fc889313ceb932c06fc11ba13fa3b87707c83128d059b",
+      "downloadSizeBytes": 3192396,
+      "contentHash": "sha256-dd8bc971fcc9979d53ba180ad994c0bbf0a3ee58f5bc6c576678fc29f6af3490",
       "manifestUrl": "bibles/catalog/translations/en/YALL.json"
     },
     {
