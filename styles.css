@@ -913,12 +913,34 @@ h1 {
   background: rgba(0, 0, 0, 0.06);
 }
 
+.pdf-embed-pages {
+  display: block;
+  width: 100%;
+  max-height: min(64vh, 600px);
+  overflow-y: auto;
+  background: #fff;
+}
+
+.pdf-embed-page {
+  display: block;
+  width: 100%;
+}
+
 .pdf-embed-frame {
   display: block;
   width: 100%;
   height: min(64vh, 600px);
   border: none;
   background: #fff;
+}
+
+.pdf-embed-loading,
+.pdf-embed-error {
+  padding: 24px 16px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.5;
 }
 
 .pdf-embed-fallback {
