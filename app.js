@@ -1841,19 +1841,14 @@ void bootstrap();
 // stylesheet can colour the colon in --accent without touching the digits.
 {
   const clock = document.querySelector("#header-clock");
+  const timeFormatter = new Intl.DateTimeFormat(undefined, {
+    hour: "numeric",
+    minute: "2-digit"
+  });
 
   if (clock) {
-    const hoursEl = document.createElement("span");
-    const sepEl = document.createElement("span");
-    const minutesEl = document.createElement("span");
-    //sepEl.className = "header-clock-sep";
-    sepEl.textContent = ":";
-    clock.replaceChildren(hoursEl, sepEl, minutesEl);
-
     const tick = () => {
-      const now = new Date();
-      hoursEl.textContent = String(now.getHours()).padStart(2, "0");
-      minutesEl.textContent = String(now.getMinutes()).padStart(2, "0");
+      clock.textContent = timeFormatter.format(new Date());
     };
 
     tick();
