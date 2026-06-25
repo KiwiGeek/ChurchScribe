@@ -78,6 +78,8 @@ window.ScriptoriaModules.createSyncStatus = (deps) => {
 
   const getActiveProviderSettings = () => ({
     ...cloudSyncSettings.providerSettings[getActiveProvider().id],
+    activeNoteId: getActiveNote()?.id ?? null,
+    syncReason: "",
     remoteSettingsFileId: cloudSyncSettings.remoteSettingsFileId,
     remoteNoteFileIds: structuredClone(cloudSyncSettings.remoteNoteFileIds),
     remoteWorkspaceFileId: cloudSyncSettings.remoteWorkspaceFileId,

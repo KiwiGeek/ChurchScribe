@@ -155,6 +155,10 @@ if (window.OneDriveProvider) {
   providerRegistry[window.OneDriveProvider.id] = window.OneDriveProvider;
 }
 
+if (window.OneNoteProvider) {
+  providerRegistry[window.OneNoteProvider.id] = window.OneNoteProvider;
+}
+
 if (!Object.keys(providerRegistry).length) {
   console.error("No storage providers registered. Ensure provider scripts (e.g. gdrive.js, localdrive.js, onedrive.js) are loaded before app.js.");
 }
@@ -658,10 +662,19 @@ const updateSaveStatus = (message) => {
   syncButton.className = "save-status-sync";
   syncButton.textContent = syncLabel;
   syncButton.addEventListener("click", async () => {
-    await syncWorkspaceToCloud({ reason: "manual" });
+    await runManualCloudSync();
   });
 
   saveStatus.append(localText, syncButton);
+};
+
+const runManualCloudSync = async () => {
+  const pullSucceeded = await pullFromCloud();
+  if (pullSucceeded === false) {
+    return;
+  }
+
+  await syncWorkspaceToCloud({ reason: "manual" });
 };
 
 const updateCompactReferenceChip = () => {
@@ -1428,6 +1441,37 @@ providerSettingsContainer.addEventListener("change", handleProviderSettingInputE
 
 googleConnectButton.addEventListener("click", async () => {
   try {
+    const currentProviderSettings = cloudSyncSettings.providerSettings[activeProvider.id] ?? {};
+    const shouldCreateOneNoteNotebook = activeProvider.id === "onenote"
+      && activeProvider.hasActiveSession()
+      && currentProviderSettings.notebookId === "__create__"
+      && typeof activeProvider.createConfiguredNotebook === "function";
+
+    if (shouldCreateOneNoteNotebook) {
+      cloudSyncSettings.status = "Creating OneNote notebook...";
+      persistCloudSyncSettings();
+      renderSettings();
+
+      const result = await activeProvider.createConfiguredNotebook(getActiveProviderSettings());
+      cloudSyncSettings.remoteWorkspaceParentId = result.remoteWorkspaceParentId ?? "";
+      cloudSyncSettings.remoteSettingsFileId = "";
+      cloudSyncSettings.remoteNoteFileIds = {};
+      cloudSyncSettings.remoteWorkspaceFileId = "";
+      cloudSyncSettings.lastSyncAt = null;
+      if (result.providerSettingsPatch && typeof result.providerSettingsPatch === "object") {
+        cloudSyncSettings.providerSettings[activeProvider.id] = {
+          ...(cloudSyncSettings.providerSettings[activeProvider.id] ?? {}),
+          ...result.providerSettingsPatch
+        };
+      }
+      cloudSyncSettings.status = `Connected to ${buildProviderStatusLabel()}`;
+      cloudSyncSettings.lastError = "";
+      persistCloudSyncSettings();
+      renderSettings();
+      refreshSaveStatus();
+      return;
+    }
+
     await connectCloud();
   } catch (error) {
     console.error(error);
@@ -1439,8 +1483,7 @@ googleDisconnectButton.addEventListener("click", () => {
 });
 
 googleSyncNowButton.addEventListener("click", async () => {
-  await pullFromCloud();
-  await syncWorkspaceToCloud({ reason: "manual" });
+  await runManualCloudSync();
 });
 
 downloadBackupButton.addEventListener("click", () => {
@@ -1776,6 +1819,9 @@ const bootstrap = async () => {
   if (hasSeenOnboarding !== true) {
     openOnboarding({ markSeen: true });
   }
+
+  renderSettings();
+  refreshSaveStatus();
 };
 
 void bootstrap();

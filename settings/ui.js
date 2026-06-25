@@ -45,6 +45,12 @@ window.ScriptoriaModules.createSettingsUi = (deps) => {
         input.type = "text";
         input.dataset.providerSettingKey = field.key;
         input.value = String(currentValues[field.key] ?? "");
+        if (field.placeholder) {
+          input.placeholder = field.placeholder;
+        }
+        if (field.disabled) {
+          input.disabled = true;
+        }
         label.append(span, input);
       }
 
@@ -192,6 +198,7 @@ window.ScriptoriaModules.createSettingsUi = (deps) => {
     deps.renderTranslationsPanel();
 
     const activeProvider = deps.getActiveProvider();
+    const currentProviderSettings = deps.cloudSyncSettings.providerSettings[activeProvider.id] ?? {};
     deps.cloudProviderSelect.value = deps.cloudSyncSettings.provider;
     deps.cloudPollIntervalSelect.value = String(deps.cloudSyncSettings.pollIntervalSeconds);
     renderProviderSettings();
@@ -218,13 +225,20 @@ window.ScriptoriaModules.createSettingsUi = (deps) => {
       deps.googleSyncNowButton.classList.toggle("is-hidden", !hasActiveStorageSession);
       deps.googleSyncNowButton.disabled = !hasActiveStorageSession;
     } else {
-      deps.googleConnectButton.textContent = `Connect ${activeProvider.displayName}`;
-      deps.googleConnectButton.classList.toggle("is-hidden", hasActiveStorageSession);
+      const shouldShowOneNoteCreateAction = activeProvider.id === "onenote"
+        && hasActiveStorageSession
+        && currentProviderSettings.notebookId === "__create__";
+      deps.googleConnectButton.textContent = shouldShowOneNoteCreateAction
+        ? "Create Notebook"
+        : `Connect ${activeProvider.displayName}`;
+      deps.googleConnectButton.classList.toggle("is-hidden", hasActiveStorageSession && !shouldShowOneNoteCreateAction);
       deps.googleDisconnectButton.classList.toggle("is-hidden", !hasActiveStorageSession);
       deps.googleSyncNowButton.classList.toggle("is-hidden", !hasActiveStorageSession);
-      deps.googleConnectButton.disabled = !activeProvider.isAvailable() || hasActiveStorageSession;
+      deps.googleConnectButton.disabled = shouldShowOneNoteCreateAction
+        ? !activeProvider.isAvailable() || !String(currentProviderSettings.createNotebookName ?? "").trim()
+        : !activeProvider.isAvailable() || hasActiveStorageSession;
       deps.googleDisconnectButton.disabled = !hasActiveStorageSession;
-      deps.googleSyncNowButton.disabled = !hasActiveStorageSession;
+      deps.googleSyncNowButton.disabled = !hasActiveStorageSession || shouldShowOneNoteCreateAction;
     }
 
     const selectedType = deps.getSelectedTypeForManager();

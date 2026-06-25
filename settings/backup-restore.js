@@ -140,7 +140,7 @@ window.ScriptoriaModules.createSettingsBackupRestore = (deps) => {
     }
 
     try {
-      await activeProvider.clearRemote();
+      await activeProvider.clearRemote(deps.getActiveProviderSettings());
 
       deps.cloudSyncSettings.remoteSettingsFileId = "";
       deps.cloudSyncSettings.remoteNoteFileIds = {};
@@ -167,7 +167,7 @@ window.ScriptoriaModules.createSettingsBackupRestore = (deps) => {
 
     if (hasSession) {
       try {
-        await activeProvider.clearRemote();
+        await activeProvider.clearRemote(deps.getActiveProviderSettings());
       } catch (error) {
         console.error("[Data] Clear remote failed during clear-all:", error);
       }

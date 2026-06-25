@@ -71,6 +71,15 @@ window.ScriptoriaModules.createSyncPayloads = (deps) => {
   };
 
   const applyCloudPayload = async (payload) => {
+    if (Array.isArray(payload.notes)) {
+      console.log("[CloudSync] Applying remote notes payload", payload.notes.map((note) => ({
+        id: note.id,
+        typeId: note.typeId,
+        updatedAt: note.updatedAt,
+        metadata: note.metadata
+      })));
+    }
+
     if (payload.workspace) {
       workspace.noteTypes = payload.workspace.noteTypes;
       workspace.activeNoteId = payload.workspace.activeNoteId;
@@ -80,7 +89,20 @@ window.ScriptoriaModules.createSyncPayloads = (deps) => {
     }
 
     if (Array.isArray(payload.notes)) {
-      workspace.notes = payload.notes;
+      if (payload.notesArePartial) {
+        const remoteNotesById = new Map(payload.notes.map((note) => [note.id, note]));
+        const mergedNotes = workspace.notes.map((note) => remoteNotesById.get(note.id) ?? note);
+
+        for (const note of payload.notes) {
+          if (!mergedNotes.some((existing) => existing.id === note.id)) {
+            mergedNotes.push(note);
+          }
+        }
+
+        workspace.notes = mergedNotes;
+      } else {
+        workspace.notes = payload.notes;
+      }
     }
 
     if (payload.preferences) {
@@ -116,6 +138,12 @@ window.ScriptoriaModules.createSyncPayloads = (deps) => {
 
     ensureWorkspaceConsistency();
     buildBookAliasMap();
+    console.log("[CloudSync] Workspace after remote payload normalization", workspace.notes.map((note) => ({
+      id: note.id,
+      typeId: note.typeId,
+      updatedAt: note.updatedAt,
+      metadata: note.metadata
+    })));
     renderWorkspace();
     void writeStoredValue(deps.workspaceStorageKey, workspace);
   };

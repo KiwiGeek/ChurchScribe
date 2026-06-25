@@ -102,6 +102,44 @@ window.ScriptoriaModules.createCloudSync = (deps) => {
     );
   };
 
+  const normalizeNoteForComparison = (note) => ({
+    id: note.id,
+    typeId: note.typeId,
+    content: note.content,
+    metadata: note.metadata,
+    updatedAt: note.updatedAt
+  });
+
+  const normalizeWorkspaceForComparison = () => ({
+    noteTypes: structuredClone(workspace.noteTypes),
+    activeNoteId: workspace.activeNoteId,
+    selectedNewNoteTypeId: workspace.selectedNewNoteTypeId,
+    customBookAliases: structuredClone(workspace.customBookAliases)
+  });
+
+  const sortById = (items) =>
+    [...items].sort((left, right) => String(left.id).localeCompare(String(right.id)));
+
+  const remotePayloadDiffersFromLocal = (remotePayload) => {
+    const remoteWorkspaceComparable = JSON.stringify({
+      noteTypes: structuredClone(remotePayload.workspace?.noteTypes ?? []),
+      activeNoteId: remotePayload.workspace?.activeNoteId ?? null,
+      selectedNewNoteTypeId: remotePayload.workspace?.selectedNewNoteTypeId ?? null,
+      customBookAliases: structuredClone(remotePayload.workspace?.customBookAliases ?? {})
+    });
+    const localWorkspaceComparable = JSON.stringify(normalizeWorkspaceForComparison());
+
+    const remoteNotes = remotePayload.notes ?? [];
+    const localComparableNotes = remotePayload.notesArePartial
+      ? workspace.notes.filter((note) => remoteNotes.some((remoteNote) => remoteNote.id === note.id))
+      : workspace.notes;
+    const remoteNotesComparable = JSON.stringify(sortById(remoteNotes.map(normalizeNoteForComparison)));
+    const localNotesComparable = JSON.stringify(sortById(localComparableNotes.map(normalizeNoteForComparison)));
+
+    return remoteWorkspaceComparable !== localWorkspaceComparable ||
+      remoteNotesComparable !== localNotesComparable;
+  };
+
   const showSyncConflictDialog = (remotePayload, mode = "conflict") => new Promise((resolve) => {
     const mostRecentNote = workspace.notes.reduce(
       (latest, note) => (!latest || new Date(note.updatedAt) > new Date(latest.updatedAt) ? note : latest),
@@ -185,7 +223,7 @@ window.ScriptoriaModules.createCloudSync = (deps) => {
 
   const pullFromCloud = async () => {
     if (!getActiveProvider().hasActiveSession() || !navigator.onLine || syncInFlightPromise || isPullInFlight) {
-      return;
+      return false;
     }
 
     isPullInFlight = true;
@@ -204,18 +242,49 @@ window.ScriptoriaModules.createCloudSync = (deps) => {
         persistCloudSyncSettings();
       }
 
+      if (result.providerSettingsPatch && typeof result.providerSettingsPatch === "object") {
+        cloudSyncSettings.providerSettings[getActiveProvider().id] = {
+          ...(cloudSyncSettings.providerSettings[getActiveProvider().id] ?? {}),
+          ...result.providerSettingsPatch
+        };
+        persistCloudSyncSettings();
+      }
+
       const remotePayload = result.data;
 
       if (!remotePayload) {
+        cloudSyncSettings.status = `OneNote is empty. Starting initial export to ${buildProviderStatusLabel()}...`;
+        persistCloudSyncSettings();
+        renderSettings();
+        refreshSaveStatus();
+        console.log("[CloudSync] Pull found no valid remote payload; scheduling initial upload.");
         void syncWorkspaceToCloud({ reason: "initial" });
-        return;
+        return true;
       }
 
       const remoteUpdatedAt = remotePayload.updatedAt ? new Date(remotePayload.updatedAt) : null;
       const lastSyncAt = cloudSyncSettings.lastSyncAt ? new Date(cloudSyncSettings.lastSyncAt) : null;
+      console.log("[CloudSync] Pull received remote payload", {
+        remoteUpdatedAt: remoteUpdatedAt?.toISOString() ?? null,
+        lastSyncAt: lastSyncAt?.toISOString() ?? null,
+        remoteNoteCount: Array.isArray(remotePayload.notes) ? remotePayload.notes.length : null
+      });
+
+      const remoteDiffersFromLocal = remotePayloadDiffersFromLocal(remotePayload);
+      console.log("[CloudSync] Remote/local payload comparison", {
+        remoteDiffersFromLocal
+      });
 
       if (lastSyncAt && remoteUpdatedAt && remoteUpdatedAt <= lastSyncAt) {
-        return;
+        if (!remoteDiffersFromLocal) {
+          return true;
+        }
+
+        console.log("[CloudSync] Remote payload differs from local despite timestamp gate; continuing with sync resolution.");
+      }
+
+      if (lastSyncAt && remoteUpdatedAt && remoteUpdatedAt <= lastSyncAt && !remoteDiffersFromLocal) {
+        return true;
       }
 
       const localHasChanges = hasLocalChangesSinceLastSync();
@@ -231,6 +300,10 @@ window.ScriptoriaModules.createCloudSync = (deps) => {
       }
 
       if (resolution === "remote") {
+        console.log("[CloudSync] Applying remote payload after conflict resolution", {
+          remoteNoteCount: Array.isArray(remotePayload.notes) ? remotePayload.notes.length : null,
+          remoteUpdatedAt: remotePayload.updatedAt ?? null
+        });
         await applyCloudPayload(remotePayload);
 
         if (remotePayload.updatedAt) {
@@ -244,13 +317,17 @@ window.ScriptoriaModules.createCloudSync = (deps) => {
         persistCloudSyncSettings();
         renderSettings();
         refreshSaveStatus();
+        return true;
       } else if (resolution === "cancel") {
         disconnectCloud();
+        return false;
       } else {
         void syncWorkspaceToCloud({ reason: "conflict-keep-local" });
+        return true;
       }
     } catch (error) {
       console.error("[CloudSync] Pull failed:", error);
+      return false;
     } finally {
       isPullInFlight = false;
     }
@@ -294,18 +371,29 @@ window.ScriptoriaModules.createCloudSync = (deps) => {
       try {
         cloudSyncSettings.status = reason === "idle"
           ? `Syncing changes to ${buildProviderStatusLabel()}...`
+          : reason === "initial"
+            ? `Performing initial OneNote export to ${buildProviderStatusLabel()}...`
           : `Syncing to ${buildProviderStatusLabel()}...`;
         cloudSyncSettings.lastError = "";
         persistCloudSyncSettings();
         renderSettings();
         refreshSaveStatus();
 
-        const result = await getActiveProvider().upload(buildCloudSyncPayload(), getActiveProviderSettings());
+        const result = await getActiveProvider().upload(buildCloudSyncPayload(), {
+          ...getActiveProviderSettings(),
+          syncReason: reason
+        });
 
         cloudSyncSettings.remoteSettingsFileId = result.remoteSettingsFileId;
         cloudSyncSettings.remoteNoteFileIds = result.remoteNoteFileIds ?? {};
         cloudSyncSettings.remoteWorkspaceFileId = result.remoteWorkspaceFileId;
         cloudSyncSettings.remoteWorkspaceParentId = result.remoteWorkspaceParentId;
+        if (result.providerSettingsPatch && typeof result.providerSettingsPatch === "object") {
+          cloudSyncSettings.providerSettings[getActiveProvider().id] = {
+            ...(cloudSyncSettings.providerSettings[getActiveProvider().id] ?? {}),
+            ...result.providerSettingsPatch
+          };
+        }
         cloudSyncSettings.lastSyncAt = new Date().toISOString();
         cloudSyncSettings.localSettingsUpdatedAt = cloudSyncSettings.lastSyncAt;
         cloudSyncSettings.status = `Connected to ${buildProviderStatusLabel()}`;
