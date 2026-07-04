@@ -1298,46 +1298,58 @@ ${json}</pre>
 
       if (activeNoteId && activeMapping?.pageId) {
         try {
-          const [pageHtml, pageMetadata] = await Promise.all([
-            fetchPageHtml(activeMapping.pageId),
-            fetchPageMetadata(activeMapping.pageId)
-          ]);
-          const parsed = parseNotePage(pageHtml);
-          const resolvedTitle = sanitizePlainText(pageMetadata.title ?? parsed.title, parsed.title || "Untitled");
-          const noteType = settingsPayload.settings?.workspace?.noteTypes?.find((type) => type.id === activeMapping.typeId) ?? null;
-          const preferredTitleFieldId = getPreferredTitleFieldId(noteType);
-          const storedSnapshot = noteSnapshots[activeNoteId] ?? {};
-          const nextNote = {
-            id: activeNoteId,
-            typeId: storedSnapshot.typeId ?? activeMapping.typeId,
-            metadata: structuredClone(storedSnapshot.metadata ?? {}),
-            content: parsed.bodyHtml,
-            createdAt: storedSnapshot.createdAt ?? settingsPayload.updatedAt,
-            updatedAt: pageMetadata.lastModifiedDateTime ?? activeMapping.lastModifiedDateTime ?? settingsPayload.updatedAt
-          };
+          const pageMetadata = await fetchPageMetadata(activeMapping.pageId);
+          const knownModifiedAt = notePageState[activeNoteId]?.lastModifiedDateTime ||
+            activeMapping.lastModifiedDateTime ||
+            "";
+          const pageChangedRemotely = !knownModifiedAt ||
+            (pageMetadata.lastModifiedDateTime && pageMetadata.lastModifiedDateTime !== knownModifiedAt);
 
-          if (preferredTitleFieldId) {
-            nextNote.metadata[preferredTitleFieldId] = resolvedTitle;
+          if (!pageChangedRemotely) {
+            console.log("[OneNoteSync] Active page unchanged since last sync; skipping remote import", {
+              noteId: activeNoteId,
+              pageId: activeMapping.pageId,
+              lastModifiedDateTime: pageMetadata.lastModifiedDateTime ?? ""
+            });
+          } else {
+            const pageHtml = await fetchPageHtml(activeMapping.pageId);
+            const parsed = parseNotePage(pageHtml);
+            const resolvedTitle = sanitizePlainText(pageMetadata.title ?? parsed.title, parsed.title || "Untitled");
+            const noteType = settingsPayload.settings?.workspace?.noteTypes?.find((type) => type.id === activeMapping.typeId) ?? null;
+            const preferredTitleFieldId = getPreferredTitleFieldId(noteType);
+            const storedSnapshot = noteSnapshots[activeNoteId] ?? {};
+            const nextNote = {
+              id: activeNoteId,
+              typeId: storedSnapshot.typeId ?? activeMapping.typeId,
+              metadata: structuredClone(storedSnapshot.metadata ?? {}),
+              content: parsed.bodyHtml,
+              createdAt: storedSnapshot.createdAt ?? settingsPayload.updatedAt,
+              updatedAt: pageMetadata.lastModifiedDateTime ?? activeMapping.lastModifiedDateTime ?? settingsPayload.updatedAt
+            };
+
+            if (preferredTitleFieldId) {
+              nextNote.metadata[preferredTitleFieldId] = resolvedTitle;
+            }
+
+            console.log("[OneNoteSync] Imported remote note title", {
+              noteId: activeNoteId,
+              pageId: activeMapping.pageId,
+              graphTitle: pageMetadata.title ?? "",
+              htmlTitle: parsed.title,
+              resolvedTitle,
+              preferredTitleFieldId,
+              resultingTitleFieldValue: preferredTitleFieldId ? nextNote.metadata[preferredTitleFieldId] : ""
+            });
+
+            notes.push(nextNote);
+            notePageState[activeNoteId] = {
+              ...activeMapping,
+              lastModifiedDateTime: pageMetadata.lastModifiedDateTime ?? activeMapping.lastModifiedDateTime,
+              title: resolvedTitle,
+              localNoteUpdatedAt: nextNote.updatedAt
+            };
+            timestamps.push(pageMetadata.lastModifiedDateTime ?? activeMapping.lastModifiedDateTime);
           }
-
-          console.log("[OneNoteSync] Imported remote note title", {
-            noteId: activeNoteId,
-            pageId: activeMapping.pageId,
-            graphTitle: pageMetadata.title ?? "",
-            htmlTitle: parsed.title,
-            resolvedTitle,
-            preferredTitleFieldId,
-            resultingTitleFieldValue: preferredTitleFieldId ? nextNote.metadata[preferredTitleFieldId] : ""
-          });
-
-          notes.push(nextNote);
-          notePageState[activeNoteId] = {
-            ...activeMapping,
-            lastModifiedDateTime: pageMetadata.lastModifiedDateTime ?? activeMapping.lastModifiedDateTime,
-            title: resolvedTitle,
-            localNoteUpdatedAt: nextNote.updatedAt
-          };
-          timestamps.push(pageMetadata.lastModifiedDateTime ?? activeMapping.lastModifiedDateTime);
         } catch (error) {
           if (error.status !== 404) {
             throw error;

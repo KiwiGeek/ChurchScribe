@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "languageTag": "en",
   "displayName": "English",
-  "catalogVersion": "2026-05-25T13:24:42.3670114\u002B00:00",
+  "catalogVersion": "2026-07-04T01:07:22.2817818\u002B00:00",
   "translations": [
     {
       "translationId": "en:AFV",
@@ -81,6 +81,19 @@
       "downloadSizeBytes": 3340283,
       "contentHash": "sha256-755791e4d29c4d8d2fc614f1caa5206c434ed3b47005e5efc925a1794e2e4fba",
       "manifestUrl": "bibles/catalog/translations/en/AMPC.json"
+    },
+    {
+      "translationId": "en:ESVUK25",
+      "code": "ESVUK25",
+      "label": "Anglicised English Standard Version 2025",
+      "sourceType": "official",
+      "languageTag": "en",
+      "languageCode3": "eng",
+      "version": 1,
+      "copyright": "Notification: The English text of the ESV Bible may not be translated in whole or in part into any other language or used as the basis of a derivative work or as the sole base English text from which any translation of the Bible is made. The ESV text may not be quoted in any publication made available to the public by a Creative Commons license. Outside of Paratext, users may not copy or download more than 500 consecutive verses of the ESV Bible or more than one half of any book of the ESV Bible. ESV\u00AE Bible, copyright \u00A9 2001 by Crossway, a publishing ministry of Good News Publishers. ESV Text Edition: 2025. Permission or license requests that exceed the above guidelines require written permission or a formal license. To obtain written permission or a formal license as required, please complete and submit Crossway\u2019s online form at www.crossway.org/permissions/.",
+      "downloadSizeBytes": 3344702,
+      "contentHash": "sha256-2e818c86743740cd780c008d2f81f7e1f13718be6d9a41f8d834e25c562c560b",
+      "manifestUrl": "bibles/catalog/translations/en/ESVUK25.json"
     },
     {
       "translationId": "en:BSB",
@@ -245,10 +258,10 @@
       "sourceType": "official",
       "languageTag": "en",
       "languageCode3": "eng",
-      "version": 22,
+      "version": 24,
       "copyright": "The Holy Bible, English Standard Version\u00AE (ESV\u00AE), copyright \u00A9 2001 by Crossway, a publishing ministry of Good News Publishers.",
       "downloadSizeBytes": 4929627,
-      "contentHash": "sha256-0faf24bffade16f9a222b062695aaba2a4225082c5fd337c30b928f06cbab717",
+      "contentHash": "sha256-f777a32d7a64a43fccd35e568ce3cd4f112b510328903781ff20c07198aa2684",
       "manifestUrl": "bibles/catalog/translations/en/ESV.json"
     },
     {
@@ -752,10 +765,10 @@
       "sourceType": "official",
       "languageTag": "en",
       "languageCode3": "eng",
-      "version": 12,
+      "version": 13,
       "copyright": "\u00A9 2021, Wycliffe Bible Translators, Inc. All rights reserved.",
-      "downloadSizeBytes": 1072199,
-      "contentHash": "sha256-4dec6f82428e32e19995d55182cb6fc49e59720be1414167e8034fd6be6f36b8",
+      "downloadSizeBytes": 1070179,
+      "contentHash": "sha256-88c0d4d39f5a254f1d1c08c3aff9271c5785811697e7db46a501c5c9125d4c81",
       "manifestUrl": "bibles/catalog/translations/en/PEV.json"
     },
     {
@@ -1025,10 +1038,10 @@
       "sourceType": "official",
       "languageTag": "en",
       "languageCode3": "eng",
-      "version": 82,
+      "version": 84,
       "copyright": "PUBLIC DOMAIN (not copyrighted)",
-      "downloadSizeBytes": 3802525,
-      "contentHash": "sha256-f0c6b9e9b71dd757125990ea0b2d88e37aab52b6adba8ab657d42520f8f6c2a6",
+      "downloadSizeBytes": 3703771,
+      "contentHash": "sha256-d52937319f233828cde35ff3718b1701257c5d7e9b6aa6fc8e1c4e1b44862aa8",
       "manifestUrl": "bibles/catalog/translations/en/engWEBUS.json"
     },
     {
@@ -1038,10 +1051,10 @@
       "sourceType": "official",
       "languageTag": "en",
       "languageCode3": "eng",
-      "version": 96,
+      "version": 98,
       "copyright": "PUBLIC DOMAIN",
-      "downloadSizeBytes": 4301574,
-      "contentHash": "sha256-40b99f6c29e8c45b902c45270d4a13692738575c37e93aa5ff5cb6bb451fabbf",
+      "downloadSizeBytes": 4602392,
+      "contentHash": "sha256-eb3838ebcf500cd2c86c0e00389e196908f53dedc5f73f9619a2f0d8f77237ee",
       "manifestUrl": "bibles/catalog/translations/en/WMB.json"
     },
     {
@@ -1051,10 +1064,10 @@
       "sourceType": "official",
       "languageTag": "en",
       "languageCode3": "eng",
-      "version": 98,
+      "version": 100,
       "copyright": "PUBLIC DOMAIN. \u0022World Messianic Bible\u0022 is a trademark.",
-      "downloadSizeBytes": 4305344,
-      "contentHash": "sha256-94ef7623b3cec25a34db8b91a8f678fa26b2fb170fccfb589c83a7e7889cc8a3",
+      "downloadSizeBytes": 4606039,
+      "contentHash": "sha256-2336ffab8e2aa0e61536ecbc6db2174f0ac9f83d277a2d0f880103fda2fbb8b9",
       "manifestUrl": "bibles/catalog/translations/en/WMBBE.json"
     },
     {
@@ -1077,10 +1090,10 @@
       "sourceType": "official",
       "languageTag": "en",
       "languageCode3": "eng",
-      "version": 11,
+      "version": 12,
       "copyright": "Copyright 2024 Y\u0027all Version Bible Society.",
-      "downloadSizeBytes": 3192396,
-      "contentHash": "sha256-dd8bc971fcc9979d53ba180ad994c0bbf0a3ee58f5bc6c576678fc29f6af3490",
+      "downloadSizeBytes": 3192134,
+      "contentHash": "sha256-23b4f4345255a86136940ab198bfb6a79e5289fd5929010e7b7d8332937c9801",
       "manifestUrl": "bibles/catalog/translations/en/YALL.json"
     },
     {

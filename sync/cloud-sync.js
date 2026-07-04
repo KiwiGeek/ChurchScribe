@@ -270,20 +270,10 @@ window.ScriptoriaModules.createCloudSync = (deps) => {
         remoteNoteCount: Array.isArray(remotePayload.notes) ? remotePayload.notes.length : null
       });
 
-      const remoteDiffersFromLocal = remotePayloadDiffersFromLocal(remotePayload);
-      console.log("[CloudSync] Remote/local payload comparison", {
-        remoteDiffersFromLocal
-      });
-
       if (lastSyncAt && remoteUpdatedAt && remoteUpdatedAt <= lastSyncAt) {
-        if (!remoteDiffersFromLocal) {
-          return true;
-        }
-
-        console.log("[CloudSync] Remote payload differs from local despite timestamp gate; continuing with sync resolution.");
-      }
-
-      if (lastSyncAt && remoteUpdatedAt && remoteUpdatedAt <= lastSyncAt && !remoteDiffersFromLocal) {
+        // Remote has not changed since our last successful sync. Any pending
+        // local edits are pushed by the follow-up idle sync — this is never a
+        // conflict, regardless of whether local currently differs from remote.
         return true;
       }
 
@@ -293,10 +283,16 @@ window.ScriptoriaModules.createCloudSync = (deps) => {
 
       if (!lastSyncAt) {
         resolution = await showSyncConflictDialog(remotePayload, "first-sync");
-      } else if (localHasChanges) {
-        resolution = await showSyncConflictDialog(remotePayload);
-      } else {
+      } else if (!localHasChanges) {
         resolution = "remote";
+      } else if (!remotePayloadDiffersFromLocal(remotePayload)) {
+        // Remote timestamp is newer but its content matches local (e.g. the
+        // provider bumped its modified time after our own upload). Nothing to
+        // reconcile — keep local and let the push refresh lastSyncAt.
+        console.log("[CloudSync] Remote newer by timestamp but content matches local; resolving as local without prompting the user.");
+        resolution = "local";
+      } else {
+        resolution = await showSyncConflictDialog(remotePayload);
       }
 
       if (resolution === "remote") {

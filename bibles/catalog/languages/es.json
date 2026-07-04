@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "languageTag": "es",
   "displayName": "Spanish",
-  "catalogVersion": "2026-05-25T13:24:42.3671948\u002B00:00",
+  "catalogVersion": "2026-07-04T01:07:22.2819456\u002B00:00",
   "translations": [
     {
       "translationId": "es:JBS",
@@ -102,10 +102,10 @@
       "sourceType": "official",
       "languageTag": "es",
       "languageCode3": "spa",
-      "version": 4,
+      "version": 5,
       "copyright": "Copyright: Dios habla hoy \u00AE, Cuarta edici\u00F3n \u00A9 Sociedades B\u00EDblicas Unidas, 2023. Otras ediciones: 1966, 1970, 1979, 1983, 1994.\nDios habla hoy \u00AE es una marca registrada de Sociedades B\u00EDblicas Unidas, y puede ser usada solamente bajo licencia.",
-      "downloadSizeBytes": 3823666,
-      "contentHash": "sha256-d4f2314c55cc353f304ab97147dd6b2ae9e4dd82699076944d2e15883adceddc",
+      "downloadSizeBytes": 3721183,
+      "contentHash": "sha256-581c53e7cad6365323b64e8d6150544d8e840949a41fdb639869e7d5ce6fce8f",
       "manifestUrl": "bibles/catalog/translations/es/DHH23ST.json"
     },
     {
@@ -323,10 +323,10 @@
       "sourceType": "official",
       "languageTag": "es",
       "languageCode3": "spa",
-      "version": 36,
-      "copyright": "Reina Valera Contempor\u00E1nea\u2122 \u00A9 Sociedades B\u00EDblicas Unidas, 2009, 2010.",
-      "downloadSizeBytes": 3391447,
-      "contentHash": "sha256-f5b363b3fa5b7c871e4b295769fb79065b60872113ec9224f9a0a5a2169b3918",
+      "version": 37,
+      "copyright": "Reina Valera Contempor\u00E1nea\u00AE \u00A9 Sociedades B\u00EDblicas Unidas, 2009, 2011, 2018, 2025.",
+      "downloadSizeBytes": 3681462,
+      "contentHash": "sha256-6aaf1330e78194617390f298c8a4048e2f43e5d86f41d1cec1887fbebe37b847",
       "manifestUrl": "bibles/catalog/translations/es/RVC.json"
     },
     {
