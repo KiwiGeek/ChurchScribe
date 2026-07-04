@@ -152,6 +152,7 @@ dummyPaneGrid.className = "pane-grid";
 let syncStatusApi            = null;
 let syncPayloadApi           = null;
 let syncCloudApi             = null;
+let syncWizardApi            = null;
 let translationsManagerApiRef = null;
 let scriptureSearchApiRef    = null;
 let viewerApi                = null;
@@ -804,11 +805,20 @@ const renderSettingsSheet = () => {
             <span>Account</span>
             <span class="mob-settings-value">${escapeHtml(cloudSyncSettings.connectedEmail)}</span>
           </div>` : ""}
+        ${(() => {
+          const locationLabel = activeProvider.getLocationLabel?.(cloudSyncSettings.providerSettings[activeProvider.id] ?? {}) ?? "";
+          return locationLabel ? `
+          <div class="mob-settings-row">
+            <span>Location</span>
+            <span class="mob-settings-value">${escapeHtml(locationLabel)}</span>
+          </div>` : "";
+        })()}
         <div class="mob-settings-row">
           <span>Last sync</span>
           <span class="mob-settings-value">${escapeHtml(formatSyncTimestamp(cloudSyncSettings.lastSyncAt))}</span>
         </div>
         <button class="mob-settings-action" id="mob-sync-now">Sync now</button>
+        <button class="mob-settings-action" id="mob-change-config">Change configuration</button>
         <button class="mob-settings-action mob-settings-action--danger" id="mob-disconnect">Disconnect</button>
       ` : `
         <p class="mob-settings-help">Connect a provider to browse your notes.</p>
@@ -902,6 +912,11 @@ const renderSettingsSheet = () => {
     }
   });
 
+  document.querySelector("#mob-change-config")?.addEventListener("click", () => {
+    settingsSheet.hidden = true;
+    syncWizardApi?.openWizard();
+  });
+
   document.querySelector("#mob-disconnect")?.addEventListener("click", () => {
     disconnectCloud();
     mobileState.isCloudConnected = false;
@@ -936,32 +951,19 @@ mobSettingsBtn?.addEventListener("click", () => {
 });
 
 // ── Cloud connect helper ──────────────────────────────────────────────────────
-const initiateCloudConnect = async (providerId) => {
-  cloudSyncSettings.provider = providerId;
-  activeProvider = providerRegistry[providerId] ?? window.NoOpProvider;
-  await persistCloudSyncSettings();
+// Launches the sync setup wizard (sign in → storage location → existing data).
+// The wizard applies configuration only when finished, so a cancelled or
+// failed attempt leaves the connect prompt in place.
+const initiateCloudConnect = (providerId) => {
+  const provider = providerRegistry[providerId];
 
-  activeProvider.waitForReady(async () => {
-    try {
-      await connectCloud();
-      mobileState.isCloudConnected = activeProvider.hasActiveSession();
-      updateSyncBar();
+  if (!provider || !syncWizardApi) {
+    showTransientStatus("This provider isn't available on this device.");
+    return;
+  }
 
-      if (mobileState.isCloudConnected) {
-        showTransientStatus("Connected — pulling your notes…");
-        await pullFromCloud();
-      }
-    } catch (err) {
-      console.error("[Mobile] Connect failed:", err);
-      // Reset provider back to "none" so the connect prompt reappears instead
-      // of showing the notes list (which would hide the connect buttons).
-      cloudSyncSettings.provider = "none";
-      activeProvider = window.NoOpProvider;
-      await persistCloudSyncSettings();
-      showTransientStatus("Connection failed — please try again.");
-    }
-
-    renderMobileApp();
+  provider.waitForReady(() => {
+    syncWizardApi.openWizard({ initialProviderId: providerId });
   });
 };
 
@@ -1270,6 +1272,39 @@ const bootstrap = async () => {
     isSettingsOpen:            () => !settingsSheet.hidden
   });
 
+  // ── Sync setup wizard (read-only mode: cloud data always wins) ────────────
+  syncWizardApi = window.ScriptoriaModules.createSyncSetupWizard({
+    documentObject: document,
+    windowObject: window,
+    providerRegistry,
+    noOpProvider: window.NoOpProvider,
+    cloudSyncSettings,
+    persistCloudSyncSettings: () => persistCloudSyncSettings(),
+    getActiveProvider: () => activeProvider,
+    setActiveProvider: (v) => { activeProvider = v; },
+    stopCloudPolling: () => stopCloudPolling(),
+    startCloudPolling: () => startCloudPolling(),
+    clearPendingAutoSync: () => {},
+    applyCloudPayload: (...args) => syncPayloadApi.applyCloudPayload(...args),
+    syncWorkspaceToCloud: () => Promise.resolve(false),   // read-only on mobile
+    renderSettings: () => {
+      if (!settingsSheet.hidden) renderSettingsSheet();
+    },
+    refreshSaveStatus: () => updateSyncBar(),
+    workspace,
+    readOnly: true,
+    onFinished: () => {
+      mobileState.isCloudConnected = activeProvider.hasActiveSession();
+      updateSyncBar();
+
+      if (mobileState.isCloudConnected) {
+        showTransientStatus("Connected — your notes are up to date.");
+      }
+
+      renderMobileApp();
+    }
+  });
+
   // ── Bootstrap sequence ────────────────────────────────────────────────────
   await initializeTranslations();
   await refreshOfflineTranslationAvailability();
@@ -1308,6 +1343,42 @@ const bootstrap = async () => {
     updateSyncBar();
     if (mobileState.currentView === "notes") renderNotesView();
   });
+
+  // ── Resume an interrupted setup wizard ────────────────────────────────────
+  // OneDrive auth on mobile uses a full-page redirect, which interrupts the
+  // wizard.  A breadcrumb in sessionStorage tells us to pick it back up once
+  // MSAL has processed the redirect response.
+  const pendingWizard = syncWizardApi.consumePendingResume();
+
+  if (pendingWizard?.providerId && providerRegistry[pendingWizard.providerId]) {
+    const pendingProvider = providerRegistry[pendingWizard.providerId];
+
+    pendingProvider.waitForReady(async () => {
+      try {
+        pendingProvider.ensureTokenClient?.();
+
+        if (!pendingProvider.hasActiveSession()) {
+          const { email } = await pendingProvider.attemptSilentReconnect(
+            cloudSyncSettings.providerSettings[pendingWizard.providerId] ?? {}
+          );
+          cloudSyncSettings.connectedEmail = email ?? cloudSyncSettings.connectedEmail;
+        }
+      } catch (err) {
+        // A parallel reconnect attempt may have beaten us to it — only give up
+        // if there's still no session.
+        if (!pendingProvider.hasActiveSession()) {
+          console.warn("[Mobile] Couldn't resume the setup wizard after sign-in:", err);
+          showTransientStatus("Sign-in didn't complete — please try again.");
+          return;
+        }
+      }
+
+      syncWizardApi.openWizard({
+        initialProviderId: pendingWizard.providerId,
+        resumeConnected: pendingProvider.hasActiveSession()
+      });
+    });
+  }
 };
 
 void bootstrap();

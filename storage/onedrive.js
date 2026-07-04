@@ -28,17 +28,29 @@
  *  7. On the Overview page, copy the value labelled "Application (client) ID".
  *  8. Under "API permissions" → "Add a permission" → "Microsoft Graph"
  *     → "Delegated permissions", add:
- *       • Files.ReadWrite.AppFolder
+ *       • Files.ReadWrite.AppFolder   (app-folder storage mode)
+ *       • Files.ReadWrite             (user-chosen "main storage" folder mode)
  *       • User.Read
- *     (Both are low-privilege delegated scopes — no admin consent required for
- *      personal Microsoft accounts.)
+ *     (All are delegated scopes — no admin consent required for personal
+ *      Microsoft accounts. Files.ReadWrite is only requested from users who
+ *      choose to store their workspace outside the app folder.)
  *  9. Save. Users will be prompted to consent on their first sign-in.
  * ──────────────────────────────────────────────────────────────────────────────
  */
 (() => {
   const clientId = "60869d80-c4cb-4d64-a753-ddecd3bb2752";
   const authority = "https://login.microsoftonline.com/common";
-  const scopes = ["Files.ReadWrite.AppFolder", "User.Read"];
+  const baseScopes = ["Files.ReadWrite.AppFolder", "User.Read"];
+  // Required when the workspace lives in a user-chosen OneDrive folder rather
+  // than the per-app special folder.  Add "Files.ReadWrite" as a delegated
+  // Microsoft Graph permission on the Azure app registration for this to work.
+  const mainStorageScope = "Files.ReadWrite";
+
+  const isMainStorage = (settings) =>
+    settings?.locationMode === "mainStorage" && Boolean(settings.folderId);
+
+  const buildScopes = (settings) =>
+    settings?.locationMode === "mainStorage" ? [...baseScopes, mainStorageScope] : baseScopes;
 
   const GRAPH_BASE = "https://graph.microsoft.com/v1.0";
   const MSAL_POLL_INTERVAL_MS = 100;
@@ -181,7 +193,9 @@
     return data.mail || data.userPrincipalName || "";
   };
 
-  const connect = async () => {
+  const connect = async (settings = {}) => {
+    const scopes = buildScopes(settings);
+
     // On mobile browsers, window.opener is nulled out by the browser on newly
     // opened tabs, so MSAL's popup flow can never postMessage the token back to
     // the calling tab.  Use loginRedirect instead: the page navigates to
@@ -244,7 +258,7 @@
     }
   };
 
-  const attemptSilentReconnect = async () => {
+  const attemptSilentReconnect = async (settings = {}) => {
     if (silentReconnectAttempted) {
       throw new Error("Silent reconnect already attempted this session.");
     }
@@ -259,7 +273,7 @@
     }
 
     try {
-      const result = await msalInst.acquireTokenSilent({ scopes, account: accounts[0] });
+      const result = await msalInst.acquireTokenSilent({ scopes: buildScopes(settings), account: accounts[0] });
       accessToken = result.accessToken;
       const email = await fetchUserEmail().catch(() => "");
       return { email };
@@ -268,6 +282,101 @@
     }
   };
 
+  // ── Setup-wizard hooks ──────────────────────────────────────────────────────
+  const getLocationOptions = () => [
+    {
+      id: "appFolder",
+      label: "App folder (recommended)",
+      description: "A dedicated folder OneDrive manages for this app (Apps → Scriptoria). No extra permissions needed.",
+      requiresFolder: null
+    },
+    {
+      id: "mainStorage",
+      label: "A folder in my OneDrive",
+      description: "Any folder you choose in your OneDrive. Files are visible alongside your other documents and can be shared or backed up.",
+      requiresFolder: "browser"
+    }
+  ];
+
+  // Re-authenticates with the wider Files.ReadWrite scope when the user picks
+  // "main storage".  Microsoft's incremental consent only prompts if needed.
+  const ensureLocationAccess = async (locationMode) => {
+    if (locationMode !== "mainStorage") {
+      return;
+    }
+
+    const msalInst = await getMsalInstance();
+    const scopes = [...baseScopes, mainStorageScope];
+    const accounts = msalInst.getAllAccounts();
+
+    try {
+      if (accounts.length) {
+        const result = await msalInst.acquireTokenSilent({ scopes, account: accounts[0] });
+        accessToken = result.accessToken;
+        return;
+      }
+    } catch {
+      // Fall through to the interactive prompt below.
+    }
+
+    // Popups can't round-trip the token on mobile browsers (see connect());
+    // use the redirect flow there instead.  The setup wizard leaves a resume
+    // breadcrumb in sessionStorage before invoking this, so it reopens at the
+    // location step after the round-trip.
+    if (window.location.pathname.endsWith("mobile.html")) {
+      await msalInst.acquireTokenRedirect({ scopes });
+      return;
+    }
+
+    const result = await msalInst.acquireTokenPopup({ scopes });
+    accessToken = result.accessToken;
+  };
+
+  // Lists child folders of the given folder (or the OneDrive root when
+  // parentId is empty) for the wizard's folder browser.
+  const listLocationFolders = async (parentId = "") => {
+    const base = parentId
+      ? `${GRAPH_BASE}/me/drive/items/${encodeURIComponent(parentId)}/children`
+      : `${GRAPH_BASE}/me/drive/root/children`;
+    const folders = [];
+    let url = `${base}?$select=id,name,folder&$top=200`;
+
+    while (url) {
+      const response = await apiFetch(url);
+      const data = await response.json();
+      folders.push(...(data.value ?? []).filter((item) => item.folder));
+      url = data["@odata.nextLink"] ?? null;
+    }
+
+    folders.sort((left, right) => left.name.localeCompare(right.name));
+    return folders.map((item) => ({ id: item.id, name: item.name }));
+  };
+
+  const createLocationFolder = async (parentId, name) => {
+    const url = parentId
+      ? `${GRAPH_BASE}/me/drive/items/${encodeURIComponent(parentId)}/children`
+      : `${GRAPH_BASE}/me/drive/root/children`;
+
+    const response = await apiFetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name,
+        folder: {},
+        "@microsoft.graph.conflictBehavior": "rename"
+      })
+    });
+    const created = await response.json();
+    return { id: created.id, name: created.name ?? name };
+  };
+
+  const buildLocationPatch = (locationMode, folder = null) => ({
+    locationMode,
+    ...(locationMode === "mainStorage" && folder
+      ? { folderId: folder.id, folderPath: folder.path ?? folder.name ?? "" }
+      : { folderId: "", folderPath: "" })
+  });
+
   const getNoteFileName = (noteId) => `${noteFilePrefix}${noteId}${noteFileSuffix}`;
 
   const getNoteIdFromFileName = (fileName) =>
@@ -275,10 +384,17 @@
       ? fileName.slice(noteFilePrefix.length, -noteFileSuffix.length)
       : "";
 
-  // PUT a JSON file into the app's special OneDrive folder (approot).
-  // Graph creates the approot automatically on first access.
-  const upsertJsonFile = async (fileName, payload) => {
-    const url = `${GRAPH_BASE}/me/drive/special/approot:/${encodeURIComponent(fileName)}:/content`;
+  // Base Graph path for the workspace's storage location: either a user-chosen
+  // folder ("main storage" mode) or the app's special folder (approot), which
+  // Graph creates automatically on first access.
+  const locationBase = (settings) =>
+    isMainStorage(settings)
+      ? `${GRAPH_BASE}/me/drive/items/${encodeURIComponent(settings.folderId)}`
+      : `${GRAPH_BASE}/me/drive/special/approot`;
+
+  // PUT a JSON file into the configured storage location.
+  const upsertJsonFile = async (settings, fileName, payload) => {
+    const url = `${locationBase(settings)}:/${encodeURIComponent(fileName)}:/content`;
 
     const response = await apiFetch(url, {
       method: "PUT",
@@ -297,13 +413,13 @@
     return response.json();
   };
 
-  // Lists every item in the app's special OneDrive folder (approot) by
-  // following @odata.nextLink pages until all results have been collected.
-  const listAppRootItems = async () => {
+  // Lists every item in the configured storage location by following
+  // @odata.nextLink pages until all results have been collected.
+  const listLocationItems = async (settings) => {
     const items = [];
 
     try {
-      let url = `${GRAPH_BASE}/me/drive/special/approot/children?$select=id,name&$top=1000`;
+      let url = `${locationBase(settings)}/children?$select=id,name&$top=1000`;
 
       while (url) {
         const response = await apiFetch(url);
@@ -328,11 +444,11 @@
     });
   };
 
-  const upload = async (payload) => {
+  const upload = async (payload, settings = {}) => {
     try {
-      const nextSettingsFileId = await upsertJsonFile(settingsFileName, payload.settings);
+      const nextSettingsFileId = await upsertJsonFile(settings, settingsFileName, payload.settings);
 
-      const existingItems = await listAppRootItems();
+      const existingItems = await listLocationItems(settings);
       const existingNoteByName = new Map(
         existingItems
           .filter((item) =>
@@ -347,7 +463,7 @@
       for (const note of payload.notes.notes) {
         const fileName = getNoteFileName(note.id);
         desiredNoteFileNames.add(fileName);
-        const fileId = await upsertJsonFile(fileName, {
+        const fileId = await upsertJsonFile(settings, fileName, {
           version: 2,
           updatedAt: payload.updatedAt,
           note
@@ -369,16 +485,16 @@
         remoteSettingsFileId: nextSettingsFileId,
         remoteNoteFileIds: nextNoteFileIds,
         remoteWorkspaceFileId: "",
-        remoteWorkspaceParentId: ""
+        remoteWorkspaceParentId: isMainStorage(settings) ? settings.folderId : ""
       };
     } catch (error) {
       throw new Error(parseErrorMessage(error));
     }
   };
 
-  const download = async () => {
+  const download = async (settings = {}) => {
     try {
-      const existingItems = await listAppRootItems();
+      const existingItems = await listLocationItems(settings);
 
       const settingsItem = existingItems.find((item) => item.name === settingsFileName);
       const noteItems = existingItems.filter(
@@ -392,7 +508,7 @@
           remoteSettingsFileId: "",
           remoteNoteFileIds: {},
           remoteWorkspaceFileId: "",
-          remoteWorkspaceParentId: ""
+          remoteWorkspaceParentId: isMainStorage(settings) ? settings.folderId : ""
         };
       }
 
@@ -455,7 +571,7 @@
         remoteSettingsFileId: settingsFileId,
         remoteNoteFileIds: nextNoteFileIds,
         remoteWorkspaceFileId: "",
-        remoteWorkspaceParentId: ""
+        remoteWorkspaceParentId: isMainStorage(settings) ? settings.folderId : ""
       };
     } catch (error) {
       throw new Error(parseErrorMessage(error));
@@ -464,19 +580,30 @@
 
   const getSettingsFields = () => [];
 
-  const getSettingsValues = () => ({});
+  const getSettingsValues = () => ({
+    locationMode: "appFolder",
+    folderId: "",
+    folderPath: ""
+  });
 
-  const applySettingChange = () => ({});
+  const applySettingChange = (key) => {
+    if (key === "locationMode" || key === "folderId") {
+      return { clearRemoteState: true };
+    }
 
-  const getLocationLabel = () => "";
+    return {};
+  };
 
-  const clearRemote = async () => {
+  const getLocationLabel = (settings = {}) =>
+    isMainStorage(settings) ? (settings.folderPath || "OneDrive folder") : "";
+
+  const clearRemote = async (settings = {}) => {
     if (!accessToken) {
       throw new Error("Not connected to OneDrive.");
     }
 
     try {
-      const items = await listAppRootItems();
+      const items = await listLocationItems(settings);
 
       await Promise.all(
         items
@@ -509,6 +636,11 @@
     getSettingsValues,
     applySettingChange,
     getLocationLabel,
+    getLocationOptions,
+    ensureLocationAccess,
+    listLocationFolders,
+    createLocationFolder,
+    buildLocationPatch,
     upload,
     download,
     clearRemote

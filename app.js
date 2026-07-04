@@ -51,12 +51,10 @@ const cardTitleFieldSelect = document.querySelector("#card-title-field-select");
 const cardSubtitleFieldSelect = document.querySelector("#card-subtitle-field-select");
 const metadataFieldList = document.querySelector("#metadata-field-list");
 const aliasList = document.querySelector("#alias-list");
-const cloudProviderSelect = document.querySelector("#cloud-provider-select");
 const cloudPollIntervalSelect = document.querySelector("#cloud-poll-interval-select");
-const cloudStatusInput = document.querySelector("#cloud-status-input");
-const cloudStatusLabel = document.querySelector("#cloud-status-label");
 const cloudLastSyncInput = document.querySelector("#cloud-last-sync-input");
-const providerSettingsContainer = document.querySelector("#provider-settings-container");
+const cloudSyncSummaryContainer = document.querySelector("#cloud-sync-summary");
+const cloudSetupButton = document.querySelector("#cloud-setup-button");
 const googleConnectButton = document.querySelector("#google-connect-button");
 const googleDisconnectButton = document.querySelector("#google-disconnect-button");
 const googleSyncNowButton = document.querySelector("#google-sync-now-button");
@@ -1437,42 +1435,18 @@ aliasList.addEventListener("change", (event) => {
   updateCustomAliases(input.dataset.aliasBook, input.value);
 });
 
-cloudProviderSelect.addEventListener("change", () => {
-  const newProviderId = cloudProviderSelect.value;
-
-  // Persist current provider's settings before switching
-  persistCloudSyncSettings();
-
-  stopCloudPolling();
-  clearPendingAutoSync();
-
-  cloudSyncSettings.provider = newProviderId;
-  activeProvider = providerRegistry[newProviderId] ?? noOpProvider;
-
-  // Remote file/folder IDs and sync timestamps are provider-specific and must not carry over.
-  cloudSyncSettings.remoteSettingsFileId = "";
-  cloudSyncSettings.remoteNoteFileIds = {};
-  cloudSyncSettings.remoteWorkspaceFileId = "";
-  cloudSyncSettings.remoteWorkspaceParentId = "";
-  cloudSyncSettings.lastSyncAt = null;
-
-  const defaults = activeProvider.getSettingsValues();
-
-  if (!cloudSyncSettings.providerSettings[newProviderId]) {
-    cloudSyncSettings.providerSettings[newProviderId] = { ...defaults };
+// Provider selection and provider-specific settings are configured through
+// the setup wizard (sync/setup-wizard.js), launched from the settings panel.
+// The settings dialog is closed while the wizard runs: both are modal
+// <dialog>s, and any modal left open would trap the Google Picker (which
+// renders into document.body) in the inert layer beneath its backdrop.  The
+// wizard's onClosed hook reopens settings afterwards.
+cloudSetupButton.addEventListener("click", () => {
+  if (settingsDialog.open) {
+    settingsDialog.close();
   }
 
-  resetTransientCloudSessionState();
-  persistCloudSyncSettings();
-  renderSettings();
-
-  activeProvider.waitForReady(() => {
-    void reconnectCloud();
-
-    if (settingsDialog.open) {
-      renderSettings();
-    }
-  });
+  syncSetupWizardApi.openWizard();
 });
 
 cloudPollIntervalSelect.addEventListener("change", () => {
@@ -1483,79 +1457,10 @@ cloudPollIntervalSelect.addEventListener("change", () => {
   startCloudPolling();
 });
 
-const handleProviderSettingChange = (key, value) => {
-  const currentSettings = cloudSyncSettings.providerSettings[activeProvider.id] ?? {};
-  currentSettings[key] = value;
-  cloudSyncSettings.providerSettings[activeProvider.id] = currentSettings;
-
-  const result = activeProvider.applySettingChange(key, value);
-
-  if (result?.clearRemoteState) {
-    cloudSyncSettings.remoteSettingsFileId = "";
-    cloudSyncSettings.remoteNoteFileIds = {};
-    cloudSyncSettings.remoteWorkspaceFileId = "";
-    cloudSyncSettings.remoteWorkspaceParentId = "";
-    cloudSyncSettings.lastError = "";
-    if (activeProvider.hasActiveSession()) {
-      cloudSyncSettings.status = `Connected to ${buildProviderStatusLabel()}`;
-    }
-  }
-
-  persistCloudSyncSettings();
-  cloudStatusInput.value = buildCloudStatusText();
-  cloudLastSyncInput.value = formatSyncTimestamp(cloudSyncSettings.lastSyncAt);
-  scheduleAutoCloudSync();
-  refreshSaveStatus();
-};
-
-const handleProviderSettingInputEvent = (event) => {
-  const input = event.target.closest("[data-provider-setting-key]");
-
-  if (!input) {
-    return;
-  }
-
-  const key = input.dataset.providerSettingKey;
-  const value = input.type === "checkbox" ? input.checked : input.value;
-  handleProviderSettingChange(key, value);
-};
-
-providerSettingsContainer.addEventListener("input", handleProviderSettingInputEvent);
-providerSettingsContainer.addEventListener("change", handleProviderSettingInputEvent);
-
+// Reconnect a configured provider whose session lapsed (expired token, or a
+// Local Drive folder-permission lapse).  New setups go through the wizard.
 googleConnectButton.addEventListener("click", async () => {
   try {
-    const currentProviderSettings = cloudSyncSettings.providerSettings[activeProvider.id] ?? {};
-    const shouldCreateOneNoteNotebook = activeProvider.id === "onenote"
-      && activeProvider.hasActiveSession()
-      && currentProviderSettings.notebookId === "__create__"
-      && typeof activeProvider.createConfiguredNotebook === "function";
-
-    if (shouldCreateOneNoteNotebook) {
-      cloudSyncSettings.status = "Creating OneNote notebook...";
-      persistCloudSyncSettings();
-      renderSettings();
-
-      const result = await activeProvider.createConfiguredNotebook(getActiveProviderSettings());
-      cloudSyncSettings.remoteWorkspaceParentId = result.remoteWorkspaceParentId ?? "";
-      cloudSyncSettings.remoteSettingsFileId = "";
-      cloudSyncSettings.remoteNoteFileIds = {};
-      cloudSyncSettings.remoteWorkspaceFileId = "";
-      cloudSyncSettings.lastSyncAt = null;
-      if (result.providerSettingsPatch && typeof result.providerSettingsPatch === "object") {
-        cloudSyncSettings.providerSettings[activeProvider.id] = {
-          ...(cloudSyncSettings.providerSettings[activeProvider.id] ?? {}),
-          ...result.providerSettingsPatch
-        };
-      }
-      cloudSyncSettings.status = `Connected to ${buildProviderStatusLabel()}`;
-      cloudSyncSettings.lastError = "";
-      persistCloudSyncSettings();
-      renderSettings();
-      refreshSaveStatus();
-      return;
-    }
-
     await connectCloud();
   } catch (error) {
     console.error(error);
@@ -1648,15 +1553,13 @@ const {
   settingsPanels,
   getActiveSettingsTabId: () => activeSettingsTabId,
   renderTranslationsPanel: () => renderTranslationsPanel(),
-  cloudProviderSelect,
   cloudPollIntervalSelect,
-  providerSettingsContainer,
   getActiveProvider: () => activeProvider,
   cloudSyncSettings,
   buildCloudStatusText: () => buildCloudStatusText(),
   formatSyncTimestamp,
-  cloudStatusLabel,
-  cloudStatusInput,
+  cloudSyncSummaryContainer,
+  cloudSetupButton,
   cloudLastSyncInput,
   googleConnectButton,
   googleDisconnectButton,
@@ -1685,6 +1588,40 @@ const {
   markLocalSettingsUpdated,
   scheduleAutoCloudSync
 }));
+
+// ── Sync setup wizard ───────────────────────────────────────────────────────
+// Multi-page dialog for configuring sync & backup providers, including the
+// storage-location choice and existing-data resolution.
+const syncSetupWizardApi = window.ScriptoriaModules.createSyncSetupWizard({
+  documentObject: document,
+  windowObject: window,
+  providerRegistry,
+  noOpProvider,
+  cloudSyncSettings,
+  persistCloudSyncSettings: () => persistCloudSyncSettings(),
+  getActiveProvider: () => activeProvider,
+  setActiveProvider: (value) => {
+    activeProvider = value;
+  },
+  stopCloudPolling: () => stopCloudPolling(),
+  startCloudPolling: () => startCloudPolling(),
+  clearPendingAutoSync: () => clearPendingAutoSync(),
+  applyCloudPayload: (...args) => applyCloudPayload(...args),
+  syncWorkspaceToCloud: (...args) => syncWorkspaceToCloud(...args),
+  renderSettings: () => renderSettings(),
+  refreshSaveStatus: () => refreshSaveStatus(),
+  workspace,
+  readOnly: false,
+  onClosed: () => {
+    // Return the user to the settings dialog they launched the wizard from,
+    // now showing the updated sync summary.
+    renderSettings();
+
+    if (!settingsDialog.open) {
+      openDialog(settingsDialog);
+    }
+  }
+});
 
 ({
   downloadWorkspaceBackup,

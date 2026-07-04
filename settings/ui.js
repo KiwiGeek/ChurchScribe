@@ -1,70 +1,59 @@
 window.ScriptoriaModules = window.ScriptoriaModules || {};
 
 window.ScriptoriaModules.createSettingsUi = (deps) => {
-  const renderProviderSettings = () => {
-    deps.providerSettingsContainer.innerHTML = "";
-    const activeProvider = deps.getActiveProvider();
-    const fields = activeProvider.getSettingsFields();
+  // Renders the Sync & Backup summary card: provider, account, storage
+  // location, and connection status.  Configuration itself happens in the
+  // setup wizard (sync/setup-wizard.js).
+  const renderCloudSummary = () => {
+    const container = deps.cloudSyncSummaryContainer;
 
-    if (!fields.length) {
+    if (!container) {
       return;
     }
 
-    const currentValues = deps.cloudSyncSettings.providerSettings[activeProvider.id] ?? {};
-    const grid = document.createElement("div");
-    grid.className = "display-field-grid";
+    container.innerHTML = "";
+    const activeProvider = deps.getActiveProvider();
+    const isNullProvider = activeProvider.id === "none";
 
-    fields.forEach((field) => {
-      const label = document.createElement("label");
+    const addRow = (label, value) => {
+      const row = document.createElement("div");
+      row.className = "cloud-sync-summary-row";
 
-      const span = document.createElement("span");
-      span.textContent = field.label;
+      const term = document.createElement("span");
+      term.className = "cloud-sync-summary-label";
+      term.textContent = label;
 
-      if (field.type === "checkbox") {
-        label.className = "field checkbox-field";
-        const input = document.createElement("input");
-        input.type = "checkbox";
-        input.dataset.providerSettingKey = field.key;
-        input.checked = Boolean(currentValues[field.key] ?? false);
-        label.append(span, input);
-      } else if (field.type === "select") {
-        label.className = "field";
-        const select = document.createElement("select");
-        select.dataset.providerSettingKey = field.key;
-        (field.options ?? []).forEach((option) => {
-          const opt = document.createElement("option");
-          opt.value = option.value;
-          opt.textContent = option.label;
-          select.append(opt);
-        });
-        select.value = String(currentValues[field.key] ?? "");
-        label.append(span, select);
-      } else {
-        label.className = "field";
-        const input = document.createElement("input");
-        input.type = "text";
-        input.dataset.providerSettingKey = field.key;
-        input.value = String(currentValues[field.key] ?? "");
-        if (field.placeholder) {
-          input.placeholder = field.placeholder;
-        }
-        if (field.disabled) {
-          input.disabled = true;
-        }
-        label.append(span, input);
-      }
+      const detail = document.createElement("span");
+      detail.className = "cloud-sync-summary-value";
+      detail.textContent = value;
 
-      if (field.helpText) {
-        const help = document.createElement("p");
-        help.className = "settings-copy";
-        help.textContent = field.helpText;
-        label.append(help);
-      }
+      row.append(term, detail);
+      container.append(row);
+    };
 
-      grid.append(label);
-    });
+    if (isNullProvider) {
+      const empty = document.createElement("p");
+      empty.className = "settings-copy";
+      empty.textContent = "No sync & backup provider is configured. Your library lives only in this browser.";
+      container.append(empty);
+      return;
+    }
 
-    deps.providerSettingsContainer.append(grid);
+    const currentSettings = deps.cloudSyncSettings.providerSettings[activeProvider.id] ?? {};
+    const locationLabel = activeProvider.getLocationLabel?.(currentSettings) || "";
+    const isLocalDrive = activeProvider.id === "local-drive";
+
+    addRow("Provider", activeProvider.displayName);
+
+    if (deps.cloudSyncSettings.connectedEmail) {
+      addRow("Account", deps.cloudSyncSettings.connectedEmail);
+    }
+
+    addRow(
+      isLocalDrive ? "Folder" : "Location",
+      locationLabel || (isLocalDrive ? "No folder selected" : "App folder")
+    );
+    addRow("Status", deps.buildCloudStatusText());
   };
 
   const renderUiSettings = (container) => {
@@ -198,16 +187,16 @@ window.ScriptoriaModules.createSettingsUi = (deps) => {
     deps.renderTranslationsPanel();
 
     const activeProvider = deps.getActiveProvider();
-    const currentProviderSettings = deps.cloudSyncSettings.providerSettings[activeProvider.id] ?? {};
-    deps.cloudProviderSelect.value = deps.cloudSyncSettings.provider;
     deps.cloudPollIntervalSelect.value = String(deps.cloudSyncSettings.pollIntervalSeconds);
-    renderProviderSettings();
+    renderCloudSummary();
     const isNullProvider = activeProvider.id === "none";
     const isLocalDrive = activeProvider.id === "local-drive";
-    deps.cloudStatusLabel.textContent = isLocalDrive ? "Folder" : "Connection Status";
-    deps.cloudStatusInput.value = deps.buildCloudStatusText();
     deps.cloudLastSyncInput.value = deps.formatSyncTimestamp(deps.cloudSyncSettings.lastSyncAt);
     const hasActiveStorageSession = activeProvider.hasActiveSession();
+
+    deps.cloudSetupButton.textContent = isNullProvider
+      ? "Set Up Synchronization…"
+      : "Change Configuration…";
 
     if (isNullProvider) {
       deps.googleConnectButton.classList.add("is-hidden");
@@ -216,29 +205,16 @@ window.ScriptoriaModules.createSettingsUi = (deps) => {
       deps.googleDisconnectButton.disabled = true;
       deps.googleSyncNowButton.classList.add("is-hidden");
       deps.googleSyncNowButton.disabled = true;
-    } else if (isLocalDrive) {
-      deps.googleConnectButton.textContent = hasActiveStorageSession ? "Change Folder" : "Choose Folder";
-      deps.googleConnectButton.classList.remove("is-hidden");
-      deps.googleConnectButton.disabled = !activeProvider.isAvailable();
-      deps.googleDisconnectButton.classList.add("is-hidden");
-      deps.googleDisconnectButton.disabled = true;
+    } else {
+      // Reconnect appears only when a configured provider has lost its session
+      // (e.g. expired token or, for Local Drive, a folder-permission lapse).
+      deps.googleConnectButton.textContent = isLocalDrive ? "Grant Folder Access" : "Reconnect";
+      deps.googleConnectButton.classList.toggle("is-hidden", hasActiveStorageSession);
+      deps.googleConnectButton.disabled = hasActiveStorageSession || !activeProvider.isAvailable();
+      deps.googleDisconnectButton.classList.toggle("is-hidden", !hasActiveStorageSession || isLocalDrive);
+      deps.googleDisconnectButton.disabled = !hasActiveStorageSession;
       deps.googleSyncNowButton.classList.toggle("is-hidden", !hasActiveStorageSession);
       deps.googleSyncNowButton.disabled = !hasActiveStorageSession;
-    } else {
-      const shouldShowOneNoteCreateAction = activeProvider.id === "onenote"
-        && hasActiveStorageSession
-        && currentProviderSettings.notebookId === "__create__";
-      deps.googleConnectButton.textContent = shouldShowOneNoteCreateAction
-        ? "Create Notebook"
-        : `Connect ${activeProvider.displayName}`;
-      deps.googleConnectButton.classList.toggle("is-hidden", hasActiveStorageSession && !shouldShowOneNoteCreateAction);
-      deps.googleDisconnectButton.classList.toggle("is-hidden", !hasActiveStorageSession);
-      deps.googleSyncNowButton.classList.toggle("is-hidden", !hasActiveStorageSession);
-      deps.googleConnectButton.disabled = shouldShowOneNoteCreateAction
-        ? !activeProvider.isAvailable() || !String(currentProviderSettings.createNotebookName ?? "").trim()
-        : !activeProvider.isAvailable() || hasActiveStorageSession;
-      deps.googleDisconnectButton.disabled = !hasActiveStorageSession;
-      deps.googleSyncNowButton.disabled = !hasActiveStorageSession || shouldShowOneNoteCreateAction;
     }
 
     const selectedType = deps.getSelectedTypeForManager();

@@ -94,6 +94,7 @@ const PRECACHE_URLS = [
   "storage/onedrive.js",
   "sync/cloud-sync.js",
   "sync/payloads.js",
+  "sync/setup-wizard.js",
   "sync/status.js",
   "themes/controller.js",
   "translations/manager.js",

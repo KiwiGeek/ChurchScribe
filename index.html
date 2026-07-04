@@ -368,23 +368,12 @@
           <div class="note-switcher-header">
             <h3 id="cloud-sync-title">Sync &amp; Backup</h3>
           </div>
-          <p class="settings-copy">Configure where your data is stored in addition to your browser's local IndexedDB. Choose a cloud provider or a local folder on your system.</p>
+          <p class="settings-copy">Configure where your data is stored in addition to your browser's local IndexedDB. Use the setup wizard to choose a cloud provider or a local folder on your system.</p>
 
           <div class="type-editor-form">
-            <div class="display-field-grid">
-              <label class="field">
-                <span>Provider</span>
-                <select id="cloud-provider-select" name="cloud-provider">
-                  <option value="none">None</option>
-                  <option value="google-drive">Google Drive</option>
-                  <option value="local-drive">Local Drive</option>
-                  <option value="onenote">OneNote</option>
-                  <option value="onedrive">OneDrive</option>
-                  <option value="dropbox" disabled>Dropbox (Later)</option>
-                  <option value="github" disabled>GitHub (Later)</option>
-                </select>
-              </label>
+            <div class="cloud-sync-summary" id="cloud-sync-summary"></div>
 
+            <div class="display-field-grid">
               <label class="field">
                 <span>Check Interval</span>
                 <select id="cloud-poll-interval-select" name="cloud-poll-interval">
@@ -394,15 +383,6 @@
                   <option value="300">5 minutes</option>
                 </select>
               </label>
-            </div>
-
-            <div id="provider-settings-container"></div>
-
-            <div class="display-field-grid">
-              <label class="field">
-                <span id="cloud-status-label">Connection Status</span>
-                <input id="cloud-status-input" name="cloud-status" type="text" readonly>
-              </label>
 
               <label class="field">
                 <span>Last Sync</span>
@@ -411,9 +391,10 @@
             </div>
 
             <div class="dialog-actions cloud-actions">
-              <button class="ghost-button" id="google-connect-button" type="button">Connect Google Drive</button>
-              <button class="ghost-button" id="google-disconnect-button" type="button">Disconnect</button>
+              <button class="ghost-button" id="cloud-setup-button" type="button">Set Up Synchronization…</button>
+              <button class="ghost-button" id="google-connect-button" type="button">Reconnect</button>
               <button class="ghost-button" id="google-sync-now-button" type="button">Sync Now</button>
+              <button class="ghost-button" id="google-disconnect-button" type="button">Disconnect</button>
             </div>
           </div>
         </section>
@@ -611,6 +592,7 @@
 
   <script src="version.js"></script>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://apis.google.com/js/api.js" async defer></script>
   <script src="https://cdn.jsdelivr.net/npm/@azure/msal-browser@2.39.0/lib/msal-browser.min.js" integrity="sha384-HtsDY8wVihpnviltxuJhKpX0ahqMUgvnzrXcW39KBNui4JooW+YJb1YxvQmNoFDZ" crossorigin="anonymous" async defer></script>
   <script src="storage/noopprovider.js"></script>
   <script src="storage/nullprovider.js"></script>
@@ -699,6 +681,7 @@
   <script src="sync/status.js"></script>
   <script src="sync/payloads.js"></script>
   <script src="sync/cloud-sync.js"></script>
+  <script src="sync/setup-wizard.js"></script>
   <script src="translations/manager.js"></script>
   <script src="scripture/aliases.js"></script>
   <script src="scripture/references.js"></script>

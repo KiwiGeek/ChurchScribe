@@ -455,7 +455,10 @@ window.ScriptoriaModules.createCloudSync = (deps) => {
     renderSettings();
 
     try {
-      const { email } = await getActiveProvider().connect();
+      // Provider settings are passed so providers with configurable storage
+      // locations (e.g. Drive/OneDrive "main storage" mode) request the right
+      // OAuth scopes for the configured location.
+      const { email } = await getActiveProvider().connect(getActiveProviderSettings());
       cloudSyncSettings.connectedEmail = email;
       cloudSyncSettings.status = `Connected to ${buildProviderStatusLabel()}`;
       cloudSyncSettings.lastError = "";
@@ -498,7 +501,7 @@ window.ScriptoriaModules.createCloudSync = (deps) => {
 
     try {
       getActiveProvider().ensureTokenClient();
-      const { email } = await getActiveProvider().attemptSilentReconnect();
+      const { email } = await getActiveProvider().attemptSilentReconnect(getActiveProviderSettings());
       cloudSyncSettings.connectedEmail = email;
       cloudSyncSettings.status = `Connected to ${buildProviderStatusLabel()}`;
       cloudSyncSettings.lastError = "";
