@@ -76,8 +76,8 @@
       align-items: center;
       justify-content: space-between;
       gap: 8px;
-      padding: 10px 14px;
-      padding-top: calc(10px + env(safe-area-inset-top));
+      padding: 5px 10px;
+      padding-top: calc(5px + env(safe-area-inset-top));
       background: var(--surface-strong);
       border-bottom: 0.5px solid var(--border);
       flex-shrink: 0;
@@ -96,8 +96,9 @@
     }
 
     .mob-icon-btn {
-      width: 34px;
-      height: 34px;
+      /* 44px minimum touch target (Apple HIG / Material guidelines) */
+      width: 44px;
+      height: 44px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -218,7 +219,8 @@
 
     .mob-search-bar input {
       width: 100%;
-      font-size: 13px;
+      /* 16px minimum — anything smaller triggers iOS auto-zoom on focus */
+      font-size: 16px;
       font-family: var(--font-body);
       padding: 7px 10px;
       border-radius: 10px;
@@ -302,9 +304,10 @@
 
     .mob-filter-input {
       width: 100%;
-      font-size: 13px;
+      /* 16px minimum — anything smaller triggers iOS auto-zoom on focus */
+      font-size: 16px;
       font-family: var(--font-body);
-      padding: 7px 10px;
+      padding: 7px 34px 7px 10px;
       border-radius: 10px;
       border: 0.5px solid var(--select-border);
       background: var(--input-surface);
@@ -316,6 +319,43 @@
       outline: none;
       border-color: var(--accent);
       box-shadow: 0 0 0 3px var(--focus-ring);
+    }
+
+    .mob-filter-wrap {
+      position: relative;
+    }
+
+    .mob-filter-clear {
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 15px;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    /* Pull-to-refresh indicator (height driven from JS while dragging) */
+    .mob-ptr {
+      height: 0;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+      background: var(--surface-accent);
+      flex-shrink: 0;
+      user-select: none;
     }
 
     .mob-notes-list {
@@ -886,7 +926,8 @@
       border: 0.5px solid var(--border);
       background: var(--select-surface);
       color: var(--text);
-      font-size: 14px;
+      /* 16px minimum — anything smaller triggers iOS auto-zoom on focus */
+      font-size: 16px;
       font-family: var(--font-body);
       padding: 10px 12px;
       margin: 8px 0 10px;
@@ -1298,6 +1339,7 @@
   <script src="themes/deep-space.js"></script>
   <script src="themes/desert-bloom.js"></script>
   <script src="themes/ember-glow.js"></script>
+  <script src="themes/evensong.js"></script>
   <script src="themes/forest-vespers.js"></script>
   <script src="themes/fuchsia-faith.js"></script>
   <script src="themes/golden-hour.js"></script>
@@ -1320,6 +1362,7 @@
   <script src="themes/papyrus-script.js"></script>
   <script src="themes/peach-blossom.js"></script>
   <script src="themes/pine-grove.js"></script>
+  <script src="themes/plainsong.js"></script>
   <script src="themes/plum-twilight.js"></script>
   <script src="themes/renaissance.js"></script>
   <script src="themes/retro-arcade.js"></script>

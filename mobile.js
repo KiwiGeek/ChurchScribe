@@ -319,7 +319,62 @@ const renderNotesView = () => {
     return;
   }
 
-  // Render notes list
+  // Render the static frame (filter bar + list container) once, then fill the
+  // list separately — re-rendering only the list keeps the filter input alive
+  // so typing doesn't dismiss the keyboard.
+  notesView.innerHTML = `
+    <div class="mob-notes-filter-bar">
+      <div class="mob-filter-wrap">
+        <input type="search" class="mob-filter-input" id="mob-notes-filter"
+               placeholder="Filter entries…" autocomplete="off"
+               value="${escapeHtml(mobileState.notesFilter)}">
+        <button class="mob-filter-clear" id="mob-notes-filter-clear" type="button"
+                aria-label="Clear filter" ${mobileState.notesFilter ? "" : "hidden"}>✕</button>
+      </div>
+    </div>
+    <div class="mob-ptr" id="mob-notes-ptr" aria-hidden="true"></div>
+    <div class="mob-notes-list" id="mob-notes-list" role="list"></div>
+  `;
+
+  const filterInput = document.querySelector("#mob-notes-filter");
+  const filterClear = document.querySelector("#mob-notes-filter-clear");
+  const notesList   = document.querySelector("#mob-notes-list");
+
+  const applyFilter = (value) => {
+    mobileState.notesFilter = value;
+    if (filterClear) filterClear.hidden = !value;
+    renderNotesList();
+  };
+
+  filterInput?.addEventListener("input", (e) => applyFilter(e.target.value));
+
+  filterInput?.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      filterInput.value = "";
+      applyFilter("");
+      filterInput.blur();
+    }
+  });
+
+  filterClear?.addEventListener("click", () => {
+    filterInput.value = "";
+    applyFilter("");
+    filterInput.focus();
+  });
+
+  notesList?.addEventListener("click", (e) => {
+    const card = e.target.closest("[data-note-id]");
+    if (card) navigateToNote(card.dataset.noteId);
+  });
+
+  attachPullToRefresh(notesList, document.querySelector("#mob-notes-ptr"));
+  renderNotesList();
+};
+
+const renderNotesList = () => {
+  const notesList = document.querySelector("#mob-notes-list");
+  if (!notesList) return;
+
   const filter = mobileState.notesFilter.toLowerCase();
   const sorted = [...workspace.notes]
     .filter((note) => {
@@ -331,42 +386,94 @@ const renderNotesView = () => {
     })
     .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
-  notesView.innerHTML = `
-    <div class="mob-notes-filter-bar">
-      <input type="search" class="mob-filter-input" id="mob-notes-filter"
-             placeholder="Filter entries…" autocomplete="off"
-             value="${escapeHtml(mobileState.notesFilter)}">
-    </div>
-    <div class="mob-notes-list" id="mob-notes-list" role="list">
-      ${sorted.length
-        ? sorted.map((note) => {
-            const type  = getNoteTypeById(note.typeId);
-            const title = getNoteDisplayTitle(note);
-            const meta  = getNoteDisplayMeta(note);
-            return `
-              <button class="mob-note-card" data-note-id="${escapeHtml(note.id)}" role="listitem">
-                <div class="mob-note-card-inner">
-                  <span class="mob-note-type-chip">${escapeHtml(type?.name ?? "Note")}</span>
-                  <p class="mob-note-title">${escapeHtml(title)}</p>
-                  ${meta ? `<p class="mob-note-meta">${escapeHtml(meta)}</p>` : ""}
-                  <p class="mob-note-date">${escapeHtml(formatNoteDate(note.updatedAt))}</p>
-                </div>
-                <svg class="mob-note-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
-              </button>
-            `;
-          }).join("")
-        : `<p class="mob-notes-empty">No entries found.</p>`}
-    </div>
-  `;
+  const emptyMessage = filter
+    ? "No entries match your filter."
+    : mobileState.isCloudConnected
+      ? "No entries yet — pull down to refresh, or create entries in the desktop app and sync."
+      : "No entries on this device yet. Reconnect your cloud provider to load your entries.";
 
-  document.querySelector("#mob-notes-filter")?.addEventListener("input", (e) => {
-    mobileState.notesFilter = e.target.value;
-    renderNotesView();
-  });
+  notesList.innerHTML = sorted.length
+    ? sorted.map((note) => {
+        const type  = getNoteTypeById(note.typeId);
+        const title = getNoteDisplayTitle(note);
+        const meta  = getNoteDisplayMeta(note);
+        return `
+          <button class="mob-note-card" data-note-id="${escapeHtml(note.id)}" role="listitem">
+            <div class="mob-note-card-inner">
+              <span class="mob-note-type-chip">${escapeHtml(type?.name ?? "Note")}</span>
+              <p class="mob-note-title">${escapeHtml(title)}</p>
+              ${meta ? `<p class="mob-note-meta">${escapeHtml(meta)}</p>` : ""}
+              <p class="mob-note-date">${escapeHtml(formatNoteDate(note.updatedAt))}</p>
+            </div>
+            <svg class="mob-note-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        `;
+      }).join("")
+    : `<p class="mob-notes-empty">${emptyMessage}</p>`;
+};
 
-  document.querySelector("#mob-notes-list")?.addEventListener("click", (e) => {
-    const card = e.target.closest("[data-note-id]");
-    if (card) navigateToNote(card.dataset.noteId);
+// ── Pull-to-refresh ───────────────────────────────────────────────────────────
+// Drag down from the top of the notes list to pull the latest data from the
+// connected cloud provider — the standard mobile refresh gesture.
+let pullToRefreshBusy = false;
+
+const attachPullToRefresh = (listEl, indicatorEl) => {
+  if (!listEl || !indicatorEl) return;
+
+  const armThresholdPx = 70;
+  let startY = null;
+  let armed = false;
+
+  const resetIndicator = () => {
+    indicatorEl.style.height = "0px";
+    indicatorEl.textContent = "";
+    startY = null;
+    armed = false;
+  };
+
+  listEl.addEventListener("touchstart", (e) => {
+    if (pullToRefreshBusy || !mobileState.isCloudConnected) return;
+    if (listEl.scrollTop <= 0) startY = e.touches[0].clientY;
+  }, { passive: true });
+
+  listEl.addEventListener("touchmove", (e) => {
+    if (startY === null || pullToRefreshBusy) return;
+
+    const dy = e.touches[0].clientY - startY;
+
+    if (dy <= 0 || listEl.scrollTop > 0) {
+      resetIndicator();
+      return;
+    }
+
+    e.preventDefault();
+    armed = dy >= armThresholdPx;
+    indicatorEl.style.height = `${Math.min(dy * 0.5, 56)}px`;
+    indicatorEl.textContent = armed ? "Release to refresh" : "Pull to refresh";
+  }, { passive: false });
+
+  listEl.addEventListener("touchend", async () => {
+    if (startY === null) return;
+
+    if (!armed) {
+      resetIndicator();
+      return;
+    }
+
+    pullToRefreshBusy = true;
+    indicatorEl.style.height = "36px";
+    indicatorEl.textContent = "Refreshing…";
+
+    try {
+      await pullFromCloud();
+      renderMobileApp();
+      showTransientStatus("Up to date");
+    } catch (err) {
+      resetIndicator();
+      showTransientStatus("Refresh failed — check your connection.");
+    } finally {
+      pullToRefreshBusy = false;
+    }
   });
 };
 

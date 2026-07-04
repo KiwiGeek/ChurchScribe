@@ -1263,6 +1263,43 @@ h1 {
   outline: none;
 }
 
+/* Toast notifications — rendered as a manual popover so they sit in the
+   browser top layer, above any open <dialog>. */
+.toast-region {
+  position: fixed;
+  inset: auto auto 1.5rem 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.toast {
+  background: var(--surface-strong, #fff);
+  color: var(--text, #1a1a1a);
+  border: 1px solid var(--border, rgba(0, 0, 0, 0.12));
+  border-radius: 999px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.14);
+  padding: 0.5rem 1.1rem;
+  font-size: 0.92rem;
+  font-family: var(--font-body, inherit);
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.toast.is-leaving {
+  opacity: 0;
+  transform: translateY(0.4rem);
+}
+
 .note-editor h2 {
   font-size: 1.55rem;
   margin-bottom: 0.25em;

@@ -103,22 +103,24 @@
 
         <div class="toolbar" id="note-toolbar" role="toolbar" aria-label="Rich text controls">
           <div class="toolbar-controls" id="toolbar-controls">
-            <button class="tool-button" type="button" data-command="bold" aria-label="Bold"><strong>B</strong></button>
-            <button class="tool-button" type="button" data-command="italic" aria-label="Italic"><em>I</em></button>
-            <button class="tool-button" type="button" data-command="underline" aria-label="Underline"><span class="underline">U</span></button>
-            <button class="tool-button" type="button" data-command="insertUnorderedList" aria-label="Bullet list">• List</button>
-            <button class="tool-button" type="button" data-command="insertOrderedList" aria-label="Numbered list">1. List</button>
-            <button class="tool-button" type="button" data-block="h2" aria-label="Heading">Heading</button>
-            <button class="tool-button" type="button" data-block="blockquote" aria-label="Quote">Quote</button>
-            <button class="tool-button" type="button" data-command="removeFormat" aria-label="Clear formatting">Reset</button>
+            <button class="tool-button" type="button" data-command="undo" aria-label="Undo" title="Undo (Ctrl+Z)">↺</button>
+            <button class="tool-button" type="button" data-command="redo" aria-label="Redo" title="Redo (Ctrl+Y)">↻</button>
+            <button class="tool-button" type="button" data-command="bold" aria-label="Bold" title="Bold (Ctrl+B)"><strong>B</strong></button>
+            <button class="tool-button" type="button" data-command="italic" aria-label="Italic" title="Italic (Ctrl+I)"><em>I</em></button>
+            <button class="tool-button" type="button" data-command="underline" aria-label="Underline" title="Underline (Ctrl+U)"><span class="underline">U</span></button>
+            <button class="tool-button" type="button" data-command="insertUnorderedList" aria-label="Bullet list" title="Bullet list">• List</button>
+            <button class="tool-button" type="button" data-command="insertOrderedList" aria-label="Numbered list" title="Numbered list">1. List</button>
+            <button class="tool-button" type="button" data-block="h2" aria-label="Heading" title="Toggle heading">Heading</button>
+            <button class="tool-button" type="button" data-block="blockquote" aria-label="Quote" title="Toggle block quote">Quote</button>
+            <button class="tool-button" type="button" data-command="removeFormat" aria-label="Clear formatting" title="Clear formatting">Reset</button>
             <div class="color-picker-wrapper" id="color-picker-wrapper">
-              <button class="tool-button color-picker-trigger" type="button" id="color-picker-trigger" aria-label="Text color" aria-expanded="false" aria-haspopup="true">
+              <button class="tool-button color-picker-trigger" type="button" id="color-picker-trigger" aria-label="Text color" title="Text color" aria-expanded="false" aria-haspopup="true">
                 <span class="color-button-a">A</span><span class="color-button-swatch" id="color-button-swatch"></span>
               </button>
               <div class="color-picker-dropdown" id="color-picker-dropdown" hidden role="dialog" aria-label="Text color"></div>
             </div>
-            <button class="tool-button" type="button" id="insert-table-button" aria-label="Insert table">Table</button>
-            <button class="tool-button" type="button" id="insert-image-button" aria-label="Insert image">Image</button>
+            <button class="tool-button" type="button" id="insert-table-button" aria-label="Insert table" title="Insert table">Table</button>
+            <button class="tool-button" type="button" id="insert-image-button" aria-label="Insert image" title="Insert image">Image</button>
           </div>
           <div class="compact-format-menu" id="compact-format-menu" hidden>
             <button class="ghost-button compact-format-button" id="compact-format-button" type="button" aria-haspopup="true" aria-expanded="false">⋯ Format</button>
@@ -198,6 +200,8 @@
       </aside>
     </main>
   </div>
+
+  <div class="toast-region" id="toast-region" popover="manual" role="status" aria-live="polite"></div>
 
 <dialog class="management-dialog" id="note-manager-dialog">
     <form class="dialog-shell" method="dialog">
@@ -638,6 +642,7 @@
   <script src="themes/deep-space.js"></script>
   <script src="themes/desert-bloom.js"></script>
   <script src="themes/ember-glow.js"></script>
+  <script src="themes/evensong.js"></script>
   <script src="themes/forest-vespers.js"></script>
   <script src="themes/fuchsia-faith.js"></script>
   <script src="themes/golden-hour.js"></script>
@@ -660,6 +665,7 @@
   <script src="themes/papyrus-script.js"></script>
   <script src="themes/peach-blossom.js"></script>
   <script src="themes/pine-grove.js"></script>
+  <script src="themes/plainsong.js"></script>
   <script src="themes/plum-twilight.js"></script>
   <script src="themes/renaissance.js"></script>
   <script src="themes/retro-arcade.js"></script>

@@ -450,7 +450,8 @@ const {
   saveActiveNote: () => saveActiveNote(),
   windowObject: window,
   renderWorkspace: () => renderWorkspace(),
-  getNoteDisplayTitle: (note) => getNoteDisplayTitle(note)
+  getNoteDisplayTitle: (note) => getNoteDisplayTitle(note),
+  showToast: (message) => showToast(message)
 });
 
 const {
@@ -666,6 +667,49 @@ const updateSaveStatus = (message) => {
   });
 
   saveStatus.append(localText, syncButton);
+};
+
+// ── Toast notifications ─────────────────────────────────────────────────────
+// Lightweight transient feedback for actions whose effect isn't otherwise
+// visible (delete, manual save, sync results).  The region is a manual
+// popover so toasts stay visible above open <dialog> elements.
+const toastRegion = document.querySelector("#toast-region");
+
+const showToast = (message, { durationMs = 2400 } = {}) => {
+  if (!toastRegion || typeof message !== "string" || !message.trim()) {
+    return;
+  }
+
+  if (typeof toastRegion.showPopover === "function" && !toastRegion.matches(":popover-open")) {
+    try {
+      toastRegion.showPopover();
+    } catch {
+      // Popover API unavailable or region already open — fixed positioning still applies.
+    }
+  }
+
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.textContent = message;
+  toastRegion.append(toast);
+
+  const removeToast = () => {
+    toast.remove();
+
+    if (!toastRegion.childElementCount && typeof toastRegion.hidePopover === "function") {
+      try {
+        toastRegion.hidePopover();
+      } catch {
+        // Already hidden.
+      }
+    }
+  };
+
+  window.setTimeout(() => {
+    toast.classList.add("is-leaving");
+    toast.addEventListener("transitionend", removeToast, { once: true });
+    window.setTimeout(removeToast, 400);
+  }, durationMs);
 };
 
 const runManualCloudSync = async () => {
@@ -1064,6 +1108,46 @@ const closeOverflowMenu = () => {
 document.addEventListener("click", (e) => {
   if (!overflowMenu.contains(e.target)) {
     closeOverflowMenu();
+  }
+});
+
+// ── Global keyboard shortcuts ────────────────────────────────────────────────
+// Ctrl/Cmd+S   → flush pending edits + persist (the app autosaves, but users
+//                expect Ctrl+S to work rather than trigger the browser dialog).
+// Ctrl/Cmd+K   → open the entries browser with the search field focused.
+// Ctrl/Cmd+Alt+N → new entry (plain Ctrl+N is reserved by the browser).
+document.addEventListener("keydown", (event) => {
+  if (!(event.ctrlKey || event.metaKey)) {
+    return;
+  }
+
+  const key = event.key.toLowerCase();
+
+  if (key === "s" && !event.shiftKey && !event.altKey) {
+    event.preventDefault();
+    flushEditorWorkNow();
+    saveActiveNote();
+    persistWorkspace();
+    refreshSaveStatus();
+    showToast("All changes saved");
+    return;
+  }
+
+  if (key === "k" && !event.shiftKey && !event.altKey) {
+    event.preventDefault();
+
+    if (!noteManagerDialog.open) {
+      openNotesBrowser();
+    }
+
+    noteBrowserFilterInput.focus();
+    noteBrowserFilterInput.select();
+    return;
+  }
+
+  if (key === "n" && event.altKey && !event.shiftKey) {
+    event.preventDefault();
+    createNote();
   }
 });
 

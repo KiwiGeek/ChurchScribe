@@ -158,6 +158,7 @@ window.ScriptoriaModules.createNotesModel = (deps) => {
       return;
     }
 
+    const deletedTitle = deps.getNoteDisplayTitle(note);
     workspace.notes = workspace.notes.filter((entry) => entry.id !== noteId);
 
     if (!workspace.notes.length) {
@@ -172,6 +173,7 @@ window.ScriptoriaModules.createNotesModel = (deps) => {
     persistWorkspace();
     deps.renderWorkspace();
     refreshSaveStatus();
+    deps.showToast?.(`Deleted "${deletedTitle}"`);
   };
 
   const changeNoteType = (noteId, nextTypeId) => {
@@ -214,3 +216,4 @@ window.ScriptoriaModules.createNotesModel = (deps) => {
     changeNoteType
   };
 };
+
