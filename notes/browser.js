@@ -142,14 +142,20 @@ window.ScriptoriaModules.createNotesBrowser = (deps) => {
           title.className = "note-browser-list-title";
           title.textContent = deps.getNoteDisplayTitle(note);
 
-          const meta = document.createElement("span");
-          meta.className = "note-browser-list-meta";
-          const cardMeta = deps.getNoteDisplayMeta(note);
-          meta.textContent = cardMeta
-            ? `${cardMeta} • ${deps.formatNoteDate(note.updatedAt)}`
-            : deps.formatNoteDate(note.updatedAt);
+          row.append(title);
 
-          row.append(title, meta);
+          const cardMeta = deps.getNoteDisplayMeta(note);
+          if (cardMeta) {
+            const subtitle = document.createElement("span");
+            subtitle.className = "note-browser-list-meta";
+            subtitle.textContent = cardMeta;
+            row.append(subtitle);
+          }
+
+          const dates = document.createElement("span");
+          dates.className = "note-browser-list-meta";
+          dates.textContent = `Created ${deps.formatNoteDate(note.createdAt)} • Updated ${deps.formatNoteDate(note.updatedAt)}`;
+          row.append(dates);
           group.append(row);
         });
 

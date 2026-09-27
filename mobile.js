@@ -94,6 +94,7 @@ const mobileState = {
   noteDetailId:    null,     // null = notes list; string id = note detail
   isCloudConnected: false,
   notesFilter:     "",
+  notesSort:       "updated-desc",
 };
 
 // ── DOM refs ──────────────────────────────────────────────────────────────────
@@ -332,6 +333,13 @@ const renderNotesView = () => {
         <button class="mob-filter-clear" id="mob-notes-filter-clear" type="button"
                 aria-label="Clear filter" ${mobileState.notesFilter ? "" : "hidden"}>✕</button>
       </div>
+      <label class="mob-notes-sort">
+        <span>Sort</span>
+        <select id="mob-notes-sort" aria-label="Sort entries">
+          <option value="updated-desc" ${mobileState.notesSort === "updated-desc" ? "selected" : ""}>Recently updated</option>
+          <option value="created-desc" ${mobileState.notesSort === "created-desc" ? "selected" : ""}>Recently created</option>
+        </select>
+      </label>
     </div>
     <div class="mob-ptr" id="mob-notes-ptr" aria-hidden="true"></div>
     <div class="mob-notes-list" id="mob-notes-list" role="list"></div>
@@ -363,6 +371,11 @@ const renderNotesView = () => {
     filterInput.focus();
   });
 
+  document.querySelector("#mob-notes-sort")?.addEventListener("change", (e) => {
+    mobileState.notesSort = e.target.value === "created-desc" ? "created-desc" : "updated-desc";
+    renderNotesList();
+  });
+
   notesList?.addEventListener("click", (e) => {
     const card = e.target.closest("[data-note-id]");
     if (card) navigateToNote(card.dataset.noteId);
@@ -385,7 +398,10 @@ const renderNotesList = () => {
       const content = note.content.replace(/<[^>]+>/g, " ").toLowerCase();
       return title.includes(filter) || meta.includes(filter) || content.includes(filter);
     })
-    .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+    .sort((a, b) => {
+      const key = mobileState.notesSort === "created-desc" ? "createdAt" : "updatedAt";
+      return new Date(b[key]) - new Date(a[key]);
+    });
 
   const emptyMessage = filter
     ? "No entries match your filter."
@@ -404,7 +420,8 @@ const renderNotesList = () => {
               <span class="mob-note-type-chip">${escapeHtml(type?.name ?? "Note")}</span>
               <p class="mob-note-title">${escapeHtml(title)}</p>
               ${meta ? `<p class="mob-note-meta">${escapeHtml(meta)}</p>` : ""}
-              <p class="mob-note-date">${escapeHtml(formatNoteDate(note.updatedAt))}</p>
+              <p class="mob-note-date">Created ${escapeHtml(formatNoteDate(note.createdAt))}</p>
+              <p class="mob-note-date">Updated ${escapeHtml(formatNoteDate(note.updatedAt))}</p>
             </div>
             <svg class="mob-note-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </button>
@@ -505,7 +522,7 @@ const renderNoteDetail = (noteId) => {
     <p class="mob-detail-type">${escapeHtml(type?.name ?? "Note")}</p>
     <p class="mob-detail-title">${escapeHtml(title)}</p>
     ${chips ? `<div class="mob-detail-chips">${chips}</div>` : ""}
-    <p class="mob-detail-date">Updated ${escapeHtml(formatNoteDate(note.updatedAt))}</p>
+    <p class="mob-detail-date">Created ${escapeHtml(formatNoteDate(note.createdAt))} • Updated ${escapeHtml(formatNoteDate(note.updatedAt))}</p>
   `;
 
   // Build read-only content container

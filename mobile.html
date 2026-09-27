@@ -309,9 +309,41 @@
 
     /* ── Notes view (list + connect prompt) ─────────────────────────────── */
     .mob-notes-filter-bar {
+      display: grid;
+      gap: 8px;
       padding: 7px 12px;
       border-bottom: 0.5px solid var(--border);
       flex-shrink: 0;
+    }
+
+    .mob-notes-sort {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .mob-notes-sort select {
+      flex: 1 1 0;
+      width: 0;
+      min-width: 0;
+      font-size: 16px;
+      font-family: var(--font-body);
+      padding: 6px 24px 6px 8px;
+      border-radius: 9px;
+      border: 0.5px solid var(--select-border);
+      background: var(--select-surface);
+      color: var(--text);
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238c4b2f'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 7px center;
+    }
+
+    [data-theme="dark"] .mob-notes-sort select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23f1b06b'/%3E%3C/svg%3E");
     }
 
     .mob-filter-input {
