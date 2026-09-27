@@ -827,6 +827,11 @@ const renderSettingsSheet = () => {
       `}
     </div>
     <div class="mob-settings-section">
+      <p class="mob-settings-label">Updates</p>
+      <button class="mob-settings-action" id="mob-check-update" type="button">Check for update</button>
+      <p class="mob-settings-help" id="mob-check-update-status" hidden></p>
+    </div>
+    <div class="mob-settings-section">
       <p class="mob-settings-label">Full editor</p>
       <p class="mob-settings-help">The Scriptoria editor and all settings are available on desktop browsers.</p>
       <a href="index.html?desktop=1" class="mob-settings-action">Open desktop version →</a>
@@ -934,6 +939,42 @@ const renderSettingsSheet = () => {
   document.querySelector("#mob-connect-onedrive-settings")?.addEventListener("click", () => {
     settingsSheet.hidden = true;
     initiateCloudConnect("onedrive");
+  });
+
+  document.querySelector("#mob-check-update")?.addEventListener("click", async () => {
+    const button = document.querySelector("#mob-check-update");
+    const status = document.querySelector("#mob-check-update-status");
+
+    if (!button || button.disabled) {
+      return;
+    }
+
+    button.disabled = true;
+    if (status) {
+      status.hidden = false;
+      status.textContent = "Checking…";
+    }
+
+    try {
+      const result = await requestAppUpdate();
+      if (!status) {
+        return;
+      }
+      status.hidden = false;
+      status.textContent = result === "updating"
+        ? "Updating…"
+        : result === "current"
+          ? "You're up to date."
+          : "Couldn't check for an update.";
+    } catch (err) {
+      console.warn("[Mobile/SW] update check failed:", err);
+      if (status) {
+        status.hidden = false;
+        status.textContent = "Couldn't check for an update.";
+      }
+    } finally {
+      button.disabled = false;
+    }
   });
 };
 
@@ -1386,6 +1427,38 @@ const bootstrap = async () => {
 void bootstrap();
 
 // ── Service worker (same as desktop) ─────────────────────────────────────────
+// iOS home-screen apps often resume without a fresh load, so requestAppUpdate
+// also runs when the page becomes visible again.  Settings can call it directly.
+const requestAppUpdate = async () => {
+  if (!("serviceWorker" in navigator)) {
+    return "unavailable";
+  }
+
+  const registration = await navigator.serviceWorker.getRegistration();
+
+  if (!registration) {
+    return "unavailable";
+  }
+
+  if (registration.waiting) {
+    registration.waiting.postMessage("skip-waiting");
+    return "updating";
+  }
+
+  await registration.update();
+
+  if (registration.waiting) {
+    registration.waiting.postMessage("skip-waiting");
+    return "updating";
+  }
+
+  if (registration.installing) {
+    return "updating";
+  }
+
+  return "current";
+};
+
 {
   const swParams = new URLSearchParams(location.search);
   if (!swParams.has("nosw") && "serviceWorker" in navigator) {
@@ -1411,6 +1484,22 @@ void bootstrap();
       } catch (err) {
         console.warn("[Mobile/SW] registration failed:", err);
       }
+    });
+
+    const checkForAppUpdate = () => {
+      void requestAppUpdate().catch((err) => {
+        console.warn("[Mobile/SW] update check failed:", err);
+      });
+    };
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") {
+        checkForAppUpdate();
+      }
+    });
+
+    window.addEventListener("pageshow", () => {
+      checkForAppUpdate();
     });
   }
 }

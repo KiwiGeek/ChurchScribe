@@ -1941,7 +1941,38 @@ window.ScriptoriaModules.createConnectivityWatcher({
 // On a normal visit, when a new SW is installed and waiting, we tell it to
 // activate immediately (skipWaiting message) and reload the page on
 // `controllerchange` so the user picks up the new shell without a manual
-// refresh.
+// refresh.  iOS home-screen apps often resume without a fresh load, so we
+// also ask for an update whenever the page becomes visible again.
+const requestAppUpdate = async () => {
+  if (!("serviceWorker" in navigator)) {
+    return "unavailable";
+  }
+
+  const registration = await navigator.serviceWorker.getRegistration();
+
+  if (!registration) {
+    return "unavailable";
+  }
+
+  if (registration.waiting) {
+    registration.waiting.postMessage("skip-waiting");
+    return "updating";
+  }
+
+  await registration.update();
+
+  if (registration.waiting) {
+    registration.waiting.postMessage("skip-waiting");
+    return "updating";
+  }
+
+  if (registration.installing) {
+    return "updating";
+  }
+
+  return "current";
+};
+
 {
   const swParams = new URLSearchParams(location.search);
 
@@ -2001,6 +2032,58 @@ window.ScriptoriaModules.createConnectivityWatcher({
         });
       } catch (err) {
         console.warn("[SW] registration failed:", err);
+      }
+    });
+
+    const checkForAppUpdate = () => {
+      void requestAppUpdate().catch((err) => {
+        console.warn("[SW] update check failed:", err);
+      });
+    };
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") {
+        checkForAppUpdate();
+      }
+    });
+
+    window.addEventListener("pageshow", () => {
+      checkForAppUpdate();
+    });
+
+    const checkUpdateButton = document.querySelector("#check-update-button");
+    const checkUpdateStatus = document.querySelector("#check-update-status");
+
+    checkUpdateButton?.addEventListener("click", async () => {
+      if (checkUpdateButton.disabled) {
+        return;
+      }
+
+      checkUpdateButton.disabled = true;
+      if (checkUpdateStatus) {
+        checkUpdateStatus.hidden = false;
+        checkUpdateStatus.textContent = "Checking…";
+      }
+
+      try {
+        const result = await requestAppUpdate();
+        if (!checkUpdateStatus) {
+          return;
+        }
+        checkUpdateStatus.hidden = false;
+        checkUpdateStatus.textContent = result === "updating"
+          ? "Updating…"
+          : result === "current"
+            ? "You're up to date."
+            : "Couldn't check for an update.";
+      } catch (err) {
+        console.warn("[SW] update check failed:", err);
+        if (checkUpdateStatus) {
+          checkUpdateStatus.hidden = false;
+          checkUpdateStatus.textContent = "Couldn't check for an update.";
+        }
+      } finally {
+        checkUpdateButton.disabled = false;
       }
     });
   }
