@@ -249,8 +249,9 @@ window.ScriptoriaModules.createEditorLinks = (deps) => {
 
       matches.forEach((match) => {
         const matchedText = match[0];
-        const resolvedParts = match.length > 2
-          ? parseExplicitReferenceParts(matchedText).map((part) => ({
+        const explicitParts = match.length > 2 ? parseExplicitReferenceParts(matchedText) : null;
+        const resolvedParts = explicitParts
+          ? explicitParts.map((part) => ({
               text: part.text,
               parsedReference: part.parsedReference
             }))
@@ -258,8 +259,13 @@ window.ScriptoriaModules.createEditorLinks = (deps) => {
               text: matchedText,
               parsedReference: parseContextualScriptureReference(matchedText, currentContext)
             }].filter((part) => part.parsedReference);
+        // Stop before a trailing piece that did not resolve, such as the "50"
+        // in "Gen 1:1, 50" while a chapter reference is still being typed.
+        const consumed = explicitParts && Number.isInteger(explicitParts.consumed)
+          ? explicitParts.consumed
+          : matchedText.length;
 
-        if (!resolvedParts.length) {
+        if (!resolvedParts.length || consumed <= 0) {
           return;
         }
 
@@ -279,7 +285,7 @@ window.ScriptoriaModules.createEditorLinks = (deps) => {
           hadResolvedMatch = true;
         });
 
-        lastIndex = match.index + matchedText.length;
+        lastIndex = match.index + consumed;
 
         if (caretOffset !== null && traversedOffset + lastIndex <= caretOffset) {
           lastReferenceBeforeCaret = resolvedParts[resolvedParts.length - 1].parsedReference;
