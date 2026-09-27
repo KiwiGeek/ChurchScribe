@@ -593,6 +593,8 @@ const searchApi = window.ScriptoriaModules.createScriptureSearch({
   getCurrentScriptureLibrary: () => viewerApi.getCurrentScriptureLibrary(),
   navigateToVerse: (book, chapter, verse) =>
     viewerApi.navigateToVerse(book, chapter, verse),
+  parseScriptureReference,
+  jumpToResolvedScripture,
   escapeRegExp,
   debounce
 });
