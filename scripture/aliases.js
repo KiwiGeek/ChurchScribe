@@ -163,17 +163,42 @@ window.ScriptoriaModules.createScriptureAliases = (deps) => {
     // Sort longest-first so e.g. "1 Cor" matches before "1 C" in regex
     // alternation; if the shorter alias came first, the regex engine would
     // match it greedily and miss the more specific one.
-    const aliasPattern = [...bookAliasMap.keys()]
+    const aliasPatternFor = (aliases) => [...aliases]
       .sort((left, right) => right.length - left.length)
       .map((alias) => escapeRegExp(alias))
       .join("|");
 
-    explicitScriptureReferencePattern = new RegExp(
-      `\\b(${aliasPattern})\\s+(\\d+)(?::\\d+(?:-\\d+)?)?(?:\\s*,\\s*(?:(?:\\d+:)?\\d+(?:-\\d+)?))*`,
-      "gi"
-    );
+    const books = getCurrentTranslation()?.books ?? {};
+    const singleChapterAliases = [];
+    const otherAliases = [];
+
+    bookAliasMap.forEach((book, alias) => {
+      if (Array.isArray(books[book]) && books[book].length === 1) {
+        singleChapterAliases.push(alias);
+      } else {
+        otherAliases.push(alias);
+      }
+    });
+
+    const singleChapterPattern = aliasPatternFor(singleChapterAliases);
+    const otherPattern = aliasPatternFor(otherAliases);
+    const aliasPattern = aliasPatternFor(bookAliasMap.keys());
+    const continuedReference = `(?::\\d+(?:-\\d+)?)?(?:\\s*,\\s*(?:(?:\\d+:)?\\d+(?:-\\d+)?))*`;
+    // Single-chapter books can be cited as "Jude 5-6" (verses, no chapter).
+    // Multi-chapter books keep the shorter "Book 5" match so "John 5-6" still
+    // links the chapter instead of swallowing the dash.
+    const explicitAlternatives = [
+      singleChapterPattern
+        ? `\\b(${singleChapterPattern})\\s+(\\d+(?:-\\d+)?)${continuedReference}`
+        : "",
+      otherPattern
+        ? `\\b(${otherPattern})\\s+(\\d+)${continuedReference}`
+        : ""
+    ].filter(Boolean);
+
+    explicitScriptureReferencePattern = new RegExp(explicitAlternatives.join("|"), "gi");
     fullExplicitScriptureReferencePattern = new RegExp(
-      `^(${aliasPattern})\\s+((?:\\d+)(?::\\d+(?:-\\d+)?)?(?:\\s*,\\s*(?:(?:\\d+:)?\\d+(?:-\\d+)?))*)$`,
+      `^(${aliasPattern})\\s+((?:\\d+(?:-\\d+)?)(?::\\d+(?:-\\d+)?)?(?:\\s*,\\s*(?:(?:\\d+:)?\\d+(?:-\\d+)?))*)$`,
       "i"
     );
     contextualScriptureReferencePattern = /\b(v(?:erse)?\.?\s*\d+(?:-\d+)?)\b/gi;

@@ -110,6 +110,37 @@ window.ScriptoriaModules.createScriptureReferences = (deps) => {
     let firstVerse = null;
 
     for (const segment of segments) {
+      const leadingVerseRange = segment.match(/^(\d+)-(\d+)$/);
+
+      // "Jude 5-6": a range with no chapter is verses in a one-chapter book.
+      if (currentChapter === null && leadingVerseRange) {
+        const verseStart = Number(leadingVerseRange[1]);
+        const verseEnd = Number(leadingVerseRange[2]);
+
+        if (
+          verseEnd < verseStart
+          || !isSingleChapterBook(canonicalBook)
+          || !isValidScriptureReference(canonicalBook, 1, verseStart, verseEnd)
+        ) {
+          return null;
+        }
+
+        currentChapter = 1;
+        const verses = chapterHighlights.get(1) ?? new Set();
+
+        for (let verse = verseStart; verse <= verseEnd; verse += 1) {
+          verses.add(verse);
+        }
+
+        chapterHighlights.set(1, verses);
+
+        if (firstVerse === null) {
+          firstVerse = verseStart;
+        }
+
+        continue;
+      }
+
       const fullChapterSegment = segment.match(/^(\d+)(?::(\d+)(?:-(\d+))?)?$/);
       const crossChapterSegment = segment.match(/^(\d+):(\d+)(?:-(\d+))?$/);
       const verseOnlySegment = segment.match(/^(\d+)(?:-(\d+))?$/);
@@ -265,6 +296,33 @@ window.ScriptoriaModules.createScriptureReferences = (deps) => {
 
     if (currentChapter === null) {
       const parsedNum = Number(verseOnlyMatch[1]);
+      const parsedEnd = verseOnlyMatch[2] ? Number(verseOnlyMatch[2]) : null;
+
+      if (parsedEnd !== null) {
+        if (
+          parsedEnd < parsedNum
+          || !isSingleChapterBook(canonicalBook)
+          || !isValidScriptureReference(canonicalBook, 1, parsedNum, parsedEnd)
+        ) {
+          return null;
+        }
+
+        const verses = new Set();
+
+        for (let verse = parsedNum; verse <= parsedEnd; verse += 1) {
+          verses.add(verse);
+        }
+
+        return {
+          parsedReference: {
+            book: canonicalBook,
+            chapter: 1,
+            firstVerse: parsedNum,
+            chapterHighlights: new Map([[1, verses]])
+          },
+          currentChapter: 1
+        };
+      }
 
       if (!isValidScriptureReference(canonicalBook, parsedNum)) {
         if (!isSingleChapterBook(canonicalBook) || !isValidScriptureReference(canonicalBook, 1, parsedNum)) {
