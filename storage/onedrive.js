@@ -62,7 +62,13 @@
 
   let msalInstancePromise = null;
   let accessToken = null;
+  let accessTokenExpiresAt = 0;
+  let sessionScopes = baseScopes;
   let silentReconnectAttempted = false;
+
+  // Graph access tokens last about an hour. Refresh a few minutes early so a
+  // sync that starts near expiry does not fail halfway through.
+  const TOKEN_REFRESH_SKEW_MS = 5 * 60 * 1000;
 
   // The provider is always "available" — MSAL is a lazy CDN dependency that we
   // wait for inside getMsalInstance().  Returning true here keeps the connect
@@ -148,7 +154,59 @@
     onReady();
   };
 
-  const apiFetch = async (url, options = {}) => {
+  const rememberAccessToken = (result, scopes) => {
+    accessToken = result.accessToken;
+    if (scopes?.length) {
+      sessionScopes = scopes;
+    }
+
+    accessTokenExpiresAt = result.expiresOn instanceof Date
+      ? result.expiresOn.getTime()
+      : Date.now() + 55 * 60 * 1000;
+  };
+
+  const accessTokenNeedsRefresh = () =>
+    !accessToken || !accessTokenExpiresAt || Date.now() >= accessTokenExpiresAt - TOKEN_REFRESH_SKEW_MS;
+
+  // MSAL returns the cached token while it is still valid, and uses the
+  // refresh token to mint a new one after that. forceRefresh skips the cache
+  // when Graph has already rejected the token we are holding.
+  const refreshAccessToken = async ({ force = false } = {}) => {
+    const msalInst = await getMsalInstance();
+    const accounts = msalInst.getAllAccounts();
+
+    if (!accounts.length) {
+      throw new Error("No OneDrive account found. Please connect first.");
+    }
+
+    try {
+      const result = await msalInst.acquireTokenSilent({
+        scopes: sessionScopes,
+        account: accounts[0],
+        forceRefresh: force
+      });
+      rememberAccessToken(result, sessionScopes);
+      return accessToken;
+    } catch (error) {
+      const code = error?.errorCode;
+      if (code === "interaction_required" || code === "consent_required" || code === "login_required") {
+        throw new Error("OneDrive needs you to connect again.");
+      }
+      throw error;
+    }
+  };
+
+  const apiFetch = async (url, options = {}, { retried = false } = {}) => {
+    if (accessTokenNeedsRefresh()) {
+      try {
+        await refreshAccessToken();
+      } catch (error) {
+        if (!accessToken || accessTokenNeedsRefresh()) {
+          throw error;
+        }
+      }
+    }
+
     if (!accessToken) {
       throw new Error("OneDrive is not connected in this browser session.");
     }
@@ -157,6 +215,12 @@
     headers.set("Authorization", `Bearer ${accessToken}`);
 
     const response = await fetch(url, { ...options, headers });
+
+    if (response.status === 401 && !retried) {
+      await response.text().catch(() => "");
+      await refreshAccessToken({ force: true });
+      return apiFetch(url, options, { retried: true });
+    }
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -221,17 +285,20 @@
     const msalInst = await getMsalInstance();
     try {
       const result = await msalInst.acquireTokenPopup({ scopes, prompt: "select_account" });
-      accessToken = result.accessToken;
+      rememberAccessToken(result, scopes);
       const email = await fetchUserEmail().catch(() => "");
       return { email };
     } catch (error) {
       accessToken = null;
+      accessTokenExpiresAt = 0;
       throw new Error(parseErrorMessage(error));
     }
   };
 
   const disconnect = () => {
     accessToken = null;
+    accessTokenExpiresAt = 0;
+    sessionScopes = baseScopes;
     silentReconnectAttempted = false;
 
     if (msalInstancePromise) {
@@ -273,8 +340,9 @@
     }
 
     try {
-      const result = await msalInst.acquireTokenSilent({ scopes: buildScopes(settings), account: accounts[0] });
-      accessToken = result.accessToken;
+      const scopes = buildScopes(settings);
+      const result = await msalInst.acquireTokenSilent({ scopes, account: accounts[0] });
+      rememberAccessToken(result, scopes);
       const email = await fetchUserEmail().catch(() => "");
       return { email };
     } catch {
@@ -312,7 +380,7 @@
     try {
       if (accounts.length) {
         const result = await msalInst.acquireTokenSilent({ scopes, account: accounts[0] });
-        accessToken = result.accessToken;
+        rememberAccessToken(result, scopes);
         return;
       }
     } catch {
@@ -329,7 +397,7 @@
     }
 
     const result = await msalInst.acquireTokenPopup({ scopes });
-    accessToken = result.accessToken;
+    rememberAccessToken(result, scopes);
   };
 
   // Lists child folders of the given folder (or the OneDrive root when
