@@ -398,24 +398,34 @@ window.ScriptoriaModules.createScriptureReferences = (deps) => {
     const parts = [];
     let currentChapter = null;
     let pendingDelimiter = "";
+    let bodyIndex = 0;
+    let committedBodyEnd = 0;
+    let stopped = false;
 
-    segments.forEach((segment, index) => {
-      if (!segment) {
+    segments.forEach((segment) => {
+      if (!segment || stopped) {
+        bodyIndex += segment.length;
         return;
       }
 
-      if (index % 2 === 1) {
+      if (/^,\s*$/.test(segment)) {
         pendingDelimiter = segment;
+        bodyIndex += segment.length;
         return;
       }
 
       const resolved = resolveReferenceSegment(canonicalBook, segment.trim(), currentChapter);
 
+      // A trailing "50" in "Gen 1:1, 50" is not a verse in chapter 1. Leave it
+      // in the text so the user can finish the chapter reference ("50:1").
       if (!resolved) {
         pendingDelimiter = "";
+        stopped = true;
         return;
       }
 
+      bodyIndex += segment.length;
+      committedBodyEnd = bodyIndex;
       currentChapter = resolved.currentChapter;
       const displayText = parts.length === 0
         ? `${originalBookText} ${segment.trim()}`
@@ -429,6 +439,8 @@ window.ScriptoriaModules.createScriptureReferences = (deps) => {
       pendingDelimiter = "";
     });
 
+    const bodyStart = referenceText.length - referenceBody.length;
+    parts.consumed = bodyStart + committedBodyEnd;
     return parts;
   };
 
