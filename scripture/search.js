@@ -13,6 +13,10 @@ window.ScriptoriaModules = window.ScriptoriaModules || {};
 //     re-parse a reference here because search already resolved (book,
 //     chapter, verse) from the index walk — handing those values to the
 //     viewer skips a regex round-trip.
+//   • Enter in the search field parses the whole query as a scripture
+//     reference (references module) and jumps via jumpToResolvedScripture.
+//     Phrase search still runs as the user types; a reference only navigates
+//     when they confirm with Enter.
 window.ScriptoriaModules.createScriptureSearch = (deps) => {
   const {
     scriptureSearchInput,
@@ -20,6 +24,8 @@ window.ScriptoriaModules.createScriptureSearch = (deps) => {
     verseDisplay,
     getCurrentScriptureLibrary,
     navigateToVerse,
+    parseScriptureReference,
+    jumpToResolvedScripture,
     escapeRegExp,
     debounce
   } = deps;
@@ -30,6 +36,10 @@ window.ScriptoriaModules.createScriptureSearch = (deps) => {
   // modules read this via getQuery so the viewer can re-run search after a
   // translation switch without us re-tokenising the input.
   let scriptureSearchQuery = "";
+
+  // Bumped on each keystroke and again when Enter navigates, so a search
+  // that was already queued cannot reopen the results after the jump.
+  let searchToken = 0;
 
   // Parse a search query into bare-word terms and quoted phrases.
   // e.g. `"Lord God" grace` → { terms: ["grace"], phrases: ["lord god"] }
@@ -193,12 +203,44 @@ window.ScriptoriaModules.createScriptureSearch = (deps) => {
     renderScriptureSearchResults(results, [...phrases, ...terms]);
   };
 
-  const debouncedPerformScriptureSearch = debounce((query) => {
+  const debouncedPerformScriptureSearch = debounce((query, token) => {
+    if (token !== searchToken) {
+      return;
+    }
     performScriptureSearch(query);
   }, 180);
 
+  const navigateToTypedReference = () => {
+    const query = scriptureSearchInput.value.trim();
+    if (!query || typeof parseScriptureReference !== "function" || typeof jumpToResolvedScripture !== "function") {
+      return false;
+    }
+
+    const parsed = parseScriptureReference(query);
+    if (!parsed) {
+      return false;
+    }
+
+    searchToken += 1;
+    jumpToResolvedScripture(parsed);
+    closeResultsPanel();
+    return true;
+  };
+
   scriptureSearchInput.addEventListener("input", () => {
-    debouncedPerformScriptureSearch(scriptureSearchInput.value);
+    const token = ++searchToken;
+    debouncedPerformScriptureSearch(scriptureSearchInput.value, token);
+  });
+
+  scriptureSearchInput.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter") {
+      return;
+    }
+
+    // The desktop search field lives inside the verse-picker form. Enter
+    // would submit that form and reload the page.
+    event.preventDefault();
+    navigateToTypedReference();
   });
 
   return {

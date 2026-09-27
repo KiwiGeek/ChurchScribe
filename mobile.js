@@ -1197,6 +1197,8 @@ const bootstrap = async () => {
     verseDisplay,
     getCurrentScriptureLibrary: () => viewerApi.getCurrentScriptureLibrary(),
     navigateToVerse: (book, chapter, verse) => viewerApi.navigateToVerse(book, chapter, verse),
+    parseScriptureReference,
+    jumpToResolvedScripture: (parsed) => viewerApi.jumpToResolvedScripture(parsed),
     escapeRegExp,
     debounce
   });

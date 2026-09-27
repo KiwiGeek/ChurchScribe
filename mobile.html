@@ -186,10 +186,15 @@
       background: var(--surface-accent);
       border-bottom: 0.5px solid var(--border);
       flex-shrink: 0;
+      min-width: 0;
+      max-width: 100%;
     }
 
     .mob-bible-pickers select {
-      flex: 1;
+      flex: 1 1 0;
+      width: 0;
+      min-width: 0;
+      max-width: 100%;
       font-size: 12px;
       font-family: var(--font-body);
       padding: 6px 24px 6px 8px;
@@ -201,6 +206,9 @@
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238c4b2f'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: right 7px center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     [data-theme="dark"] .mob-bible-pickers select {
@@ -208,7 +216,11 @@
     }
 
     #translation-select {
-      flex: 2;
+      flex: 2 1 0;
+    }
+
+    #bible-view {
+      min-width: 0;
     }
 
     .mob-search-bar {

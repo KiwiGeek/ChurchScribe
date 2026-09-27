@@ -116,6 +116,9 @@ window.ScriptoriaModules.createScriptureViewer = (deps) => {
     });
   };
 
+  const chapterOptionLabel = (book, chapterNumber) =>
+    book === "Psalms" ? `Psalm ${chapterNumber}` : `Chapter ${chapterNumber}`;
+
   const populateChapterOptions = (book) => {
     const scriptureLibrary = getCurrentScriptureLibrary();
     chapterSelect.innerHTML = "";
@@ -123,7 +126,8 @@ window.ScriptoriaModules.createScriptureViewer = (deps) => {
     scriptureLibrary[book].forEach((chapter, index) => {
       const option = document.createElement("option");
       option.value = String(index);
-      option.textContent = `Chapter ${chapter.chapter}`;
+      option.dataset.chapter = String(chapter.chapter);
+      option.textContent = chapterOptionLabel(book, chapter.chapter);
       chapterSelect.append(option);
     });
   };
@@ -387,7 +391,7 @@ window.ScriptoriaModules.createScriptureViewer = (deps) => {
 
     const scriptureLibrary = getCurrentScriptureLibrary();
     const currentBook = scriptureLibrary[bookSelect.value] ? bookSelect.value : Object.keys(scriptureLibrary)[0];
-    const requestedChapterNumber = Number(chapterSelect.selectedOptions[0]?.textContent.replace("Chapter ", "") ?? 1);
+    const requestedChapterNumber = Number(chapterSelect.selectedOptions[0]?.dataset.chapter ?? 1);
     const chapterIndex = scriptureLibrary[currentBook].findIndex((chapter) => chapter.chapter === requestedChapterNumber);
 
     populateBookOptions();
