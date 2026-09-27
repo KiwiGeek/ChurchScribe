@@ -842,7 +842,10 @@ const renderSettingsSheet = () => {
     const button = e.target.closest("[data-theme-mode]");
     if (!button) return;
     const selectedMode = button.dataset.themeMode;
-    applyThemeMode?.(selectedMode);
+    // Persist to IndexedDB (not only the localStorage mirror). Without this,
+    // bootstrap prefers the stale IDB value and the mobile choice is lost on
+    // the next load — especially noticeable on iOS Safari / PWA relaunches.
+    applyThemeMode?.(selectedMode, { persist: true });
     document.querySelectorAll("#mob-theme-toggle-group .mob-theme-toggle").forEach((toggle) => {
       toggle.setAttribute("aria-pressed", String(toggle.dataset.themeMode === selectedMode));
     });
@@ -851,10 +854,12 @@ const renderSettingsSheet = () => {
   document.querySelector("#mob-color-theme-grid")?.addEventListener("click", (e) => {
     const btn = e.target.closest("[data-color-theme]");
     if (!btn) return;
-    applyColorTheme?.(btn.dataset.colorTheme);
+    const themeId = btn.dataset.colorTheme;
+    void writeStoredValue(colorThemeStorageKey, themeId);
+    applyColorTheme?.(themeId);
     // Update active state without re-rendering the whole sheet
     document.querySelectorAll(".mob-color-swatch").forEach((s) => {
-      const isNowActive = s.dataset.colorTheme === btn.dataset.colorTheme;
+      const isNowActive = s.dataset.colorTheme === themeId;
       s.classList.toggle("active", isNowActive);
       s.setAttribute("aria-pressed", isNowActive);
     });
