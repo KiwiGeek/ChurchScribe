@@ -336,19 +336,34 @@ window.ScriptoriaModules.createScriptureViewer = (deps) => {
 
     if (activeScriptureFocus && activeScriptureFocus.book === selectedBook && activeScriptureFocus.chapter === chapter.chapter) {
       const fv = activeScriptureFocus.firstVerse;
-      const targetRow = chapter.verses.find((v) => {
-        const cov = Array.isArray(v.coversVerses) ? v.coversVerses : null;
-        if (cov && cov.length > 0) {
-          return cov.includes(fv);
+      // A chapter-only reference (for example "Deut 16") has no verse. Scroll
+      // the pane to the top instead of leaving the previous chapter's offset.
+      const scrollToFocusedVerse = () => {
+        if (fv == null) {
+          verseDisplay.scrollTo({ top: 0, behavior: "smooth" });
+          return;
         }
-        return v.verse === fv;
-      });
-      const anchor = targetRow ? targetRow.verse : fv;
-      const targetVerse = chapterText.querySelector(`[data-verse="${anchor}"]`);
 
-      if (targetVerse) {
-        targetVerse.scrollIntoView({ block: "start", behavior: "smooth" });
-      }
+        const targetRow = chapter.verses.find((v) => {
+          const cov = Array.isArray(v.coversVerses) ? v.coversVerses : null;
+          if (cov && cov.length > 0) {
+            return cov.includes(fv);
+          }
+          return v.verse === fv;
+        });
+        const anchor = targetRow ? targetRow.verse : fv;
+        const targetVerse = chapterText.querySelector(`[data-verse="${anchor}"]`);
+
+        if (targetVerse) {
+          targetVerse.scrollIntoView({ block: "start", behavior: "smooth" });
+        } else {
+          verseDisplay.scrollTo({ top: 0, behavior: "smooth" });
+        }
+      };
+
+      // Search hides the chapter pane until the jump finishes. Scrolling a
+      // display:none container is ignored, so wait until it is on screen.
+      requestAnimationFrame(scrollToFocusedVerse);
     }
   };
 
