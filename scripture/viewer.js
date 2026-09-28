@@ -61,6 +61,41 @@ window.ScriptoriaModules.createScriptureViewer = (deps) => {
     return t.length > 0 ? t : null;
   };
 
+  // Some headings mark one italic word with slashes ("the / Lord / Sends",
+  // "with the / Lord", "Sons of / Gershon"). A slash that introduces a longer
+  // phrase, a letter name, or a speaker label stays as a slash.
+  const sectionHeadingItalic = / \/ (Lord|Gershon)(?: \/)?/g;
+
+  const setSectionHeading = (el, text) => {
+    el.textContent = "";
+    const source = String(text);
+    const pattern = new RegExp(sectionHeadingItalic.source, "g");
+    let last = 0;
+    let dropMarkupSpace = false;
+    const appendText = (value) => {
+      if (!value) {
+        return;
+      }
+      if (dropMarkupSpace) {
+        value = value.replace(/^ (?=\p{P})/u, "");
+        dropMarkupSpace = false;
+      }
+      if (value) {
+        el.append(document.createTextNode(value));
+      }
+    };
+    for (const match of source.matchAll(pattern)) {
+      appendText(source.slice(last, match.index));
+      el.append(document.createTextNode(" "));
+      const em = document.createElement("em");
+      em.textContent = match[1];
+      el.append(em);
+      last = match.index + match[0].length;
+      dropMarkupSpace = match[0].endsWith("/");
+    }
+    appendText(source.slice(last));
+  };
+
   const getPreferredTranslation = async () => {
     // Goes through migrateLegacyPreference so users coming from the pre-IDB
     // localStorage build still pick up their saved translation on first load.
@@ -223,21 +258,21 @@ window.ScriptoriaModules.createScriptureViewer = (deps) => {
     if (chapter.heading) {
       const headingEl = document.createElement("h3");
       headingEl.className = "chapter-section-heading";
-      headingEl.textContent = chapter.heading;
+      setSectionHeading(headingEl, chapter.heading);
       chapterText.append(headingEl);
     }
 
     if (chapter.subheading) {
       const subEl = document.createElement("h4");
       subEl.className = "chapter-subheading";
-      subEl.textContent = chapter.subheading;
+      setSectionHeading(subEl, chapter.subheading);
       chapterText.append(subEl);
     }
 
     if (chapter.superscription) {
       const supEl = document.createElement("p");
       supEl.className = "chapter-superscription";
-      supEl.textContent = chapter.superscription;
+      setSectionHeading(supEl, chapter.superscription);
       chapterText.append(supEl);
     }
 
@@ -245,14 +280,14 @@ window.ScriptoriaModules.createScriptureViewer = (deps) => {
       if (verse.heading) {
         const headingEl = document.createElement("h3");
         headingEl.className = "chapter-section-heading";
-        headingEl.textContent = verse.heading;
+        setSectionHeading(headingEl, verse.heading);
         chapterText.append(headingEl);
       }
 
       if (verse.subheading) {
         const subEl = document.createElement("h4");
         subEl.className = "chapter-subheading";
-        subEl.textContent = verse.subheading;
+        setSectionHeading(subEl, verse.subheading);
         chapterText.append(subEl);
       }
 
