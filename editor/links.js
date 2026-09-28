@@ -131,6 +131,55 @@ window.ScriptoriaModules.createEditorLinks = (deps) => {
     selection.addRange(range);
   };
 
+  // A text offset cannot tell "end of the previous list item" from "start of
+  // the new empty item". Keep the live node when linkify did not replace it.
+  const captureCaret = (root) => {
+    const selection = windowObject.getSelection();
+
+    if (!selection.rangeCount) {
+      return null;
+    }
+
+    const range = selection.getRangeAt(0);
+
+    if (!root.contains(range.startContainer)) {
+      return null;
+    }
+
+    return {
+      container: range.startContainer,
+      offset: range.startOffset,
+      textOffset: getCaretTextOffset(root)
+    };
+  };
+
+  const restoreCaret = (root, saved) => {
+    if (!saved) {
+      return;
+    }
+
+    if (saved.container && root.contains(saved.container)) {
+      const maxOffset = saved.container.nodeType === Node.TEXT_NODE
+        ? saved.container.nodeValue.length
+        : saved.container.childNodes.length;
+      const offset = Math.min(saved.offset, maxOffset);
+
+      try {
+        const selection = windowObject.getSelection();
+        const range = document.createRange();
+        range.setStart(saved.container, offset);
+        range.collapse(true);
+        selection.removeAllRanges();
+        selection.addRange(range);
+        return;
+      } catch {
+        // The saved node survived, but the offset did not. Fall back below.
+      }
+    }
+
+    restoreCaretTextOffset(root, saved.textOffset);
+  };
+
   const getEditorBlockContaining = (node) => {
     if (!node) {
       return null;
@@ -197,7 +246,8 @@ window.ScriptoriaModules.createEditorLinks = (deps) => {
 
   const linkifyScriptureReferences = ({ jumpToCaretReference = false, scope = null } = {}) => {
     const root = (scope && noteEditor.contains(scope)) ? scope : noteEditor;
-    const caretOffset = getCaretTextOffset(root);
+    const caret = captureCaret(root);
+    const caretOffset = caret ? caret.textOffset : null;
     unwrapAutoScriptureLinks(root);
     const explicitPattern = getExplicitPattern();
     const contextualPattern = getContextualPattern();
@@ -305,7 +355,7 @@ window.ScriptoriaModules.createEditorLinks = (deps) => {
       traversedOffset += sourceText.length;
     });
 
-    restoreCaretTextOffset(root, caretOffset);
+    restoreCaret(root, caret);
 
     if (jumpToCaretReference && lastReferenceBeforeCaret) {
       jumpToResolvedScripture(lastReferenceBeforeCaret);
@@ -409,7 +459,8 @@ window.ScriptoriaModules.createEditorLinks = (deps) => {
 
   const linkifyUrls = ({ suppressAtCaret = false, scope = null } = {}) => {
     const root = (scope && noteEditor.contains(scope)) ? scope : noteEditor;
-    const caretOffset = getCaretTextOffset(root);
+    const caret = captureCaret(root);
+    const caretOffset = caret ? caret.textOffset : null;
     unwrapAutoUrlLinks(root);
     const globalOffsets = new Map();
 
@@ -550,7 +601,7 @@ window.ScriptoriaModules.createEditorLinks = (deps) => {
       textNode.parentNode.replaceChild(fragment, textNode);
     });
 
-    restoreCaretTextOffset(root, caretOffset);
+    restoreCaret(root, caret);
   };
 
   const getPreviousNodeFromCaret = (root, node) => {
