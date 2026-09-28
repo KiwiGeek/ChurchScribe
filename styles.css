@@ -773,6 +773,97 @@ h1 {
   outline: none;
 }
 
+.dictate-control {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.dictate-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 15rem;
+  padding: 10px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.dictate-menu[hidden] {
+  display: none;
+}
+
+.dictate-menu .dictate-button {
+  width: 100%;
+}
+
+.dictate-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.dictate-field[hidden] {
+  display: none;
+}
+
+.dictate-source {
+  width: 100%;
+  max-width: none;
+  height: 2.4rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface-accent);
+  color: var(--accent-strong);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  padding: 0 0.7rem;
+}
+
+.dictate-source:disabled {
+  opacity: 0.72;
+}
+
+.dictate-button.is-listening,
+.dictate-menu-button.is-listening {
+  background: var(--accent);
+  color: var(--surface-strong);
+}
+
+.dictation-interim {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.dictation-interim[data-dictation-status="true"] {
+  margin-top: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--surface-accent);
+  font-style: normal;
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+.dictation-interim:empty::before {
+  content: "Listening…";
+}
+
 .underline {
   text-decoration: underline;
 }
@@ -2683,6 +2774,10 @@ body.is-compact-editor .toolbar {
 
 body.is-compact-editor .toolbar > .toolbar-controls {
   display: none;
+}
+
+body.is-compact-editor .dictate-control {
+  margin-left: 0;
 }
 
 body.is-compact-editor .compact-format-button {

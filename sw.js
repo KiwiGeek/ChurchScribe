@@ -70,6 +70,9 @@ const PRECACHE_URLS = [
   "core/storage.js",
   "core/workspace.js",
   "editor/controller.js",
+  // Live dictation menu, tab-audio capture, and the editor status line.
+  "editor/dictation.js",
+  "editor/tab-dictation.js",
   "editor/links.js",
   "editor/media.js",
   "editor/navigation.js",
@@ -239,15 +242,22 @@ self.addEventListener("install", (event) => {
   })());
 });
 
-// ── Activate: clean up old caches ────────────────────────────────────────────
+// ── Activate: clean up old app-shell caches ─────────────────────────────────
+// Only drop previous Scriptoria shells. The Whisper weights live in the
+// browser cache named "transformers-cache", and wiping that on every service
+// worker update forces the model to download again.
 self.addEventListener("activate", (event) => {
   event.waitUntil((async () => {
     const keys = await caches.keys();
     await Promise.all(
       keys.map((key) => {
-        if (key === CACHE_NAME || key === FONTS_CACHE) {
+        const oldAppShell = (key.startsWith("scriptoria-v-") || key.startsWith("scriptoria-dev-"))
+          && key !== CACHE_NAME;
+
+        if (!oldAppShell || key === FONTS_CACHE) {
           return null;
         }
+
         return caches.delete(key);
       })
     );

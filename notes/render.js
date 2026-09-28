@@ -184,6 +184,7 @@ window.ScriptoriaModules.createNotesRender = (deps) => {
     renderActiveNoteSummary();
     renderMetadataSummary();
     renderNoteMetadataFields();
+    deps.captureDictationInterim?.();
     noteEditor.innerHTML = activeNote.content;
     trimEditorLeadingSpacerNodes();
     if (!noteEditor.firstChild) {
@@ -195,6 +196,7 @@ window.ScriptoriaModules.createNotesRender = (deps) => {
     refreshTableUi();
     ensureTrailingParagraph();
     updateNoteEditorPlaceholderState();
+    deps.restoreDictationInterim?.();
   };
 
   const refreshNoteSurfaces = () => {
