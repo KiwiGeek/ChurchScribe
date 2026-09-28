@@ -516,6 +516,15 @@
     try {
       const nextSettingsFileId = await upsertJsonFile(settings, settingsFileName, payload.settings);
 
+      if (settings.settingsOnly) {
+        return {
+          remoteSettingsFileId: nextSettingsFileId,
+          remoteNoteFileIds: settings.remoteNoteFileIds ?? {},
+          remoteWorkspaceFileId: "",
+          remoteWorkspaceParentId: isMainStorage(settings) ? settings.folderId : ""
+        };
+      }
+
       const existingItems = await listLocationItems(settings);
       const existingNoteByName = new Map(
         existingItems

@@ -35,6 +35,8 @@ window.ScriptoriaModules.createCloudSync = (deps) => {
   let isPullInFlight = false;
   let cloudPollTimer = null;
   let cloudSyncQueuedWhileOffline = false;
+  let uiSettingsSyncPromise = null;
+  let uiSettingsSyncQueued = false;
 
   const persistCloudSyncSettings = () => {
     void writeStoredValue(cloudSyncStorageKey, structuredClone(cloudSyncSettings));
@@ -414,6 +416,122 @@ window.ScriptoriaModules.createCloudSync = (deps) => {
     return syncInFlightPromise;
   };
 
+  const syncUiSettingsToCloud = async () => {
+    const provider = getActiveProvider();
+
+    if (!provider.hasActiveSession() || provider.id === "none" || !navigator.onLine) {
+      return false;
+    }
+
+    if (uiSettingsSyncPromise) {
+      uiSettingsSyncQueued = true;
+      return uiSettingsSyncPromise;
+    }
+
+    uiSettingsSyncPromise = (async () => {
+      try {
+        do {
+          uiSettingsSyncQueued = false;
+          const uploaded = await uploadUiSettingsOnce();
+
+          if (uploaded) {
+            await pullFromCloud();
+          }
+        } while (uiSettingsSyncQueued);
+
+        return true;
+      } catch (error) {
+        console.warn("[CloudSync] UI settings sync failed:", error);
+        return false;
+      } finally {
+        uiSettingsSyncPromise = null;
+      }
+    })();
+
+    return uiSettingsSyncPromise;
+  };
+
+  const uploadUiSettingsOnce = async () => {
+    if (syncInFlightPromise) {
+      await syncInFlightPromise;
+    }
+
+    while (isPullInFlight) {
+      await new Promise((resolve) => window.setTimeout(resolve, 100));
+    }
+
+    const provider = getActiveProvider();
+    syncInFlightPromise = (async () => {
+      const providerSettings = getActiveProviderSettings();
+      const downloaded = await provider.download(providerSettings);
+
+      if (!downloaded?.data?.preferences && !downloaded?.data?.workspace) {
+        return false;
+      }
+
+      if (downloaded.remoteSettingsFileId) {
+        cloudSyncSettings.remoteSettingsFileId = downloaded.remoteSettingsFileId;
+      }
+
+      if (downloaded.remoteNoteFileIds) {
+        cloudSyncSettings.remoteNoteFileIds = downloaded.remoteNoteFileIds;
+      }
+
+      if (downloaded.providerSettingsPatch && typeof downloaded.providerSettingsPatch === "object") {
+        cloudSyncSettings.providerSettings[provider.id] = {
+          ...(cloudSyncSettings.providerSettings[provider.id] ?? {}),
+          ...downloaded.providerSettingsPatch
+        };
+      }
+
+      const remoteSettings = { ...downloaded.data };
+      delete remoteSettings.notes;
+      delete remoteSettings.notesArePartial;
+      const localPreferences = buildCloudSyncPayload().settings.preferences;
+      const updatedAt = new Date().toISOString();
+      const nextSettings = {
+        ...remoteSettings,
+        updatedAt,
+        preferences: {
+          ...(remoteSettings.preferences ?? {}),
+          theme: localPreferences.theme,
+          colorTheme: localPreferences.colorTheme
+        }
+      };
+      const result = await provider.upload(
+        {
+          updatedAt,
+          settings: nextSettings,
+          notes: { version: 2, updatedAt, notes: [] }
+        },
+        {
+          ...getActiveProviderSettings(),
+          settingsOnly: true
+        }
+      );
+
+      if (result.remoteSettingsFileId) {
+        cloudSyncSettings.remoteSettingsFileId = result.remoteSettingsFileId;
+      }
+
+      if (result.providerSettingsPatch && typeof result.providerSettingsPatch === "object") {
+        cloudSyncSettings.providerSettings[provider.id] = {
+          ...(cloudSyncSettings.providerSettings[provider.id] ?? {}),
+          ...result.providerSettingsPatch
+        };
+      }
+
+      persistCloudSyncSettings();
+      return true;
+    })();
+
+    try {
+      return await syncInFlightPromise;
+    } finally {
+      syncInFlightPromise = null;
+    }
+  };
+
   const scheduleAutoCloudSync = () => {
     if (!getActiveProvider().hasActiveSession()) {
       return;
@@ -532,6 +650,7 @@ window.ScriptoriaModules.createCloudSync = (deps) => {
     stopCloudPolling,
     startCloudPolling,
     syncWorkspaceToCloud,
+    syncUiSettingsToCloud,
     scheduleAutoCloudSync,
     connectCloud,
     disconnectCloud,

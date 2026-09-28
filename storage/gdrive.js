@@ -578,6 +578,37 @@
       const location = resolveLocation(settings);
       const updatedParentId = location.remoteWorkspaceParentId;
       const settingsQuery = buildSettingsQuery(location);
+
+      // Theme changes on mobile update the settings file only. Rewriting note
+      // files from a read-only device would replace newer desktop notes.
+      if (settings.settingsOnly) {
+        const existingSettingsFileId = await findFileId(remoteSettingsFileId, location, settingsQuery);
+
+        if (!existingSettingsFileId) {
+          return {
+            remoteSettingsFileId: "",
+            remoteNoteFileIds,
+            remoteWorkspaceFileId: "",
+            remoteWorkspaceParentId: updatedParentId
+          };
+        }
+
+        const nextSettingsFileId = await upsertJsonFile(
+          {
+            fileId: existingSettingsFileId,
+            name: settingsFileName,
+            parents: location.parents
+          },
+          payload.settings
+        );
+
+        return {
+          remoteSettingsFileId: nextSettingsFileId,
+          remoteNoteFileIds,
+          remoteWorkspaceFileId: "",
+          remoteWorkspaceParentId: updatedParentId
+        };
+      }
       const existingSettingsFileId = await findFileId(remoteSettingsFileId, location, settingsQuery);
       const nextSettingsFileId = await upsertJsonFile(
         {
