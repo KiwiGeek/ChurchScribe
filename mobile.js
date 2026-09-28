@@ -866,6 +866,7 @@ const renderSettingsSheet = () => {
     document.querySelectorAll("#mob-theme-toggle-group .mob-theme-toggle").forEach((toggle) => {
       toggle.setAttribute("aria-pressed", String(toggle.dataset.themeMode === selectedMode));
     });
+    void syncCloudApi?.syncUiSettingsToCloud?.();
   });
 
   document.querySelector("#mob-color-theme-grid")?.addEventListener("click", (e) => {
@@ -880,6 +881,7 @@ const renderSettingsSheet = () => {
       s.classList.toggle("active", isNowActive);
       s.setAttribute("aria-pressed", isNowActive);
     });
+    void syncCloudApi?.syncUiSettingsToCloud?.();
   });
 
   document.querySelector("#mob-translation-search")?.addEventListener("input", (event) => {

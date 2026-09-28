@@ -308,13 +308,22 @@
     return files;
   };
 
-  const upload = async (payload) => {
+  const upload = async (payload, settings = {}) => {
     if (!directoryHandle) {
       throw new Error("No local folder selected. Choose a folder first.");
     }
 
     await ensureMigratedFiles();
     await writeJsonFile(SETTINGS_FILENAME, payload.settings);
+
+    if (settings.settingsOnly) {
+      return {
+        remoteSettingsFileId: SETTINGS_FILENAME,
+        remoteNoteFileIds: settings.remoteNoteFileIds ?? {},
+        remoteWorkspaceFileId: "",
+        remoteWorkspaceParentId: directoryHandle.name
+      };
+    }
 
     const existingNoteFiles = await listNoteFiles();
     const desiredNoteFiles = new Set();

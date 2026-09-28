@@ -1095,6 +1095,48 @@ ${json}</pre>
 
   const upload = async (payload, settings) => {
     try {
+      if (settings.settingsOnly) {
+        if (!settings.remoteSettingsFileId) {
+          return {
+            remoteSettingsFileId: "",
+            remoteNoteFileIds: settings.remoteNoteFileIds ?? {},
+            remoteWorkspaceFileId: "",
+            remoteWorkspaceParentId: ""
+          };
+        }
+
+        const notebook = await ensureTargetNotebook(settings);
+        const syncSection = await ensureSection(notebook.id, syncSectionName);
+        const notePageState = { ...(settings.notePageState ?? {}) };
+        const noteSnapshotsById = { ...(settings.noteSnapshotsById ?? {}) };
+        const settingsPayload = buildSettingsStoragePayload(payload.settings, notePageState, noteSnapshotsById);
+        const settingsSignature = buildSettingsSignature(
+          settingsPayload.settings,
+          settingsPayload.noteMappings,
+          settingsPayload.noteSnapshots
+        );
+        const settingsPageResult = await upsertSettingsPage(
+          syncSection.id,
+          settingsPayload,
+          settings.remoteSettingsFileId
+        );
+
+        return {
+          remoteSettingsFileId: settingsPageResult.pageId,
+          remoteNoteFileIds: settings.remoteNoteFileIds ?? {},
+          remoteWorkspaceFileId: "",
+          remoteWorkspaceParentId: notebook.id,
+          providerSettingsPatch: {
+            notebookId: notebook.id,
+            sectionIdsByTypeId: settings.sectionIdsByTypeId ?? {},
+            notePageState,
+            noteSnapshotsById,
+            settingsPageLastModifiedAt: settingsPageResult.lastModifiedDateTime,
+            settingsSignature
+          }
+        };
+      }
+
       const notebook = await ensureTargetNotebook(settings);
       const syncSection = await ensureSection(notebook.id, syncSectionName);
       const noteTypes = payload.settings?.workspace?.noteTypes ?? [];
