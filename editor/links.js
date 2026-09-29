@@ -264,6 +264,10 @@ window.ScriptoriaModules.createEditorLinks = (deps) => {
             return NodeFilter.FILTER_REJECT;
           }
 
+          if (node.parentElement?.closest("[data-dictation-interim]")) {
+            return NodeFilter.FILTER_REJECT;
+          }
+
           return NodeFilter.FILTER_ACCEPT;
         }
       }
@@ -489,6 +493,10 @@ window.ScriptoriaModules.createEditorLinks = (deps) => {
           }
 
           if (node.parentElement?.closest(EMBED_SELECTOR)) {
+            return NodeFilter.FILTER_REJECT;
+          }
+
+          if (node.parentElement?.closest("[data-dictation-interim]")) {
             return NodeFilter.FILTER_REJECT;
           }
 

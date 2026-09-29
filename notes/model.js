@@ -102,6 +102,7 @@ window.ScriptoriaModules.createNotesModel = (deps) => {
       return;
     }
 
+    deps.prepareDictationForNoteChange?.();
     workspace.selectedNewNoteTypeId = type.id;
     const note = createEmptyNote(type.id, buildMetadataForType(type));
     workspace.notes.unshift(note);
@@ -120,6 +121,8 @@ window.ScriptoriaModules.createNotesModel = (deps) => {
       return;
     }
 
+    deps.prepareDictationForNoteChange?.();
+
     const duplicate = {
       ...createEmptyNote(sourceNote.typeId, structuredClone(sourceNote.metadata)),
       content: sourceNote.content
@@ -137,6 +140,7 @@ window.ScriptoriaModules.createNotesModel = (deps) => {
       return;
     }
 
+    deps.prepareDictationForNoteChange?.();
     flushEditorWorkNow();
     saveActiveNote();
     workspace.activeNoteId = noteId;
@@ -156,6 +160,10 @@ window.ScriptoriaModules.createNotesModel = (deps) => {
 
     if (!confirmed) {
       return;
+    }
+
+    if (workspace.activeNoteId === noteId) {
+      deps.prepareDictationForNoteChange?.();
     }
 
     const deletedTitle = deps.getNoteDisplayTitle(note);

@@ -137,6 +137,11 @@ window.ScriptoriaModules.createEditorController = (deps) => {
       return false;
     }
 
+    // The live listening line is empty until the first words arrive. Keep it.
+    if (node.dataset?.dictationInterim === "true") {
+      return false;
+    }
+
     const tagName = node.tagName;
 
     if (tagName === "BR") {
@@ -193,10 +198,11 @@ window.ScriptoriaModules.createEditorController = (deps) => {
     const hasMutationMarkers = noteEditor.querySelector(
       "[data-embed-ghost], [data-embed-dragging]"
     ) !== null;
+    const hasLiveDictation = noteEditor.querySelector("[data-dictation-interim]") !== null;
 
     let serializedContent;
 
-    if (hasMutationMarkers) {
+    if (hasMutationMarkers || hasLiveDictation) {
       const editorClone = noteEditor.cloneNode(true);
 
       editorClone.querySelectorAll("[data-embed-ghost]").forEach((ghost) => {
@@ -211,6 +217,13 @@ window.ScriptoriaModules.createEditorController = (deps) => {
 
       editorClone.querySelectorAll("[data-embed-dragging]").forEach((el) => {
         el.removeAttribute("data-embed-dragging");
+      });
+
+      // The in-progress phrase stays on screen only. Saving it would make the
+      // next render look like a finished paragraph, and the final result would
+      // append those words a second time.
+      editorClone.querySelectorAll("[data-dictation-interim]").forEach((el) => {
+        el.remove();
       });
 
       serializedContent = editorClone.innerHTML;

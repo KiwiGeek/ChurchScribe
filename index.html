@@ -126,6 +126,29 @@
             <button class="ghost-button compact-format-button" id="compact-format-button" type="button" aria-haspopup="true" aria-expanded="false">⋯ Format</button>
             <div class="compact-format-panel" id="compact-format-panel" hidden></div>
           </div>
+          <div class="dictate-control">
+            <button class="tool-button dictate-menu-button" id="dictate-menu-button" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="dictate-menu">Listen</button>
+            <div class="dictate-menu" id="dictate-menu" hidden>
+              <button class="tool-button dictate-button" id="dictate-button" type="button" aria-pressed="false" aria-label="Listen and write what is spoken" title="Listen and write what is spoken">Listen</button>
+              <label class="dictate-field">
+                Source
+                <select class="dictate-source" id="dictate-source" aria-label="Dictation audio source">
+                  <option value="microphone">Microphone</option>
+                  <option value="tab" title="Record a browser tab's audio on this device. Works while the speakers are muted. Muting that tab itself stops the audio.">Tab audio</option>
+                </select>
+              </label>
+              <label class="dictate-field" id="dictate-model-field" hidden>
+                Model
+                <select class="dictate-source" id="dictate-model" aria-label="Whisper model">
+                  <option value="tiny" title="Fastest. Rough wording.">Tiny</option>
+                  <option value="base" title="Faster than Small, less accurate.">Base</option>
+                  <option value="small" selected title="Balanced. A few hundred megabytes the first time.">Small</option>
+                  <option value="medium" title="Clearer than Small, slower, larger download.">Medium</option>
+                  <option value="turbo" title="Best quality that still runs in the browser. Largest download. A GPU helps a lot.">Large Turbo</option>
+                </select>
+              </label>
+            </div>
+          </div>
         </div>
         <input type="file" id="insert-image-file" accept="image/*" multiple hidden>
 
@@ -696,6 +719,8 @@
   <script src="editor/navigation.js"></script>
   <script src="editor/media.js"></script>
   <script src="editor/controller.js"></script>
+  <script src="editor/tab-dictation.js"></script>
+  <script src="editor/dictation.js"></script>
   <script src="themes/controller.js"></script>
   <script src="layout/panes.js"></script>
   <script src="core/connectivity.js"></script>

@@ -16,6 +16,12 @@ const noteMetaBar = document.querySelector("#note-meta-bar");
 const metadataSummary = document.querySelector("#metadata-summary");
 const noteMetaFields = document.querySelector("#note-meta-fields");
 const noteToolbar = document.querySelector("#note-toolbar");
+const dictateMenuButton = document.querySelector("#dictate-menu-button");
+const dictateMenu = document.querySelector("#dictate-menu");
+const dictateButton = document.querySelector("#dictate-button");
+const dictateSource = document.querySelector("#dictate-source");
+const dictateModel = document.querySelector("#dictate-model");
+const dictateModelField = document.querySelector("#dictate-model-field");
 const toolbarControls = document.querySelector("#toolbar-controls");
 const compactFormatMenu = document.querySelector("#compact-format-menu");
 const compactFormatButton = document.querySelector("#compact-format-button");
@@ -410,6 +416,7 @@ let goToPreviousOnboardingStep = () => {};
 let goToNextOnboardingStep = () => {};
 let finishOnboarding = () => {};
 let editorControllerApi = null;
+let dictationApi = null;
 
 const getEditorRange = () => editorControllerApi?.getEditorRange() ?? null;
 const saveEditorSelection = () => editorControllerApi?.saveEditorSelection() ?? null;
@@ -446,6 +453,7 @@ const {
   refreshSaveStatus: () => refreshSaveStatus(),
   flushEditorWorkNow: () => flushEditorWorkNow(),
   saveActiveNote: () => saveActiveNote(),
+  prepareDictationForNoteChange: () => dictationApi?.prepareForNoteChange(),
   windowObject: window,
   renderWorkspace: () => renderWorkspace(),
   getNoteDisplayTitle: (note) => getNoteDisplayTitle(note),
@@ -946,6 +954,26 @@ window.ScriptoriaModules.createEditorMedia({
   documentObject: document
 }).attach();
 
+dictationApi = window.ScriptoriaModules.createDictation({
+  noteEditor,
+  dictateMenuButton,
+  dictateMenu,
+  dictateButton,
+  dictateSource,
+  dictateModel,
+  dictateModelField,
+  linkifyScriptureReferences,
+  parseScriptureReference,
+  jumpToResolvedScripture,
+  saveActiveNote: () => saveActiveNote(),
+  updateNoteEditorPlaceholderState: () => updateNoteEditorPlaceholderState(),
+  showToast: (message, options) => showToast(message, options),
+  windowObject: window,
+  documentObject: document,
+  navigatorObject: navigator
+});
+dictationApi.attach();
+
 let refreshNoteSurfaces = () => {};
 
 ({
@@ -974,6 +1002,8 @@ let refreshNoteSurfaces = () => {};
   ensureTrailingParagraph,
   trimEditorLeadingSpacerNodes,
   updateNoteEditorPlaceholderState,
+  captureDictationInterim: () => dictationApi?.captureDictationInterim(),
+  restoreDictationInterim: () => dictationApi?.restoreListeningLine(),
   noteBrowserSelectedNoteIdRef: () => noteBrowserSelectedNoteId,
   getNoteTypeById,
   getActiveNote,
