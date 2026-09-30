@@ -234,6 +234,10 @@ const settingsTabs = [
     label: "Data Management"
   },
   {
+    id: "beta",
+    label: "Beta"
+  },
+  {
     id: "about",
     label: "About"
   }
@@ -954,25 +958,135 @@ window.ScriptoriaModules.createEditorMedia({
   documentObject: document
 }).attach();
 
-dictationApi = window.ScriptoriaModules.createDictation({
-  noteEditor,
-  dictateMenuButton,
-  dictateMenu,
-  dictateButton,
-  dictateSource,
-  dictateModel,
-  dictateModelField,
-  linkifyScriptureReferences,
-  parseScriptureReference,
-  jumpToResolvedScripture,
-  saveActiveNote: () => saveActiveNote(),
-  updateNoteEditorPlaceholderState: () => updateNoteEditorPlaceholderState(),
-  showToast: (message, options) => showToast(message, options),
-  windowObject: window,
-  documentObject: document,
-  navigatorObject: navigator
+dictationApi = null;
+
+const transcriptionsStorageKey = "service-notes-beta-transcriptions";
+const dictateControl = document.querySelector(".dictate-control");
+const betaTranscriptionsToggle = document.querySelector("#beta-transcriptions-toggle");
+
+const transcriptionsEnabled = () => {
+  try {
+    return window.localStorage.getItem(transcriptionsStorageKey) === "1";
+  } catch {
+    return false;
+  }
+};
+
+const setTranscriptionsEnabled = (enabled) => {
+  try {
+    if (enabled) {
+      window.localStorage.setItem(transcriptionsStorageKey, "1");
+    } else {
+      window.localStorage.removeItem(transcriptionsStorageKey);
+    }
+  } catch {
+    // The switch still applies for this page if storage is blocked.
+  }
+};
+
+const syncTranscriptionsToggle = () => {
+  if (!betaTranscriptionsToggle) {
+    return;
+  }
+
+  const enabled = transcriptionsEnabled();
+  betaTranscriptionsToggle.setAttribute("aria-pressed", enabled ? "true" : "false");
+  const state = betaTranscriptionsToggle.querySelector(".ui-toggle-state");
+
+  if (state) {
+    state.textContent = enabled ? "On" : "Off";
+  }
+};
+
+const loadScript = (src) => new Promise((resolve, reject) => {
+  if (document.querySelector(`script[src="${src}"]`)) {
+    resolve();
+    return;
+  }
+
+  const script = document.createElement("script");
+  script.src = src;
+  script.async = false;
+  script.onload = () => resolve();
+  script.onerror = () => reject(new Error("Transcription couldn't load."));
+  document.body.append(script);
 });
-dictationApi.attach();
+
+let dictationLoad = null;
+
+const ensureDictation = () => {
+  if (dictationApi) {
+    if (dictateControl) {
+      dictateControl.hidden = false;
+    }
+
+    return Promise.resolve(dictationApi);
+  }
+
+  if (!dictationLoad) {
+    dictationLoad = (async () => {
+      await loadScript("editor/tab-dictation.js");
+      await loadScript("editor/dictation.js");
+      dictationApi = window.ScriptoriaModules.createDictation({
+        noteEditor,
+        dictateMenuButton,
+        dictateMenu,
+        dictateButton,
+        dictateSource,
+        dictateModel,
+        dictateModelField,
+        linkifyScriptureReferences,
+        parseScriptureReference,
+        jumpToResolvedScripture,
+        saveActiveNote: () => saveActiveNote(),
+        updateNoteEditorPlaceholderState: () => updateNoteEditorPlaceholderState(),
+        showToast: (message, options) => showToast(message, options),
+        windowObject: window,
+        documentObject: document,
+        navigatorObject: navigator
+      });
+      dictationApi.attach();
+
+      if (dictateControl) {
+        dictateControl.hidden = false;
+      }
+
+      return dictationApi;
+    })().catch((error) => {
+      dictationLoad = null;
+      throw error;
+    });
+  }
+
+  return dictationLoad;
+};
+
+if (transcriptionsEnabled()) {
+  void ensureDictation();
+}
+
+syncTranscriptionsToggle();
+
+betaTranscriptionsToggle?.addEventListener("click", () => {
+  const enabled = !transcriptionsEnabled();
+  setTranscriptionsEnabled(enabled);
+  syncTranscriptionsToggle();
+
+  if (enabled) {
+    void ensureDictation().catch(() => {
+      setTranscriptionsEnabled(false);
+      syncTranscriptionsToggle();
+      showToast("Transcription couldn't load.");
+    });
+    return;
+  }
+
+  if (dictateControl) {
+    dictateControl.hidden = true;
+  }
+
+  dictationApi?.prepareForNoteChange();
+});
 
 let refreshNoteSurfaces = () => {};
 

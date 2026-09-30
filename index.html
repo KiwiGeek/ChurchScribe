@@ -126,7 +126,7 @@
             <button class="ghost-button compact-format-button" id="compact-format-button" type="button" aria-haspopup="true" aria-expanded="false">⋯ Format</button>
             <div class="compact-format-panel" id="compact-format-panel" hidden></div>
           </div>
-          <div class="dictate-control">
+          <div class="dictate-control" hidden>
             <button class="tool-button dictate-menu-button" id="dictate-menu-button" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="dictate-menu">Listen</button>
             <div class="dictate-menu" id="dictate-menu" hidden>
               <button class="tool-button dictate-button" id="dictate-button" type="button" aria-pressed="false" aria-label="Listen and write what is spoken" title="Listen and write what is spoken">Listen</button>
@@ -492,6 +492,18 @@
           </div>
         </section>
 
+        <section class="type-editor-panel settings-beta-panel" data-settings-panel="beta" aria-labelledby="beta-title">
+          <div class="note-switcher-header">
+            <h3 id="beta-title">Beta</h3>
+          </div>
+          <p class="settings-copy">Features here are still being tried out. They stay off until you turn them on, and their code is not loaded before that.</p>
+          <button class="ui-toggle-button" id="beta-transcriptions-toggle" type="button" aria-pressed="false">
+            <span>Enable transcriptions</span>
+            <span class="ui-toggle-state">Off</span>
+          </button>
+          <p class="settings-copy">Listen with the microphone, or with a browser tab, and write what is spoken into the open note.</p>
+        </section>
+
         <section class="type-editor-panel settings-about-panel" data-settings-panel="about" aria-labelledby="about-title">
           <div class="note-switcher-header">
             <h3 id="about-title">About Scriptoria</h3>
@@ -719,8 +731,6 @@
   <script src="editor/navigation.js"></script>
   <script src="editor/media.js"></script>
   <script src="editor/controller.js"></script>
-  <script src="editor/tab-dictation.js"></script>
-  <script src="editor/dictation.js"></script>
   <script src="themes/controller.js"></script>
   <script src="layout/panes.js"></script>
   <script src="core/connectivity.js"></script>
