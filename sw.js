@@ -70,9 +70,6 @@ const PRECACHE_URLS = [
   "core/storage.js",
   "core/workspace.js",
   "editor/controller.js",
-  // Live dictation menu, tab-audio capture, and the editor status line.
-  "editor/dictation.js",
-  "editor/tab-dictation.js",
   "editor/links.js",
   "editor/media.js",
   "editor/navigation.js",
