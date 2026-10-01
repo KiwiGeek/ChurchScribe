@@ -25,7 +25,8 @@
     "",
     "How long the notes should be:",
     "Summarize. Do not retell the transcript, and do not write a second sentence that only repeats the first.",
-    "Do not drop a point, illustration, application, or scripture just to make the notes shorter. Keep it, and say it briefly.",
+    "A long selection is still a short set of notes. Fold a stretch of related names, dates, and places into one or two sentences. Keep each turning point, scripture, illustration, and application. Do not make a separate line for every person, year, or place.",
+    "Do not drop a turning point, illustration, application, or scripture just to make the notes shorter. Keep it, and say it briefly.",
     "",
     "Also:",
     "Skip greetings, thanks for music, head counts, travel talk, and other housekeeping unless the speaker makes it part of the sermon.",
@@ -86,7 +87,7 @@
       throw new Error("Notes reply was not JSON.");
     }
 
-    const parsed = JSON.parse(body.slice(start, end + 1));
+    const parsed = parseNotesJson(body.slice(start));
     const sermonTitle = normalized(parsed.sermonTitle);
 
     const paragraphFrom = (text, kind) => {
@@ -127,7 +128,102 @@
         .map((item) => paragraphFrom(item?.text, item?.kind))
         .filter(Boolean);
 
-    return { sermonTitle, blocks };
+    return { sermonTitle, blocks, truncated: Boolean(parsed.truncated) };
+  };
+
+  const lastBraceOutsideString = (text) => {
+    let inString = false;
+    let escape = false;
+    let last = -1;
+
+    for (let index = 0; index < text.length; index += 1) {
+      const character = text[index];
+
+      if (inString) {
+        if (escape) {
+          escape = false;
+          continue;
+        }
+
+        if (character === "\\") {
+          escape = true;
+          continue;
+        }
+
+        if (character === "\"") {
+          inString = false;
+        }
+
+        continue;
+      }
+
+      if (character === "\"") {
+        inString = true;
+        continue;
+      }
+
+      if (character === "}") {
+        last = index;
+      }
+    }
+
+    return last;
+  };
+
+  const closersFor = (text) => {
+    let inString = false;
+    let escape = false;
+    const stack = [];
+
+    for (const character of text) {
+      if (inString) {
+        if (escape) {
+          escape = false;
+          continue;
+        }
+
+        if (character === "\\") {
+          escape = true;
+          continue;
+        }
+
+        if (character === "\"") {
+          inString = false;
+        }
+
+        continue;
+      }
+
+      if (character === "\"") {
+        inString = true;
+        continue;
+      }
+
+      if (character === "{" || character === "[") {
+        stack.push(character);
+      } else if ((character === "}" || character === "]") && stack.length) {
+        stack.pop();
+      }
+    }
+
+    return stack.reverse().map((opener) => (opener === "{" ? "}" : "]")).join("");
+  };
+
+  const parseNotesJson = (jsonText) => {
+    try {
+      return JSON.parse(jsonText);
+    } catch {
+      const end = lastBraceOutsideString(jsonText);
+
+      if (end < 0) {
+        throw new Error("Notes reply was not JSON.");
+      }
+
+      const closed = jsonText.slice(0, end + 1).replace(/,\s*$/, "") + closersFor(jsonText.slice(0, end + 1));
+      const parsed = JSON.parse(closed);
+      parsed.truncated = true;
+      return parsed;
+    }
   };
 
   const describeApiEvent = (payload, characters) => {
@@ -331,6 +427,7 @@
       const decoder = new TextDecoder();
       let buffer = "";
       let text = "";
+      let stopReason = null;
 
       while (true) {
         const { done, value } = await reader.read();
@@ -361,13 +458,38 @@
             text += payload.delta.text || "";
           }
 
+          if (payload.type === "message_delta" && payload.delta?.stop_reason) {
+            stopReason = payload.delta.stop_reason;
+          }
+
           if (payload.type === "error") {
             throw new Error(payload.error?.message || "Anthropic returned an error.");
           }
         });
       }
 
-      return text;
+      return { text, stopReason };
+    };
+
+    const notesUserMessage = (transcript, extraLines) => [
+      "This is one selected passage from a message. Write notes only for this selection.",
+      "sermonTitle is required. Use the name the speaker gives this sermon or sermonette. If they never name it, suggest a short title.",
+      "Keep every scripture they refer to. Correct a wrong reference, and fill in a missing verse when the passage is clear. Do not quote the verse unless one short phrase is the point.",
+      transcript.length > 6000
+        ? "This selection is long. Group related names, dates, and places into a few short lines. Keep each turning point and every scripture. Do not give every person, year, or place its own line."
+        : "Keep each note short: one idea, in one or two sentences. Do not drop a worthwhile point just to be shorter, and do not write a long paragraph.",
+      "Use a list only when the speaker is actually enumerating.",
+      ...extraLines,
+      "",
+      transcript
+    ].join("\n");
+
+    const readNotes = (text) => {
+      try {
+        return parseSermonNoteReply(text);
+      } catch {
+        return null;
+      }
     };
 
     const requestNotes = async (transcript, noteId, anchor) => {
@@ -402,21 +524,13 @@
           },
           body: JSON.stringify({
             model: "claude-haiku-4-5-20251001",
-            max_tokens: 4096,
+            max_tokens: 8192,
             temperature: 0.2,
             stream: true,
             system: SYSTEM_PROMPT,
             messages: [{
               role: "user",
-              content: [
-                "This is one selected passage from a message. Write notes only for this selection.",
-                "sermonTitle is required. Use the name the speaker gives this sermon or sermonette. If they never name it, suggest a short title.",
-                "Keep every scripture they refer to. Correct a wrong reference, and fill in a missing verse when the passage is clear. Do not quote the verse unless one short phrase is the point.",
-                "Keep each note short: one idea, in one or two sentences. Do not drop a worthwhile point just to be shorter, and do not write a long paragraph.",
-                "Use a list only when the speaker is actually enumerating.",
-                "",
-                transcript
-              ].join("\n")
+              content: notesUserMessage(transcript, [])
             }]
           })
         });
@@ -444,7 +558,7 @@
         state.lastLabel = `HTTP ${response.status}`;
         showStatus(`Anthropic accepted the request (HTTP ${response.status}).`, anchor);
 
-        const text = await readEvents(response, (payload) => {
+        const firstReply = await readEvents(response, (payload) => {
           if (payload.type === "content_block_delta" && payload.delta?.type === "text_delta") {
             state.characters += (payload.delta.text || "").length;
           }
@@ -458,10 +572,78 @@
           return;
         }
 
-        const notes = parseSermonNoteReply(text);
+        let notes = readNotes(firstReply.text);
+
+        if (firstReply.stopReason === "max_tokens" || !notes) {
+          showStatus(
+            firstReply.stopReason === "max_tokens"
+              ? "That reply was cut off. Asking for a shorter set of notes…"
+              : "That reply could not be read. Asking again for a shorter set of notes…",
+            anchor
+          );
+          const retry = await windowObject.fetch("https://api.anthropic.com/v1/messages", {
+            method: "POST",
+            signal: controller.signal,
+            headers: {
+              "content-type": "application/json",
+              "x-api-key": key,
+              "anthropic-version": "2023-06-01",
+              "anthropic-dangerous-direct-browser-access": "true"
+            },
+            body: JSON.stringify({
+              model: "claude-haiku-4-5-20251001",
+              max_tokens: 8192,
+              temperature: 0.2,
+              stream: true,
+              system: SYSTEM_PROMPT,
+              messages: [{
+                role: "user",
+                content: notesUserMessage(transcript, [
+                  "The previous reply was cut off because it was too long. Write at most 40 short lines. Group the history. Keep every scripture reference."
+                ])
+              }]
+            })
+          });
+
+          if (controller.signal.aborted || getActiveNoteId?.() !== noteId) {
+            return;
+          }
+
+          if (!retry.ok) {
+            if (!notes) {
+              throw new Error(`Anthropic returned ${retry.status}.`);
+            }
+          } else {
+            try {
+              state.characters = 0;
+              const secondReply = await readEvents(retry, (payload) => {
+                if (payload.type === "content_block_delta" && payload.delta?.type === "text_delta") {
+                  state.characters += (payload.delta.text || "").length;
+                }
+
+                state.lastEventAt = Date.now();
+                state.lastLabel = describeApiEvent(payload, state.characters);
+                showStatus(state.lastLabel, anchor);
+              });
+              notes = readNotes(secondReply.text) || notes;
+            } catch (retryError) {
+              if (!notes) {
+                throw retryError;
+              }
+            }
+          }
+        }
+
+        if (!notes) {
+          throw new Error("Notes reply was not JSON.");
+        }
         showStatus("Writing the notes into the entry…", anchor);
         appendNotes(notes.sermonTitle, notes.blocks, anchor);
         clearStatus();
+
+        if (notes.truncated) {
+          toast("Part of the reply was cut off. The notes above are what arrived.");
+        }
 
         if (notes.sermonTitle && getActiveNoteId?.() === noteId) {
           await chooseSermonTitleField?.(notes.sermonTitle);
