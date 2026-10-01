@@ -199,10 +199,11 @@ window.ScriptoriaModules.createEditorController = (deps) => {
       "[data-embed-ghost], [data-embed-dragging]"
     ) !== null;
     const hasLiveDictation = noteEditor.querySelector("[data-dictation-interim]") !== null;
+    const hasNotesStatus = noteEditor.querySelector("[data-sermon-notes-status]") !== null;
 
     let serializedContent;
 
-    if (hasMutationMarkers || hasLiveDictation) {
+    if (hasMutationMarkers || hasLiveDictation || hasNotesStatus) {
       const editorClone = noteEditor.cloneNode(true);
 
       editorClone.querySelectorAll("[data-embed-ghost]").forEach((ghost) => {
@@ -223,6 +224,9 @@ window.ScriptoriaModules.createEditorController = (deps) => {
       // next render look like a finished paragraph, and the final result would
       // append those words a second time.
       editorClone.querySelectorAll("[data-dictation-interim]").forEach((el) => {
+        el.remove();
+      });
+      editorClone.querySelectorAll("[data-sermon-notes-status]").forEach((el) => {
         el.remove();
       });
 

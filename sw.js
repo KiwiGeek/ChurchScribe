@@ -70,6 +70,7 @@ const PRECACHE_URLS = [
   "core/storage.js",
   "core/workspace.js",
   "editor/controller.js",
+  // Dictation loads with transcriptions. Make notes keeps each idea to one or two sentences.
   "editor/links.js",
   "editor/media.js",
   "editor/navigation.js",

@@ -22,6 +22,10 @@ const dictateButton = document.querySelector("#dictate-button");
 const dictateSource = document.querySelector("#dictate-source");
 const dictateModel = document.querySelector("#dictate-model");
 const dictateModelField = document.querySelector("#dictate-model-field");
+const dictateNotesButton = document.querySelector("#dictate-notes-button");
+const sermonTitleDialog = document.querySelector("#sermon-title-dialog");
+const sermonTitleHeading = document.querySelector("#sermon-title-heading");
+const sermonTitleFields = document.querySelector("#sermon-title-fields");
 const toolbarControls = document.querySelector("#toolbar-controls");
 const compactFormatMenu = document.querySelector("#compact-format-menu");
 const compactFormatButton = document.querySelector("#compact-format-button");
@@ -998,7 +1002,7 @@ const syncTranscriptionsToggle = () => {
   }
 };
 
-const loadScript = (src) => new Promise((resolve, reject) => {
+const loadScript = (src, failureMessage = "Transcription couldn't load.") => new Promise((resolve, reject) => {
   if (document.querySelector(`script[src="${src}"]`)) {
     resolve();
     return;
@@ -1008,7 +1012,7 @@ const loadScript = (src) => new Promise((resolve, reject) => {
   script.src = src;
   script.async = false;
   script.onload = () => resolve();
-  script.onerror = () => reject(new Error("Transcription couldn't load."));
+  script.onerror = () => reject(new Error(failureMessage));
   document.body.append(script);
 });
 
@@ -1061,11 +1065,214 @@ const ensureDictation = () => {
   return dictationLoad;
 };
 
+const conciseNotesStorageKey = "service-notes-beta-concise-notes";
+const anthropicKeyStorageKey = "service-notes-anthropic-key";
+const betaConciseNotesToggle = document.querySelector("#beta-concise-notes-toggle");
+const betaAnthropicKeyField = document.querySelector("#beta-anthropic-key-field");
+const betaAnthropicKeyInput = document.querySelector("#beta-anthropic-key");
+let sermonNotesApi = null;
+let sermonNotesLoad = null;
+
+const conciseNotesEnabled = () => {
+  try {
+    return window.localStorage.getItem(conciseNotesStorageKey) === "1";
+  } catch {
+    return false;
+  }
+};
+
+const setConciseNotesEnabled = (enabled) => {
+  try {
+    if (enabled) {
+      window.localStorage.setItem(conciseNotesStorageKey, "1");
+    } else {
+      window.localStorage.removeItem(conciseNotesStorageKey);
+    }
+  } catch {
+    // The switch still applies for this page if storage is blocked.
+  }
+};
+
+const readAnthropicKey = () => {
+  try {
+    return window.localStorage.getItem(anthropicKeyStorageKey) || "";
+  } catch {
+    return "";
+  }
+};
+
+const writeAnthropicKey = (value) => {
+  try {
+    if (value) {
+      window.localStorage.setItem(anthropicKeyStorageKey, value);
+    } else {
+      window.localStorage.removeItem(anthropicKeyStorageKey);
+    }
+  } catch {
+    // The key can still be used for this page if storage is blocked.
+  }
+};
+
+const syncConciseNotesToggle = () => {
+  const enabled = conciseNotesEnabled();
+
+  if (betaConciseNotesToggle) {
+    betaConciseNotesToggle.setAttribute("aria-pressed", enabled ? "true" : "false");
+    const state = betaConciseNotesToggle.querySelector(".ui-toggle-state");
+
+    if (state) {
+      state.textContent = enabled ? "On" : "Off";
+    }
+  }
+
+  if (betaAnthropicKeyField) {
+    betaAnthropicKeyField.hidden = !enabled;
+  }
+};
+
+const ensureSermonNotes = () => {
+  if (!conciseNotesEnabled() || !transcriptionsEnabled()) {
+    sermonNotesApi?.disable();
+    return Promise.resolve(null);
+  }
+
+  const start = () => {
+    if (sermonNotesApi) {
+      sermonNotesApi.attach(dictationApi);
+      sermonNotesApi.enable();
+      return Promise.resolve(sermonNotesApi);
+    }
+
+    if (!sermonNotesLoad) {
+      sermonNotesLoad = loadScript("editor/sermon-notes.js", "Sermon notes couldn't load.").then(() => {
+        sermonNotesApi = window.ScriptoriaModules.createSermonNotes({
+          noteEditor,
+          linkifyScriptureReferences,
+          saveActiveNote: () => saveActiveNote(),
+          updateNoteEditorPlaceholderState: () => updateNoteEditorPlaceholderState(),
+          showToast: (message, options) => showToast(message, options),
+          readApiKey: readAnthropicKey,
+          getActiveNoteId: () => getActiveNote()?.id ?? null,
+          chooseSermonTitleField: (title) => chooseSermonTitleField(title),
+          dictateNotesButton,
+          dictateMenu,
+          dictateMenuButton,
+          windowObject: window,
+          documentObject: document
+        });
+        sermonNotesApi.attach(dictationApi);
+
+        if (conciseNotesEnabled() && transcriptionsEnabled()) {
+          sermonNotesApi.enable();
+        }
+
+        return sermonNotesApi;
+      }).catch((error) => {
+        sermonNotesLoad = null;
+        throw error;
+      });
+    }
+
+    return sermonNotesLoad;
+  };
+
+  return ensureDictation().then(() => {
+    if (!conciseNotesEnabled() || !transcriptionsEnabled()) {
+      sermonNotesApi?.disable();
+      return null;
+    }
+
+    return start();
+  });
+};
+
 if (transcriptionsEnabled()) {
-  void ensureDictation();
+  void ensureDictation().then(() => {
+    if (conciseNotesEnabled()) {
+      return ensureSermonNotes();
+    }
+
+    return null;
+  });
 }
 
 syncTranscriptionsToggle();
+syncConciseNotesToggle();
+
+if (betaAnthropicKeyInput) {
+  betaAnthropicKeyInput.value = readAnthropicKey();
+  betaAnthropicKeyInput.addEventListener("input", () => {
+    writeAnthropicKey(betaAnthropicKeyInput.value.trim());
+  });
+}
+
+const assignSermonTitle = (fieldId, title) => {
+  const note = getActiveNote();
+  const name = String(title || "").replace(/\s+/g, " ").trim();
+
+  if (!note || !fieldId || !name) {
+    return;
+  }
+
+  note.metadata[fieldId] = name;
+  const input = noteMetaFields?.querySelector(`[data-field-id="${fieldId}"]`);
+
+  if (input) {
+    input.value = name;
+  }
+
+  touchNote(note);
+  refreshNoteSurfaces();
+  saveActiveNote();
+};
+
+const chooseSermonTitleField = (title) => new Promise((resolve) => {
+  const name = String(title || "").replace(/\s+/g, " ").trim();
+  const note = getActiveNote();
+  const fields = getNoteTypeById(note?.typeId)?.fields || [];
+
+  if (!sermonTitleDialog || !name || !fields.length) {
+    resolve(null);
+    return;
+  }
+
+  let settled = false;
+  const finish = (fieldId) => {
+    if (settled) {
+      return;
+    }
+
+    settled = true;
+    sermonTitleDialog.close();
+    resolve(fieldId);
+  };
+
+  sermonTitleHeading.textContent = name;
+  sermonTitleFields.replaceChildren();
+
+  fields.forEach((field) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "ghost-button";
+    const current = String(note.metadata[field.id] || "").trim();
+    button.textContent = current ? `${field.label} (currently ${current})` : field.label;
+    button.addEventListener("click", () => {
+      assignSermonTitle(field.id, name);
+      finish(field.id);
+    });
+    sermonTitleFields.append(button);
+  });
+
+  const skip = document.createElement("button");
+  skip.type = "button";
+  skip.className = "ghost-button";
+  skip.textContent = "Don't save it on the entry";
+  skip.addEventListener("click", () => finish(null));
+  sermonTitleFields.append(skip);
+
+  sermonTitleDialog.addEventListener("close", () => finish(null), { once: true });
+  sermonTitleDialog.showModal();
+});
 
 betaTranscriptionsToggle?.addEventListener("click", () => {
   const enabled = !transcriptionsEnabled();
@@ -1073,11 +1280,13 @@ betaTranscriptionsToggle?.addEventListener("click", () => {
   syncTranscriptionsToggle();
 
   if (enabled) {
-    void ensureDictation().catch(() => {
-      setTranscriptionsEnabled(false);
-      syncTranscriptionsToggle();
-      showToast("Transcription couldn't load.");
-    });
+    void ensureDictation()
+      .then(() => (conciseNotesEnabled() ? ensureSermonNotes() : null))
+      .catch(() => {
+        setTranscriptionsEnabled(false);
+        syncTranscriptionsToggle();
+        showToast("Transcription couldn't load.");
+      });
     return;
   }
 
@@ -1085,7 +1294,31 @@ betaTranscriptionsToggle?.addEventListener("click", () => {
     dictateControl.hidden = true;
   }
 
+  sermonNotesApi?.disable();
   dictationApi?.prepareForNoteChange();
+});
+
+betaConciseNotesToggle?.addEventListener("click", () => {
+  const enabled = !conciseNotesEnabled();
+  setConciseNotesEnabled(enabled);
+  syncConciseNotesToggle();
+
+  if (!enabled) {
+    sermonNotesApi?.disable();
+    return;
+  }
+
+  if (!transcriptionsEnabled()) {
+    setTranscriptionsEnabled(true);
+    syncTranscriptionsToggle();
+  }
+
+  void ensureSermonNotes().catch(() => {
+    setConciseNotesEnabled(false);
+    syncConciseNotesToggle();
+    sermonNotesApi?.disable();
+    showToast("Sermon notes couldn't load.");
+  });
 });
 
 let refreshNoteSurfaces = () => {};

@@ -126,27 +126,30 @@
             <button class="ghost-button compact-format-button" id="compact-format-button" type="button" aria-haspopup="true" aria-expanded="false">⋯ Format</button>
             <div class="compact-format-panel" id="compact-format-panel" hidden></div>
           </div>
-          <div class="dictate-control" hidden>
-            <button class="tool-button dictate-menu-button" id="dictate-menu-button" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="dictate-menu">Listen</button>
-            <div class="dictate-menu" id="dictate-menu" hidden>
-              <button class="tool-button dictate-button" id="dictate-button" type="button" aria-pressed="false" aria-label="Listen and write what is spoken" title="Listen and write what is spoken">Listen</button>
-              <label class="dictate-field">
-                Source
-                <select class="dictate-source" id="dictate-source" aria-label="Dictation audio source">
-                  <option value="microphone">Microphone</option>
-                  <option value="tab" title="Record a browser tab's audio on this device. Works while the speakers are muted. Muting that tab itself stops the audio.">Tab audio</option>
-                </select>
-              </label>
-              <label class="dictate-field" id="dictate-model-field" hidden>
-                Model
-                <select class="dictate-source" id="dictate-model" aria-label="Whisper model">
-                  <option value="tiny" title="Fastest. Rough wording.">Tiny</option>
-                  <option value="base" title="Faster than Small, less accurate.">Base</option>
-                  <option value="small" selected title="Balanced. A few hundred megabytes the first time.">Small</option>
-                  <option value="medium" title="Clearer than Small, slower, larger download.">Medium</option>
-                  <option value="turbo" title="Best quality that still runs in the browser. Largest download. A GPU helps a lot.">Large Turbo</option>
-                </select>
-              </label>
+          <div class="note-listen-actions">
+            <button class="tool-button" id="dictate-notes-button" type="button" hidden aria-label="Make notes from the selection" title="Make notes from the selection. Listening can keep going.">Make notes</button>
+            <div class="dictate-control" hidden>
+              <button class="tool-button dictate-menu-button" id="dictate-menu-button" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="dictate-menu">Listen</button>
+              <div class="dictate-menu" id="dictate-menu" hidden>
+                <button class="tool-button dictate-button" id="dictate-button" type="button" aria-pressed="false" aria-label="Listen and write what is spoken" title="Listen and write what is spoken">Listen</button>
+                <label class="dictate-field">
+                  Source
+                  <select class="dictate-source" id="dictate-source" aria-label="Dictation audio source">
+                    <option value="microphone">Microphone</option>
+                    <option value="tab" title="Record a browser tab's audio on this device. Works while the speakers are muted. Muting that tab itself stops the audio.">Tab audio</option>
+                  </select>
+                </label>
+                <label class="dictate-field" id="dictate-model-field" hidden>
+                  Model
+                  <select class="dictate-source" id="dictate-model" aria-label="Whisper model">
+                    <option value="tiny" title="Fastest. Rough wording.">Tiny</option>
+                    <option value="base" title="Faster than Small, less accurate.">Base</option>
+                    <option value="small" selected title="Balanced. A few hundred megabytes the first time.">Small</option>
+                    <option value="medium" title="Clearer than Small, slower, larger download.">Medium</option>
+                    <option value="turbo" title="Best quality that still runs in the browser. Largest download. A GPU helps a lot.">Large Turbo</option>
+                  </select>
+                </label>
+              </div>
             </div>
           </div>
         </div>
@@ -275,6 +278,22 @@
 
       <div class="dialog-body">
         <div class="note-meta details-meta" id="note-meta-fields"></div>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="management-dialog compact-dialog" id="sermon-title-dialog">
+    <form class="dialog-shell compact-shell" method="dialog">
+      <div class="dialog-header">
+        <div>
+          <p class="panel-kicker">Message name</p>
+          <h2 id="sermon-title-heading"></h2>
+        </div>
+        <button class="ghost-button" type="submit">Close</button>
+      </div>
+      <div class="dialog-body">
+        <p class="settings-copy" id="sermon-title-copy">Save this name on the entry, or leave it only in the notes.</p>
+        <div class="sermon-title-choices" id="sermon-title-fields"></div>
       </div>
     </form>
   </dialog>
@@ -502,6 +521,18 @@
             <span class="ui-toggle-state">Off</span>
           </button>
           <p class="settings-copy">Listen with the microphone, or with a browser tab, and write what is spoken into the open note.</p>
+          <button class="ui-toggle-button" id="beta-concise-notes-toggle" type="button" aria-pressed="false">
+            <span>Write concise notes</span>
+            <span class="ui-toggle-state">Off</span>
+          </button>
+          <p class="settings-copy">The spoken words stay in the note. Select a passage, then choose Make notes. That works while Listen is still running. The selection is sent to Anthropic, and the concise notes are appended. Scripture is written as a reference, not the verse, so the link can open the passage.</p>
+          <div id="beta-anthropic-key-field" hidden>
+            <label class="field beta-key-field">
+              <span>Anthropic API key</span>
+              <input id="beta-anthropic-key" type="password" autocomplete="off" spellcheck="false" autocapitalize="off" placeholder="sk-ant-...">
+            </label>
+            <p class="settings-copy">The key stays in this browser. It is not included in sync or backup.</p>
+          </div>
         </section>
 
         <section class="type-editor-panel settings-about-panel" data-settings-panel="about" aria-labelledby="about-title">
