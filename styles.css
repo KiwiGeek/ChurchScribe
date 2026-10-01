@@ -773,11 +773,17 @@ h1 {
   outline: none;
 }
 
+.note-listen-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
 .dictate-control {
   position: relative;
   display: flex;
   align-items: center;
-  margin-left: auto;
 }
 
 .dictate-control[hidden] {
@@ -866,6 +872,68 @@ h1 {
 
 .dictation-interim:empty::before {
   content: "Listening…";
+}
+
+.sermon-notes {
+  margin: 0.35rem 0 0.85rem;
+}
+
+.note-editor .sermon-notes p {
+  margin: 0 0 0.55rem;
+}
+
+.sermon-notes-title {
+  margin: 0 0 0.35rem;
+  font-weight: 700;
+}
+
+.note-editor .sermon-notes .sermon-notes-title {
+  margin-bottom: 0.35rem;
+}
+
+.sermon-notes ul,
+.note-editor .sermon-notes ul {
+  margin: 0.15rem 0 0.55rem 1.15rem;
+  padding-left: 1.15rem;
+}
+
+.sermon-note-label {
+  font-weight: 700;
+}
+
+.sermon-notes-status {
+  margin-top: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--surface-accent);
+  color: var(--text);
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+#dictate-notes-button[hidden] {
+  display: none;
+}
+
+.sermon-title-choices {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.sermon-title-choices .ghost-button {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+#beta-anthropic-key-field[hidden] {
+  display: none;
+}
+
+.beta-key-field {
+  max-width: 28rem;
+  margin-bottom: 8px;
 }
 
 .underline {
@@ -2790,7 +2858,7 @@ body.is-compact-editor .toolbar > .toolbar-controls {
   display: none;
 }
 
-body.is-compact-editor .dictate-control {
+body.is-compact-editor .note-listen-actions {
   margin-left: 0;
 }
 

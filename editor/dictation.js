@@ -37,6 +37,10 @@ window.ScriptoriaModules.createDictation = (deps) => {
   let preferLocal = true;
   let pendingInterim = "";
   let activityMessage = "";
+  let consumePhrase = null;
+  let onSessionStart = null;
+  let onParagraph = null;
+  let onSessionEnd = null;
 
   const recognitionCtor = () =>
     windowObject.SpeechRecognition || windowObject.webkitSpeechRecognition || null;
@@ -237,6 +241,7 @@ window.ScriptoriaModules.createDictation = (deps) => {
     updateNoteEditorPlaceholderState();
     saveActiveNote();
     revealDictationLine(paragraph);
+    onParagraph?.(paragraph);
     return true;
   };
 
@@ -258,6 +263,12 @@ window.ScriptoriaModules.createDictation = (deps) => {
       return false;
     }
 
+    if (consumePhrase?.(phrase)) {
+      paragraph.remove();
+      updateNoteEditorPlaceholderState();
+      return true;
+    }
+
     paragraph.textContent = phrase;
     return finalizeParagraph(paragraph);
   };
@@ -270,6 +281,11 @@ window.ScriptoriaModules.createDictation = (deps) => {
     }
 
     pendingInterim = "";
+
+    if (consumePhrase?.(phrase)) {
+      return true;
+    }
+
     const paragraph = ensureInterimParagraph();
     paragraph.textContent = phrase;
     return finalizeParagraph(paragraph);
@@ -298,7 +314,7 @@ window.ScriptoriaModules.createDictation = (deps) => {
     }
   };
 
-  const endSession = ({ status = "" } = {}) => {
+  const endSession = ({ status = "", keepRaw = false } = {}) => {
     runId += 1;
     listening = false;
     starting = false;
@@ -311,11 +327,13 @@ window.ScriptoriaModules.createDictation = (deps) => {
     tabSession = null;
     releaseWakeLock();
     commitInterimPhrase();
+    const notify = onSessionEnd;
     renderButton();
     setStatus(status);
+    notify?.({ keepRaw });
   };
 
-  const stop = ({ status = "", flushTab = false } = {}) => {
+  const stop = ({ status = "", flushTab = false, keepRaw = false } = {}) => {
     if (flushTab && tabSession && listening && !finishing) {
       finishing = true;
       const session = tabSession;
@@ -327,12 +345,12 @@ window.ScriptoriaModules.createDictation = (deps) => {
           return;
         }
 
-        endSession();
+        endSession({ keepRaw });
       });
       return;
     }
 
-    endSession({ status });
+    endSession({ status, keepRaw });
   };
 
   const fail = (message) => {
@@ -431,6 +449,7 @@ window.ScriptoriaModules.createDictation = (deps) => {
     pendingInterim = "";
     renderButton();
     void acquireWakeLock();
+    onSessionStart?.();
   };
 
   const createRecognition = (useLocal) => {
@@ -629,6 +648,7 @@ window.ScriptoriaModules.createDictation = (deps) => {
     setStatus("Listening");
     setInterim("");
     void acquireWakeLock();
+    onSessionStart?.();
     beginRecognition(capturedRun, preferLocal);
   };
 
@@ -771,10 +791,23 @@ window.ScriptoriaModules.createDictation = (deps) => {
     attach,
     prepareForNoteChange: () => {
       if (!listening && !starting) {
+        onSessionEnd?.({ keepRaw: true });
         return;
       }
 
-      stop();
+      stop({ keepRaw: true });
+    },
+    setPhraseConsumer: (consumer) => {
+      consumePhrase = typeof consumer === "function" ? consumer : null;
+    },
+    setSessionStartListener: (listener) => {
+      onSessionStart = typeof listener === "function" ? listener : null;
+    },
+    setParagraphListener: (listener) => {
+      onParagraph = typeof listener === "function" ? listener : null;
+    },
+    setSessionEndListener: (listener) => {
+      onSessionEnd = typeof listener === "function" ? listener : null;
     },
     captureDictationInterim,
     restoreListeningLine
