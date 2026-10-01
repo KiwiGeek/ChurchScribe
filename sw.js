@@ -70,7 +70,7 @@ const PRECACHE_URLS = [
   "core/storage.js",
   "core/workspace.js",
   "editor/controller.js",
-  // Dictation loads with transcriptions. A long selection still comes back as a short set of notes.
+  // Dictation loads with transcriptions. Entry details can set the created date.
   "editor/links.js",
   "editor/media.js",
   "editor/navigation.js",

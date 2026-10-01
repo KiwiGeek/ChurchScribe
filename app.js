@@ -440,6 +440,8 @@ const {
   createDefaultNoteType,
   createEmptyNote,
   formatNoteDate,
+  toDateInputValue,
+  createdAtFromDateInput,
   getNoteTypeById,
   getActiveNote,
   buildMetadataForType,
@@ -1355,6 +1357,7 @@ let refreshNoteSurfaces = () => {};
   getNoteTypeById,
   getActiveNote,
   formatNoteDate,
+  toDateInputValue,
   ensureWorkspaceConsistency,
   renderNoteManager: () => renderNoteManager(),
   renderSettings: () => renderSettings()
@@ -1587,7 +1590,11 @@ noteBrowserSortSelect.addEventListener("change", () => {
   renderNoteManager();
 });
 
-noteMetaFields.addEventListener("input", () => {
+noteMetaFields.addEventListener("input", (event) => {
+  if (event.target.closest("[data-created-date]")) {
+    return;
+  }
+
   const activeNote = getActiveNote();
 
   if (!activeNote) {
@@ -1603,7 +1610,37 @@ noteMetaFields.addEventListener("input", () => {
   refreshSaveStatus();
 });
 
+const applyCreatedDate = (input) => {
+  const activeNote = getActiveNote();
+  const nextCreatedAt = createdAtFromDateInput(input.value);
+
+  if (!activeNote || !nextCreatedAt || toDateInputValue(activeNote.createdAt) === input.value) {
+    return;
+  }
+
+  activeNote.createdAt = nextCreatedAt;
+  touchNote(activeNote);
+  persistWorkspace();
+  refreshNoteSurfaces();
+  refreshSaveStatus();
+};
+
+noteMetaFields.addEventListener("input", (event) => {
+  const createdInput = event.target.closest("[data-created-date]");
+
+  if (createdInput) {
+    applyCreatedDate(createdInput);
+  }
+});
+
 noteMetaFields.addEventListener("change", (event) => {
+  const createdInput = event.target.closest("[data-created-date]");
+
+  if (createdInput) {
+    applyCreatedDate(createdInput);
+    return;
+  }
+
   const typeSelect = event.target.closest("[data-note-type-change]");
 
   if (!typeSelect) {
