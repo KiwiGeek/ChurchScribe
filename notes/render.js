@@ -137,6 +137,21 @@ window.ScriptoriaModules.createNotesRender = (deps) => {
       noteMetaFields.append(typeField);
     }
 
+    const createdField = document.createElement("label");
+    createdField.className = "field";
+
+    const createdLabel = document.createElement("span");
+    createdLabel.textContent = "Created";
+
+    const createdInput = document.createElement("input");
+    createdInput.type = "date";
+    createdInput.name = "created-date";
+    createdInput.dataset.createdDate = "true";
+    createdInput.value = deps.toDateInputValue(activeNote.createdAt);
+
+    createdField.append(createdLabel, createdInput);
+    noteMetaFields.append(createdField);
+
     type.fields.forEach((field) => {
       const label = document.createElement("label");
       label.className = "field";
@@ -166,6 +181,7 @@ window.ScriptoriaModules.createNotesRender = (deps) => {
       metaBits.push(secondaryMeta);
     }
 
+    metaBits.push(`Created ${deps.formatNoteDate(activeNote.createdAt)}`);
     metaBits.push(`Updated ${deps.formatNoteDate(activeNote.updatedAt)}`);
     activeNoteLabel.textContent = type.name || "Entries";
     activeNoteTitle.textContent = getNoteDisplayTitle(activeNote);
