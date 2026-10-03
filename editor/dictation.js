@@ -151,18 +151,68 @@ window.ScriptoriaModules.createDictation = (deps) => {
     }
   };
 
+  // Keep the latest line in view only while the user has the editor at the end.
+  // Scrolling away to read earlier text stays put until they return there.
+  const END_SLACK_PX = 16;
+  let followEnd = true;
+  let programmaticTop = null;
+  let lastScrollTop = 0;
+  let lastTouchY = 0;
+
+  const isPinnedToEnd = () =>
+    noteEditor.scrollHeight - noteEditor.clientHeight - noteEditor.scrollTop <= END_SLACK_PX;
+
+  const syncFollowEnd = () => {
+    lastScrollTop = noteEditor.scrollTop;
+    followEnd = isPinnedToEnd();
+  };
+
   const revealDictationLine = (paragraph) => {
-    if (!paragraph) {
+    if (!paragraph || !followEnd) {
       return;
     }
 
     const line = paragraph.getBoundingClientRect();
     const editor = noteEditor.getBoundingClientRect();
+    let delta = 0;
 
     if (line.bottom > editor.bottom - 12) {
-      noteEditor.scrollTop += line.bottom - editor.bottom + 24;
+      delta = line.bottom - editor.bottom + 24;
     } else if (line.top < editor.top) {
-      noteEditor.scrollTop -= editor.top - line.top + 12;
+      delta = -(editor.top - line.top + 12);
+    }
+
+    if (!delta) {
+      return;
+    }
+
+    programmaticTop = noteEditor.scrollTop + delta;
+    noteEditor.scrollTop += delta;
+    lastScrollTop = noteEditor.scrollTop;
+  };
+
+  const onEditorScroll = () => {
+    const next = noteEditor.scrollTop;
+    const delta = next - lastScrollTop;
+    lastScrollTop = next;
+
+    if (programmaticTop !== null && Math.abs(next - programmaticTop) <= 1) {
+      programmaticTop = null;
+      return;
+    }
+
+    programmaticTop = null;
+    const pinned = isPinnedToEnd();
+
+    // A shorter status line clamps scrollTop down while the view is still at
+    // the end. That is not the user scrolling away.
+    if (delta < -1 && !pinned) {
+      followEnd = false;
+      return;
+    }
+
+    if (pinned && delta >= -1) {
+      followEnd = true;
     }
   };
 
@@ -593,6 +643,8 @@ window.ScriptoriaModules.createDictation = (deps) => {
       return;
     }
 
+    syncFollowEnd();
+
     if (dictateSource?.value === "tab") {
       await startTab();
       return;
@@ -685,6 +737,34 @@ window.ScriptoriaModules.createDictation = (deps) => {
   };
 
   const attach = () => {
+    noteEditor.addEventListener("scroll", onEditorScroll, { passive: true });
+    noteEditor.addEventListener("wheel", (event) => {
+      if (event.deltaY < 0 && noteEditor.scrollTop > 0) {
+        followEnd = false;
+      }
+    }, { passive: true });
+    noteEditor.addEventListener("touchstart", (event) => {
+      const y = event.touches[0]?.clientY;
+
+      if (y !== undefined) {
+        lastTouchY = y;
+      }
+    }, { passive: true });
+    noteEditor.addEventListener("touchmove", (event) => {
+      const y = event.touches[0]?.clientY;
+
+      if (y === undefined) {
+        return;
+      }
+
+      if (y > lastTouchY + 2 && noteEditor.scrollTop > 0) {
+        followEnd = false;
+      }
+
+      lastTouchY = y;
+    }, { passive: true });
+    syncFollowEnd();
+
     if (!dictateButton || !dictateMenuButton) {
       return;
     }
