@@ -2332,6 +2332,42 @@ const bootstrap = async () => {
 
   renderSettings();
   refreshSaveStatus();
+
+  // OneDrive (and other redirect-based providers) interrupt the setup wizard
+  // when running as an installed web app.  A sessionStorage breadcrumb tells
+  // us to reopen the wizard once MSAL has processed the redirect response.
+  const pendingWizard = syncSetupWizardApi.consumePendingResume();
+
+  if (pendingWizard?.providerId && providerRegistry[pendingWizard.providerId]) {
+    const pendingProvider = providerRegistry[pendingWizard.providerId];
+
+    pendingProvider.waitForReady(async () => {
+      try {
+        pendingProvider.ensureTokenClient?.();
+
+        if (!pendingProvider.hasActiveSession()) {
+          const { email } = await pendingProvider.attemptSilentReconnect(
+            cloudSyncSettings.providerSettings[pendingWizard.providerId] ?? {}
+          );
+          cloudSyncSettings.connectedEmail = email ?? cloudSyncSettings.connectedEmail;
+        }
+      } catch (err) {
+        if (!pendingProvider.hasActiveSession()) {
+          console.warn("[Desktop] Couldn't resume the setup wizard after sign-in:", err);
+          return;
+        }
+      }
+
+      if (settingsDialog.open) {
+        settingsDialog.close();
+      }
+
+      syncSetupWizardApi.openWizard({
+        initialProviderId: pendingWizard.providerId,
+        resumeConnected: pendingProvider.hasActiveSession()
+      });
+    });
+  }
 };
 
 void bootstrap();

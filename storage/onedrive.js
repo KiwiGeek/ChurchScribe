@@ -257,29 +257,63 @@
     return data.mail || data.userPrincipalName || "";
   };
 
+  // Popups can't round-trip tokens when:
+  //  • the shell is mobile.html (iOS/Android tab opener is nulled), or
+  //  • the app is running as an installed PWA / home-screen web app
+  //    (standalone display modes block or isolate popup windows).
+  // Use loginRedirect in those cases; getMsalInstance() calls
+  // handleRedirectPromise() on return to exchange the auth code.
+  const shouldUseRedirectAuth = () => {
+    try {
+      if (window.location.pathname.endsWith("mobile.html")) {
+        return true;
+      }
+
+      if (window.navigator.standalone === true) {
+        return true;
+      }
+
+      if (typeof window.matchMedia === "function") {
+        if (
+          window.matchMedia("(display-mode: standalone)").matches ||
+          window.matchMedia("(display-mode: fullscreen)").matches ||
+          window.matchMedia("(display-mode: minimal-ui)").matches
+        ) {
+          return true;
+        }
+      }
+    } catch {
+      // matchMedia / standalone probes can throw in unusual embeds.
+    }
+
+    return false;
+  };
+
+  const popupAuthFailed = (error) => {
+    const message = `${error?.errorCode || ""} ${error?.message || ""}`.toLowerCase();
+    return /popup|window_open|blocked|empty_window|opener/.test(message);
+  };
+
+  const beginLoginRedirect = async (scopes) => {
+    // Clear any stale MSAL interaction lock from a previous interrupted
+    // attempt so retries don't throw interaction_in_progress.
+    for (const key of Object.keys(sessionStorage)) {
+      if (key.includes("msal") || key.includes("interaction")) {
+        sessionStorage.removeItem(key);
+      }
+    }
+    msalInstancePromise = null;
+    const freshInst = await getMsalInstance();
+    await freshInst.loginRedirect({ scopes, prompt: "select_account" });
+    // Page navigates away above; unreachable in normal operation.
+    return { email: "" };
+  };
+
   const connect = async (settings = {}) => {
     const scopes = buildScopes(settings);
 
-    // On mobile browsers, window.opener is nulled out by the browser on newly
-    // opened tabs, so MSAL's popup flow can never postMessage the token back to
-    // the calling tab.  Use loginRedirect instead: the page navigates to
-    // Microsoft, authenticates, and returns directly to mobile.html (which is
-    // now a registered redirect URI in Azure).  getMsalInstance() calls
-    // handleRedirectPromise() after initialize(), which exchanges the auth code
-    // for a token; attemptSilentReconnect then finds it on the fresh page load.
-    if (window.location.pathname.endsWith("mobile.html")) {
-      // Clear any stale MSAL interaction lock from a previous interrupted
-      // attempt so retries don't throw interaction_in_progress.
-      for (const key of Object.keys(sessionStorage)) {
-        if (key.includes("msal") || key.includes("interaction")) {
-          sessionStorage.removeItem(key);
-        }
-      }
-      msalInstancePromise = null;
-      const freshInst = await getMsalInstance();
-      await freshInst.loginRedirect({ scopes, prompt: "select_account" });
-      // Page navigates away above; unreachable in normal operation.
-      return { email: "" };
+    if (shouldUseRedirectAuth()) {
+      return beginLoginRedirect(scopes);
     }
 
     const msalInst = await getMsalInstance();
@@ -289,6 +323,12 @@
       const email = await fetchUserEmail().catch(() => "");
       return { email };
     } catch (error) {
+      // Installed web apps and strict popup blockers sometimes still look like
+      // a normal browser tab; fall back to redirect when the popup path fails.
+      if (popupAuthFailed(error)) {
+        return beginLoginRedirect(scopes);
+      }
+
       accessToken = null;
       accessTokenExpiresAt = 0;
       throw new Error(parseErrorMessage(error));
@@ -387,17 +427,25 @@
       // Fall through to the interactive prompt below.
     }
 
-    // Popups can't round-trip the token on mobile browsers (see connect());
-    // use the redirect flow there instead.  The setup wizard leaves a resume
-    // breadcrumb in sessionStorage before invoking this, so it reopens at the
-    // location step after the round-trip.
-    if (window.location.pathname.endsWith("mobile.html")) {
+    // Popups can't round-trip the token on mobile / installed web apps
+    // (see connect()). Use redirect there instead. The setup wizard leaves a
+    // resume breadcrumb in sessionStorage before invoking this, so it reopens
+    // at the location step after the round-trip.
+    if (shouldUseRedirectAuth()) {
       await msalInst.acquireTokenRedirect({ scopes });
       return;
     }
 
-    const result = await msalInst.acquireTokenPopup({ scopes });
-    rememberAccessToken(result, scopes);
+    try {
+      const result = await msalInst.acquireTokenPopup({ scopes });
+      rememberAccessToken(result, scopes);
+    } catch (error) {
+      if (popupAuthFailed(error)) {
+        await msalInst.acquireTokenRedirect({ scopes });
+        return;
+      }
+      throw error;
+    }
   };
 
   // Lists child folders of the given folder (or the OneDrive root when

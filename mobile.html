@@ -11,14 +11,40 @@
   <link rel="icon" type="image/svg+xml" href="icon.svg">
   <link rel="apple-touch-icon" href="icon.svg">
   <script>
-    // Redirect back to desktop if someone opens this on a non-mobile device
-    // (unless ?mobile=1 forces the mobile view, e.g. for testing)
+    // Honour an explicit view preference, then fall back to device heuristics.
     (function () {
-      if (new URLSearchParams(location.search).has('mobile')) { return; }
-      var isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+      var VIEW_PREF_KEY = "service-notes-view-preference";
+      var params = new URLSearchParams(location.search);
+      var persist = function (view) {
+        try { localStorage.setItem(VIEW_PREF_KEY, view); } catch (e) {}
+      };
+      var readPref = function () {
+        try { return localStorage.getItem(VIEW_PREF_KEY); } catch (e) { return null; }
+      };
+
+      if (params.has("mobile")) {
+        persist("mobile");
+        return;
+      }
+      if (params.has("desktop")) {
+        persist("desktop");
+        location.replace("index.html");
+        return;
+      }
+
+      var preferred = readPref();
+      if (preferred === "mobile") {
+        return;
+      }
+      if (preferred === "desktop") {
+        location.replace("index.html");
+        return;
+      }
+
+      var isTouchDevice = ("ontouchstart" in window) || (navigator.maxTouchPoints > 0);
       var smallestDimension = Math.min(window.screen.width, window.screen.height);
       if (!isTouchDevice || smallestDimension > 480) {
-        location.replace('index.html?desktop=1');
+        location.replace("index.html");
       }
     })();
   </script>
@@ -1453,6 +1479,7 @@
   <script src="sync/setup-wizard.js"></script>
 
   <!-- Mobile controller -->
+  <script src="core/view-mode.js"></script>
   <script src="core/storage.js"></script>
   <script src="core/workspace.js"></script>
   <script src="mobile.js"></script>
