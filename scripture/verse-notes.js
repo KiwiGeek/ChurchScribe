@@ -283,7 +283,7 @@ window.ScriptoriaModules.createVerseNotes = (deps) => {
             <button class="ghost-button" type="submit" data-verse-note-cancel>Close</button>
           </div>
           <div class="dialog-body verse-note-body">
-            <textarea id="verse-note-input" class="verse-note-input" rows="5" placeholder="Write a note… References and URLs become links when saved."></textarea>
+            <textarea id="verse-note-input" class="verse-note-input" rows="4" placeholder="Write a note… References and URLs become links when saved."></textarea>
           </div>
           <div class="dialog-actions verse-note-actions">
             <button type="button" class="ghost-button verse-note-delete" data-verse-note-delete hidden>Delete</button>

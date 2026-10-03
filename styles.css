@@ -1859,21 +1859,17 @@ h1 {
   color: var(--accent);
 }
 
-.verse-note-dialog {
-  width: min(440px, calc(100% - 24px));
-}
-
 .verse-note-dialog .verse-note-shell {
   min-height: 0;
   height: auto;
   max-height: min(520px, calc(100vh - 48px));
 }
 
-.verse-note-header {
+.verse-note-dialog .verse-note-header {
   padding-bottom: 10px;
 }
 
-.verse-note-header h2 {
+.verse-note-dialog .verse-note-header h2 {
   margin: 0;
   font-family: var(--font-body);
   font-size: 1.2rem;
@@ -1882,7 +1878,7 @@ h1 {
   line-height: 1.25;
 }
 
-.verse-note-body {
+.verse-note-dialog .dialog-body.verse-note-body {
   flex: 0 0 auto;
   padding-top: 14px;
   padding-bottom: 12px;
@@ -1890,7 +1886,7 @@ h1 {
 
 .verse-note-input {
   width: 100%;
-  min-height: 8rem;
+  min-height: 6.75rem;
   max-height: 40vh;
   resize: vertical;
   padding: 0.85rem 0.95rem;
@@ -1907,14 +1903,14 @@ h1 {
   outline-offset: 2px;
 }
 
-.verse-note-actions {
+.verse-note-dialog .dialog-actions.verse-note-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   justify-content: flex-end;
   align-items: center;
   margin: 0;
-  padding: 12px 20px 18px;
+  padding: 12px 20px 16px;
   border-top: 1px solid var(--border);
 }
 
@@ -2054,6 +2050,12 @@ h1 {
 
 .compact-dialog {
   width: min(720px, calc(100% - 24px));
+}
+
+.verse-note-dialog.management-dialog,
+.verse-note-dialog.compact-dialog,
+.verse-note-dialog {
+  width: min(440px, calc(100% - 24px));
 }
 
 #table-dialog {
