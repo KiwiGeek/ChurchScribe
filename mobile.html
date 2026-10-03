@@ -13,6 +13,22 @@
   <link rel="icon" type="image/svg+xml" href="icon.svg">
   <link rel="apple-touch-icon" href="icon.svg">
   <script>
+    // Mark installed iOS PWAs early so CSS can clear the translucent status bar
+    // even when env(safe-area-inset-top) incorrectly reports 0.
+    (function () {
+      var ua = navigator.userAgent || "";
+      var isIOS = /iPad|iPhone|iPod/.test(ua) ||
+        (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+      var standalone = navigator.standalone === true ||
+        (window.matchMedia && (
+          window.matchMedia("(display-mode: standalone)").matches ||
+          window.matchMedia("(display-mode: fullscreen)").matches
+        ));
+      if (isIOS) document.documentElement.classList.add("is-ios");
+      if (standalone) document.documentElement.classList.add("is-standalone");
+    })();
+  </script>
+  <script>
     // Honour an explicit view preference, then fall back to device heuristics.
     (function () {
       var VIEW_PREF_KEY = "service-notes-view-preference";
@@ -100,6 +116,15 @@
       height: 100dvh;
     }
 
+    /* On iOS standalone, 100dvh can exclude the status-bar band while
+       black-translucent still overlays it — prefer fill-available height. */
+    html.is-ios.is-standalone,
+    html.is-ios.is-standalone body {
+      height: 100%;
+      min-height: 100vh;
+      min-height: -webkit-fill-available;
+    }
+
     #mob-app {
       display: flex;
       flex-direction: column;
@@ -110,6 +135,11 @@
          so its background fills the home-indicator strip directly. */
     }
 
+    html.is-ios.is-standalone #mob-app {
+      height: 100%;
+      min-height: -webkit-fill-available;
+    }
+
     /* ── Header ─────────────────────────────────────────────────────────── */
     .mob-header {
       position: relative;
@@ -118,11 +148,20 @@
       justify-content: space-between;
       gap: 8px;
       padding: 5px 10px;
+      /* constant() for older iOS; env() thereafter. */
+      padding-top: calc(5px + constant(safe-area-inset-top));
       padding-top: calc(5px + env(safe-area-inset-top, 0px));
       background: var(--surface-strong);
       border-bottom: 0.5px solid var(--border);
       flex-shrink: 0;
       user-select: none;
+    }
+
+    /* black-translucent + WebKit sometimes reports inset 0 while the OS bar
+       still covers the top — keep a phone-status-bar minimum in that mode. */
+    html.is-ios.is-standalone .mob-header {
+      padding-top: calc(5px + max(47px, constant(safe-area-inset-top)));
+      padding-top: calc(5px + max(47px, env(safe-area-inset-top, 0px)));
     }
 
     /* black-translucent uses light status icons; darken the notch strip on
@@ -133,9 +172,15 @@
       top: 0;
       left: 0;
       right: 0;
+      height: constant(safe-area-inset-top);
       height: env(safe-area-inset-top, 0px);
       background: rgba(20, 16, 12, 0.55);
       pointer-events: none;
+    }
+
+    html.is-ios.is-standalone .mob-header::before {
+      height: max(47px, constant(safe-area-inset-top));
+      height: max(47px, env(safe-area-inset-top, 0px));
     }
 
     [data-theme="dark"] .mob-header::before {
@@ -792,14 +837,25 @@
       align-items: flex-end;
     }
 
+    /* Keep sheet chrome (Settings title / Done) below the status bar. */
+    html.is-ios.is-standalone .mob-sheet-backdrop:not([hidden]) {
+      padding-top: max(47px, constant(safe-area-inset-top));
+      padding-top: max(47px, env(safe-area-inset-top, 0px));
+    }
+
     .mob-sheet {
       width: 100%;
       background: var(--surface-strong);
       border-radius: 20px 20px 0 0;
+      padding: 0 16px calc(16px + constant(safe-area-inset-bottom));
       padding: 0 16px calc(16px + env(safe-area-inset-bottom));
       max-height: 72vh;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
+    }
+
+    html.is-ios.is-standalone .mob-settings-sheet {
+      max-height: calc(100% - 8px);
     }
 
     .mob-sheet-handle {

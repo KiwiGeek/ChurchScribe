@@ -52,6 +52,22 @@
   <link rel="icon" type="image/svg+xml" href="icon.svg">
   <link rel="apple-touch-icon" href="icon.svg">
   <script>
+    // Mark installed iOS PWAs early so header/settings clear the translucent
+    // status bar even when env(safe-area-inset-top) incorrectly reports 0.
+    (function () {
+      var ua = navigator.userAgent || "";
+      var isIOS = /iPad|iPhone|iPod/.test(ua) ||
+        (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+      var standalone = navigator.standalone === true ||
+        (window.matchMedia && (
+          window.matchMedia("(display-mode: standalone)").matches ||
+          window.matchMedia("(display-mode: fullscreen)").matches
+        ));
+      if (isIOS) document.documentElement.classList.add("is-ios");
+      if (standalone) document.documentElement.classList.add("is-standalone");
+    })();
+  </script>
+  <script>
     (function () {
       var themeMirrorKey = "service-notes-theme-mirror";
       var colorThemeMirrorKey = "service-notes-color-theme-mirror";
