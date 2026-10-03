@@ -9,6 +9,9 @@ window.ScriptoriaModules.createSyncPayloads = (deps) => {
     getCurrentPaneSplit,
     getCurrentTranslationCode,
     getCurrentColorThemeId,
+    getOpenDyslexicFont,
+    applyOpenDyslexicFont,
+    openDyslexicStorageKey,
     getTranslationStateForSync,
     flushEditorWorkNow,
     applyThemeMode,
@@ -35,6 +38,9 @@ window.ScriptoriaModules.createSyncPayloads = (deps) => {
     getShowVerseNoteMargin,
     setShowVerseNoteMargin,
     showVerseNoteMarginStorageKey,
+    getVerseNotesEnabled,
+    setVerseNotesEnabled,
+    verseNotesEnabledStorageKey,
     refreshVerseNotesView
   } = deps;
 
@@ -55,7 +61,9 @@ window.ScriptoriaModules.createSyncPayloads = (deps) => {
       scriptureOnly: typeof getScriptureOnly === "function" ? getScriptureOnly() : false,
       translation: getCurrentTranslationCode(),
       colorTheme: getCurrentColorThemeId(),
-      showVerseNoteMargin: typeof getShowVerseNoteMargin === "function" ? getShowVerseNoteMargin() : true
+      openDyslexicFont: typeof getOpenDyslexicFont === "function" ? getOpenDyslexicFont() : false,
+      showVerseNoteMargin: typeof getShowVerseNoteMargin === "function" ? getShowVerseNoteMargin() : true,
+      verseNotesEnabled: typeof getVerseNotesEnabled === "function" ? getVerseNotesEnabled() : true
     },
     verseNotes: typeof getVerseNotesPayload === "function" ? getVerseNotesPayload() : undefined,
     translationState: getTranslationStateForSync ? getTranslationStateForSync() : undefined,
@@ -144,12 +152,29 @@ window.ScriptoriaModules.createSyncPayloads = (deps) => {
       }
 
       if (payload.preferences.colorTheme) {
-        applyColorTheme(payload.preferences.colorTheme);
-        void writeStoredValue(colorThemeStorageKey, payload.preferences.colorTheme);
+        const colorTheme =
+          payload.preferences.colorTheme === "easy-read" ? "default" : payload.preferences.colorTheme;
+        applyColorTheme(colorTheme);
+        void writeStoredValue(colorThemeStorageKey, colorTheme);
+        if (payload.preferences.colorTheme === "easy-read" && typeof applyOpenDyslexicFont === "function") {
+          applyOpenDyslexicFont(true, { persist: true, markChange: false, sync: false });
+        }
+      }
+
+      if (typeof payload.preferences.openDyslexicFont === "boolean" && typeof applyOpenDyslexicFont === "function") {
+        applyOpenDyslexicFont(payload.preferences.openDyslexicFont, {
+          persist: true,
+          markChange: false,
+          sync: false
+        });
       }
 
       if (typeof payload.preferences.showVerseNoteMargin === "boolean" && typeof setShowVerseNoteMargin === "function") {
         setShowVerseNoteMargin(payload.preferences.showVerseNoteMargin, { sync: false });
+      }
+
+      if (typeof payload.preferences.verseNotesEnabled === "boolean" && typeof setVerseNotesEnabled === "function") {
+        setVerseNotesEnabled(payload.preferences.verseNotesEnabled, { sync: false });
       }
     }
 

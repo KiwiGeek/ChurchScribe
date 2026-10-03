@@ -19,7 +19,9 @@ window.ScriptoriaModules.createSettingsBackupRestore = (deps) => {
       scriptureOnly: typeof deps.isScriptureOnly === "function" ? deps.isScriptureOnly() : false,
       selectedTranslationId: deps.getCurrentTranslationCode(),
       colorTheme: deps.getCurrentColorThemeId(),
-      showVerseNoteMargin: typeof deps.getShowVerseNoteMargin === "function" ? deps.getShowVerseNoteMargin() : true
+      openDyslexicFont: typeof deps.getOpenDyslexicFont === "function" ? deps.getOpenDyslexicFont() : false,
+      showVerseNoteMargin: typeof deps.getShowVerseNoteMargin === "function" ? deps.getShowVerseNoteMargin() : true,
+      verseNotesEnabled: typeof deps.getVerseNotesEnabled === "function" ? deps.getVerseNotesEnabled() : true
     },
     verseNotes: typeof deps.getVerseNotesPayload === "function" ? deps.getVerseNotesPayload() : undefined,
     translationState: deps.getTranslationStateForBackup()
@@ -92,12 +94,24 @@ window.ScriptoriaModules.createSettingsBackupRestore = (deps) => {
         }
 
         if (preferences.colorTheme) {
-          deps.applyColorTheme(preferences.colorTheme);
-          void deps.writeStoredValue(deps.colorThemeStorageKey, preferences.colorTheme);
+          const colorTheme = preferences.colorTheme === "easy-read" ? "default" : preferences.colorTheme;
+          deps.applyColorTheme(colorTheme);
+          void deps.writeStoredValue(deps.colorThemeStorageKey, colorTheme);
+          if (preferences.colorTheme === "easy-read" && typeof deps.setOpenDyslexicFont === "function") {
+            deps.setOpenDyslexicFont(true, { sync: false });
+          }
+        }
+
+        if (typeof preferences.openDyslexicFont === "boolean" && typeof deps.setOpenDyslexicFont === "function") {
+          deps.setOpenDyslexicFont(preferences.openDyslexicFont, { sync: false });
         }
 
         if (typeof preferences.showVerseNoteMargin === "boolean" && typeof deps.setShowVerseNoteMargin === "function") {
           deps.setShowVerseNoteMargin(preferences.showVerseNoteMargin, { sync: false });
+        }
+
+        if (typeof preferences.verseNotesEnabled === "boolean" && typeof deps.setVerseNotesEnabled === "function") {
+          deps.setVerseNotesEnabled(preferences.verseNotesEnabled, { sync: false });
         }
       }
 
@@ -137,12 +151,14 @@ window.ScriptoriaModules.createSettingsBackupRestore = (deps) => {
       deps.deleteStoredValue(deps.scriptureOnlyStorageKey),
       deps.deleteStoredValue(deps.translationStorageKey),
       deps.deleteStoredValue(deps.colorThemeStorageKey),
+      deps.openDyslexicStorageKey ? deps.deleteStoredValue(deps.openDyslexicStorageKey) : Promise.resolve(),
       deps.deleteStoredValue(deps.lastBookChapterStorageKey),
       deps.deleteStoredValue(deps.onboardingStorageKey),
       deps.deleteStoredValue(deps.notesStorageKey),
       deps.deleteStoredValue(deps.translationRegistryStorageKey),
       deps.verseNotesStorageKey ? deps.deleteStoredValue(deps.verseNotesStorageKey) : Promise.resolve(),
-      deps.showVerseNoteMarginStorageKey ? deps.deleteStoredValue(deps.showVerseNoteMarginStorageKey) : Promise.resolve()
+      deps.showVerseNoteMarginStorageKey ? deps.deleteStoredValue(deps.showVerseNoteMarginStorageKey) : Promise.resolve(),
+      deps.verseNotesEnabledStorageKey ? deps.deleteStoredValue(deps.verseNotesEnabledStorageKey) : Promise.resolve()
     ]);
     deps.clearThemePreferenceMirrors();
 
@@ -209,12 +225,14 @@ window.ScriptoriaModules.createSettingsBackupRestore = (deps) => {
       deps.deleteStoredValue(deps.scriptureOnlyStorageKey),
       deps.deleteStoredValue(deps.translationStorageKey),
       deps.deleteStoredValue(deps.colorThemeStorageKey),
+      deps.openDyslexicStorageKey ? deps.deleteStoredValue(deps.openDyslexicStorageKey) : Promise.resolve(),
       deps.deleteStoredValue(deps.lastBookChapterStorageKey),
       deps.deleteStoredValue(deps.onboardingStorageKey),
       deps.deleteStoredValue(deps.notesStorageKey),
       deps.deleteStoredValue(deps.translationRegistryStorageKey),
       deps.verseNotesStorageKey ? deps.deleteStoredValue(deps.verseNotesStorageKey) : Promise.resolve(),
-      deps.showVerseNoteMarginStorageKey ? deps.deleteStoredValue(deps.showVerseNoteMarginStorageKey) : Promise.resolve()
+      deps.showVerseNoteMarginStorageKey ? deps.deleteStoredValue(deps.showVerseNoteMarginStorageKey) : Promise.resolve(),
+      deps.verseNotesEnabledStorageKey ? deps.deleteStoredValue(deps.verseNotesEnabledStorageKey) : Promise.resolve()
     ]);
     deps.clearThemePreferenceMirrors();
 

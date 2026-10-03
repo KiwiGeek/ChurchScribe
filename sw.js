@@ -108,7 +108,6 @@ const PRECACHE_URLS = [
   "themes/plainsong.js",
   "themes/evensong.js",
   "themes/clean-paper.js",
-  "themes/easy-read.js",
   "themes/inkwood.js",
   "themes/lectern.js",
   "themes/quarry-stone.js",

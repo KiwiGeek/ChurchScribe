@@ -28,10 +28,13 @@ const translationRegistryStorageKey = "service-notes-translation-registry";
 const cloudSyncStorageKey        = "service-notes-cloud-sync";
 const colorThemeStorageKey       = "service-notes-color-theme";
 const colorThemeMirrorStorageKey = "service-notes-color-theme-mirror";
+const openDyslexicStorageKey     = "service-notes-opendyslexic-font";
+const openDyslexicMirrorStorageKey = "service-notes-opendyslexic-font-mirror";
 const lastBookChapterStorageKey  = "service-notes-last-book-chapter";
 const onboardingStorageKey       = "service-notes-onboarding-seen";
 const verseNotesStorageKey       = "service-notes-verse-notes";
 const showVerseNoteMarginStorageKey = "service-notes-verse-notes-margin";
+const verseNotesEnabledStorageKey = "service-notes-verse-notes-enabled";
 const THEME_MODE_OPTIONS = [
   { value: "system", label: "System" },
   { value: "light", label: "Light" },
@@ -794,10 +797,19 @@ const renderSettingsSheet = () => {
       <div class="mob-theme-toggle-group" id="mob-theme-toggle-group" role="group" aria-label="Theme mode selection">
         ${modeButtons}
       </div>
+      <label class="mob-settings-check" id="mob-opendyslexic-label">
+        <input type="checkbox" id="mob-opendyslexic-font" ${themeApi?.getOpenDyslexicFont?.() ? "checked" : ""}>
+        <span>Use OpenDyslexic font</span>
+      </label>
+      <p class="mob-settings-help">Applies OpenDyslexic on top of any color theme.</p>
       <p class="mob-settings-label mob-settings-label--spaced" id="mob-color-theme-label">Color theme</p>
       <div class="mob-color-theme-grid" id="mob-color-theme-grid" aria-labelledby="mob-color-theme-label">${swatchGrid}</div>
       <p class="mob-settings-label mob-settings-label--spaced">Scripture notes</p>
-      <p class="mob-settings-help">Tap a verse to add or edit a note. A dot marks verses that already have one.</p>
+      <p class="mob-settings-help">When notes mode is on, tap a verse to add or edit a note. A dot marks verses that already have one.</p>
+      <div class="mob-theme-toggle-group" id="mob-verse-notes-enabled-group" role="group" aria-label="Scripture notes mode">
+        <button type="button" class="mob-theme-toggle" data-verse-notes-enabled="on" aria-pressed="${(verseNotesApiRef?.getNotesEnabled?.() ?? true) ? "true" : "false"}">Notes on</button>
+        <button type="button" class="mob-theme-toggle" data-verse-notes-enabled="off" aria-pressed="${(verseNotesApiRef?.getNotesEnabled?.() ?? true) ? "false" : "true"}">Notes off</button>
+      </div>
       <div class="mob-theme-toggle-group" id="mob-verse-note-margin-group" role="group" aria-label="Scripture note margin on desktop">
         <button type="button" class="mob-theme-toggle" data-verse-note-margin="show" aria-pressed="${(verseNotesApiRef?.getShowMargin?.() ?? true) ? "true" : "false"}">Show margin on desktop</button>
         <button type="button" class="mob-theme-toggle" data-verse-note-margin="hide" aria-pressed="${(verseNotesApiRef?.getShowMargin?.() ?? true) ? "false" : "true"}">Hide margin</button>
@@ -867,6 +879,17 @@ const renderSettingsSheet = () => {
     </div>
   `;
 
+  document.querySelector("#mob-verse-notes-enabled-group")?.addEventListener("click", (e) => {
+    const button = e.target.closest("[data-verse-notes-enabled]");
+    if (!button || !verseNotesApiRef) return;
+    const enabled = button.dataset.verseNotesEnabled === "on";
+    verseNotesApiRef.setNotesEnabled(enabled);
+    document.querySelectorAll("#mob-verse-notes-enabled-group .mob-theme-toggle").forEach((toggle) => {
+      toggle.setAttribute("aria-pressed", String((toggle.dataset.verseNotesEnabled === "on") === enabled));
+    });
+    viewerApiRef?.renderChapter?.();
+  });
+
   document.querySelector("#mob-verse-note-margin-group")?.addEventListener("click", (e) => {
     const button = e.target.closest("[data-verse-note-margin]");
     if (!button || !verseNotesApiRef) return;
@@ -902,6 +925,12 @@ const renderSettingsSheet = () => {
     document.querySelectorAll("#mob-theme-toggle-group .mob-theme-toggle").forEach((toggle) => {
       toggle.setAttribute("aria-pressed", String(toggle.dataset.themeMode === selectedMode));
     });
+    void syncCloudApi?.syncUiSettingsToCloud?.();
+  });
+
+  document.querySelector("#mob-opendyslexic-font")?.addEventListener("change", (e) => {
+    const enabled = Boolean(e.target.checked);
+    themeApi?.applyOpenDyslexicFont?.(enabled, { persist: true, markChange: true });
     void syncCloudApi?.syncUiSettingsToCloud?.();
   });
 
@@ -1195,8 +1224,11 @@ const bootstrap = async () => {
     themeMirrorStorageKey,
     colorThemeStorageKey,
     colorThemeMirrorStorageKey,
+    openDyslexicStorageKey,
+    openDyslexicMirrorStorageKey,
     markLocalSettingsUpdated: () => {},
     scheduleAutoCloudSync:    () => {},
+    syncUiSettingsToCloud: () => syncCloudApi?.syncUiSettingsToCloud?.(),
     isSettingsOpen:    () => !settingsSheet.hidden,
     renderSettings:    () => {}
   });
@@ -1309,6 +1341,7 @@ const bootstrap = async () => {
     writeStoredValue,
     verseNotesStorageKey,
     showMarginStorageKey: showVerseNoteMarginStorageKey,
+    notesEnabledStorageKey: verseNotesEnabledStorageKey,
     markLocalSettingsUpdated: () => {},
     scheduleAutoCloudSync: () => {},
     syncUiSettingsToCloud: () => syncCloudApi?.syncUiSettingsToCloud?.(),
@@ -1386,6 +1419,9 @@ const bootstrap = async () => {
     getCurrentPaneSplit:      () => 50,   // not used on mobile
     getCurrentTranslationCode: () => viewerApi.getCurrentTranslationCode(),
     getCurrentColorThemeId:   () => themeApi.getCurrentColorThemeId(),
+    getOpenDyslexicFont:      () => themeApi.getOpenDyslexicFont(),
+    applyOpenDyslexicFont:    (...args) => themeApi.applyOpenDyslexicFont(...args),
+    openDyslexicStorageKey,
     getTranslationStateForSync: () => translationsManagerApiRef?.getTranslationStateForSync?.() ?? { installedOfficialIds: [] },
     flushEditorWorkNow:       () => {},
     applyThemeMode:           themeApi.applyThemeMode,
@@ -1413,6 +1449,9 @@ const bootstrap = async () => {
     getShowVerseNoteMargin: () => verseNotesApiRef?.getShowMargin?.() ?? true,
     setShowVerseNoteMargin: (value, options) => verseNotesApiRef?.setShowMargin?.(value, options),
     showVerseNoteMarginStorageKey,
+    getVerseNotesEnabled: () => verseNotesApiRef?.getNotesEnabled?.() ?? true,
+    setVerseNotesEnabled: (value, options) => verseNotesApiRef?.setNotesEnabled?.(value, options),
+    verseNotesEnabledStorageKey,
     refreshVerseNotesView: () => viewerApi?.renderChapter?.()
   });
 
@@ -1492,6 +1531,10 @@ const bootstrap = async () => {
   buildBookAliasMap();
   await restoreLastBookChapter();
   applyColorTheme(await themeApi.getPreferredColorTheme());
+  themeApi.applyOpenDyslexicFont(await themeApi.getPreferredOpenDyslexicFont(), {
+    persist: false,
+    markChange: false
+  });
   // Desktop layout preference — kept in memory so cloud sync does not wipe it.
   scriptureOnlyPreference = (await readStoredValue(scriptureOnlyStorageKey)) === true;
   await verseNotesApiRef?.load?.();

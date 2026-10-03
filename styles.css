@@ -133,6 +133,8 @@ body::before {
   align-items: center;
   margin-bottom: 12px;
   user-select: none;
+  /* Installed iPad/desktop PWAs with black-translucent status bars. */
+  padding-top: env(safe-area-inset-top, 0px);
 }
 
 .header-actions {
@@ -1836,6 +1838,10 @@ h1 {
   font: inherit;
 }
 
+.verse-note-rail-card:not(button) {
+  cursor: default;
+}
+
 .verse-note-rail-card:last-child {
   margin-bottom: 0;
 }
@@ -3349,6 +3355,24 @@ body.is-compact-editor .compact-format-panel .color-picker-trigger {
 
 .ui-inline-select select:focus {
   outline: none;
+}
+
+.ui-checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font: inherit;
+  color: var(--text);
+  cursor: pointer;
+  user-select: none;
+}
+
+.ui-checkbox-label input {
+  width: 1.05rem;
+  height: 1.05rem;
+  accent-color: var(--accent-strong);
+  cursor: pointer;
 }
 
 .ui-toggle-button:hover,
