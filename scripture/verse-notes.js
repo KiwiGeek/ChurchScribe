@@ -287,7 +287,7 @@ window.ScriptoriaModules.createVerseNotes = (deps) => {
           </div>
           <div class="dialog-actions verse-note-actions">
             <button type="button" class="ghost-button verse-note-delete" data-verse-note-delete hidden>Delete</button>
-            <button type="button" class="primary-button" data-verse-note-save>Save</button>
+            <button type="button" class="ghost-button primary-button" data-verse-note-save>Save</button>
           </div>
         </form>
       `;
