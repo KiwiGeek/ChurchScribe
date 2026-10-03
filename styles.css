@@ -1706,7 +1706,7 @@ h1 {
 
 .verse-text {
   margin: 0;
-  font-family: "Fraunces", serif;
+  font-family: var(--font-heading);
   font-size: clamp(1.35rem, 2vw, 1.9rem);
   line-height: 1.45;
 }

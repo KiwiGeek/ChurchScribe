@@ -6,6 +6,7 @@ window.ScriptoriaModules = window.ScriptoriaModules || {};
 (function () {
   const FEATURED_THEME_IDS = [
     "default",
+    "easy-read",
     "clean-paper",
     "lectern",
     "plainsong",
@@ -80,6 +81,7 @@ window.ScriptoriaModules = window.ScriptoriaModules || {};
     plainsong: ["minimal", "cool"],
     "void-scripture": ["minimal", "bold"],
     "clean-paper": ["minimal", "bold"],
+    "easy-read": ["minimal", "bold"],
     lectern: ["minimal", "bold"],
     cyberpunk: ["bold"],
     "neon-sermon": ["bold"],
