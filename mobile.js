@@ -1270,7 +1270,7 @@ const bootstrap = async () => {
     scheduleAutoCloudSync: () => {},
     syncUiSettingsToCloud: () => syncCloudApi?.syncUiSettingsToCloud?.(),
     parseScriptureReference,
-    getExplicitPattern: () => aliasesApi.getFullExplicitPattern?.() || aliasesApi.getExplicitPattern?.(),
+    getExplicitPattern: () => aliasesApi.getExplicitPattern?.(),
     jumpToScripture: (ref) => showScriptureSheet(ref),
     isMobileShell: true
   });
