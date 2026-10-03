@@ -134,7 +134,15 @@ body::before {
   margin-bottom: 12px;
   user-select: none;
   /* Installed iPad/desktop PWAs with black-translucent status bars. */
+  padding-top: constant(safe-area-inset-top);
   padding-top: env(safe-area-inset-top, 0px);
+}
+
+/* iOS standalone can report inset 0 while the translucent OS bar still
+   covers the top — keep a status-bar minimum so title/Settings stay clear. */
+html.is-ios.is-standalone .app-header {
+  padding-top: max(47px, constant(safe-area-inset-top));
+  padding-top: max(47px, env(safe-area-inset-top, 0px));
 }
 
 .header-actions {
@@ -2109,6 +2117,31 @@ h1 {
   height: min(820px, calc(100vh - 64px));
   min-height: min(820px, calc(100vh - 64px));
   max-height: calc(100vh - 64px);
+}
+
+/* Keep Settings / library dialogs below the iOS status bar in installed PWAs. */
+html.is-ios.is-standalone .management-dialog {
+  margin-top: max(47px, calc(constant(safe-area-inset-top) + 12px));
+  margin-top: max(47px, calc(env(safe-area-inset-top, 0px) + 12px));
+  margin-bottom: max(24px, calc(constant(safe-area-inset-bottom) + 12px));
+  margin-bottom: max(24px, calc(env(safe-area-inset-bottom, 0px) + 12px));
+}
+
+html.is-ios.is-standalone .dialog-shell,
+html.is-ios.is-standalone #note-manager-dialog .dialog-shell,
+html.is-ios.is-standalone #settings-dialog .dialog-shell {
+  height: auto;
+  min-height: 0;
+  max-height: calc(
+    100dvh - max(47px, env(safe-area-inset-top, 0px)) - max(24px, env(safe-area-inset-bottom, 0px)) - 24px
+  );
+}
+
+html.is-ios.is-standalone #settings-dialog .dialog-shell {
+  min-height: min(
+    820px,
+    calc(100dvh - max(47px, env(safe-area-inset-top, 0px)) - max(24px, env(safe-area-inset-bottom, 0px)) - 24px)
+  );
 }
 
 .dialog-header {
