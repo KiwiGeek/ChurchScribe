@@ -19,6 +19,7 @@ window.ScriptoriaModules.createSettingsBackupRestore = (deps) => {
       scriptureOnly: typeof deps.isScriptureOnly === "function" ? deps.isScriptureOnly() : false,
       selectedTranslationId: deps.getCurrentTranslationCode(),
       colorTheme: deps.getCurrentColorThemeId(),
+      openDyslexicFont: typeof deps.getOpenDyslexicFont === "function" ? deps.getOpenDyslexicFont() : false,
       showVerseNoteMargin: typeof deps.getShowVerseNoteMargin === "function" ? deps.getShowVerseNoteMargin() : true,
       verseNotesEnabled: typeof deps.getVerseNotesEnabled === "function" ? deps.getVerseNotesEnabled() : true
     },
@@ -93,8 +94,16 @@ window.ScriptoriaModules.createSettingsBackupRestore = (deps) => {
         }
 
         if (preferences.colorTheme) {
-          deps.applyColorTheme(preferences.colorTheme);
-          void deps.writeStoredValue(deps.colorThemeStorageKey, preferences.colorTheme);
+          const colorTheme = preferences.colorTheme === "easy-read" ? "default" : preferences.colorTheme;
+          deps.applyColorTheme(colorTheme);
+          void deps.writeStoredValue(deps.colorThemeStorageKey, colorTheme);
+          if (preferences.colorTheme === "easy-read" && typeof deps.setOpenDyslexicFont === "function") {
+            deps.setOpenDyslexicFont(true, { sync: false });
+          }
+        }
+
+        if (typeof preferences.openDyslexicFont === "boolean" && typeof deps.setOpenDyslexicFont === "function") {
+          deps.setOpenDyslexicFont(preferences.openDyslexicFont, { sync: false });
         }
 
         if (typeof preferences.showVerseNoteMargin === "boolean" && typeof deps.setShowVerseNoteMargin === "function") {
@@ -142,6 +151,7 @@ window.ScriptoriaModules.createSettingsBackupRestore = (deps) => {
       deps.deleteStoredValue(deps.scriptureOnlyStorageKey),
       deps.deleteStoredValue(deps.translationStorageKey),
       deps.deleteStoredValue(deps.colorThemeStorageKey),
+      deps.openDyslexicStorageKey ? deps.deleteStoredValue(deps.openDyslexicStorageKey) : Promise.resolve(),
       deps.deleteStoredValue(deps.lastBookChapterStorageKey),
       deps.deleteStoredValue(deps.onboardingStorageKey),
       deps.deleteStoredValue(deps.notesStorageKey),
@@ -215,6 +225,7 @@ window.ScriptoriaModules.createSettingsBackupRestore = (deps) => {
       deps.deleteStoredValue(deps.scriptureOnlyStorageKey),
       deps.deleteStoredValue(deps.translationStorageKey),
       deps.deleteStoredValue(deps.colorThemeStorageKey),
+      deps.openDyslexicStorageKey ? deps.deleteStoredValue(deps.openDyslexicStorageKey) : Promise.resolve(),
       deps.deleteStoredValue(deps.lastBookChapterStorageKey),
       deps.deleteStoredValue(deps.onboardingStorageKey),
       deps.deleteStoredValue(deps.notesStorageKey),

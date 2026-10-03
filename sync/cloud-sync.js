@@ -175,12 +175,15 @@ window.ScriptoriaModules.createCloudSync = (deps) => {
     const localMargin = localSettings.preferences?.showVerseNoteMargin !== false;
     const remoteNotesEnabled = remotePayload.preferences?.verseNotesEnabled !== false;
     const localNotesEnabled = localSettings.preferences?.verseNotesEnabled !== false;
+    const remoteOpenDyslexic = Boolean(remotePayload.preferences?.openDyslexicFont);
+    const localOpenDyslexic = Boolean(localSettings.preferences?.openDyslexicFont);
 
     return remoteWorkspaceComparable !== localWorkspaceComparable ||
       remoteNotesComparable !== localNotesComparable ||
       remoteVerseNotesComparable !== localVerseNotesComparable ||
       remoteMargin !== localMargin ||
-      remoteNotesEnabled !== localNotesEnabled;
+      remoteNotesEnabled !== localNotesEnabled ||
+      remoteOpenDyslexic !== localOpenDyslexic;
   };
 
   const showSyncConflictDialog = (remotePayload, mode = "conflict") => new Promise((resolve) => {
@@ -547,6 +550,7 @@ window.ScriptoriaModules.createCloudSync = (deps) => {
           ...(remoteSettings.preferences ?? {}),
           theme: localPreferences.theme,
           colorTheme: localPreferences.colorTheme,
+          openDyslexicFont: localPreferences.openDyslexicFont,
           showVerseNoteMargin: localPreferences.showVerseNoteMargin,
           verseNotesEnabled: localPreferences.verseNotesEnabled
         },

@@ -3357,6 +3357,24 @@ body.is-compact-editor .compact-format-panel .color-picker-trigger {
   outline: none;
 }
 
+.ui-checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font: inherit;
+  color: var(--text);
+  cursor: pointer;
+  user-select: none;
+}
+
+.ui-checkbox-label input {
+  width: 1.05rem;
+  height: 1.05rem;
+  accent-color: var(--accent-strong);
+  cursor: pointer;
+}
+
 .ui-toggle-button:hover,
 .ui-toggle-button:focus-visible {
   transform: translateY(-1px);

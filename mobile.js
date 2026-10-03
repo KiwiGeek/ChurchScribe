@@ -28,6 +28,8 @@ const translationRegistryStorageKey = "service-notes-translation-registry";
 const cloudSyncStorageKey        = "service-notes-cloud-sync";
 const colorThemeStorageKey       = "service-notes-color-theme";
 const colorThemeMirrorStorageKey = "service-notes-color-theme-mirror";
+const openDyslexicStorageKey     = "service-notes-opendyslexic-font";
+const openDyslexicMirrorStorageKey = "service-notes-opendyslexic-font-mirror";
 const lastBookChapterStorageKey  = "service-notes-last-book-chapter";
 const onboardingStorageKey       = "service-notes-onboarding-seen";
 const verseNotesStorageKey       = "service-notes-verse-notes";
@@ -795,6 +797,11 @@ const renderSettingsSheet = () => {
       <div class="mob-theme-toggle-group" id="mob-theme-toggle-group" role="group" aria-label="Theme mode selection">
         ${modeButtons}
       </div>
+      <label class="mob-settings-check" id="mob-opendyslexic-label">
+        <input type="checkbox" id="mob-opendyslexic-font" ${themeApi?.getOpenDyslexicFont?.() ? "checked" : ""}>
+        <span>Use OpenDyslexic font</span>
+      </label>
+      <p class="mob-settings-help">Applies OpenDyslexic on top of any color theme.</p>
       <p class="mob-settings-label mob-settings-label--spaced" id="mob-color-theme-label">Color theme</p>
       <div class="mob-color-theme-grid" id="mob-color-theme-grid" aria-labelledby="mob-color-theme-label">${swatchGrid}</div>
       <p class="mob-settings-label mob-settings-label--spaced">Scripture notes</p>
@@ -918,6 +925,12 @@ const renderSettingsSheet = () => {
     document.querySelectorAll("#mob-theme-toggle-group .mob-theme-toggle").forEach((toggle) => {
       toggle.setAttribute("aria-pressed", String(toggle.dataset.themeMode === selectedMode));
     });
+    void syncCloudApi?.syncUiSettingsToCloud?.();
+  });
+
+  document.querySelector("#mob-opendyslexic-font")?.addEventListener("change", (e) => {
+    const enabled = Boolean(e.target.checked);
+    themeApi?.applyOpenDyslexicFont?.(enabled, { persist: true, markChange: true });
     void syncCloudApi?.syncUiSettingsToCloud?.();
   });
 
@@ -1211,8 +1224,11 @@ const bootstrap = async () => {
     themeMirrorStorageKey,
     colorThemeStorageKey,
     colorThemeMirrorStorageKey,
+    openDyslexicStorageKey,
+    openDyslexicMirrorStorageKey,
     markLocalSettingsUpdated: () => {},
     scheduleAutoCloudSync:    () => {},
+    syncUiSettingsToCloud: () => syncCloudApi?.syncUiSettingsToCloud?.(),
     isSettingsOpen:    () => !settingsSheet.hidden,
     renderSettings:    () => {}
   });
@@ -1403,6 +1419,9 @@ const bootstrap = async () => {
     getCurrentPaneSplit:      () => 50,   // not used on mobile
     getCurrentTranslationCode: () => viewerApi.getCurrentTranslationCode(),
     getCurrentColorThemeId:   () => themeApi.getCurrentColorThemeId(),
+    getOpenDyslexicFont:      () => themeApi.getOpenDyslexicFont(),
+    applyOpenDyslexicFont:    (...args) => themeApi.applyOpenDyslexicFont(...args),
+    openDyslexicStorageKey,
     getTranslationStateForSync: () => translationsManagerApiRef?.getTranslationStateForSync?.() ?? { installedOfficialIds: [] },
     flushEditorWorkNow:       () => {},
     applyThemeMode:           themeApi.applyThemeMode,
@@ -1512,6 +1531,10 @@ const bootstrap = async () => {
   buildBookAliasMap();
   await restoreLastBookChapter();
   applyColorTheme(await themeApi.getPreferredColorTheme());
+  themeApi.applyOpenDyslexicFont(await themeApi.getPreferredOpenDyslexicFont(), {
+    persist: false,
+    markChange: false
+  });
   // Desktop layout preference — kept in memory so cloud sync does not wipe it.
   scriptureOnlyPreference = (await readStoredValue(scriptureOnlyStorageKey)) === true;
   await verseNotesApiRef?.load?.();

@@ -30,3 +30,33 @@
   font-display: swap;
   src: url("./opendyslexic/opendyslexic-latin-700-italic.woff2") format("woff2");
 }
+
+/* Applied via settings checkbox on any color theme (html[data-opendyslexic="true"]).
+   Specificity beats theme attribute selectors that set --font-*. */
+html[data-opendyslexic="true"] {
+  --font-heading: "OpenDyslexic", "Comic Sans MS", sans-serif;
+  --font-body: "OpenDyslexic", "Comic Sans MS", sans-serif;
+}
+
+html[data-opendyslexic="true"] body,
+html[data-opendyslexic="true"] button,
+html[data-opendyslexic="true"] input,
+html[data-opendyslexic="true"] select,
+html[data-opendyslexic="true"] textarea {
+  letter-spacing: 0.04em;
+  word-spacing: 0.08em;
+}
+
+html[data-opendyslexic="true"] .note-editor {
+  font-size: 1.08rem;
+  line-height: 1.85;
+  letter-spacing: 0.04em;
+  word-spacing: 0.1em;
+}
+
+html[data-opendyslexic="true"] .chapter-verse,
+html[data-opendyslexic="true"] .verse-text {
+  letter-spacing: 0.04em;
+  word-spacing: 0.1em;
+  line-height: 1.85;
+}

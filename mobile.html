@@ -55,6 +55,7 @@
     (function () {
       var themeMirrorKey = "service-notes-theme-mirror";
       var colorThemeMirrorKey = "service-notes-color-theme-mirror";
+      var openDyslexicMirrorKey = "service-notes-opendyslexic-font-mirror";
       try {
         var storedMode = localStorage.getItem(themeMirrorKey) || "system";
         var resolvedTheme = storedMode === "system"
@@ -62,10 +63,19 @@
           : (storedMode === "dark" ? "dark" : "light");
         document.documentElement.dataset.theme = resolvedTheme;
         var storedColorTheme = localStorage.getItem(colorThemeMirrorKey);
+        if (storedColorTheme === "easy-read") {
+          storedColorTheme = "default";
+          try { localStorage.setItem(openDyslexicMirrorKey, "1"); } catch (e) {}
+        }
         if (storedColorTheme && storedColorTheme !== "default") {
           document.documentElement.dataset.colorTheme = storedColorTheme;
         } else {
           document.documentElement.removeAttribute("data-color-theme");
+        }
+        if (localStorage.getItem(openDyslexicMirrorKey) === "1") {
+          document.documentElement.dataset.opendyslexic = "true";
+        } else {
+          document.documentElement.removeAttribute("data-opendyslexic");
         }
       } catch {
         document.documentElement.dataset.theme = "light";
@@ -984,6 +994,24 @@
       line-height: 1.5;
     }
 
+    .mob-settings-check {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 12px 0 4px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .mob-settings-check input {
+      width: 1.1rem;
+      height: 1.1rem;
+      accent-color: var(--accent-strong);
+    }
+
     .mob-settings-action {
       display: block;
       width: 100%;
@@ -1479,7 +1507,6 @@
   <script src="themes/void-scripture.js"></script>
   <script src="themes/volcanic-rock.js"></script>
   <script src="themes/clean-paper.js"></script>
-  <script src="themes/easy-read.js"></script>
   <script src="themes/inkwood.js"></script>
   <script src="themes/lectern.js"></script>
   <script src="themes/quarry-stone.js"></script>

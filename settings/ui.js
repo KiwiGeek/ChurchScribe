@@ -99,6 +99,35 @@ window.ScriptoriaModules.createSettingsUi = (deps) => {
     themeModeField.append(themeModeLabel, themeModeSelect);
     appearanceRow.append(themeModeField);
     appearanceSection.append(appearanceRow);
+
+    if (typeof deps.getOpenDyslexicFont === "function" && typeof deps.setOpenDyslexicFont === "function") {
+      const dyslexiaRow = document.createElement("div");
+      dyslexiaRow.className = "ui-toggle-row";
+
+      const dyslexiaLabel = document.createElement("label");
+      dyslexiaLabel.className = "ui-checkbox-label";
+      dyslexiaLabel.htmlFor = "ui-opendyslexic-font-checkbox";
+
+      const dyslexiaCheckbox = document.createElement("input");
+      dyslexiaCheckbox.type = "checkbox";
+      dyslexiaCheckbox.id = "ui-opendyslexic-font-checkbox";
+      dyslexiaCheckbox.checked = Boolean(deps.getOpenDyslexicFont());
+      dyslexiaCheckbox.addEventListener("change", () => {
+        deps.setOpenDyslexicFont(dyslexiaCheckbox.checked);
+      });
+
+      const dyslexiaText = document.createElement("span");
+      dyslexiaText.textContent = "Use OpenDyslexic font";
+
+      dyslexiaLabel.append(dyslexiaCheckbox, dyslexiaText);
+      dyslexiaRow.append(dyslexiaLabel);
+
+      const dyslexiaHelp = document.createElement("p");
+      dyslexiaHelp.className = "settings-copy";
+      dyslexiaHelp.textContent = "Applies the OpenDyslexic typeface on top of any color theme.";
+      appearanceSection.append(dyslexiaRow, dyslexiaHelp);
+    }
+
     container.append(appearanceSection);
 
     const layoutSection = document.createElement("div");

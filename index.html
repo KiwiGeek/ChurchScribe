@@ -55,6 +55,7 @@
     (function () {
       var themeMirrorKey = "service-notes-theme-mirror";
       var colorThemeMirrorKey = "service-notes-color-theme-mirror";
+      var openDyslexicMirrorKey = "service-notes-opendyslexic-font-mirror";
 
       try {
         var storedMode = localStorage.getItem(themeMirrorKey) || "system";
@@ -65,10 +66,21 @@
         document.documentElement.dataset.theme = resolvedTheme;
 
         var storedColorTheme = localStorage.getItem(colorThemeMirrorKey);
+        // Retired Easy Read color theme — treat as default + OpenDyslexic.
+        if (storedColorTheme === "easy-read") {
+          storedColorTheme = "default";
+          try { localStorage.setItem(openDyslexicMirrorKey, "1"); } catch (e) {}
+        }
         if (storedColorTheme && storedColorTheme !== "default") {
           document.documentElement.dataset.colorTheme = storedColorTheme;
         } else {
           document.documentElement.removeAttribute("data-color-theme");
+        }
+
+        if (localStorage.getItem(openDyslexicMirrorKey) === "1") {
+          document.documentElement.dataset.opendyslexic = "true";
+        } else {
+          document.documentElement.removeAttribute("data-opendyslexic");
         }
       } catch {
         document.documentElement.dataset.theme = "light";
@@ -792,7 +804,6 @@
   <script src="editor/media.js"></script>
   <script src="editor/controller.js"></script>
   <script src="themes/clean-paper.js"></script>
-  <script src="themes/easy-read.js"></script>
   <script src="themes/inkwood.js"></script>
   <script src="themes/lectern.js"></script>
   <script src="themes/quarry-stone.js"></script>

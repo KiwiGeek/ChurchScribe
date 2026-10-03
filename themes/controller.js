@@ -30,14 +30,18 @@ window.ScriptoriaModules.createThemeController = (deps) => {
     themeMirrorStorageKey,
     colorThemeStorageKey,
     colorThemeMirrorStorageKey,
+    openDyslexicStorageKey = "service-notes-opendyslexic-font",
+    openDyslexicMirrorStorageKey = "service-notes-opendyslexic-font-mirror",
     markLocalSettingsUpdated,
     scheduleAutoCloudSync,
     isSettingsOpen,
-    renderSettings
+    renderSettings,
+    syncUiSettingsToCloud = null
   } = deps;
 
   let currentThemeMode = "system";
   let currentColorThemeId = "default";
+  let openDyslexicFont = false;
 
   const systemThemeMediaQuery = windowObject.matchMedia("(prefers-color-scheme: dark)");
 
@@ -77,11 +81,39 @@ window.ScriptoriaModules.createThemeController = (deps) => {
   const syncThemePreferenceMirrors = () => {
     writeMirroredPreference(themeMirrorStorageKey, normalizeThemeMode(currentThemeMode));
     writeMirroredPreference(colorThemeMirrorStorageKey, currentColorThemeId || "default");
+    writeMirroredPreference(openDyslexicMirrorStorageKey, openDyslexicFont ? "1" : "0");
   };
 
   const clearThemePreferenceMirrors = () => {
     writeMirroredPreference(themeMirrorStorageKey, null);
     writeMirroredPreference(colorThemeMirrorStorageKey, null);
+    writeMirroredPreference(openDyslexicMirrorStorageKey, null);
+  };
+
+  const applyOpenDyslexicFont = (enabled, { persist = false, markChange = false, sync = true } = {}) => {
+    openDyslexicFont = Boolean(enabled);
+    if (openDyslexicFont) {
+      documentObject.documentElement.dataset.opendyslexic = "true";
+    } else {
+      documentObject.documentElement.removeAttribute("data-opendyslexic");
+    }
+    syncThemePreferenceMirrors();
+
+    if (persist) {
+      void writeStoredValue(openDyslexicStorageKey, openDyslexicFont);
+    }
+
+    if (markChange && sync) {
+      markLocalSettingsUpdated();
+      scheduleAutoCloudSync();
+      if (typeof syncUiSettingsToCloud === "function") {
+        void syncUiSettingsToCloud();
+      }
+    }
+
+    if (isSettingsOpen()) {
+      renderSettings();
+    }
   };
 
   const applyThemeMode = (mode, { persist = false, markChange = false, rerender = true } = {}) => {
@@ -148,11 +180,29 @@ window.ScriptoriaModules.createThemeController = (deps) => {
     const mirrored = readMirroredPreference(colorThemeMirrorStorageKey);
     const validIds = colorThemes.map((t) => t.id);
 
+    // Former "Easy Read" color theme → default colors + OpenDyslexic checkbox.
+    if (saved === "easy-read" || mirrored === "easy-read") {
+      applyOpenDyslexicFont(true, { persist: true, markChange: false, sync: false });
+      if (saved === "easy-read") {
+        void writeStoredValue(colorThemeStorageKey, "default");
+      }
+      return "default";
+    }
+
     if (validIds.includes(saved)) {
       return saved;
     }
 
     return validIds.includes(mirrored) ? mirrored : "default";
+  };
+
+  const getPreferredOpenDyslexicFont = async () => {
+    const saved = await readStoredValue(openDyslexicStorageKey);
+    if (typeof saved === "boolean") {
+      return saved;
+    }
+    const mirrored = readMirroredPreference(openDyslexicMirrorStorageKey);
+    return mirrored === "1" || mirrored === "true";
   };
 
   // OS-level theme change: only re-applies if the user's mode preference is
@@ -167,15 +217,18 @@ window.ScriptoriaModules.createThemeController = (deps) => {
     // Apply
     applyThemeMode,
     applyColorTheme,
+    applyOpenDyslexicFont,
     // State accessors
     getCurrentThemeMode: () => currentThemeMode,
     getCurrentColorThemeId: () => currentColorThemeId,
+    getOpenDyslexicFont: () => openDyslexicFont,
     // Resolution
     getResolvedThemeForMode,
     syncThemeModeControl,
     // Preferences
     getPreferredTheme,
     getPreferredColorTheme,
+    getPreferredOpenDyslexicFont,
     // Mirror helpers (used by the backup/restore / clear-data flows so they
     // can wipe localStorage in lockstep with IndexedDB).
     syncThemePreferenceMirrors,

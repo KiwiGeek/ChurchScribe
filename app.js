@@ -131,6 +131,8 @@ const translationRegistryStorageKey = "service-notes-translation-registry";
 const cloudSyncStorageKey = "service-notes-cloud-sync";
 const colorThemeStorageKey = "service-notes-color-theme";
 const colorThemeMirrorStorageKey = "service-notes-color-theme-mirror";
+const openDyslexicStorageKey = "service-notes-opendyslexic-font";
+const openDyslexicMirrorStorageKey = "service-notes-opendyslexic-font-mirror";
 const lastBookChapterStorageKey = "service-notes-last-book-chapter";
 const onboardingStorageKey = "service-notes-onboarding-seen";
 const verseNotesStorageKey = "service-notes-verse-notes";
@@ -361,10 +363,13 @@ const themeApi = window.ScriptoriaModules.createThemeController({
   themeMirrorStorageKey,
   colorThemeStorageKey,
   colorThemeMirrorStorageKey,
+  openDyslexicStorageKey,
+  openDyslexicMirrorStorageKey,
   // sync hooks — late-bound through the syncCloudApi thunks declared above
   // so they no-op safely until the sync module is wired up later in this file.
   markLocalSettingsUpdated: (...args) => markLocalSettingsUpdated(...args),
   scheduleAutoCloudSync: (...args) => scheduleAutoCloudSync(...args),
+  syncUiSettingsToCloud: (...args) => syncCloudApi?.syncUiSettingsToCloud?.(...args),
   // Settings rerender — late-bound because renderSettings is a `let`
   // placeholder that gets its real value when settings/ui.js is created.
   isSettingsOpen: () => settingsDialog.open,
@@ -374,10 +379,12 @@ const themeApi = window.ScriptoriaModules.createThemeController({
 const {
   applyThemeMode,
   applyColorTheme,
+  applyOpenDyslexicFont,
   getResolvedThemeForMode,
   syncThemeModeControl,
   getPreferredTheme,
   getPreferredColorTheme,
+  getPreferredOpenDyslexicFont,
   syncThemePreferenceMirrors,
   clearThemePreferenceMirrors,
   normalizeThemeMode
@@ -1469,6 +1476,9 @@ syncPayloadApi = window.ScriptoriaModules.createSyncPayloads({
   translationStorageKey,
   applyColorTheme,
   colorThemeStorageKey,
+  getOpenDyslexicFont: () => themeApi.getOpenDyslexicFont(),
+  applyOpenDyslexicFont: (...args) => themeApi.applyOpenDyslexicFont(...args),
+  openDyslexicStorageKey,
   applySyncedTranslationState: (...args) =>
     translationsManagerApiRef ? translationsManagerApiRef.applySyncedTranslationState(...args) : Promise.resolve(),
   ensureWorkspaceConsistency,
@@ -2094,6 +2104,10 @@ const {
     viewerApi.renderChapter();
     renderSettings();
   },
+  getOpenDyslexicFont: () => themeApi.getOpenDyslexicFont(),
+  setOpenDyslexicFont: (enabled) => {
+    applyOpenDyslexicFont(enabled, { persist: true, markChange: true });
+  },
   colorThemes,
   getCurrentColorThemeId: () => themeApi.getCurrentColorThemeId(),
   writeStoredValue,
@@ -2168,6 +2182,10 @@ const syncSetupWizardApi = window.ScriptoriaModules.createSyncSetupWizard({
   translationStorageKey,
   applyColorTheme,
   colorThemeStorageKey,
+  getOpenDyslexicFont: () => themeApi.getOpenDyslexicFont(),
+  setOpenDyslexicFont: (value, options = {}) =>
+    applyOpenDyslexicFont(value, { persist: true, markChange: false, sync: false, ...options }),
+  openDyslexicStorageKey,
   buildBookAliasMap: () => buildBookAliasMap(),
   renderWorkspace: () => renderWorkspace(),
   persistWorkspace: () => persistWorkspace(),
@@ -2369,6 +2387,7 @@ const bootstrap = async () => {
   buildBookAliasMap();
   await restoreLastBookChapter();
   applyColorTheme(await getPreferredColorTheme());
+  applyOpenDyslexicFont(await getPreferredOpenDyslexicFont(), { persist: false, markChange: false });
   await verseNotesApi.load();
   await restoreCloudSyncSettings();
   activeProvider.waitForReady(() => {
