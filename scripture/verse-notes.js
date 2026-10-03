@@ -509,11 +509,8 @@ window.ScriptoriaModules.createVerseNotes = (deps) => {
             rail.append(renderMarginCard(book, chapter, entry));
           });
           bindScriptureLinks(rail);
-        } else {
-          rail.classList.add("is-empty");
+          block.append(rail);
         }
-
-        block.append(rail);
       }
     });
 
