@@ -157,13 +157,126 @@ window.ScriptoriaModules.createSettingsUi = (deps) => {
       themeCatalog.enrichColorThemes(deps.colorThemes);
     }
 
-    const createThemeCard = (theme, syncRoots = []) => {
+    const parseHexColor = (value) => {
+      if (typeof value !== "string") return null;
+      let hex = value.trim().replace("#", "");
+      if (hex.length === 3) {
+        hex = hex.split("").map((part) => part + part).join("");
+      }
+      if (!/^[0-9a-fA-F]{6}$/.test(hex)) return null;
+      return {
+        r: Number.parseInt(hex.slice(0, 2), 16),
+        g: Number.parseInt(hex.slice(2, 4), 16),
+        b: Number.parseInt(hex.slice(4, 6), 16)
+      };
+    };
+
+    const toRgba = (color, alpha) => `rgba(${color.r}, ${color.g}, ${color.b}, ${alpha})`;
+
+    const mixHex = (a, b, amount) => {
+      const mix = (from, to) => Math.round(from + (to - from) * amount);
+      return `#${[mix(a.r, b.r), mix(a.g, b.g), mix(a.b, b.b)]
+        .map((channel) => channel.toString(16).padStart(2, "0"))
+        .join("")}`;
+    };
+
+    const themeLooksDark = (theme) => {
+      if (theme.supports === "dark") return true;
+      if (theme.supports === "light") return false;
+      const surface = parseHexColor((theme.swatches || [])[0]);
+      if (!surface) return false;
+      return (0.2126 * surface.r + 0.7152 * surface.g + 0.0722 * surface.b) / 255 < 0.42;
+    };
+
+    const createThemePreview = (theme, { size = "card" } = {}) => {
+      const swatches = theme.swatches || [];
+      const surface = parseHexColor(swatches[0]) || { r: 245, g: 245, b: 245 };
+      const accent = parseHexColor(swatches[1]) || { r: 120, g: 90, b: 60 };
+      const panel = parseHexColor(swatches[2]) || surface;
+      const ink = parseHexColor(swatches[3]) || (themeLooksDark(theme)
+        ? { r: 230, g: 230, b: 230 }
+        : { r: 30, g: 30, b: 30 });
+      const dark = themeLooksDark(theme);
+      const pageBg = dark
+        ? `radial-gradient(ellipse 80% 55% at 12% 0%, ${toRgba(accent, 0.34)} 0%, transparent 55%), linear-gradient(155deg, ${mixHex(surface, { r: 0, g: 0, b: 0 }, 0.12)} 0%, ${mixHex(surface, accent, 0.16)} 55%, ${mixHex(surface, accent, 0.08)} 100%)`
+        : `radial-gradient(ellipse 90% 60% at 8% 0%, ${toRgba(accent, 0.22)} 0%, transparent 52%), linear-gradient(155deg, ${mixHex(surface, { r: 255, g: 255, b: 255 }, 0.35)} 0%, ${mixHex(surface, accent, 0.1)} 50%, ${mixHex(panel, accent, 0.12)} 100%)`;
+      const panelFill = dark
+        ? mixHex(panel, { r: 0, g: 0, b: 0 }, 0.18)
+        : mixHex(panel, { r: 255, g: 255, b: 255 }, 0.55);
+      const muted = toRgba(ink, dark ? 0.42 : 0.28);
+
+      const preview = document.createElement("div");
+      preview.className = `theme-preview theme-preview--${size}`;
+      preview.setAttribute("aria-hidden", "true");
+      preview.style.setProperty("--tp-bg", pageBg);
+      preview.style.setProperty("--tp-surface", panelFill);
+      preview.style.setProperty("--tp-accent", `#${[accent.r, accent.g, accent.b].map((n) => n.toString(16).padStart(2, "0")).join("")}`);
+      preview.style.setProperty("--tp-text", `#${[ink.r, ink.g, ink.b].map((n) => n.toString(16).padStart(2, "0")).join("")}`);
+      preview.style.setProperty("--tp-muted", muted);
+      preview.style.setProperty("--tp-border", toRgba(ink, dark ? 0.18 : 0.12));
+
+      preview.innerHTML = `
+        <div class="theme-preview-chrome">
+          <span class="theme-preview-brand"></span>
+          <span class="theme-preview-actions">
+            <i></i><i></i>
+          </span>
+        </div>
+        <div class="theme-preview-panes">
+          <div class="theme-preview-pane">
+            <span class="theme-preview-line"></span>
+            <span class="theme-preview-line theme-preview-line--mid"></span>
+            <span class="theme-preview-line theme-preview-line--short"></span>
+            <span class="theme-preview-line"></span>
+          </div>
+          <div class="theme-preview-pane theme-preview-pane--scripture">
+            <span class="theme-preview-verse"><i></i><b></b></span>
+            <span class="theme-preview-verse"><i></i><b></b></span>
+            <span class="theme-preview-verse"><i></i><b class="theme-preview-line--short"></b></span>
+          </div>
+        </div>
+      `;
+      return preview;
+    };
+
+    const fillThemeSample = (sampleRoot, theme) => {
+      if (!sampleRoot || !theme) return;
+      sampleRoot.replaceChildren();
+
+      const frame = document.createElement("div");
+      frame.className = "theme-sample-frame";
+      frame.append(createThemePreview(theme, { size: "hero" }));
+
+      const caption = document.createElement("div");
+      caption.className = "theme-sample-caption";
+
+      const title = document.createElement("p");
+      title.className = "theme-sample-name";
+      title.textContent = theme.name;
+
+      const detail = document.createElement("p");
+      detail.className = "theme-sample-meta";
+      const modeLabel = theme.supports === "both"
+        ? "Light & dark"
+        : theme.supports === "dark"
+          ? "Dark only"
+          : "Light only";
+      detail.textContent = `${modeLabel} · sample layout`;
+
+      caption.append(title, detail);
+      sampleRoot.append(frame, caption);
+      sampleRoot.dataset.themeId = theme.id;
+    };
+
+    const createThemeCard = (theme, { syncRoots = [], sampleRoot = null, size = "card" } = {}) => {
       const isActive = theme.id === deps.getCurrentColorThemeId();
       const card = document.createElement("button");
       card.type = "button";
       card.className = `theme-card${isActive ? " is-active" : ""}`;
       card.dataset.themeId = theme.id;
       card.setAttribute("aria-pressed", String(isActive));
+
+      const preview = createThemePreview(theme, { size });
 
       const swatch = document.createElement("div");
       swatch.className = "theme-swatch";
@@ -182,17 +295,23 @@ window.ScriptoriaModules.createSettingsUi = (deps) => {
       meta.className = "theme-card-meta";
       const modeLabel = theme.supports === "both" ? "Light & dark" : theme.supports === "dark" ? "Dark only" : "Light only";
       meta.textContent = modeLabel;
-      card.setAttribute("aria-label", `${theme.name}, ${modeLabel}`);
+      card.setAttribute("aria-label", `${theme.name}, ${modeLabel}. Hover to preview sample.`);
 
       const check = document.createElement("span");
       check.className = "theme-card-check";
       check.setAttribute("aria-hidden", "true");
       check.textContent = "✓";
 
-      card.append(swatch, name, meta, check);
+      card.append(preview, swatch, name, meta, check);
+
+      const showSample = () => fillThemeSample(sampleRoot, theme);
+      card.addEventListener("pointerenter", showSample);
+      card.addEventListener("focus", showSample);
+
       card.addEventListener("click", () => {
         void deps.writeStoredValue(deps.colorThemeStorageKey, theme.id);
         deps.applyColorTheme(theme.id);
+        fillThemeSample(sampleRoot, theme);
         syncRoots.forEach((root) => {
           root.querySelectorAll(".theme-card").forEach((el) => {
             const active = el.dataset.themeId === theme.id;
@@ -247,8 +366,30 @@ window.ScriptoriaModules.createSettingsUi = (deps) => {
 
     const themeCopy = document.createElement("p");
     themeCopy.className = "settings-copy";
-    themeCopy.textContent = "Start with a distinct look, or filter the full library.";
+    themeCopy.textContent = "Hover a theme for a larger sample, then click to apply.";
     themeSection.append(themeCopy);
+
+    const filteredThemes = typeof themeCatalog.filterColorThemes === "function"
+      ? themeCatalog.filterColorThemes(deps.colorThemes, {
+        support: themeSupportFilter,
+        mood: themeMoodFilter
+      })
+      : deps.colorThemes;
+
+    const featuredThemes = (typeof themeCatalog.getFeaturedThemes === "function"
+      ? themeCatalog.getFeaturedThemes(deps.colorThemes)
+      : deps.colorThemes.filter((theme) => theme.featured))
+      .filter((theme) => filteredThemes.some((candidate) => candidate.id === theme.id));
+
+    const sample = document.createElement("div");
+    sample.className = "theme-sample";
+    sample.setAttribute("aria-live", "polite");
+    const activeTheme = deps.colorThemes.find((theme) => theme.id === deps.getCurrentColorThemeId())
+      || featuredThemes[0]
+      || filteredThemes[0]
+      || deps.colorThemes[0];
+    fillThemeSample(sample, activeTheme);
+    themeSection.append(sample);
 
     const filterBar = document.createElement("div");
     filterBar.className = "theme-filter-bar";
@@ -279,23 +420,33 @@ window.ScriptoriaModules.createSettingsUi = (deps) => {
     );
     themeSection.append(filterBar);
 
-    const filteredThemes = typeof themeCatalog.filterColorThemes === "function"
-      ? themeCatalog.filterColorThemes(deps.colorThemes, {
-        support: themeSupportFilter,
-        mood: themeMoodFilter
-      })
-      : deps.colorThemes;
-
-    const featuredThemes = (typeof themeCatalog.getFeaturedThemes === "function"
-      ? themeCatalog.getFeaturedThemes(deps.colorThemes)
-      : deps.colorThemes.filter((theme) => theme.featured))
-      .filter((theme) => filteredThemes.some((candidate) => candidate.id === theme.id));
-
     const featuredGrid = document.createElement("div");
     featuredGrid.className = "theme-grid theme-grid--featured";
     const allGrid = document.createElement("div");
     allGrid.className = "theme-grid";
     const syncRoots = [featuredGrid, allGrid];
+
+    const restoreActiveSample = () => {
+      const activeId = deps.getCurrentColorThemeId();
+      const nextTheme = deps.colorThemes.find((entry) => entry.id === activeId) || activeTheme;
+      fillThemeSample(sample, nextTheme);
+    };
+
+    const bindSampleRestore = (root) => {
+      root.addEventListener("pointerleave", (event) => {
+        if (root.contains(event.relatedTarget)) return;
+        restoreActiveSample();
+      });
+      root.addEventListener("focusout", (event) => {
+        if (root.contains(event.relatedTarget)) return;
+        // Keep the hovered sample if the pointer is still over a card.
+        if (root.querySelector(".theme-card:hover")) return;
+        restoreActiveSample();
+      });
+    };
+
+    bindSampleRestore(featuredGrid);
+    bindSampleRestore(allGrid);
 
     if (featuredThemes.length > 0 && themeMoodFilter === "all") {
       const featuredTitle = document.createElement("p");
@@ -304,7 +455,11 @@ window.ScriptoriaModules.createSettingsUi = (deps) => {
       themeSection.append(featuredTitle);
 
       featuredThemes.forEach((theme) => {
-        featuredGrid.append(createThemeCard(theme, syncRoots));
+        featuredGrid.append(createThemeCard(theme, {
+          syncRoots,
+          sampleRoot: sample,
+          size: "featured"
+        }));
       });
       themeSection.append(featuredGrid);
     }
@@ -323,7 +478,11 @@ window.ScriptoriaModules.createSettingsUi = (deps) => {
       themeSection.append(empty);
     } else {
       filteredThemes.forEach((theme) => {
-        allGrid.append(createThemeCard(theme, syncRoots));
+        allGrid.append(createThemeCard(theme, {
+          syncRoots,
+          sampleRoot: sample,
+          size: "card"
+        }));
       });
       themeSection.append(allGrid);
     }
