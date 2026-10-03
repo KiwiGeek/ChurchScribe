@@ -134,11 +134,16 @@ const colorThemeMirrorStorageKey = "service-notes-color-theme-mirror";
 const lastBookChapterStorageKey = "service-notes-last-book-chapter";
 const onboardingStorageKey = "service-notes-onboarding-seen";
 const autoCloudSyncDelayMs = 10000;
-// Compact mode is meant for narrow desktop panes while keeping the full editor available.
+// Compact editor densifies the notes chrome on narrow windows. Scripture combo
+// collapse is separate and keyed off the scripture panel's own width so an iPad
+// in portrait (window < 900 but scripture pane still roomy) keeps the
+// Translation / Book / Chapter selects visible.
 const compactEditorThresholdPx = 900;
+const compactScriptureThresholdPx = 280;
 const chapterLabelPrefixPattern = /^Chapter\s+/i;
 let compactResizeFrame = null;
 let compactEditorActive = null;
+let compactScriptureActive = null;
 
 // noOpProvider — defensive fallback used as the initial value of activeProvider
 // and whenever providerRegistry lookup misses.  Lives in storage/noopprovider.js
@@ -785,6 +790,34 @@ const closeCompactVersePicker = () => {
   compactReferenceChip?.setAttribute("aria-expanded", "false");
 };
 
+const applyCompactScriptureState = () => {
+  const scripturePanel = document.querySelector(".scripture-panel");
+  const panelWidth = scripturePanel?.clientWidth ?? 0;
+  // Fall back to collapsing only when we cannot measure a panel (should not
+  // happen in the desktop shell). A measured width of 0 means the panel is
+  // hidden/unlaid-out; keep the previous state rather than flashing compact.
+  if (!scripturePanel || panelWidth <= 0) {
+    return;
+  }
+
+  const isCompact = panelWidth < compactScriptureThresholdPx;
+
+  if (compactScriptureActive === isCompact) {
+    return;
+  }
+
+  compactScriptureActive = isCompact;
+  document.body.classList.toggle("is-compact-scripture", isCompact);
+
+  if (compactReferenceChip) {
+    compactReferenceChip.hidden = !isCompact;
+  }
+
+  if (!isCompact) {
+    closeCompactVersePicker();
+  }
+};
+
 const applyCompactEditorState = () => {
   const isCompact = window.innerWidth <= compactEditorThresholdPx;
 
@@ -799,10 +832,6 @@ const applyCompactEditorState = () => {
     compactFormatMenu.hidden = !isCompact;
   }
 
-  if (compactReferenceChip) {
-    compactReferenceChip.hidden = !isCompact;
-  }
-
   if (toolbarControls && compactFormatPanel && noteToolbar && compactFormatMenu) {
     if (isCompact) {
       if (toolbarControls.parentElement !== compactFormatPanel) {
@@ -815,7 +844,6 @@ const applyCompactEditorState = () => {
 
   if (!isCompact) {
     closeCompactFormatPanel();
-    closeCompactVersePicker();
   }
 };
 
@@ -2219,7 +2247,7 @@ const setupCompactEditorMode = () => {
     verseReferenceObserver.observe(verseReference, { childList: true, subtree: true, characterData: true });
   }
 
-  window.addEventListener("resize", () => {
+  const scheduleCompactLayoutUpdate = () => {
     if (compactResizeFrame !== null) {
       window.cancelAnimationFrame(compactResizeFrame);
     }
@@ -2227,10 +2255,26 @@ const setupCompactEditorMode = () => {
     compactResizeFrame = window.requestAnimationFrame(() => {
       compactResizeFrame = null;
       applyCompactEditorState();
+      applyCompactScriptureState();
     });
-  });
+  };
+
+  window.addEventListener("resize", scheduleCompactLayoutUpdate);
+
+  // Pane drag / scripture-only toggles change panel width without a window
+  // resize — observe the scripture panel directly so combos expand/collapse
+  // with the available space (especially on iPad portrait).
+  const scripturePanel = document.querySelector(".scripture-panel");
+  if (scripturePanel && typeof ResizeObserver === "function") {
+    const scriptureResizeObserver = new ResizeObserver(() => {
+      scheduleCompactLayoutUpdate();
+    });
+    scriptureResizeObserver.observe(scripturePanel);
+  }
+
   updateCompactReferenceChip();
   applyCompactEditorState();
+  applyCompactScriptureState();
 };
 
 setupCompactEditorMode();

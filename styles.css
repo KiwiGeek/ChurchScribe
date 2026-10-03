@@ -2898,7 +2898,11 @@ body.is-compact-editor .compact-format-button {
   display: block;
 }
 
-body.is-compact-editor .compact-reference-chip {
+/* Scripture combo collapse is keyed off panel width (body.is-compact-scripture),
+ * not the notes compact-editor window breakpoint, so iPad portrait and other
+ * mid-width layouts keep Translation / Book / Chapter visible when the
+ * scripture pane still has room for them. */
+body.is-compact-scripture .compact-reference-chip {
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
@@ -2914,21 +2918,21 @@ body.is-compact-editor .compact-reference-chip {
   cursor: pointer;
 }
 
-body.is-compact-editor .compact-reference-chip::after {
+body.is-compact-scripture .compact-reference-chip::after {
   content: "▾";
   color: var(--muted);
   font-size: 0.8rem;
 }
 
-body.is-compact-editor .verse-picker {
+body.is-compact-scripture .verse-picker {
   display: none;
 }
 
-body.is-compact-editor .verse-picker.is-compact-expanded {
+body.is-compact-scripture .verse-picker.is-compact-expanded {
   display: grid;
 }
 
-body.is-compact-editor .compact-verse-picker-actions {
+body.is-compact-scripture .compact-verse-picker-actions {
   display: flex;
   justify-content: flex-end;
   grid-column: 1 / -1;
@@ -3009,10 +3013,11 @@ body.is-compact-editor .compact-format-panel .color-picker-trigger {
  * user who narrows their window has made a deliberate choice — we respect that
  * and let the layout stay as-is rather than second-guessing them.
  *
- * If a future "compact editor mode" is introduced (see GitHub issue: Compact
- * editor mode for narrow desktop windows) these breakpoints are where that
- * work would live. Until then, the default desktop layout stays two-panel;
- * users can opt into scripture-only mode from Settings → Layout & Mode.
+ * Compact notes chrome still densifies below 900px window width. Scripture
+ * Translation / Book / Chapter combos collapse separately when the scripture
+ * panel itself is narrower than ~280px, so iPad portrait keeps the selects
+ * visible whenever the pane has room. Users can also opt into scripture-only
+ * mode from Settings → Layout & Mode.
  */
 
 /* ===================== UI SETTINGS PANEL ===================== */
