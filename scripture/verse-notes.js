@@ -274,24 +274,19 @@ window.ScriptoriaModules.createVerseNotes = (deps) => {
         </div>
       `
       : `
-        <form class="dialog-shell compact-shell" method="dialog">
-          <div class="dialog-header">
+        <form class="dialog-shell compact-shell verse-note-shell" method="dialog">
+          <div class="dialog-header verse-note-header">
             <div>
               <p class="panel-kicker">Scripture note</p>
               <h2 id="verse-note-title">Verse note</h2>
             </div>
             <button class="ghost-button" type="submit" data-verse-note-cancel>Close</button>
           </div>
-          <div class="dialog-body">
-            <p class="settings-copy">Plain text. Scripture references and URLs become links when saved.</p>
-            <label class="field">
-              <span>Note</span>
-              <textarea id="verse-note-input" class="verse-note-input" rows="8" placeholder="Add a note for this verse…"></textarea>
-            </label>
+          <div class="dialog-body verse-note-body">
+            <textarea id="verse-note-input" class="verse-note-input" rows="5" placeholder="Write a note… References and URLs become links when saved."></textarea>
           </div>
           <div class="dialog-actions verse-note-actions">
-            <button type="button" class="ghost-button" data-verse-note-delete hidden>Delete</button>
-            <button type="submit" class="ghost-button" data-verse-note-cancel>Cancel</button>
+            <button type="button" class="ghost-button verse-note-delete" data-verse-note-delete hidden>Delete</button>
             <button type="button" class="primary-button" data-verse-note-save>Save</button>
           </div>
         </form>

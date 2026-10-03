@@ -1859,11 +1859,41 @@ h1 {
   color: var(--accent);
 }
 
+.verse-note-dialog {
+  width: min(440px, calc(100% - 24px));
+}
+
+.verse-note-dialog .verse-note-shell {
+  min-height: 0;
+  height: auto;
+  max-height: min(520px, calc(100vh - 48px));
+}
+
+.verse-note-header {
+  padding-bottom: 10px;
+}
+
+.verse-note-header h2 {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.25;
+}
+
+.verse-note-body {
+  flex: 0 0 auto;
+  padding-top: 14px;
+  padding-bottom: 12px;
+}
+
 .verse-note-input {
   width: 100%;
-  min-height: 10rem;
+  min-height: 8rem;
+  max-height: 40vh;
   resize: vertical;
-  padding: 0.75rem 0.85rem;
+  padding: 0.85rem 0.95rem;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   background: var(--input-surface, var(--surface-strong));
@@ -1872,17 +1902,35 @@ h1 {
   line-height: 1.55;
 }
 
+.verse-note-input:focus {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
 .verse-note-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   justify-content: flex-end;
   align-items: center;
+  margin: 0;
+  padding: 12px 20px 18px;
+  border-top: 1px solid var(--border);
 }
 
-.verse-note-dialog .dialog-body {
-  display: grid;
-  gap: 12px;
+.verse-note-actions .primary-button {
+  min-width: 5.5rem;
+}
+
+.verse-note-delete {
+  margin-right: auto;
+  color: var(--muted);
+}
+
+.verse-note-delete:hover,
+.verse-note-delete:focus-visible {
+  color: var(--text);
+  border-color: var(--border);
 }
 
 .verse-note-sheet-backdrop {
@@ -2016,10 +2064,6 @@ h1 {
   min-height: auto;
 }
 
-.compact-shell {
-  min-height: auto;
-}
-
 .management-dialog {
   width: min(1100px, calc(100% - 24px));
   border: 1px solid var(--border);
@@ -2040,6 +2084,11 @@ h1 {
   flex-direction: column;
   min-height: min(760px, calc(100vh - 64px));
   max-height: calc(100vh - 64px);
+}
+
+.dialog-shell.compact-shell,
+.compact-shell {
+  min-height: auto;
 }
 
 #note-manager-dialog .dialog-shell {
