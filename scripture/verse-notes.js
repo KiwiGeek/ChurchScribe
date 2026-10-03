@@ -325,9 +325,10 @@ window.ScriptoriaModules.createVerseNotes = (deps) => {
       if (!window.confirm("Delete this verse note?")) {
         return;
       }
-      deleteNote(editingMeta.book, editingMeta.chapter, editingMeta.verse);
+      const { book, chapter, verse, onChanged } = editingMeta;
+      deleteNote(book, chapter, verse);
       closeEditor();
-      editingMeta.onChanged?.();
+      onChanged?.();
     });
 
     return dialogEl;
