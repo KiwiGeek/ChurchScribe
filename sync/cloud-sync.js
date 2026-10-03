@@ -122,6 +122,31 @@ window.ScriptoriaModules.createCloudSync = (deps) => {
   const sortById = (items) =>
     [...items].sort((left, right) => String(left.id).localeCompare(String(right.id)));
 
+  const normalizeVerseNotesForComparison = (payload) => {
+    if (!payload || typeof payload !== "object") {
+      return {};
+    }
+    const source = payload.notes && typeof payload.notes === "object" ? payload.notes : payload;
+    const normalized = {};
+    Object.keys(source)
+      .sort()
+      .forEach((key) => {
+        const entry = source[key];
+        if (!entry || typeof entry !== "object") {
+          return;
+        }
+        const text = typeof entry.text === "string" ? entry.text : "";
+        if (!text.trim()) {
+          return;
+        }
+        normalized[key] = {
+          text,
+          updatedAt: typeof entry.updatedAt === "string" ? entry.updatedAt : ""
+        };
+      });
+    return normalized;
+  };
+
   const remotePayloadDiffersFromLocal = (remotePayload) => {
     const remoteWorkspaceComparable = JSON.stringify({
       noteTypes: structuredClone(remotePayload.workspace?.noteTypes ?? []),
@@ -138,8 +163,21 @@ window.ScriptoriaModules.createCloudSync = (deps) => {
     const remoteNotesComparable = JSON.stringify(sortById(remoteNotes.map(normalizeNoteForComparison)));
     const localNotesComparable = JSON.stringify(sortById(localComparableNotes.map(normalizeNoteForComparison)));
 
+    const localSettings = buildCloudSyncPayload().settings;
+    const remoteVerseNotesComparable = JSON.stringify(
+      normalizeVerseNotesForComparison(remotePayload.verseNotes)
+    );
+    const localVerseNotesComparable = JSON.stringify(
+      normalizeVerseNotesForComparison(localSettings.verseNotes)
+    );
+    // Default is "show margin" when the preference is absent (older payloads).
+    const remoteMargin = remotePayload.preferences?.showVerseNoteMargin !== false;
+    const localMargin = localSettings.preferences?.showVerseNoteMargin !== false;
+
     return remoteWorkspaceComparable !== localWorkspaceComparable ||
-      remoteNotesComparable !== localNotesComparable;
+      remoteNotesComparable !== localNotesComparable ||
+      remoteVerseNotesComparable !== localVerseNotesComparable ||
+      remoteMargin !== localMargin;
   };
 
   const showSyncConflictDialog = (remotePayload, mode = "conflict") => new Promise((resolve) => {
@@ -223,8 +261,17 @@ window.ScriptoriaModules.createCloudSync = (deps) => {
     }
   };
 
-  const pullFromCloud = async () => {
-    if (!getActiveProvider().hasActiveSession() || !navigator.onLine || syncInFlightPromise || isPullInFlight) {
+  const pullFromCloud = async ({ force = false } = {}) => {
+    // Skip while a full sync or settings-only upload is in flight so a pull
+    // cannot overwrite local verse-note / theme edits mid-upload. The
+    // settings-only path may pass force:true for its own follow-up pull.
+    if (
+      !getActiveProvider().hasActiveSession() ||
+      !navigator.onLine ||
+      syncInFlightPromise ||
+      (!force && uiSettingsSyncPromise) ||
+      isPullInFlight
+    ) {
       return false;
     }
 
@@ -435,7 +482,7 @@ window.ScriptoriaModules.createCloudSync = (deps) => {
           const uploaded = await uploadUiSettingsOnce();
 
           if (uploaded) {
-            await pullFromCloud();
+            await pullFromCloud({ force: true });
           }
         } while (uiSettingsSyncQueued);
 
@@ -487,7 +534,8 @@ window.ScriptoriaModules.createCloudSync = (deps) => {
       const remoteSettings = { ...downloaded.data };
       delete remoteSettings.notes;
       delete remoteSettings.notesArePartial;
-      const localPreferences = buildCloudSyncPayload().settings.preferences;
+      const localSettings = buildCloudSyncPayload().settings;
+      const localPreferences = localSettings.preferences;
       const updatedAt = new Date().toISOString();
       const nextSettings = {
         ...remoteSettings,
@@ -495,8 +543,12 @@ window.ScriptoriaModules.createCloudSync = (deps) => {
         preferences: {
           ...(remoteSettings.preferences ?? {}),
           theme: localPreferences.theme,
-          colorTheme: localPreferences.colorTheme
-        }
+          colorTheme: localPreferences.colorTheme,
+          showVerseNoteMargin: localPreferences.showVerseNoteMargin
+        },
+        // Verse notes live in the settings file so mobile / settings-only sync
+        // can push them without uploading the full sermon-note workspace.
+        verseNotes: localSettings.verseNotes
       };
       const result = await provider.upload(
         {
@@ -521,6 +573,8 @@ window.ScriptoriaModules.createCloudSync = (deps) => {
         };
       }
 
+      cloudSyncSettings.lastSyncAt = updatedAt;
+      cloudSyncSettings.localSettingsUpdatedAt = updatedAt;
       persistCloudSyncSettings();
       return true;
     })();
