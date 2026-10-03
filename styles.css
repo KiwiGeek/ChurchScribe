@@ -3238,13 +3238,18 @@ body.is-compact-editor .compact-format-panel .color-picker-trigger {
 }
 
 .theme-sample {
+  position: sticky;
+  top: 0;
+  z-index: 3;
   display: grid;
   gap: 10px;
   margin: 4px 0 14px;
   padding: 12px;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  background: var(--surface-accent);
+  background: color-mix(in srgb, var(--surface-strong) 92%, var(--surface-accent));
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
 .theme-sample-frame {
