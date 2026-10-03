@@ -35,6 +35,9 @@ window.ScriptoriaModules.createSyncPayloads = (deps) => {
     getShowVerseNoteMargin,
     setShowVerseNoteMargin,
     showVerseNoteMarginStorageKey,
+    getVerseNotesEnabled,
+    setVerseNotesEnabled,
+    verseNotesEnabledStorageKey,
     refreshVerseNotesView
   } = deps;
 
@@ -55,7 +58,8 @@ window.ScriptoriaModules.createSyncPayloads = (deps) => {
       scriptureOnly: typeof getScriptureOnly === "function" ? getScriptureOnly() : false,
       translation: getCurrentTranslationCode(),
       colorTheme: getCurrentColorThemeId(),
-      showVerseNoteMargin: typeof getShowVerseNoteMargin === "function" ? getShowVerseNoteMargin() : true
+      showVerseNoteMargin: typeof getShowVerseNoteMargin === "function" ? getShowVerseNoteMargin() : true,
+      verseNotesEnabled: typeof getVerseNotesEnabled === "function" ? getVerseNotesEnabled() : true
     },
     verseNotes: typeof getVerseNotesPayload === "function" ? getVerseNotesPayload() : undefined,
     translationState: getTranslationStateForSync ? getTranslationStateForSync() : undefined,
@@ -150,6 +154,10 @@ window.ScriptoriaModules.createSyncPayloads = (deps) => {
 
       if (typeof payload.preferences.showVerseNoteMargin === "boolean" && typeof setShowVerseNoteMargin === "function") {
         setShowVerseNoteMargin(payload.preferences.showVerseNoteMargin, { sync: false });
+      }
+
+      if (typeof payload.preferences.verseNotesEnabled === "boolean" && typeof setVerseNotesEnabled === "function") {
+        setVerseNotesEnabled(payload.preferences.verseNotesEnabled, { sync: false });
       }
     }
 

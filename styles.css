@@ -133,6 +133,8 @@ body::before {
   align-items: center;
   margin-bottom: 12px;
   user-select: none;
+  /* Installed iPad/desktop PWAs with black-translucent status bars. */
+  padding-top: env(safe-area-inset-top, 0px);
 }
 
 .header-actions {
@@ -1834,6 +1836,10 @@ h1 {
   text-align: left;
   cursor: pointer;
   font: inherit;
+}
+
+.verse-note-rail-card:not(button) {
+  cursor: default;
 }
 
 .verse-note-rail-card:last-child {

@@ -6,8 +6,10 @@
   <title>Scriptoria</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#2a2118">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <!-- black-translucent lets the installed PWA paint under the status icons. -->
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="icon" type="image/svg+xml" href="icon.svg">
   <link rel="apple-touch-icon" href="icon.svg">
   <script>
@@ -81,6 +83,7 @@
       height: 100%;
       height: 100dvh;
       overflow: hidden;
+      background: var(--surface-strong);
     }
 
     body {
@@ -99,16 +102,34 @@
 
     /* ── Header ─────────────────────────────────────────────────────────── */
     .mob-header {
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 8px;
       padding: 5px 10px;
-      padding-top: calc(5px + env(safe-area-inset-top));
+      padding-top: calc(5px + env(safe-area-inset-top, 0px));
       background: var(--surface-strong);
       border-bottom: 0.5px solid var(--border);
       flex-shrink: 0;
       user-select: none;
+    }
+
+    /* black-translucent uses light status icons; darken the notch strip on
+       light themes so time / signal / battery stay readable. */
+    .mob-header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: env(safe-area-inset-top, 0px);
+      background: rgba(20, 16, 12, 0.55);
+      pointer-events: none;
+    }
+
+    [data-theme="dark"] .mob-header::before {
+      display: none;
     }
 
     .mob-header h1 {

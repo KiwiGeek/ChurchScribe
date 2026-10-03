@@ -135,6 +135,7 @@ const lastBookChapterStorageKey = "service-notes-last-book-chapter";
 const onboardingStorageKey = "service-notes-onboarding-seen";
 const verseNotesStorageKey = "service-notes-verse-notes";
 const showVerseNoteMarginStorageKey = "service-notes-verse-notes-margin";
+const verseNotesEnabledStorageKey = "service-notes-verse-notes-enabled";
 const autoCloudSyncDelayMs = 10000;
 // Compact editor densifies the notes chrome on narrow windows. Scripture combo
 // collapse is separate and keyed off the scripture panel's own width so an iPad
@@ -574,6 +575,7 @@ const verseNotesApi = window.ScriptoriaModules.createVerseNotes({
   writeStoredValue: (...args) => writeStoredValue(...args),
   verseNotesStorageKey,
   showMarginStorageKey: showVerseNoteMarginStorageKey,
+  notesEnabledStorageKey: verseNotesEnabledStorageKey,
   markLocalSettingsUpdated: (...args) => markLocalSettingsUpdated(...args),
   scheduleAutoCloudSync: (...args) => scheduleAutoCloudSync(...args),
   parseScriptureReference,
@@ -1478,6 +1480,9 @@ syncPayloadApi = window.ScriptoriaModules.createSyncPayloads({
   getShowVerseNoteMargin: () => verseNotesApi.getShowMargin(),
   setShowVerseNoteMargin: (value, options) => verseNotesApi.setShowMargin(value, options),
   showVerseNoteMarginStorageKey,
+  getVerseNotesEnabled: () => verseNotesApi.getNotesEnabled(),
+  setVerseNotesEnabled: (value, options) => verseNotesApi.setNotesEnabled(value, options),
+  verseNotesEnabledStorageKey,
   refreshVerseNotesView: () => viewerApi.renderChapter()
 });
 
@@ -2083,6 +2088,12 @@ const {
     viewerApi.renderChapter();
     renderSettings();
   },
+  getVerseNotesEnabled: () => verseNotesApi.getNotesEnabled(),
+  setVerseNotesEnabled: (value) => {
+    verseNotesApi.setNotesEnabled(value);
+    viewerApi.renderChapter();
+    renderSettings();
+  },
   colorThemes,
   getCurrentColorThemeId: () => themeApi.getCurrentColorThemeId(),
   writeStoredValue,
@@ -2173,10 +2184,13 @@ const syncSetupWizardApi = window.ScriptoriaModules.createSyncSetupWizard({
   translationRegistryStorageKey,
   verseNotesStorageKey,
   showVerseNoteMarginStorageKey,
+  verseNotesEnabledStorageKey,
   getVerseNotesPayload: () => verseNotesApi.getSyncPayload(),
   applyVerseNotesPayload: (payload) => verseNotesApi.applySyncPayload(payload),
   getShowVerseNoteMargin: () => verseNotesApi.getShowMargin(),
   setShowVerseNoteMargin: (value, options) => verseNotesApi.setShowMargin(value, options),
+  getVerseNotesEnabled: () => verseNotesApi.getNotesEnabled(),
+  setVerseNotesEnabled: (value, options) => verseNotesApi.setNotesEnabled(value, options),
   refreshVerseNotesView: () => viewerApi.renderChapter(),
   clearThemePreferenceMirrors,
   cloudSyncSettings,

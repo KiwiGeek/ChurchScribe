@@ -170,14 +170,17 @@ window.ScriptoriaModules.createCloudSync = (deps) => {
     const localVerseNotesComparable = JSON.stringify(
       normalizeVerseNotesForComparison(localSettings.verseNotes)
     );
-    // Default is "show margin" when the preference is absent (older payloads).
+    // Default is "show margin" / notes mode on when the preference is absent.
     const remoteMargin = remotePayload.preferences?.showVerseNoteMargin !== false;
     const localMargin = localSettings.preferences?.showVerseNoteMargin !== false;
+    const remoteNotesEnabled = remotePayload.preferences?.verseNotesEnabled !== false;
+    const localNotesEnabled = localSettings.preferences?.verseNotesEnabled !== false;
 
     return remoteWorkspaceComparable !== localWorkspaceComparable ||
       remoteNotesComparable !== localNotesComparable ||
       remoteVerseNotesComparable !== localVerseNotesComparable ||
-      remoteMargin !== localMargin;
+      remoteMargin !== localMargin ||
+      remoteNotesEnabled !== localNotesEnabled;
   };
 
   const showSyncConflictDialog = (remotePayload, mode = "conflict") => new Promise((resolve) => {
@@ -544,7 +547,8 @@ window.ScriptoriaModules.createCloudSync = (deps) => {
           ...(remoteSettings.preferences ?? {}),
           theme: localPreferences.theme,
           colorTheme: localPreferences.colorTheme,
-          showVerseNoteMargin: localPreferences.showVerseNoteMargin
+          showVerseNoteMargin: localPreferences.showVerseNoteMargin,
+          verseNotesEnabled: localPreferences.verseNotesEnabled
         },
         // Verse notes live in the settings file so mobile / settings-only sync
         // can push them without uploading the full sermon-note workspace.

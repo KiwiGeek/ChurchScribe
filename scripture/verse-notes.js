@@ -10,6 +10,7 @@ window.ScriptoriaModules.createVerseNotes = (deps) => {
     writeStoredValue,
     verseNotesStorageKey = "service-notes-verse-notes",
     showMarginStorageKey = "service-notes-verse-notes-margin",
+    notesEnabledStorageKey = "service-notes-verse-notes-enabled",
     markLocalSettingsUpdated = () => {},
     scheduleAutoCloudSync = () => {},
     syncUiSettingsToCloud = null,
@@ -21,6 +22,8 @@ window.ScriptoriaModules.createVerseNotes = (deps) => {
 
   let notesByKey = Object.create(null);
   let showMargin = true;
+  // When false, verses are not tappable for add/edit; existing notes still show.
+  let notesEnabled = true;
   let dialogEl = null;
   let editingKey = null;
   let editingMeta = null;
@@ -75,8 +78,9 @@ window.ScriptoriaModules.createVerseNotes = (deps) => {
     }
   };
 
-  const persistMarginPref = ({ sync = true } = {}) => {
+  const persistPrefs = ({ sync = true } = {}) => {
     void writeStoredValue(showMarginStorageKey, showMargin);
+    void writeStoredValue(notesEnabledStorageKey, notesEnabled);
     if (!sync) {
       return;
     }
@@ -93,6 +97,10 @@ window.ScriptoriaModules.createVerseNotes = (deps) => {
     const marginPref = await readStoredValue(showMarginStorageKey);
     if (typeof marginPref === "boolean") {
       showMargin = marginPref;
+    }
+    const enabledPref = await readStoredValue(notesEnabledStorageKey);
+    if (typeof enabledPref === "boolean") {
+      notesEnabled = enabledPref;
     }
   };
 
@@ -352,6 +360,9 @@ window.ScriptoriaModules.createVerseNotes = (deps) => {
   };
 
   const openEditor = ({ book, chapter, covers, onChanged }) => {
+    if (!notesEnabled) {
+      return;
+    }
     const verseList = (covers && covers.length ? covers : []).map(Number).filter(Number.isFinite);
     if (!verseList.length) {
       return;
@@ -398,8 +409,10 @@ window.ScriptoriaModules.createVerseNotes = (deps) => {
   };
 
   const renderMarginCard = (book, chapter, entry) => {
-    const card = document.createElement("button");
-    card.type = "button";
+    const card = document.createElement(notesEnabled ? "button" : "div");
+    if (notesEnabled) {
+      card.type = "button";
+    }
     card.className = "verse-note-rail-card";
     card.dataset.verse = String(entry.verse);
 
@@ -412,22 +425,24 @@ window.ScriptoriaModules.createVerseNotes = (deps) => {
     body.innerHTML = linkifyPlainText(entry.text);
 
     card.append(label, body);
-    card.addEventListener("click", (event) => {
-      if (event.target.closest("a")) {
-        return;
-      }
-      event.preventDefault();
-      event.stopPropagation();
-      openEditor({
-        book,
-        chapter,
-        covers: [entry.verse],
-        onChanged: () => {
-          // Caller re-decorates via afterChapterRender path.
-          deps.refreshChapter?.();
+    if (notesEnabled) {
+      card.addEventListener("click", (event) => {
+        if (event.target.closest("a")) {
+          return;
         }
+        event.preventDefault();
+        event.stopPropagation();
+        openEditor({
+          book,
+          chapter,
+          covers: [entry.verse],
+          onChanged: () => {
+            // Caller re-decorates via afterChapterRender path.
+            deps.refreshChapter?.();
+          }
+        });
       });
-    });
+    }
     return card;
   };
 
@@ -475,15 +490,17 @@ window.ScriptoriaModules.createVerseNotes = (deps) => {
       const covers = coveredVersesForEl(verseEl);
       const rowNotes = notesForVerses(book, chapter, covers);
       const hasRowNote = rowNotes.length > 0;
-
-      verseEl.classList.add("is-note-target");
-      verseEl.setAttribute("role", "button");
-      verseEl.tabIndex = 0;
       const refLabel = formatRefLabel(book, chapter, covers);
-      verseEl.setAttribute(
-        "aria-label",
-        hasRowNote ? `${refLabel}. Has note. Activate to edit.` : `${refLabel}. Activate to add a note.`
-      );
+
+      if (notesEnabled) {
+        verseEl.classList.add("is-note-target");
+        verseEl.setAttribute("role", "button");
+        verseEl.tabIndex = 0;
+        verseEl.setAttribute(
+          "aria-label",
+          hasRowNote ? `${refLabel}. Has note. Activate to edit.` : `${refLabel}. Activate to add a note.`
+        );
+      }
 
       if (hasRowNote) {
         verseEl.classList.add("has-verse-note");
@@ -513,6 +530,9 @@ window.ScriptoriaModules.createVerseNotes = (deps) => {
       chapterText.dataset.verseNotesBound = "1";
 
       chapterText.addEventListener("click", (event) => {
+        if (!notesEnabled) {
+          return;
+        }
         if (event.target.closest(".chapter-verse-continues-link")) {
           return;
         }
@@ -536,6 +556,9 @@ window.ScriptoriaModules.createVerseNotes = (deps) => {
       });
 
       chapterText.addEventListener("keydown", (event) => {
+        if (!notesEnabled) {
+          return;
+        }
         if (event.key !== "Enter" && event.key !== " ") {
           return;
         }
@@ -598,7 +621,16 @@ window.ScriptoriaModules.createVerseNotes = (deps) => {
   const getShowMargin = () => showMargin;
   const setShowMargin = (value, { sync = true } = {}) => {
     showMargin = Boolean(value);
-    persistMarginPref({ sync });
+    persistPrefs({ sync });
+  };
+
+  const getNotesEnabled = () => notesEnabled;
+  const setNotesEnabled = (value, { sync = true } = {}) => {
+    notesEnabled = Boolean(value);
+    persistPrefs({ sync });
+    if (!notesEnabled) {
+      closeEditor();
+    }
   };
 
   return {
@@ -612,10 +644,12 @@ window.ScriptoriaModules.createVerseNotes = (deps) => {
     closeEditor,
     getShowMargin,
     setShowMargin,
+    getNotesEnabled,
+    setNotesEnabled,
     getSyncPayload,
     applySyncPayload,
     mergeRemoteNotes,
     setRefreshChapter,
-    getStorageKeys: () => [verseNotesStorageKey, showMarginStorageKey]
+    getStorageKeys: () => [verseNotesStorageKey, showMarginStorageKey, notesEnabledStorageKey]
   };
 };

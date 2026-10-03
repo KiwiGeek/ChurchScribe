@@ -152,7 +152,10 @@ window.ScriptoriaModules.createSettingsUi = (deps) => {
     layoutSection.append(layoutRow);
     container.append(layoutSection);
 
-    if (typeof deps.getShowVerseNoteMargin === "function" && typeof deps.setShowVerseNoteMargin === "function") {
+    if (
+      (typeof deps.getShowVerseNoteMargin === "function" && typeof deps.setShowVerseNoteMargin === "function") ||
+      (typeof deps.getVerseNotesEnabled === "function" && typeof deps.setVerseNotesEnabled === "function")
+    ) {
       const verseNotesSection = document.createElement("div");
       verseNotesSection.className = "ui-settings-section";
 
@@ -166,34 +169,68 @@ window.ScriptoriaModules.createSettingsUi = (deps) => {
       verseNotesCopy.textContent = "Tap a verse to add a note. When notes exist, show them in a margin beside the chapter.";
       verseNotesSection.append(verseNotesCopy);
 
-      const verseNotesRow = document.createElement("div");
-      verseNotesRow.className = "ui-toggle-row";
+      if (typeof deps.getVerseNotesEnabled === "function" && typeof deps.setVerseNotesEnabled === "function") {
+        const modeRow = document.createElement("div");
+        modeRow.className = "ui-toggle-row";
 
-      const verseNotesField = document.createElement("label");
-      verseNotesField.className = "ui-inline-select";
+        const modeField = document.createElement("label");
+        modeField.className = "ui-inline-select";
 
-      const verseNotesLabel = document.createElement("span");
-      verseNotesLabel.textContent = "Note margin";
+        const modeLabel = document.createElement("span");
+        modeLabel.textContent = "Notes mode";
 
-      const verseNotesSelect = document.createElement("select");
-      verseNotesSelect.id = "ui-verse-note-margin-select";
-      [
-        { value: "show", label: "Show when notes exist" },
-        { value: "hide", label: "Hide margin" }
-      ].forEach((option) => {
-        const opt = document.createElement("option");
-        opt.value = option.value;
-        opt.textContent = option.label;
-        verseNotesSelect.append(opt);
-      });
-      verseNotesSelect.value = deps.getShowVerseNoteMargin() ? "show" : "hide";
-      verseNotesSelect.addEventListener("change", () => {
-        deps.setShowVerseNoteMargin(verseNotesSelect.value === "show");
-      });
+        const modeSelect = document.createElement("select");
+        modeSelect.id = "ui-verse-notes-enabled-select";
+        [
+          { value: "on", label: "On — tap verses to edit" },
+          { value: "off", label: "Off — reading only" }
+        ].forEach((option) => {
+          const opt = document.createElement("option");
+          opt.value = option.value;
+          opt.textContent = option.label;
+          modeSelect.append(opt);
+        });
+        modeSelect.value = deps.getVerseNotesEnabled() ? "on" : "off";
+        modeSelect.addEventListener("change", () => {
+          deps.setVerseNotesEnabled(modeSelect.value === "on");
+        });
 
-      verseNotesField.append(verseNotesLabel, verseNotesSelect);
-      verseNotesRow.append(verseNotesField);
-      verseNotesSection.append(verseNotesRow);
+        modeField.append(modeLabel, modeSelect);
+        modeRow.append(modeField);
+        verseNotesSection.append(modeRow);
+      }
+
+      if (typeof deps.getShowVerseNoteMargin === "function" && typeof deps.setShowVerseNoteMargin === "function") {
+        const verseNotesRow = document.createElement("div");
+        verseNotesRow.className = "ui-toggle-row";
+
+        const verseNotesField = document.createElement("label");
+        verseNotesField.className = "ui-inline-select";
+
+        const verseNotesLabel = document.createElement("span");
+        verseNotesLabel.textContent = "Note margin";
+
+        const verseNotesSelect = document.createElement("select");
+        verseNotesSelect.id = "ui-verse-note-margin-select";
+        [
+          { value: "show", label: "Show when notes exist" },
+          { value: "hide", label: "Hide margin" }
+        ].forEach((option) => {
+          const opt = document.createElement("option");
+          opt.value = option.value;
+          opt.textContent = option.label;
+          verseNotesSelect.append(opt);
+        });
+        verseNotesSelect.value = deps.getShowVerseNoteMargin() ? "show" : "hide";
+        verseNotesSelect.addEventListener("change", () => {
+          deps.setShowVerseNoteMargin(verseNotesSelect.value === "show");
+        });
+
+        verseNotesField.append(verseNotesLabel, verseNotesSelect);
+        verseNotesRow.append(verseNotesField);
+        verseNotesSection.append(verseNotesRow);
+      }
+
       container.append(verseNotesSection);
     }
 

@@ -19,7 +19,8 @@ window.ScriptoriaModules.createSettingsBackupRestore = (deps) => {
       scriptureOnly: typeof deps.isScriptureOnly === "function" ? deps.isScriptureOnly() : false,
       selectedTranslationId: deps.getCurrentTranslationCode(),
       colorTheme: deps.getCurrentColorThemeId(),
-      showVerseNoteMargin: typeof deps.getShowVerseNoteMargin === "function" ? deps.getShowVerseNoteMargin() : true
+      showVerseNoteMargin: typeof deps.getShowVerseNoteMargin === "function" ? deps.getShowVerseNoteMargin() : true,
+      verseNotesEnabled: typeof deps.getVerseNotesEnabled === "function" ? deps.getVerseNotesEnabled() : true
     },
     verseNotes: typeof deps.getVerseNotesPayload === "function" ? deps.getVerseNotesPayload() : undefined,
     translationState: deps.getTranslationStateForBackup()
@@ -99,6 +100,10 @@ window.ScriptoriaModules.createSettingsBackupRestore = (deps) => {
         if (typeof preferences.showVerseNoteMargin === "boolean" && typeof deps.setShowVerseNoteMargin === "function") {
           deps.setShowVerseNoteMargin(preferences.showVerseNoteMargin, { sync: false });
         }
+
+        if (typeof preferences.verseNotesEnabled === "boolean" && typeof deps.setVerseNotesEnabled === "function") {
+          deps.setVerseNotesEnabled(preferences.verseNotesEnabled, { sync: false });
+        }
       }
 
       if (backup.verseNotes && typeof deps.applyVerseNotesPayload === "function") {
@@ -142,7 +147,8 @@ window.ScriptoriaModules.createSettingsBackupRestore = (deps) => {
       deps.deleteStoredValue(deps.notesStorageKey),
       deps.deleteStoredValue(deps.translationRegistryStorageKey),
       deps.verseNotesStorageKey ? deps.deleteStoredValue(deps.verseNotesStorageKey) : Promise.resolve(),
-      deps.showVerseNoteMarginStorageKey ? deps.deleteStoredValue(deps.showVerseNoteMarginStorageKey) : Promise.resolve()
+      deps.showVerseNoteMarginStorageKey ? deps.deleteStoredValue(deps.showVerseNoteMarginStorageKey) : Promise.resolve(),
+      deps.verseNotesEnabledStorageKey ? deps.deleteStoredValue(deps.verseNotesEnabledStorageKey) : Promise.resolve()
     ]);
     deps.clearThemePreferenceMirrors();
 
@@ -214,7 +220,8 @@ window.ScriptoriaModules.createSettingsBackupRestore = (deps) => {
       deps.deleteStoredValue(deps.notesStorageKey),
       deps.deleteStoredValue(deps.translationRegistryStorageKey),
       deps.verseNotesStorageKey ? deps.deleteStoredValue(deps.verseNotesStorageKey) : Promise.resolve(),
-      deps.showVerseNoteMarginStorageKey ? deps.deleteStoredValue(deps.showVerseNoteMarginStorageKey) : Promise.resolve()
+      deps.showVerseNoteMarginStorageKey ? deps.deleteStoredValue(deps.showVerseNoteMarginStorageKey) : Promise.resolve(),
+      deps.verseNotesEnabledStorageKey ? deps.deleteStoredValue(deps.verseNotesEnabledStorageKey) : Promise.resolve()
     ]);
     deps.clearThemePreferenceMirrors();
 
