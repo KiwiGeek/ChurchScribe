@@ -1773,6 +1773,154 @@ h1 {
   text-decoration-color: color-mix(in srgb, var(--muted) 72%, transparent);
 }
 
+.chapter-verse.is-note-target {
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 140ms ease;
+}
+
+.chapter-verse.is-note-target:hover,
+.chapter-verse.is-note-target:focus-visible {
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  outline: none;
+}
+
+.chapter-verse.has-verse-note .chapter-verse-number {
+  position: relative;
+}
+
+.chapter-verse.has-verse-note .chapter-verse-number::after {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-left: 4px;
+  border-radius: 50%;
+  background: var(--accent);
+  vertical-align: middle;
+}
+
+.chapter-text.has-verse-note-margin {
+  gap: 12px;
+}
+
+.chapter-verse-block {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(132px, 32%);
+  gap: 10px 16px;
+  align-items: start;
+}
+
+.verse-note-rail {
+  min-width: 0;
+  padding: 2px 0 2px 12px;
+  border-left: 2px solid color-mix(in srgb, var(--accent) 35%, var(--border));
+}
+
+.verse-note-rail.is-empty {
+  min-height: 1.2em;
+  opacity: 0.35;
+}
+
+.verse-note-rail-card {
+  display: grid;
+  gap: 4px;
+  width: 100%;
+  margin: 0 0 8px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
+.verse-note-rail-card:last-child {
+  margin-bottom: 0;
+}
+
+.verse-note-rail-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.verse-note-rail-body {
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+.verse-note-rail-body a {
+  color: var(--accent);
+}
+
+.verse-note-input {
+  width: 100%;
+  min-height: 10rem;
+  resize: vertical;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--input-surface, var(--surface-strong));
+  color: var(--text);
+  font: inherit;
+  line-height: 1.55;
+}
+
+.verse-note-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.verse-note-dialog .dialog-body {
+  display: grid;
+  gap: 12px;
+}
+
+.verse-note-sheet-backdrop {
+  display: none;
+}
+
+.verse-note-sheet-backdrop.is-open,
+.verse-note-sheet-backdrop:not([hidden]) {
+  display: flex;
+}
+
+.verse-note-sheet .verse-note-help {
+  margin: 0 0 10px;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.verse-note-sheet .verse-note-actions {
+  margin-top: 12px;
+  justify-content: stretch;
+}
+
+.verse-note-sheet .verse-note-actions .mob-settings-action {
+  flex: 1;
+}
+
+@media (max-width: 720px) {
+  .chapter-verse-block {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .verse-note-rail {
+    border-left: 0;
+    border-top: 1px solid var(--border);
+    padding: 8px 0 0;
+  }
+}
+
 .verse-added-words {
   font-style: italic;
 }

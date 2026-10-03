@@ -29,7 +29,13 @@ window.ScriptoriaModules.createSyncPayloads = (deps) => {
     applySyncedTranslationState,
     ensureWorkspaceConsistency,
     buildBookAliasMap,
-    renderWorkspace
+    renderWorkspace,
+    getVerseNotesPayload,
+    applyVerseNotesPayload,
+    getShowVerseNoteMargin,
+    setShowVerseNoteMargin,
+    showVerseNoteMarginStorageKey,
+    refreshVerseNotesView
   } = deps;
 
   const buildCloudSettingsPayload = (updatedAt = new Date().toISOString()) => ({
@@ -48,8 +54,10 @@ window.ScriptoriaModules.createSyncPayloads = (deps) => {
       paneSplit: getCurrentPaneSplit(),
       scriptureOnly: typeof getScriptureOnly === "function" ? getScriptureOnly() : false,
       translation: getCurrentTranslationCode(),
-      colorTheme: getCurrentColorThemeId()
+      colorTheme: getCurrentColorThemeId(),
+      showVerseNoteMargin: typeof getShowVerseNoteMargin === "function" ? getShowVerseNoteMargin() : true
     },
+    verseNotes: typeof getVerseNotesPayload === "function" ? getVerseNotesPayload() : undefined,
     translationState: getTranslationStateForSync ? getTranslationStateForSync() : undefined,
     syncSettings: {
       provider: cloudSyncSettings.provider,
@@ -138,6 +146,17 @@ window.ScriptoriaModules.createSyncPayloads = (deps) => {
       if (payload.preferences.colorTheme) {
         applyColorTheme(payload.preferences.colorTheme);
         void writeStoredValue(colorThemeStorageKey, payload.preferences.colorTheme);
+      }
+
+      if (typeof payload.preferences.showVerseNoteMargin === "boolean" && typeof setShowVerseNoteMargin === "function") {
+        setShowVerseNoteMargin(payload.preferences.showVerseNoteMargin, { sync: false });
+      }
+    }
+
+    if (payload.verseNotes && typeof applyVerseNotesPayload === "function") {
+      applyVerseNotesPayload(payload.verseNotes);
+      if (typeof refreshVerseNotesView === "function") {
+        refreshVerseNotesView();
       }
     }
 

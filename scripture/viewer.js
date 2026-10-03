@@ -43,7 +43,9 @@ window.ScriptoriaModules.createScriptureViewer = (deps) => {
     getScriptureSearchQuery,
     // Sync hooks
     markLocalSettingsUpdated,
-    scheduleAutoCloudSync
+    scheduleAutoCloudSync,
+    // Optional: decorate rendered chapter (e.g. verse notes margin / indicators)
+    afterChapterRender
   } = deps;
 
   let currentTranslationCode = "en:KJV";
@@ -367,6 +369,14 @@ window.ScriptoriaModules.createScriptureViewer = (deps) => {
       copyrightLine.className = "chapter-copyright";
       copyrightLine.textContent = translation.copyright;
       verseTranslation.append(copyrightLine);
+    }
+
+    if (typeof afterChapterRender === "function") {
+      try {
+        afterChapterRender(chapterText, selectedBook, chapter.chapter);
+      } catch (error) {
+        console.warn("[Scripture] afterChapterRender failed:", error);
+      }
     }
 
     if (activeScriptureFocus && activeScriptureFocus.book === selectedBook && activeScriptureFocus.chapter === chapter.chapter) {

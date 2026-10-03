@@ -152,6 +152,51 @@ window.ScriptoriaModules.createSettingsUi = (deps) => {
     layoutSection.append(layoutRow);
     container.append(layoutSection);
 
+    if (typeof deps.getShowVerseNoteMargin === "function" && typeof deps.setShowVerseNoteMargin === "function") {
+      const verseNotesSection = document.createElement("div");
+      verseNotesSection.className = "ui-settings-section";
+
+      const verseNotesTitle = document.createElement("p");
+      verseNotesTitle.className = "ui-settings-section-title";
+      verseNotesTitle.textContent = "Scripture notes";
+      verseNotesSection.append(verseNotesTitle);
+
+      const verseNotesCopy = document.createElement("p");
+      verseNotesCopy.className = "settings-copy";
+      verseNotesCopy.textContent = "Tap a verse to add a note. When notes exist, show them in a margin beside the chapter.";
+      verseNotesSection.append(verseNotesCopy);
+
+      const verseNotesRow = document.createElement("div");
+      verseNotesRow.className = "ui-toggle-row";
+
+      const verseNotesField = document.createElement("label");
+      verseNotesField.className = "ui-inline-select";
+
+      const verseNotesLabel = document.createElement("span");
+      verseNotesLabel.textContent = "Note margin";
+
+      const verseNotesSelect = document.createElement("select");
+      verseNotesSelect.id = "ui-verse-note-margin-select";
+      [
+        { value: "show", label: "Show when notes exist" },
+        { value: "hide", label: "Hide margin" }
+      ].forEach((option) => {
+        const opt = document.createElement("option");
+        opt.value = option.value;
+        opt.textContent = option.label;
+        verseNotesSelect.append(opt);
+      });
+      verseNotesSelect.value = deps.getShowVerseNoteMargin() ? "show" : "hide";
+      verseNotesSelect.addEventListener("change", () => {
+        deps.setShowVerseNoteMargin(verseNotesSelect.value === "show");
+      });
+
+      verseNotesField.append(verseNotesLabel, verseNotesSelect);
+      verseNotesRow.append(verseNotesField);
+      verseNotesSection.append(verseNotesRow);
+      container.append(verseNotesSection);
+    }
+
     const viewSection = document.createElement("div");
     viewSection.className = "ui-settings-section";
 

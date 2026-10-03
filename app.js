@@ -133,6 +133,8 @@ const colorThemeStorageKey = "service-notes-color-theme";
 const colorThemeMirrorStorageKey = "service-notes-color-theme-mirror";
 const lastBookChapterStorageKey = "service-notes-last-book-chapter";
 const onboardingStorageKey = "service-notes-onboarding-seen";
+const verseNotesStorageKey = "service-notes-verse-notes";
+const showVerseNoteMarginStorageKey = "service-notes-verse-notes-margin";
 const autoCloudSyncDelayMs = 10000;
 // Compact editor densifies the notes chrome on narrow windows. Scripture combo
 // collapse is separate and keyed off the scripture panel's own width so an iPad
@@ -567,6 +569,19 @@ const {
   getReferenceContext
 } = referencesApi;
 
+const verseNotesApi = window.ScriptoriaModules.createVerseNotes({
+  readStoredValue: (...args) => readStoredValue(...args),
+  writeStoredValue: (...args) => writeStoredValue(...args),
+  verseNotesStorageKey,
+  showMarginStorageKey: showVerseNoteMarginStorageKey,
+  markLocalSettingsUpdated: (...args) => markLocalSettingsUpdated(...args),
+  scheduleAutoCloudSync: (...args) => scheduleAutoCloudSync(...args),
+  parseScriptureReference,
+  getExplicitPattern: () => aliasesApi.getExplicitPattern?.(),
+  jumpToScripture: (ref) => jumpToScripture(ref),
+  isMobileShell: false
+});
+
 const viewerApi = window.ScriptoriaModules.createScriptureViewer({
   bookSelect,
   chapterSelect,
@@ -599,7 +614,14 @@ const viewerApi = window.ScriptoriaModules.createScriptureViewer({
   getScriptureSearchQuery: () =>
     scriptureSearchApiRef ? scriptureSearchApiRef.getQuery() : "",
   markLocalSettingsUpdated: (...args) => markLocalSettingsUpdated(...args),
-  scheduleAutoCloudSync: (...args) => scheduleAutoCloudSync(...args)
+  scheduleAutoCloudSync: (...args) => scheduleAutoCloudSync(...args),
+  afterChapterRender: (root, book, chapter) => {
+    verseNotesApi.decorateChapter(root, book, chapter);
+  }
+});
+
+verseNotesApi.setRefreshChapter(() => {
+  viewerApi.renderChapter();
 });
 
 const {
@@ -1450,7 +1472,13 @@ syncPayloadApi = window.ScriptoriaModules.createSyncPayloads({
   ensureWorkspaceConsistency,
   buildBookAliasMap: () => buildBookAliasMap(),
   renderWorkspace: () => renderWorkspace(),
-  workspaceStorageKey
+  workspaceStorageKey,
+  getVerseNotesPayload: () => verseNotesApi.getSyncPayload(),
+  applyVerseNotesPayload: (payload) => verseNotesApi.applySyncPayload(payload),
+  getShowVerseNoteMargin: () => verseNotesApi.getShowMargin(),
+  setShowVerseNoteMargin: (value, options) => verseNotesApi.setShowMargin(value, options),
+  showVerseNoteMarginStorageKey,
+  refreshVerseNotesView: () => viewerApi.renderChapter()
 });
 
 syncCloudApi = window.ScriptoriaModules.createCloudSync({
@@ -2049,6 +2077,12 @@ const {
   paneGrid,
   getScriptureLayoutMode,
   setScriptureLayoutMode,
+  getShowVerseNoteMargin: () => verseNotesApi.getShowMargin(),
+  setShowVerseNoteMargin: (value) => {
+    verseNotesApi.setShowMargin(value);
+    viewerApi.renderChapter();
+    renderSettings();
+  },
   colorThemes,
   getCurrentColorThemeId: () => themeApi.getCurrentColorThemeId(),
   writeStoredValue,
@@ -2137,6 +2171,13 @@ const syncSetupWizardApi = window.ScriptoriaModules.createSyncSetupWizard({
   onboardingStorageKey,
   notesStorageKey,
   translationRegistryStorageKey,
+  verseNotesStorageKey,
+  showVerseNoteMarginStorageKey,
+  getVerseNotesPayload: () => verseNotesApi.getSyncPayload(),
+  applyVerseNotesPayload: (payload) => verseNotesApi.applySyncPayload(payload),
+  getShowVerseNoteMargin: () => verseNotesApi.getShowMargin(),
+  setShowVerseNoteMargin: (value, options) => verseNotesApi.setShowMargin(value, options),
+  refreshVerseNotesView: () => viewerApi.renderChapter(),
   clearThemePreferenceMirrors,
   cloudSyncSettings,
   persistCloudSyncSettings,
@@ -2314,6 +2355,7 @@ const bootstrap = async () => {
   buildBookAliasMap();
   await restoreLastBookChapter();
   applyColorTheme(await getPreferredColorTheme());
+  await verseNotesApi.load();
   await restoreCloudSyncSettings();
   activeProvider.waitForReady(() => {
     void reconnectCloud();
@@ -2323,6 +2365,8 @@ const bootstrap = async () => {
     }
   });
   await restoreWorkspace();
+  // Re-decorate scripture after notes load in case chapter rendered earlier.
+  viewerApi.renderChapter();
 
   const hasSeenOnboarding = await readStoredValue(onboardingStorageKey);
 

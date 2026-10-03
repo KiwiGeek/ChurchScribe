@@ -89,6 +89,7 @@ const PRECACHE_URLS = [
   "scripture/aliases.js",
   "scripture/references.js",
   "scripture/viewer.js",
+  "scripture/verse-notes.js",
   "scripture/search.js",
   "settings/backup-restore.js",
   "settings/note-types.js",
