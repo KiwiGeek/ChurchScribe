@@ -968,12 +968,55 @@ const renderSettingsSheet = () => {
   }
 
   document.querySelector("#mob-sync-now")?.addEventListener("click", async () => {
+    const button = document.querySelector("#mob-sync-now");
+    if (button?.disabled) {
+      return;
+    }
+    if (button) {
+      button.disabled = true;
+    }
     showTransientStatus("Syncing…");
     try {
-      await pullFromCloud();
+      if (!activeProvider.hasActiveSession()) {
+        try {
+          await reconnectCloud();
+        } catch (err) {
+          console.warn("[Mobile] Reconnect before Sync now failed:", err);
+        }
+        mobileState.isCloudConnected = activeProvider.hasActiveSession();
+      }
+
+      if (!activeProvider.hasActiveSession()) {
+        showTransientStatus("Not connected — reconnect and try again.");
+        return;
+      }
+
+      // Push local UI settings (theme / verse notes) first so a follow-up pull
+      // cannot overwrite them, then pull the latest sermon notes + settings.
+      await syncCloudApi?.syncUiSettingsToCloud?.();
+      const pulled = await pullFromCloud({ force: true });
+      if (pulled === false) {
+        showTransientStatus("Sync couldn't finish — try again in a moment.");
+        return;
+      }
+
+      // Manual sync should refresh the "Last sync" row even when pull reports
+      // the remote copy is already up to date.
+      cloudSyncSettings.lastSyncAt = new Date().toISOString();
+      persistCloudSyncSettings();
+      showTransientStatus("Synced.");
       renderMobileApp();
+      if (!settingsSheet.hidden) {
+        renderSettingsSheet();
+      }
     } catch (err) {
-      showTransientStatus("Sync failed — check your connection.");
+      console.warn("[Mobile] Sync now failed:", err);
+      const detail = err?.message ? String(err.message) : "check your connection";
+      showTransientStatus(`Sync failed — ${detail}`);
+    } finally {
+      if (button) {
+        button.disabled = false;
+      }
     }
   });
 

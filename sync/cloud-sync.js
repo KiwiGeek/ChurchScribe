@@ -573,8 +573,9 @@ window.ScriptoriaModules.createCloudSync = (deps) => {
         };
       }
 
-      cloudSyncSettings.lastSyncAt = updatedAt;
-      cloudSyncSettings.localSettingsUpdatedAt = updatedAt;
+      // Do not advance lastSyncAt here. Settings-only uploads bump the settings
+      // file timestamp; treating that as a full sync watermark can make the next
+      // pull skip newer sermon-note files whose timestamps are older.
       persistCloudSyncSettings();
       return true;
     })();
