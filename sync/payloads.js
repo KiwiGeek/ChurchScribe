@@ -40,9 +40,31 @@ window.ScriptoriaModules.createSyncPayloads = (deps) => {
     showVerseNoteMarginStorageKey,
     getVerseNotesEnabled,
     setVerseNotesEnabled,
+    getVerseNotesMode,
+    setVerseNotesMode,
     verseNotesEnabledStorageKey,
     refreshVerseNotesView
   } = deps;
+
+  const resolveVerseNotesMode = () => {
+    if (typeof getVerseNotesMode === "function") {
+      return getVerseNotesMode();
+    }
+    if (typeof getVerseNotesEnabled === "function") {
+      return getVerseNotesEnabled() ? "tap" : "off";
+    }
+    return "tap";
+  };
+
+  const applyVerseNotesMode = (value, options) => {
+    if (typeof setVerseNotesMode === "function") {
+      setVerseNotesMode(value, options);
+      return;
+    }
+    if (typeof setVerseNotesEnabled === "function") {
+      setVerseNotesEnabled(value, options);
+    }
+  };
 
   const buildCloudSettingsPayload = (updatedAt = new Date().toISOString()) => ({
     version: 2,
@@ -63,7 +85,9 @@ window.ScriptoriaModules.createSyncPayloads = (deps) => {
       colorTheme: getCurrentColorThemeId(),
       openDyslexicFont: typeof getOpenDyslexicFont === "function" ? getOpenDyslexicFont() : false,
       showVerseNoteMargin: typeof getShowVerseNoteMargin === "function" ? getShowVerseNoteMargin() : true,
-      verseNotesEnabled: typeof getVerseNotesEnabled === "function" ? getVerseNotesEnabled() : true
+      verseNotesMode: resolveVerseNotesMode(),
+      // Legacy boolean kept for older clients; true unless notes mode is off.
+      verseNotesEnabled: resolveVerseNotesMode() !== "off"
     },
     verseNotes: typeof getVerseNotesPayload === "function" ? getVerseNotesPayload() : undefined,
     translationState: getTranslationStateForSync ? getTranslationStateForSync() : undefined,
@@ -173,8 +197,10 @@ window.ScriptoriaModules.createSyncPayloads = (deps) => {
         setShowVerseNoteMargin(payload.preferences.showVerseNoteMargin, { sync: false });
       }
 
-      if (typeof payload.preferences.verseNotesEnabled === "boolean" && typeof setVerseNotesEnabled === "function") {
-        setVerseNotesEnabled(payload.preferences.verseNotesEnabled, { sync: false });
+      if (typeof payload.preferences.verseNotesMode === "string") {
+        applyVerseNotesMode(payload.preferences.verseNotesMode, { sync: false });
+      } else if (typeof payload.preferences.verseNotesEnabled === "boolean") {
+        applyVerseNotesMode(payload.preferences.verseNotesEnabled ? "tap" : "off", { sync: false });
       }
     }
 

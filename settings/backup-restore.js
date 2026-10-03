@@ -21,7 +21,12 @@ window.ScriptoriaModules.createSettingsBackupRestore = (deps) => {
       colorTheme: deps.getCurrentColorThemeId(),
       openDyslexicFont: typeof deps.getOpenDyslexicFont === "function" ? deps.getOpenDyslexicFont() : false,
       showVerseNoteMargin: typeof deps.getShowVerseNoteMargin === "function" ? deps.getShowVerseNoteMargin() : true,
-      verseNotesEnabled: typeof deps.getVerseNotesEnabled === "function" ? deps.getVerseNotesEnabled() : true
+      verseNotesMode: typeof deps.getVerseNotesMode === "function"
+        ? deps.getVerseNotesMode()
+        : (typeof deps.getVerseNotesEnabled === "function" && !deps.getVerseNotesEnabled() ? "off" : "tap"),
+      verseNotesEnabled: typeof deps.getVerseNotesMode === "function"
+        ? deps.getVerseNotesMode() !== "off"
+        : (typeof deps.getVerseNotesEnabled === "function" ? deps.getVerseNotesEnabled() : true)
     },
     verseNotes: typeof deps.getVerseNotesPayload === "function" ? deps.getVerseNotesPayload() : undefined,
     translationState: deps.getTranslationStateForBackup()
@@ -110,8 +115,14 @@ window.ScriptoriaModules.createSettingsBackupRestore = (deps) => {
           deps.setShowVerseNoteMargin(preferences.showVerseNoteMargin, { sync: false });
         }
 
-        if (typeof preferences.verseNotesEnabled === "boolean" && typeof deps.setVerseNotesEnabled === "function") {
-          deps.setVerseNotesEnabled(preferences.verseNotesEnabled, { sync: false });
+        if (typeof preferences.verseNotesMode === "string") {
+          if (typeof deps.setVerseNotesMode === "function") {
+            deps.setVerseNotesMode(preferences.verseNotesMode, { sync: false });
+          } else if (typeof deps.setVerseNotesEnabled === "function") {
+            deps.setVerseNotesEnabled(preferences.verseNotesMode, { sync: false });
+          }
+        } else if (typeof preferences.verseNotesEnabled === "boolean" && typeof deps.setVerseNotesEnabled === "function") {
+          deps.setVerseNotesEnabled(preferences.verseNotesEnabled ? "tap" : "off", { sync: false });
         }
       }
 

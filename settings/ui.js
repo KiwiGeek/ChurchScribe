@@ -195,10 +195,13 @@ window.ScriptoriaModules.createSettingsUi = (deps) => {
 
       const verseNotesCopy = document.createElement("p");
       verseNotesCopy.className = "settings-copy";
-      verseNotesCopy.textContent = "Tap a verse to add a note. When notes exist, show them in a margin beside the chapter.";
+      verseNotesCopy.textContent = "Add notes on verses, or keep scripture read-only. When notes exist, show them in a margin beside the chapter.";
       verseNotesSection.append(verseNotesCopy);
 
-      if (typeof deps.getVerseNotesEnabled === "function" && typeof deps.setVerseNotesEnabled === "function") {
+      if (
+        (typeof deps.getVerseNotesMode === "function" && typeof deps.setVerseNotesMode === "function") ||
+        (typeof deps.getVerseNotesEnabled === "function" && typeof deps.setVerseNotesEnabled === "function")
+      ) {
         const modeRow = document.createElement("div");
         modeRow.className = "ui-toggle-row";
 
@@ -211,7 +214,8 @@ window.ScriptoriaModules.createSettingsUi = (deps) => {
         const modeSelect = document.createElement("select");
         modeSelect.id = "ui-verse-notes-enabled-select";
         [
-          { value: "on", label: "On — tap verses to edit" },
+          { value: "tap", label: "Tap — tap verses to edit" },
+          { value: "long-tap", label: "Long tap — press and hold to edit" },
           { value: "off", label: "Off — reading only" }
         ].forEach((option) => {
           const opt = document.createElement("option");
@@ -219,9 +223,16 @@ window.ScriptoriaModules.createSettingsUi = (deps) => {
           opt.textContent = option.label;
           modeSelect.append(opt);
         });
-        modeSelect.value = deps.getVerseNotesEnabled() ? "on" : "off";
+        const currentMode = typeof deps.getVerseNotesMode === "function"
+          ? deps.getVerseNotesMode()
+          : (deps.getVerseNotesEnabled() ? "tap" : "off");
+        modeSelect.value = currentMode === "on" ? "tap" : currentMode;
         modeSelect.addEventListener("change", () => {
-          deps.setVerseNotesEnabled(modeSelect.value === "on");
+          if (typeof deps.setVerseNotesMode === "function") {
+            deps.setVerseNotesMode(modeSelect.value);
+          } else {
+            deps.setVerseNotesEnabled(modeSelect.value);
+          }
         });
 
         modeField.append(modeLabel, modeSelect);

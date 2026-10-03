@@ -1492,6 +1492,8 @@ syncPayloadApi = window.ScriptoriaModules.createSyncPayloads({
   showVerseNoteMarginStorageKey,
   getVerseNotesEnabled: () => verseNotesApi.getNotesEnabled(),
   setVerseNotesEnabled: (value, options) => verseNotesApi.setNotesEnabled(value, options),
+  getVerseNotesMode: () => verseNotesApi.getNotesMode(),
+  setVerseNotesMode: (value, options) => verseNotesApi.setNotesMode(value, options),
   verseNotesEnabledStorageKey,
   refreshVerseNotesView: () => viewerApi.renderChapter()
 });
@@ -2104,6 +2106,12 @@ const {
     viewerApi.renderChapter();
     renderSettings();
   },
+  getVerseNotesMode: () => verseNotesApi.getNotesMode(),
+  setVerseNotesMode: (value) => {
+    verseNotesApi.setNotesMode(value);
+    viewerApi.renderChapter();
+    renderSettings();
+  },
   getOpenDyslexicFont: () => themeApi.getOpenDyslexicFont(),
   setOpenDyslexicFont: (enabled) => {
     applyOpenDyslexicFont(enabled, { persist: true, markChange: true });
@@ -2209,6 +2217,8 @@ const syncSetupWizardApi = window.ScriptoriaModules.createSyncSetupWizard({
   setShowVerseNoteMargin: (value, options) => verseNotesApi.setShowMargin(value, options),
   getVerseNotesEnabled: () => verseNotesApi.getNotesEnabled(),
   setVerseNotesEnabled: (value, options) => verseNotesApi.setNotesEnabled(value, options),
+  getVerseNotesMode: () => verseNotesApi.getNotesMode(),
+  setVerseNotesMode: (value, options) => verseNotesApi.setNotesMode(value, options),
   refreshVerseNotesView: () => viewerApi.renderChapter(),
   clearThemePreferenceMirrors,
   cloudSyncSettings,

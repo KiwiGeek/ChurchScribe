@@ -22,13 +22,34 @@ window.ScriptoriaModules.createVerseNotes = (deps) => {
 
   let notesByKey = Object.create(null);
   let showMargin = true;
-  // When false, verses are not tappable for add/edit; existing notes still show.
-  let notesEnabled = true;
+  // tap | long-tap | off — off keeps existing notes visible but not editable.
+  let notesMode = "tap";
   let dialogEl = null;
   let editingKey = null;
   let editingMeta = null;
+  let longPressTimer = null;
+  let longPressFired = false;
+  let longPressStart = null;
+
+  const LONG_PRESS_MS = 500;
+  const LONG_PRESS_MOVE_PX = 12;
 
   const nowIso = () => new Date().toISOString();
+
+  const normalizeNotesMode = (value) => {
+    if (value === "long-tap" || value === "off" || value === "tap") {
+      return value;
+    }
+    if (value === false || value === "false" || value === "off") {
+      return "off";
+    }
+    if (value === true || value === "true" || value === "on") {
+      return "tap";
+    }
+    return "tap";
+  };
+
+  const notesInteractionEnabled = () => notesMode !== "off";
 
   const makeKey = (book, chapter, verse) =>
     `${String(book)}|${Number(chapter)}|${Number(verse)}`;
@@ -80,7 +101,7 @@ window.ScriptoriaModules.createVerseNotes = (deps) => {
 
   const persistPrefs = ({ sync = true } = {}) => {
     void writeStoredValue(showMarginStorageKey, showMargin);
-    void writeStoredValue(notesEnabledStorageKey, notesEnabled);
+    void writeStoredValue(notesEnabledStorageKey, notesMode);
     if (!sync) {
       return;
     }
@@ -91,6 +112,14 @@ window.ScriptoriaModules.createVerseNotes = (deps) => {
     }
   };
 
+  const clearLongPress = () => {
+    if (longPressTimer != null) {
+      window.clearTimeout(longPressTimer);
+      longPressTimer = null;
+    }
+    longPressStart = null;
+  };
+
   const load = async () => {
     const stored = await readStoredValue(verseNotesStorageKey);
     notesByKey = normalizeStore(stored);
@@ -98,9 +127,9 @@ window.ScriptoriaModules.createVerseNotes = (deps) => {
     if (typeof marginPref === "boolean") {
       showMargin = marginPref;
     }
-    const enabledPref = await readStoredValue(notesEnabledStorageKey);
-    if (typeof enabledPref === "boolean") {
-      notesEnabled = enabledPref;
+    const modePref = await readStoredValue(notesEnabledStorageKey);
+    if (modePref !== undefined && modePref !== null) {
+      notesMode = normalizeNotesMode(modePref);
     }
   };
 
@@ -360,7 +389,7 @@ window.ScriptoriaModules.createVerseNotes = (deps) => {
   };
 
   const openEditor = ({ book, chapter, covers, onChanged }) => {
-    if (!notesEnabled) {
+    if (!notesInteractionEnabled()) {
       return;
     }
     const verseList = (covers && covers.length ? covers : []).map(Number).filter(Number.isFinite);
@@ -409,8 +438,11 @@ window.ScriptoriaModules.createVerseNotes = (deps) => {
   };
 
   const renderMarginCard = (book, chapter, entry) => {
-    const card = document.createElement(notesEnabled ? "button" : "div");
-    if (notesEnabled) {
+    // Margin cards stay clickable whenever notes can be edited — they are an
+    // explicit note control, not a verse tap.
+    const interactive = notesInteractionEnabled();
+    const card = document.createElement(interactive ? "button" : "div");
+    if (interactive) {
       card.type = "button";
     }
     card.className = "verse-note-rail-card";
@@ -425,7 +457,7 @@ window.ScriptoriaModules.createVerseNotes = (deps) => {
     body.innerHTML = linkifyPlainText(entry.text);
 
     card.append(label, body);
-    if (notesEnabled) {
+    if (interactive) {
       card.addEventListener("click", (event) => {
         if (event.target.closest("a")) {
           return;
@@ -492,13 +524,19 @@ window.ScriptoriaModules.createVerseNotes = (deps) => {
       const hasRowNote = rowNotes.length > 0;
       const refLabel = formatRefLabel(book, chapter, covers);
 
-      if (notesEnabled) {
+      if (notesInteractionEnabled()) {
         verseEl.classList.add("is-note-target");
         verseEl.setAttribute("role", "button");
         verseEl.tabIndex = 0;
+        const actionHint =
+          notesMode === "long-tap"
+            ? "Press and hold to edit."
+            : "Activate to edit.";
         verseEl.setAttribute(
           "aria-label",
-          hasRowNote ? `${refLabel}. Has note. Activate to edit.` : `${refLabel}. Activate to add a note.`
+          hasRowNote
+            ? `${refLabel}. Has note. ${actionHint}`
+            : `${refLabel}. ${notesMode === "long-tap" ? "Press and hold to add a note." : "Activate to add a note."}`
         );
       }
 
@@ -529,8 +567,71 @@ window.ScriptoriaModules.createVerseNotes = (deps) => {
     if (!chapterText.dataset.verseNotesBound) {
       chapterText.dataset.verseNotesBound = "1";
 
+      const openFromVerseEl = (verseEl) => {
+        const covers = coveredVersesForEl(verseEl);
+        openEditor({
+          book: chapterText.dataset.noteBook || book,
+          chapter: Number(chapterText.dataset.noteChapter || chapter),
+          covers,
+          onChanged: () => deps.refreshChapter?.()
+        });
+      };
+
+      chapterText.addEventListener("pointerdown", (event) => {
+        if (notesMode !== "long-tap" || event.button != null && event.button !== 0) {
+          return;
+        }
+        if (event.target.closest(".chapter-verse-continues-link, a, .verse-note-rail-card")) {
+          return;
+        }
+        const verseEl = event.target.closest(".chapter-verse");
+        if (!verseEl || !chapterText.contains(verseEl)) {
+          return;
+        }
+        clearLongPress();
+        longPressFired = false;
+        longPressStart = { x: event.clientX, y: event.clientY, verseEl };
+        longPressTimer = window.setTimeout(() => {
+          longPressTimer = null;
+          const target = longPressStart?.verseEl;
+          if (!target) {
+            return;
+          }
+          longPressFired = true;
+          openFromVerseEl(target);
+        }, LONG_PRESS_MS);
+      });
+
+      const cancelLongPressIfMoved = (event) => {
+        if (!longPressStart || longPressTimer == null) {
+          return;
+        }
+        const dx = event.clientX - longPressStart.x;
+        const dy = event.clientY - longPressStart.y;
+        if ((dx * dx) + (dy * dy) > LONG_PRESS_MOVE_PX * LONG_PRESS_MOVE_PX) {
+          clearLongPress();
+        }
+      };
+
+      chapterText.addEventListener("pointermove", cancelLongPressIfMoved);
+      chapterText.addEventListener("pointerup", clearLongPress);
+      chapterText.addEventListener("pointercancel", clearLongPress);
+      chapterText.addEventListener("contextmenu", (event) => {
+        if (notesMode === "long-tap" && (longPressFired || longPressTimer != null)) {
+          event.preventDefault();
+        }
+      });
+
       chapterText.addEventListener("click", (event) => {
-        if (!notesEnabled) {
+        if (!notesInteractionEnabled()) {
+          return;
+        }
+        if (notesMode === "long-tap") {
+          if (longPressFired) {
+            event.preventDefault();
+            event.stopPropagation();
+            longPressFired = false;
+          }
           return;
         }
         if (event.target.closest(".chapter-verse-continues-link")) {
@@ -546,17 +647,11 @@ window.ScriptoriaModules.createVerseNotes = (deps) => {
         if (!verseEl || !chapterText.contains(verseEl)) {
           return;
         }
-        const covers = coveredVersesForEl(verseEl);
-        openEditor({
-          book: chapterText.dataset.noteBook || book,
-          chapter: Number(chapterText.dataset.noteChapter || chapter),
-          covers,
-          onChanged: () => deps.refreshChapter?.()
-        });
+        openFromVerseEl(verseEl);
       });
 
       chapterText.addEventListener("keydown", (event) => {
-        if (!notesEnabled) {
+        if (!notesInteractionEnabled()) {
           return;
         }
         if (event.key !== "Enter" && event.key !== " ") {
@@ -567,7 +662,7 @@ window.ScriptoriaModules.createVerseNotes = (deps) => {
           return;
         }
         event.preventDefault();
-        verseEl.click();
+        openFromVerseEl(verseEl);
       });
     }
 
@@ -624,13 +719,23 @@ window.ScriptoriaModules.createVerseNotes = (deps) => {
     persistPrefs({ sync });
   };
 
-  const getNotesEnabled = () => notesEnabled;
-  const setNotesEnabled = (value, { sync = true } = {}) => {
-    notesEnabled = Boolean(value);
+  const getNotesMode = () => notesMode;
+  const setNotesMode = (value, { sync = true } = {}) => {
+    notesMode = normalizeNotesMode(value);
     persistPrefs({ sync });
-    if (!notesEnabled) {
+    if (!notesInteractionEnabled()) {
       closeEditor();
     }
+  };
+
+  // Backward-compatible boolean helpers used by older sync payloads.
+  const getNotesEnabled = () => notesInteractionEnabled();
+  const setNotesEnabled = (value, options) => {
+    if (typeof value === "string") {
+      setNotesMode(value, options);
+      return;
+    }
+    setNotesMode(value ? "tap" : "off", options);
   };
 
   return {
@@ -644,6 +749,8 @@ window.ScriptoriaModules.createVerseNotes = (deps) => {
     closeEditor,
     getShowMargin,
     setShowMargin,
+    getNotesMode,
+    setNotesMode,
     getNotesEnabled,
     setNotesEnabled,
     getSyncPayload,
