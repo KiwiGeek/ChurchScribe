@@ -104,8 +104,12 @@ window.ScriptoriaModules.createSyncSetupWizard = (deps) => {
 
     try {
       await provider.ensureLocationAccess?.(state.locationMode);
-    } finally {
+      // Redirect auth navigates away before this resolves, leaving the
+      // breadcrumb for resume. Popup/silent success stays on-page, so clear it.
       clearPendingFlag();
+    } catch (error) {
+      clearPendingFlag();
+      throw error;
     }
   };
 

@@ -852,11 +852,24 @@ const renderSettingsSheet = () => {
       <p class="mob-settings-help" id="mob-check-update-status" hidden></p>
     </div>
     <div class="mob-settings-section">
-      <p class="mob-settings-label">Full editor</p>
-      <p class="mob-settings-help">The Scriptoria editor and all settings are available on desktop browsers.</p>
-      <a href="index.html?desktop=1" class="mob-settings-action">Open desktop version →</a>
+      <p class="mob-settings-label">Device view</p>
+      <p class="mob-settings-help">Open the full desktop editor. Your choice is remembered on this device.</p>
+      <button class="mob-settings-action" id="mob-open-desktop" type="button">Switch to desktop view →</button>
     </div>
   `;
+
+  document.querySelector("#mob-open-desktop")?.addEventListener("click", () => {
+    if (typeof window.ScriptoriaModules?.navigateToView === "function") {
+      window.ScriptoriaModules.navigateToView("desktop");
+      return;
+    }
+    try {
+      localStorage.setItem("service-notes-view-preference", "desktop");
+    } catch {
+      // Ignore storage failures; still navigate.
+    }
+    window.location.assign("index.html");
+  });
 
   document.querySelector("#mob-theme-toggle-group")?.addEventListener("click", (e) => {
     const button = e.target.closest("[data-theme-mode]");

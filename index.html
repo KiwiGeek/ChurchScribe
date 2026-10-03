@@ -5,17 +5,41 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script>
     (function () {
+      var VIEW_PREF_KEY = "service-notes-view-preference";
       var params = new URLSearchParams(location.search);
-      // ?mobile=1  — force the mobile view (useful for testing on a desktop browser)
-      if (params.has('mobile')) { location.replace('mobile.html?mobile=1'); return; }
-      // ?desktop=1 — force the desktop view (bypass auto-redirect on a real phone)
-      if (params.has('desktop')) { return; }
+      var persist = function (view) {
+        try { localStorage.setItem(VIEW_PREF_KEY, view); } catch (e) {}
+      };
+      var readPref = function () {
+        try { return localStorage.getItem(VIEW_PREF_KEY); } catch (e) { return null; }
+      };
+
+      // Explicit query params win and are remembered for later visits.
+      if (params.has("mobile")) {
+        persist("mobile");
+        location.replace("mobile.html");
+        return;
+      }
+      if (params.has("desktop")) {
+        persist("desktop");
+        return;
+      }
+
+      var preferred = readPref();
+      if (preferred === "mobile") {
+        location.replace("mobile.html");
+        return;
+      }
+      if (preferred === "desktop") {
+        return;
+      }
+
       // Auto-redirect: touch device whose smallest screen dimension is ≤ 480 px.
       // Checking the smallest dimension means both portrait and landscape redirect.
-      var isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+      var isTouchDevice = ("ontouchstart" in window) || (navigator.maxTouchPoints > 0);
       var smallestDimension = Math.min(window.screen.width, window.screen.height);
       if (isTouchDevice && smallestDimension <= 480) {
-        location.replace('mobile.html');
+        location.replace("mobile.html");
       }
     })();
   </script>
@@ -774,6 +798,7 @@
   <script src="themes/controller.js"></script>
   <script src="layout/panes.js"></script>
   <script src="core/connectivity.js"></script>
+  <script src="core/view-mode.js"></script>
   <script src="core/storage.js"></script>
   <script src="core/workspace.js"></script>
   <script src="app.js"></script>

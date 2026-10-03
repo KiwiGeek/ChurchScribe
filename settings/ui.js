@@ -152,6 +152,39 @@ window.ScriptoriaModules.createSettingsUi = (deps) => {
     layoutSection.append(layoutRow);
     container.append(layoutSection);
 
+    const viewSection = document.createElement("div");
+    viewSection.className = "ui-settings-section";
+
+    const viewTitle = document.createElement("p");
+    viewTitle.className = "ui-settings-section-title";
+    viewTitle.textContent = "Device view";
+    viewSection.append(viewTitle);
+
+    const viewCopy = document.createElement("p");
+    viewCopy.className = "settings-copy";
+    viewCopy.textContent = "Use the compact mobile shell instead of this full editor. Your choice is remembered on this device.";
+    viewSection.append(viewCopy);
+
+    const mobileViewButton = document.createElement("button");
+    mobileViewButton.type = "button";
+    mobileViewButton.className = "about-link about-link--block";
+    mobileViewButton.id = "switch-to-mobile-view";
+    mobileViewButton.textContent = "Switch to mobile view";
+    mobileViewButton.addEventListener("click", () => {
+      if (typeof window.ScriptoriaModules.navigateToView === "function") {
+        window.ScriptoriaModules.navigateToView("mobile");
+        return;
+      }
+      try {
+        localStorage.setItem("service-notes-view-preference", "mobile");
+      } catch {
+        // Ignore storage failures; still navigate.
+      }
+      window.location.assign("mobile.html");
+    });
+    viewSection.append(mobileViewButton);
+    container.append(viewSection);
+
     const themeCatalog = window.ScriptoriaModules;
     if (typeof themeCatalog.enrichColorThemes === "function") {
       themeCatalog.enrichColorThemes(deps.colorThemes);
