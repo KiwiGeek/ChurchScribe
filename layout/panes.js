@@ -7,6 +7,10 @@ window.ScriptoriaModules = window.ScriptoriaModules || {};
 // persisted to IndexedDB via the storage helpers in deps and read back on
 // bootstrap so the user's last-used layout sticks across loads.
 //
+// Settings exposes these as one tri-state control (notes left / scripture left /
+// scripture only).  Under the hood paneOrder and scriptureOnly stay separate
+// so cloud sync and backups remain compatible with older clients.
+//
 // Also owns the drag-to-resize behaviour on the pane divider.  Dragging
 // updates the split live; mouseup persists the final value and pings the
 // sync hooks so cloud-sync notices the preference changed.
@@ -31,6 +35,22 @@ window.ScriptoriaModules.createPaneLayout = (deps) => {
   let currentPaneSplit = 0.6;
   let scriptureOnly = false;
 
+  const normalizeScriptureLayoutMode = (mode) => {
+    if (mode === "scripture-only" || mode === "scripture-left") {
+      return mode;
+    }
+
+    return "notes-left";
+  };
+
+  const getScriptureLayoutMode = () => {
+    if (scriptureOnly) {
+      return "scripture-only";
+    }
+
+    return paneGrid.dataset.order === "scripture-first" ? "scripture-left" : "notes-left";
+  };
+
   const getPreferredPaneOrder = async () => {
     const savedOrder = await migrateLegacyPreference(paneOrderStorageKey);
     return savedOrder === "scripture-first" ? "scripture-first" : "notes-first";
@@ -46,33 +66,13 @@ window.ScriptoriaModules.createPaneLayout = (deps) => {
     return saved === true;
   };
 
-  // Reflect the current pane order on the Settings UI's "Scripture on left"
-  // toggle so the dialog opens in sync with reality.  Best-effort: the toggle
-  // may not exist if the dialog hasn't been rendered yet.
-  const syncPaneOrderToggle = (order) => {
-    const scriptureFirst = order === "scripture-first";
-    const btn = documentObject.querySelector("#ui-scripture-left-toggle");
+  // Keep the Settings tri-state select in sync when layout is applied from
+  // bootstrap, sync, or backup.  Best-effort: the select may not exist yet.
+  const syncScriptureLayoutControl = (mode = getScriptureLayoutMode()) => {
+    const select = documentObject.querySelector("#ui-scripture-layout-select");
 
-    if (btn) {
-      btn.setAttribute("aria-pressed", String(scriptureFirst));
-      const state = btn.querySelector(".ui-toggle-state");
-
-      if (state) {
-        state.textContent = scriptureFirst ? "On" : "Off";
-      }
-    }
-  };
-
-  const syncScriptureOnlyToggle = (enabled) => {
-    const btn = documentObject.querySelector("#ui-scripture-only-toggle");
-
-    if (btn) {
-      btn.setAttribute("aria-pressed", String(enabled));
-      const state = btn.querySelector(".ui-toggle-state");
-
-      if (state) {
-        state.textContent = enabled ? "On" : "Off";
-      }
+    if (select) {
+      select.value = normalizeScriptureLayoutMode(mode);
     }
   };
 
@@ -109,8 +109,8 @@ window.ScriptoriaModules.createPaneLayout = (deps) => {
 
   const applyPaneOrder = (order) => {
     paneGrid.dataset.order = order;
-    syncPaneOrderToggle(order);
     applySplit(currentPaneSplit);
+    syncScriptureLayoutControl();
   };
 
   const applyScriptureOnly = (enabled) => {
@@ -127,25 +127,36 @@ window.ScriptoriaModules.createPaneLayout = (deps) => {
       paneDivider.setAttribute("aria-hidden", String(scriptureOnly));
     }
 
-    syncScriptureOnlyToggle(scriptureOnly);
     applySplit(currentPaneSplit);
+    syncScriptureLayoutControl();
   };
 
-  const togglePaneOrder = () => {
-    const currentOrder = paneGrid.dataset.order === "scripture-first"
-      ? "scripture-first"
-      : "notes-first";
-    const nextOrder = currentOrder === "scripture-first" ? "notes-first" : "scripture-first";
-    void writeStoredValue(paneOrderStorageKey, nextOrder);
-    applyPaneOrder(nextOrder);
-    markLocalSettingsUpdated();
-    scheduleAutoCloudSync();
+  const applyScriptureLayoutMode = (mode) => {
+    const normalized = normalizeScriptureLayoutMode(mode);
+
+    if (normalized === "scripture-only") {
+      applyScriptureOnly(true);
+      return;
+    }
+
+    applyScriptureOnly(false);
+    applyPaneOrder(normalized === "scripture-left" ? "scripture-first" : "notes-first");
   };
 
-  const toggleScriptureOnly = () => {
-    const nextEnabled = !scriptureOnly;
-    void writeStoredValue(scriptureOnlyStorageKey, nextEnabled);
-    applyScriptureOnly(nextEnabled);
+  const setScriptureLayoutMode = (mode) => {
+    const normalized = normalizeScriptureLayoutMode(mode);
+
+    if (normalized === "scripture-only") {
+      void writeStoredValue(scriptureOnlyStorageKey, true);
+      applyScriptureOnly(true);
+    } else {
+      const order = normalized === "scripture-left" ? "scripture-first" : "notes-first";
+      void writeStoredValue(scriptureOnlyStorageKey, false);
+      void writeStoredValue(paneOrderStorageKey, order);
+      applyScriptureOnly(false);
+      applyPaneOrder(order);
+    }
+
     markLocalSettingsUpdated();
     scheduleAutoCloudSync();
   };
@@ -220,10 +231,10 @@ window.ScriptoriaModules.createPaneLayout = (deps) => {
     applySplit,
     applyPaneOrder,
     applyScriptureOnly,
-    togglePaneOrder,
-    toggleScriptureOnly,
-    syncPaneOrderToggle,
-    syncScriptureOnlyToggle,
+    applyScriptureLayoutMode,
+    setScriptureLayoutMode,
+    getScriptureLayoutMode,
+    syncScriptureLayoutControl,
     getPreferredPaneOrder,
     getPreferredSplit,
     getPreferredScriptureOnly,

@@ -381,12 +381,13 @@ const {
 } = themeApi;
 
 // ── Pane layout ───────────────────────────────────────────────────────────
-// Owns the split-pane layout (notes-first vs scripture-first ordering, plus
-// the divider-drag resize behaviour).  The pane-divider DOM ref is queried
-// here only to thread it into the module — nothing else in app.js touches
-// it.  Names are destructured back into local scope to match how
-// applyPaneOrder / applySplit / togglePaneOrder are passed as deps to other
-// modules (settings/ui, sync/payloads, settings/backup-restore).
+// Owns the split-pane layout (notes-first vs scripture-first ordering,
+// scripture-only mode, plus the divider-drag resize behaviour).  The
+// pane-divider DOM ref is queried here only to thread it into the module —
+// nothing else in app.js touches it.  Names are destructured back into local
+// scope to match how applyPaneOrder / applySplit / setScriptureLayoutMode are
+// passed as deps to other modules (settings/ui, sync/payloads,
+// settings/backup-restore).
 const paneDivider = document.querySelector("#pane-divider");
 
 const paneLayoutApi = window.ScriptoriaModules.createPaneLayout({
@@ -409,8 +410,8 @@ const {
   applySplit,
   applyPaneOrder,
   applyScriptureOnly,
-  togglePaneOrder,
-  toggleScriptureOnly,
+  setScriptureLayoutMode,
+  getScriptureLayoutMode,
   getPreferredPaneOrder,
   getPreferredSplit,
   getPreferredScriptureOnly,
@@ -894,8 +895,8 @@ const {
 // getResolvedThemeForMode / syncThemeModeControl / applyThemeMode moved to
 // theme/controller.js.
 
-// getPreferredPaneOrder / getPreferredSplit / syncPaneOrderToggle / applySplit
-// / applyPaneOrder / togglePaneOrder moved to layout/panes.js.
+// getPreferredPaneOrder / getPreferredSplit / applySplit / applyPaneOrder /
+// scripture layout mode helpers moved to layout/panes.js.
 
 // getPreferredColorTheme / applyColorTheme moved to theme/controller.js.
 
@@ -2035,9 +2036,8 @@ const {
   applyThemeMode,
   getCurrentThemeMode: () => themeApi.getCurrentThemeMode(),
   paneGrid,
-  togglePaneOrder,
-  toggleScriptureOnly,
-  isScriptureOnly,
+  getScriptureLayoutMode,
+  setScriptureLayoutMode,
   colorThemes,
   getCurrentColorThemeId: () => themeApi.getCurrentColorThemeId(),
   writeStoredValue,
