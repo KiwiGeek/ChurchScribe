@@ -111,6 +111,7 @@ const PRECACHE_URLS = [
   "themes/quarry-stone.js",
   "themes/sapphire-lectionary.js",
   "themes/catalog.js",
+  "themes/backgrounds.js",
   "translations/manager.js",
   "bibles/catalog/index.json",
   "bibles/catalog/languages/en.json",
