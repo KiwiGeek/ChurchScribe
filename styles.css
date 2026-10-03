@@ -2909,6 +2909,9 @@ body.is-compact-scripture .compact-reference-chip {
   gap: 10px;
   margin: 0 20px 12px;
   padding: 0.6rem 0.9rem;
+  max-width: calc(100% - 40px);
+  min-width: 0;
+  box-sizing: border-box;
   border: 1px solid var(--border);
   border-radius: 999px;
   background: var(--ghost-surface);
@@ -2918,8 +2921,16 @@ body.is-compact-scripture .compact-reference-chip {
   cursor: pointer;
 }
 
+body.is-compact-scripture .compact-reference-chip-label {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 body.is-compact-scripture .compact-reference-chip::after {
   content: "▾";
+  flex-shrink: 0;
   color: var(--muted);
   font-size: 0.8rem;
 }
@@ -2928,8 +2939,13 @@ body.is-compact-scripture .verse-picker {
   display: none;
 }
 
+/* Expanded picker sits in a narrow pane — stack selects instead of three
+ * cramped columns that become unreadable below ~200px. */
 body.is-compact-scripture .verse-picker.is-compact-expanded {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+  padding-inline: 16px;
 }
 
 body.is-compact-scripture .compact-verse-picker-actions {
