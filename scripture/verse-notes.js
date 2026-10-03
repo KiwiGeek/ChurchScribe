@@ -350,8 +350,8 @@ window.ScriptoriaModules.createVerseNotes = (deps) => {
       return;
     }
     const input = ensureDialog().querySelector("#verse-note-input");
-    setNote(editingMeta.book, editingMeta.chapter, editingMeta.verse, input?.value ?? "");
-    const onChanged = editingMeta.onChanged;
+    const { book, chapter, verse, onChanged } = editingMeta;
+    setNote(book, chapter, verse, input?.value ?? "");
     closeEditor();
     onChanged?.();
   };

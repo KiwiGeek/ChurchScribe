@@ -577,7 +577,7 @@ const verseNotesApi = window.ScriptoriaModules.createVerseNotes({
   markLocalSettingsUpdated: (...args) => markLocalSettingsUpdated(...args),
   scheduleAutoCloudSync: (...args) => scheduleAutoCloudSync(...args),
   parseScriptureReference,
-  getExplicitPattern: () => aliasesApi.getFullExplicitPattern?.() || aliasesApi.getExplicitPattern?.(),
+  getExplicitPattern: () => aliasesApi.getExplicitPattern?.(),
   jumpToScripture: (ref) => jumpToScripture(ref),
   isMobileShell: false
 });
