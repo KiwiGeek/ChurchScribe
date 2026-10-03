@@ -3121,6 +3121,10 @@ body.is-compact-editor .compact-format-panel .color-picker-trigger {
   cursor: pointer;
 }
 
+#ui-scripture-layout-select {
+  min-width: 9.5rem;
+}
+
 .ui-inline-select select option {
   background: var(--surface-strong);
   color: var(--text);

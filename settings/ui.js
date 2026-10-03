@@ -95,31 +95,38 @@ window.ScriptoriaModules.createSettingsUi = (deps) => {
     themeModeField.append(themeModeLabel, themeModeSelect);
     toggleRow.append(themeModeField);
 
-    const currentOrder = deps.paneGrid.dataset.order === "scripture-first" ? "scripture-first" : "notes-first";
-    const paneBtn = document.createElement("button");
-    paneBtn.type = "button";
-    paneBtn.id = "ui-scripture-left-toggle";
-    paneBtn.className = "ui-toggle-button";
-    paneBtn.setAttribute("aria-pressed", String(currentOrder === "scripture-first"));
-    paneBtn.innerHTML = `<span>Scripture left</span><span class="ui-toggle-state">${currentOrder === "scripture-first" ? "On" : "Off"}</span>`;
-    paneBtn.addEventListener("click", () => {
-      deps.togglePaneOrder();
-    });
-    toggleRow.append(paneBtn);
+    const layoutField = document.createElement("label");
+    layoutField.className = "ui-inline-select";
 
-    const scriptureOnlyEnabled = typeof deps.isScriptureOnly === "function"
-      ? deps.isScriptureOnly()
-      : deps.paneGrid.classList.contains("is-scripture-only");
-    const scriptureOnlyBtn = document.createElement("button");
-    scriptureOnlyBtn.type = "button";
-    scriptureOnlyBtn.id = "ui-scripture-only-toggle";
-    scriptureOnlyBtn.className = "ui-toggle-button";
-    scriptureOnlyBtn.setAttribute("aria-pressed", String(scriptureOnlyEnabled));
-    scriptureOnlyBtn.innerHTML = `<span>Scripture only</span><span class="ui-toggle-state">${scriptureOnlyEnabled ? "On" : "Off"}</span>`;
-    scriptureOnlyBtn.addEventListener("click", () => {
-      deps.toggleScriptureOnly();
+    const layoutLabel = document.createElement("span");
+    layoutLabel.textContent = "Layout";
+
+    const layoutSelect = document.createElement("select");
+    layoutSelect.id = "ui-scripture-layout-select";
+    [
+      { value: "notes-left", label: "Notes left" },
+      { value: "scripture-left", label: "Scripture left" },
+      { value: "scripture-only", label: "Scripture only" }
+    ].forEach((option) => {
+      const opt = document.createElement("option");
+      opt.value = option.value;
+      opt.textContent = option.label;
+      layoutSelect.append(opt);
     });
-    toggleRow.append(scriptureOnlyBtn);
+
+    const currentLayoutMode = typeof deps.getScriptureLayoutMode === "function"
+      ? deps.getScriptureLayoutMode()
+      : (deps.paneGrid.classList.contains("is-scripture-only")
+        ? "scripture-only"
+        : deps.paneGrid.dataset.order === "scripture-first"
+          ? "scripture-left"
+          : "notes-left");
+    layoutSelect.value = currentLayoutMode;
+    layoutSelect.addEventListener("change", () => {
+      deps.setScriptureLayoutMode(layoutSelect.value);
+    });
+    layoutField.append(layoutLabel, layoutSelect);
+    toggleRow.append(layoutField);
     toggleSection.append(toggleRow);
     container.append(toggleSection);
 
