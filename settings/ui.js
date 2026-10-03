@@ -106,6 +106,20 @@ window.ScriptoriaModules.createSettingsUi = (deps) => {
       deps.togglePaneOrder();
     });
     toggleRow.append(paneBtn);
+
+    const scriptureOnlyEnabled = typeof deps.isScriptureOnly === "function"
+      ? deps.isScriptureOnly()
+      : deps.paneGrid.classList.contains("is-scripture-only");
+    const scriptureOnlyBtn = document.createElement("button");
+    scriptureOnlyBtn.type = "button";
+    scriptureOnlyBtn.id = "ui-scripture-only-toggle";
+    scriptureOnlyBtn.className = "ui-toggle-button";
+    scriptureOnlyBtn.setAttribute("aria-pressed", String(scriptureOnlyEnabled));
+    scriptureOnlyBtn.innerHTML = `<span>Scripture only</span><span class="ui-toggle-state">${scriptureOnlyEnabled ? "On" : "Off"}</span>`;
+    scriptureOnlyBtn.addEventListener("click", () => {
+      deps.toggleScriptureOnly();
+    });
+    toggleRow.append(scriptureOnlyBtn);
     toggleSection.append(toggleRow);
     container.append(toggleSection);
 

@@ -19,6 +19,9 @@ window.ScriptoriaModules.createSyncPayloads = (deps) => {
     paneOrderStorageKey,
     applySplit,
     paneSplitStorageKey,
+    getScriptureOnly,
+    applyScriptureOnly,
+    scriptureOnlyStorageKey,
     applyTranslation,
     translationStorageKey,
     applyColorTheme,
@@ -43,6 +46,7 @@ window.ScriptoriaModules.createSyncPayloads = (deps) => {
       theme: getCurrentThemeMode(),
       paneOrder: paneGrid.dataset.order === "scripture-first" ? "scripture-first" : "notes-first",
       paneSplit: getCurrentPaneSplit(),
+      scriptureOnly: typeof getScriptureOnly === "function" ? getScriptureOnly() : false,
       translation: getCurrentTranslationCode(),
       colorTheme: getCurrentColorThemeId()
     },
@@ -119,6 +123,11 @@ window.ScriptoriaModules.createSyncPayloads = (deps) => {
       if (typeof payload.preferences.paneSplit === "number") {
         applySplit(payload.preferences.paneSplit);
         void writeStoredValue(paneSplitStorageKey, getCurrentPaneSplit());
+      }
+
+      if (typeof payload.preferences.scriptureOnly === "boolean" && typeof applyScriptureOnly === "function") {
+        applyScriptureOnly(payload.preferences.scriptureOnly);
+        void writeStoredValue(scriptureOnlyStorageKey, payload.preferences.scriptureOnly);
       }
 
       if (payload.preferences.translation) {

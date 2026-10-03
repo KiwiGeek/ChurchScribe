@@ -1,10 +1,11 @@
 window.ScriptoriaModules = window.ScriptoriaModules || {};
 
 // ─── Pane layout controller ─────────────────────────────────────────────────
-// Owns the two-pane split layout: the order (notes-first vs scripture-first)
-// and the split fraction (the share of width given to the notes pane).  Both
-// preferences are persisted to IndexedDB via the storage helpers in deps and
-// read back on bootstrap so the user's last-used layout sticks across loads.
+// Owns the two-pane split layout: the order (notes-first vs scripture-first),
+// the split fraction (the share of width given to the notes pane), and the
+// scripture-only mode that hides the editor entirely.  Preferences are
+// persisted to IndexedDB via the storage helpers in deps and read back on
+// bootstrap so the user's last-used layout sticks across loads.
 //
 // Also owns the drag-to-resize behaviour on the pane divider.  Dragging
 // updates the split live; mouseup persists the final value and pings the
@@ -19,6 +20,7 @@ window.ScriptoriaModules.createPaneLayout = (deps) => {
     migrateLegacyPreference,
     paneOrderStorageKey,
     paneSplitStorageKey,
+    scriptureOnlyStorageKey,
     markLocalSettingsUpdated,
     scheduleAutoCloudSync
   } = deps;
@@ -27,6 +29,7 @@ window.ScriptoriaModules.createPaneLayout = (deps) => {
   // every assignment to [0.2, 0.8] so a corrupted or hand-edited storage value
   // can't push the divider off-screen.
   let currentPaneSplit = 0.6;
+  let scriptureOnly = false;
 
   const getPreferredPaneOrder = async () => {
     const savedOrder = await migrateLegacyPreference(paneOrderStorageKey);
@@ -36,6 +39,11 @@ window.ScriptoriaModules.createPaneLayout = (deps) => {
   const getPreferredSplit = async () => {
     const saved = await readStoredValue(paneSplitStorageKey);
     return typeof saved === "number" && saved >= 0.2 && saved <= 0.8 ? saved : 0.6;
+  };
+
+  const getPreferredScriptureOnly = async () => {
+    const saved = await readStoredValue(scriptureOnlyStorageKey);
+    return saved === true;
   };
 
   // Reflect the current pane order on the Settings UI's "Scripture on left"
@@ -55,6 +63,19 @@ window.ScriptoriaModules.createPaneLayout = (deps) => {
     }
   };
 
+  const syncScriptureOnlyToggle = (enabled) => {
+    const btn = documentObject.querySelector("#ui-scripture-only-toggle");
+
+    if (btn) {
+      btn.setAttribute("aria-pressed", String(enabled));
+      const state = btn.querySelector(".ui-toggle-state");
+
+      if (state) {
+        state.textContent = enabled ? "On" : "Off";
+      }
+    }
+  };
+
   // Reshape the grid columns to put `currentPaneSplit` worth of width on the
   // notes side and the rest on the scripture side, swapping which side gets
   // which fraction depending on pane order.  The 20px middle column is the
@@ -63,8 +84,18 @@ window.ScriptoriaModules.createPaneLayout = (deps) => {
   // overflowing the container and creating a blank strip on the right.  The
   // split is clamped to [0.2, 0.8] so a drag can never push either panel to
   // effectively zero by accident.
+  //
+  // When scripture-only mode is active the grid is a single full-width column;
+  // we still update `currentPaneSplit` so the prior split restores cleanly when
+  // the editor is shown again.
   const applySplit = (fraction) => {
     currentPaneSplit = Math.max(0.2, Math.min(0.8, fraction));
+
+    if (scriptureOnly) {
+      paneGrid.style.gridTemplateColumns = "minmax(0, 1fr)";
+      return;
+    }
+
     const isScriptureFirst = paneGrid.dataset.order === "scripture-first";
 
     if (isScriptureFirst) {
@@ -82,6 +113,24 @@ window.ScriptoriaModules.createPaneLayout = (deps) => {
     applySplit(currentPaneSplit);
   };
 
+  const applyScriptureOnly = (enabled) => {
+    scriptureOnly = Boolean(enabled);
+    paneGrid.classList.toggle("is-scripture-only", scriptureOnly);
+
+    const notePanel = paneGrid.querySelector(".note-panel");
+
+    if (notePanel) {
+      notePanel.setAttribute("aria-hidden", String(scriptureOnly));
+    }
+
+    if (paneDivider) {
+      paneDivider.setAttribute("aria-hidden", String(scriptureOnly));
+    }
+
+    syncScriptureOnlyToggle(scriptureOnly);
+    applySplit(currentPaneSplit);
+  };
+
   const togglePaneOrder = () => {
     const currentOrder = paneGrid.dataset.order === "scripture-first"
       ? "scripture-first"
@@ -89,6 +138,14 @@ window.ScriptoriaModules.createPaneLayout = (deps) => {
     const nextOrder = currentOrder === "scripture-first" ? "notes-first" : "scripture-first";
     void writeStoredValue(paneOrderStorageKey, nextOrder);
     applyPaneOrder(nextOrder);
+    markLocalSettingsUpdated();
+    scheduleAutoCloudSync();
+  };
+
+  const toggleScriptureOnly = () => {
+    const nextEnabled = !scriptureOnly;
+    void writeStoredValue(scriptureOnlyStorageKey, nextEnabled);
+    applyScriptureOnly(nextEnabled);
     markLocalSettingsUpdated();
     scheduleAutoCloudSync();
   };
@@ -105,6 +162,11 @@ window.ScriptoriaModules.createPaneLayout = (deps) => {
   // session counts as one preference change, not dozens.
   if (paneDivider) {
     paneDivider.addEventListener("pointerdown", (startEvent) => {
+      // Scripture-only mode hides the editor and divider; ignore any stray events.
+      if (scriptureOnly) {
+        return;
+      }
+
       // Mouse: only start a drag on the primary (left) button.  Touch and
       // pen events report button === 0 too, so this also doesn't filter
       // those out.
@@ -157,10 +219,15 @@ window.ScriptoriaModules.createPaneLayout = (deps) => {
   return {
     applySplit,
     applyPaneOrder,
+    applyScriptureOnly,
     togglePaneOrder,
+    toggleScriptureOnly,
     syncPaneOrderToggle,
+    syncScriptureOnlyToggle,
     getPreferredPaneOrder,
     getPreferredSplit,
-    getCurrentPaneSplit: () => currentPaneSplit
+    getPreferredScriptureOnly,
+    getCurrentPaneSplit: () => currentPaneSplit,
+    isScriptureOnly: () => scriptureOnly
   };
 };
