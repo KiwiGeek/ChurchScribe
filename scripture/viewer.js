@@ -533,17 +533,28 @@ window.ScriptoriaModules.createScriptureViewer = (deps) => {
     scheduleAutoCloudSync();
   });
 
+  const scrollChapterToTop = () => {
+    // Combo navigation clears scripture focus, so renderChapter will not scroll
+    // to a verse. Reset the pane so the new chapter starts at the top instead
+    // of keeping the previous chapter's scroll offset.
+    requestAnimationFrame(() => {
+      verseDisplay?.scrollTo?.({ top: 0, behavior: "auto" });
+    });
+  };
+
   bookSelect.addEventListener("change", () => {
     activeScriptureFocus = null;
     populateChapterOptions(bookSelect.value);
     chapterSelect.value = "0";
     renderChapter();
+    scrollChapterToTop();
     saveLastBookChapter();
   });
 
   chapterSelect.addEventListener("change", () => {
     activeScriptureFocus = null;
     renderChapter();
+    scrollChapterToTop();
     saveLastBookChapter();
   });
 
