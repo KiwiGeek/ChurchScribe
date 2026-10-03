@@ -29,6 +29,12 @@ jobs:
           COMMIT=$(git rev-parse --short HEAD)
           BUILD_DATE=$(date -u +"%Y-%m-%d %H:%M UTC")
           printf 'window.APP_COMMIT = "%s";\nwindow.APP_BUILD_DATE = "%s";\n' "$COMMIT" "$BUILD_DATE" > version.js
+          # Browsers only install a new service worker when sw.js itself changes
+          # byte-for-byte. version.js is imported by the worker for cache naming,
+          # but an unchanged sw.js means Check for update reports "up to date"
+          # and cache-first keeps serving the previous shell. Append a build
+          # stamp so every Pages deploy produces a detectable SW update.
+          printf '\n// Build %s (%s)\n' "$COMMIT" "$BUILD_DATE" >> sw.js
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

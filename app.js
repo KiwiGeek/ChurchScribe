@@ -2372,34 +2372,83 @@ window.ScriptoriaModules.createConnectivityWatcher({
 // `controllerchange` so the user picks up the new shell without a manual
 // refresh.  iOS home-screen apps often resume without a fresh load, so we
 // also ask for an update whenever the page becomes visible again.
+const forceCleanAppReload = async () => {
+  try {
+    if ("serviceWorker" in navigator) {
+      const regs = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(regs.map((reg) => reg.unregister()));
+    }
+
+    if ("caches" in window) {
+      const keys = await caches.keys();
+      await Promise.all(keys.map((key) => caches.delete(key)));
+    }
+  } finally {
+    location.reload();
+  }
+};
+
+const fetchPublishedAppCommit = async () => {
+  const response = await fetch(`version.js?_=${Date.now()}`, { cache: "no-store" });
+
+  if (!response.ok) {
+    return null;
+  }
+
+  const match = /APP_COMMIT\s*=\s*"([^"]+)"/.exec(await response.text());
+  return match ? match[1] : null;
+};
+
 const requestAppUpdate = async () => {
-  if (!("serviceWorker" in navigator)) {
-    return "unavailable";
+  let swResult = "unavailable";
+
+  if ("serviceWorker" in navigator) {
+    const registration = await navigator.serviceWorker.getRegistration();
+
+    if (registration) {
+      if (registration.waiting) {
+        registration.waiting.postMessage("skip-waiting");
+        return "updating";
+      }
+
+      await registration.update();
+
+      if (registration.waiting) {
+        registration.waiting.postMessage("skip-waiting");
+        return "updating";
+      }
+
+      if (registration.installing) {
+        return "updating";
+      }
+
+      swResult = "current";
+    }
   }
 
-  const registration = await navigator.serviceWorker.getRegistration();
+  // Fallback for deploys that changed assets/version.js but not sw.js: the SW
+  // update check sees identical worker bytes and reports "current" while the
+  // cache-first shell stays stale.  Compare the published commit and hard-reset
+  // when it diverges from the running page.
+  try {
+    const remoteCommit = await fetchPublishedAppCommit();
+    const localCommit = typeof window.APP_COMMIT === "string" ? window.APP_COMMIT : null;
 
-  if (!registration) {
-    return "unavailable";
+    if (
+      remoteCommit
+      && localCommit
+      && remoteCommit !== "dev"
+      && localCommit !== "dev"
+      && remoteCommit !== localCommit
+    ) {
+      void forceCleanAppReload();
+      return "updating";
+    }
+  } catch (err) {
+    console.warn("[SW] published version check failed:", err);
   }
 
-  if (registration.waiting) {
-    registration.waiting.postMessage("skip-waiting");
-    return "updating";
-  }
-
-  await registration.update();
-
-  if (registration.waiting) {
-    registration.waiting.postMessage("skip-waiting");
-    return "updating";
-  }
-
-  if (registration.installing) {
-    return "updating";
-  }
-
-  return "current";
+  return swResult;
 };
 
 {
