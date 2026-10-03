@@ -805,10 +805,11 @@ const renderSettingsSheet = () => {
       <p class="mob-settings-label mob-settings-label--spaced" id="mob-color-theme-label">Color theme</p>
       <div class="mob-color-theme-grid" id="mob-color-theme-grid" aria-labelledby="mob-color-theme-label">${swatchGrid}</div>
       <p class="mob-settings-label mob-settings-label--spaced">Scripture notes</p>
-      <p class="mob-settings-help">When notes mode is on, tap a verse to add or edit a note. A dot marks verses that already have one.</p>
+      <p class="mob-settings-help">Choose how verses open the note editor. A dot marks verses that already have a note.</p>
       <div class="mob-theme-toggle-group" id="mob-verse-notes-enabled-group" role="group" aria-label="Scripture notes mode">
-        <button type="button" class="mob-theme-toggle" data-verse-notes-enabled="on" aria-pressed="${(verseNotesApiRef?.getNotesEnabled?.() ?? true) ? "true" : "false"}">Notes on</button>
-        <button type="button" class="mob-theme-toggle" data-verse-notes-enabled="off" aria-pressed="${(verseNotesApiRef?.getNotesEnabled?.() ?? true) ? "false" : "true"}">Notes off</button>
+        <button type="button" class="mob-theme-toggle" data-verse-notes-mode="tap" aria-pressed="${(verseNotesApiRef?.getNotesMode?.() ?? "tap") === "tap" ? "true" : "false"}">Tap</button>
+        <button type="button" class="mob-theme-toggle" data-verse-notes-mode="long-tap" aria-pressed="${(verseNotesApiRef?.getNotesMode?.() ?? "tap") === "long-tap" ? "true" : "false"}">Long tap</button>
+        <button type="button" class="mob-theme-toggle" data-verse-notes-mode="off" aria-pressed="${(verseNotesApiRef?.getNotesMode?.() ?? "tap") === "off" ? "true" : "false"}">Off</button>
       </div>
       <div class="mob-theme-toggle-group" id="mob-verse-note-margin-group" role="group" aria-label="Scripture note margin on desktop">
         <button type="button" class="mob-theme-toggle" data-verse-note-margin="show" aria-pressed="${(verseNotesApiRef?.getShowMargin?.() ?? true) ? "true" : "false"}">Show margin on desktop</button>
@@ -880,12 +881,12 @@ const renderSettingsSheet = () => {
   `;
 
   document.querySelector("#mob-verse-notes-enabled-group")?.addEventListener("click", (e) => {
-    const button = e.target.closest("[data-verse-notes-enabled]");
+    const button = e.target.closest("[data-verse-notes-mode]");
     if (!button || !verseNotesApiRef) return;
-    const enabled = button.dataset.verseNotesEnabled === "on";
-    verseNotesApiRef.setNotesEnabled(enabled);
+    const mode = button.dataset.verseNotesMode;
+    verseNotesApiRef.setNotesMode(mode);
     document.querySelectorAll("#mob-verse-notes-enabled-group .mob-theme-toggle").forEach((toggle) => {
-      toggle.setAttribute("aria-pressed", String((toggle.dataset.verseNotesEnabled === "on") === enabled));
+      toggle.setAttribute("aria-pressed", String(toggle.dataset.verseNotesMode === mode));
     });
     viewerApiRef?.renderChapter?.();
   });
@@ -1451,6 +1452,8 @@ const bootstrap = async () => {
     showVerseNoteMarginStorageKey,
     getVerseNotesEnabled: () => verseNotesApiRef?.getNotesEnabled?.() ?? true,
     setVerseNotesEnabled: (value, options) => verseNotesApiRef?.setNotesEnabled?.(value, options),
+    getVerseNotesMode: () => verseNotesApiRef?.getNotesMode?.() ?? "tap",
+    setVerseNotesMode: (value, options) => verseNotesApiRef?.setNotesMode?.(value, options),
     verseNotesEnabledStorageKey,
     refreshVerseNotesView: () => viewerApi?.renderChapter?.()
   });

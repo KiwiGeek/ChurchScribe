@@ -173,8 +173,17 @@ window.ScriptoriaModules.createCloudSync = (deps) => {
     // Default is "show margin" / notes mode on when the preference is absent.
     const remoteMargin = remotePayload.preferences?.showVerseNoteMargin !== false;
     const localMargin = localSettings.preferences?.showVerseNoteMargin !== false;
-    const remoteNotesEnabled = remotePayload.preferences?.verseNotesEnabled !== false;
-    const localNotesEnabled = localSettings.preferences?.verseNotesEnabled !== false;
+    const normalizeNotesModePref = (preferences = {}) => {
+      if (typeof preferences.verseNotesMode === "string") {
+        return preferences.verseNotesMode;
+      }
+      if (preferences.verseNotesEnabled === false) {
+        return "off";
+      }
+      return "tap";
+    };
+    const remoteNotesMode = normalizeNotesModePref(remotePayload.preferences);
+    const localNotesMode = normalizeNotesModePref(localSettings.preferences);
     const remoteOpenDyslexic = Boolean(remotePayload.preferences?.openDyslexicFont);
     const localOpenDyslexic = Boolean(localSettings.preferences?.openDyslexicFont);
 
@@ -182,7 +191,7 @@ window.ScriptoriaModules.createCloudSync = (deps) => {
       remoteNotesComparable !== localNotesComparable ||
       remoteVerseNotesComparable !== localVerseNotesComparable ||
       remoteMargin !== localMargin ||
-      remoteNotesEnabled !== localNotesEnabled ||
+      remoteNotesMode !== localNotesMode ||
       remoteOpenDyslexic !== localOpenDyslexic;
   };
 
@@ -552,6 +561,7 @@ window.ScriptoriaModules.createCloudSync = (deps) => {
           colorTheme: localPreferences.colorTheme,
           openDyslexicFont: localPreferences.openDyslexicFont,
           showVerseNoteMargin: localPreferences.showVerseNoteMargin,
+          verseNotesMode: localPreferences.verseNotesMode,
           verseNotesEnabled: localPreferences.verseNotesEnabled
         },
         // Verse notes live in the settings file so mobile / settings-only sync
