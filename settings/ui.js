@@ -1,6 +1,10 @@
 window.ScriptoriaModules = window.ScriptoriaModules || {};
 
 window.ScriptoriaModules.createSettingsUi = (deps) => {
+  // Persist picker filters across settings re-renders within the session.
+  let themeSupportFilter = "all";
+  let themeMoodFilter = "all";
+
   // Renders the Sync & Backup summary card: provider, account, storage
   // location, and connection status.  Configuration itself happens in the
   // setup wizard (sync/setup-wizard.js).
@@ -148,18 +152,12 @@ window.ScriptoriaModules.createSettingsUi = (deps) => {
     layoutSection.append(layoutRow);
     container.append(layoutSection);
 
-    const themeSection = document.createElement("div");
-    themeSection.className = "ui-settings-section";
+    const themeCatalog = window.ScriptoriaModules;
+    if (typeof themeCatalog.enrichColorThemes === "function") {
+      themeCatalog.enrichColorThemes(deps.colorThemes);
+    }
 
-    const themeTitle = document.createElement("p");
-    themeTitle.className = "ui-settings-section-title";
-    themeTitle.textContent = "Color Theme";
-    themeSection.append(themeTitle);
-
-    const themeGrid = document.createElement("div");
-    themeGrid.className = "theme-grid";
-
-    deps.colorThemes.forEach((theme) => {
+    const createThemeCard = (theme, syncRoots = []) => {
       const isActive = theme.id === deps.getCurrentColorThemeId();
       const card = document.createElement("button");
       card.type = "button";
@@ -169,7 +167,7 @@ window.ScriptoriaModules.createSettingsUi = (deps) => {
 
       const swatch = document.createElement("div");
       swatch.className = "theme-swatch";
-      theme.swatches.forEach((color) => {
+      (theme.swatches || []).forEach((color) => {
         const dot = document.createElement("div");
         dot.className = "theme-swatch-color";
         dot.style.background = color;
@@ -195,18 +193,141 @@ window.ScriptoriaModules.createSettingsUi = (deps) => {
       card.addEventListener("click", () => {
         void deps.writeStoredValue(deps.colorThemeStorageKey, theme.id);
         deps.applyColorTheme(theme.id);
-        themeGrid.querySelectorAll(".theme-card").forEach((el) => {
-          const active = el.dataset.themeId === theme.id;
-          el.classList.toggle("is-active", active);
-          el.setAttribute("aria-pressed", String(active));
+        syncRoots.forEach((root) => {
+          root.querySelectorAll(".theme-card").forEach((el) => {
+            const active = el.dataset.themeId === theme.id;
+            el.classList.toggle("is-active", active);
+            el.setAttribute("aria-pressed", String(active));
+          });
         });
         deps.markLocalSettingsUpdated();
         deps.scheduleAutoCloudSync();
       });
-      themeGrid.append(card);
-    });
+      return card;
+    };
 
-    themeSection.append(themeGrid);
+    const createFilterGroup = (label, options, selected, onSelect) => {
+      const group = document.createElement("div");
+      group.className = "theme-filter-group";
+      group.setAttribute("role", "group");
+      group.setAttribute("aria-label", label);
+
+      const caption = document.createElement("span");
+      caption.className = "theme-filter-label";
+      caption.textContent = label;
+      group.append(caption);
+
+      const chips = document.createElement("div");
+      chips.className = "theme-filter-chips";
+
+      options.forEach((option) => {
+        const chip = document.createElement("button");
+        chip.type = "button";
+        chip.className = `theme-filter-chip${option.value === selected ? " is-active" : ""}`;
+        chip.setAttribute("aria-pressed", String(option.value === selected));
+        chip.textContent = option.label;
+        chip.addEventListener("click", () => {
+          onSelect(option.value);
+          renderUiSettings(container);
+        });
+        chips.append(chip);
+      });
+
+      group.append(chips);
+      return group;
+    };
+
+    const themeSection = document.createElement("div");
+    themeSection.className = "ui-settings-section";
+
+    const themeTitle = document.createElement("p");
+    themeTitle.className = "ui-settings-section-title";
+    themeTitle.textContent = "Color Theme";
+    themeSection.append(themeTitle);
+
+    const themeCopy = document.createElement("p");
+    themeCopy.className = "settings-copy";
+    themeCopy.textContent = "Start with a distinct look, or filter the full library.";
+    themeSection.append(themeCopy);
+
+    const filterBar = document.createElement("div");
+    filterBar.className = "theme-filter-bar";
+    filterBar.append(
+      createFilterGroup(
+        "Support",
+        [
+          { value: "all", label: "All" },
+          { value: "light", label: "Light" },
+          { value: "dark", label: "Dark" },
+          { value: "both", label: "Light & dark" }
+        ],
+        themeSupportFilter,
+        (value) => { themeSupportFilter = value; }
+      ),
+      createFilterGroup(
+        "Mood",
+        [
+          { value: "all", label: "All" },
+          { value: "warm", label: "Warm" },
+          { value: "cool", label: "Cool" },
+          { value: "bold", label: "Bold" },
+          { value: "minimal", label: "Minimal" }
+        ],
+        themeMoodFilter,
+        (value) => { themeMoodFilter = value; }
+      )
+    );
+    themeSection.append(filterBar);
+
+    const filteredThemes = typeof themeCatalog.filterColorThemes === "function"
+      ? themeCatalog.filterColorThemes(deps.colorThemes, {
+        support: themeSupportFilter,
+        mood: themeMoodFilter
+      })
+      : deps.colorThemes;
+
+    const featuredThemes = (typeof themeCatalog.getFeaturedThemes === "function"
+      ? themeCatalog.getFeaturedThemes(deps.colorThemes)
+      : deps.colorThemes.filter((theme) => theme.featured))
+      .filter((theme) => filteredThemes.some((candidate) => candidate.id === theme.id));
+
+    const featuredGrid = document.createElement("div");
+    featuredGrid.className = "theme-grid theme-grid--featured";
+    const allGrid = document.createElement("div");
+    allGrid.className = "theme-grid";
+    const syncRoots = [featuredGrid, allGrid];
+
+    if (featuredThemes.length > 0 && themeMoodFilter === "all") {
+      const featuredTitle = document.createElement("p");
+      featuredTitle.className = "theme-subsection-title";
+      featuredTitle.textContent = "Featured";
+      themeSection.append(featuredTitle);
+
+      featuredThemes.forEach((theme) => {
+        featuredGrid.append(createThemeCard(theme, syncRoots));
+      });
+      themeSection.append(featuredGrid);
+    }
+
+    const allTitle = document.createElement("p");
+    allTitle.className = "theme-subsection-title";
+    allTitle.textContent = themeMoodFilter === "all" && themeSupportFilter === "all"
+      ? "All themes"
+      : `${filteredThemes.length} match${filteredThemes.length === 1 ? "" : "es"}`;
+    themeSection.append(allTitle);
+
+    if (filteredThemes.length === 0) {
+      const empty = document.createElement("p");
+      empty.className = "settings-copy";
+      empty.textContent = "No themes match these filters.";
+      themeSection.append(empty);
+    } else {
+      filteredThemes.forEach((theme) => {
+        allGrid.append(createThemeCard(theme, syncRoots));
+      });
+      themeSection.append(allGrid);
+    }
+
     container.append(themeSection);
   };
 
