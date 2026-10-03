@@ -148,20 +148,14 @@
       justify-content: space-between;
       gap: 8px;
       padding: 5px 10px;
-      /* constant() for older iOS; env() thereafter. */
+      /* constant() for older iOS; env() thereafter. Use the real inset only —
+         a fixed minimum stacked on top of a working inset left a large gap. */
       padding-top: calc(5px + constant(safe-area-inset-top));
       padding-top: calc(5px + env(safe-area-inset-top, 0px));
       background: var(--surface-strong);
       border-bottom: 0.5px solid var(--border);
       flex-shrink: 0;
       user-select: none;
-    }
-
-    /* black-translucent + WebKit sometimes reports inset 0 while the OS bar
-       still covers the top — keep a phone-status-bar minimum in that mode. */
-    html.is-ios.is-standalone .mob-header {
-      padding-top: calc(5px + max(47px, constant(safe-area-inset-top)));
-      padding-top: calc(5px + max(47px, env(safe-area-inset-top, 0px)));
     }
 
     /* black-translucent uses light status icons; darken the notch strip on
@@ -176,11 +170,6 @@
       height: env(safe-area-inset-top, 0px);
       background: rgba(20, 16, 12, 0.55);
       pointer-events: none;
-    }
-
-    html.is-ios.is-standalone .mob-header::before {
-      height: max(47px, constant(safe-area-inset-top));
-      height: max(47px, env(safe-area-inset-top, 0px));
     }
 
     [data-theme="dark"] .mob-header::before {
@@ -839,8 +828,8 @@
 
     /* Keep sheet chrome (Settings title / Done) below the status bar. */
     html.is-ios.is-standalone .mob-sheet-backdrop:not([hidden]) {
-      padding-top: max(47px, constant(safe-area-inset-top));
-      padding-top: max(47px, env(safe-area-inset-top, 0px));
+      padding-top: constant(safe-area-inset-top);
+      padding-top: env(safe-area-inset-top, 0px);
     }
 
     .mob-sheet {
