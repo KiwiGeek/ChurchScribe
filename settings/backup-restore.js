@@ -18,8 +18,10 @@ window.ScriptoriaModules.createSettingsBackupRestore = (deps) => {
       paneSplit: deps.getCurrentPaneSplit(),
       scriptureOnly: typeof deps.isScriptureOnly === "function" ? deps.isScriptureOnly() : false,
       selectedTranslationId: deps.getCurrentTranslationCode(),
-      colorTheme: deps.getCurrentColorThemeId()
+      colorTheme: deps.getCurrentColorThemeId(),
+      showVerseNoteMargin: typeof deps.getShowVerseNoteMargin === "function" ? deps.getShowVerseNoteMargin() : true
     },
+    verseNotes: typeof deps.getVerseNotesPayload === "function" ? deps.getVerseNotesPayload() : undefined,
     translationState: deps.getTranslationStateForBackup()
   });
 
@@ -93,11 +95,22 @@ window.ScriptoriaModules.createSettingsBackupRestore = (deps) => {
           deps.applyColorTheme(preferences.colorTheme);
           void deps.writeStoredValue(deps.colorThemeStorageKey, preferences.colorTheme);
         }
+
+        if (typeof preferences.showVerseNoteMargin === "boolean" && typeof deps.setShowVerseNoteMargin === "function") {
+          deps.setShowVerseNoteMargin(preferences.showVerseNoteMargin, { sync: false });
+        }
+      }
+
+      if (backup.verseNotes && typeof deps.applyVerseNotesPayload === "function") {
+        deps.applyVerseNotesPayload(backup.verseNotes);
       }
 
       deps.buildBookAliasMap();
       deps.renderWorkspace();
       deps.persistWorkspace();
+      if (typeof deps.refreshVerseNotesView === "function") {
+        deps.refreshVerseNotesView();
+      }
       deps.updateSaveStatus("Library restored from backup.");
     } catch (error) {
       console.error("[Backup] Restore failed:", error);
@@ -127,7 +140,9 @@ window.ScriptoriaModules.createSettingsBackupRestore = (deps) => {
       deps.deleteStoredValue(deps.lastBookChapterStorageKey),
       deps.deleteStoredValue(deps.onboardingStorageKey),
       deps.deleteStoredValue(deps.notesStorageKey),
-      deps.deleteStoredValue(deps.translationRegistryStorageKey)
+      deps.deleteStoredValue(deps.translationRegistryStorageKey),
+      deps.verseNotesStorageKey ? deps.deleteStoredValue(deps.verseNotesStorageKey) : Promise.resolve(),
+      deps.showVerseNoteMarginStorageKey ? deps.deleteStoredValue(deps.showVerseNoteMarginStorageKey) : Promise.resolve()
     ]);
     deps.clearThemePreferenceMirrors();
 
@@ -197,7 +212,9 @@ window.ScriptoriaModules.createSettingsBackupRestore = (deps) => {
       deps.deleteStoredValue(deps.lastBookChapterStorageKey),
       deps.deleteStoredValue(deps.onboardingStorageKey),
       deps.deleteStoredValue(deps.notesStorageKey),
-      deps.deleteStoredValue(deps.translationRegistryStorageKey)
+      deps.deleteStoredValue(deps.translationRegistryStorageKey),
+      deps.verseNotesStorageKey ? deps.deleteStoredValue(deps.verseNotesStorageKey) : Promise.resolve(),
+      deps.showVerseNoteMarginStorageKey ? deps.deleteStoredValue(deps.showVerseNoteMarginStorageKey) : Promise.resolve()
     ]);
     deps.clearThemePreferenceMirrors();
 

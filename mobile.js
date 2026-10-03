@@ -30,6 +30,8 @@ const colorThemeStorageKey       = "service-notes-color-theme";
 const colorThemeMirrorStorageKey = "service-notes-color-theme-mirror";
 const lastBookChapterStorageKey  = "service-notes-last-book-chapter";
 const onboardingStorageKey       = "service-notes-onboarding-seen";
+const verseNotesStorageKey       = "service-notes-verse-notes";
+const showVerseNoteMarginStorageKey = "service-notes-verse-notes-margin";
 const THEME_MODE_OPTIONS = [
   { value: "system", label: "System" },
   { value: "light", label: "Light" },
@@ -161,6 +163,7 @@ let translationsManagerApiRef = null;
 let scriptureSearchApiRef    = null;
 let viewerApi                = null;
 let aliasesApi               = null;
+let verseNotesApiRef         = null;
 let referencesApi            = null;
 let themeApi                 = null;
 
@@ -793,6 +796,12 @@ const renderSettingsSheet = () => {
       </div>
       <p class="mob-settings-label mob-settings-label--spaced" id="mob-color-theme-label">Color theme</p>
       <div class="mob-color-theme-grid" id="mob-color-theme-grid" aria-labelledby="mob-color-theme-label">${swatchGrid}</div>
+      <p class="mob-settings-label mob-settings-label--spaced">Scripture notes</p>
+      <p class="mob-settings-help">Tap a verse to add or edit a note. A dot marks verses that already have one.</p>
+      <div class="mob-theme-toggle-group" id="mob-verse-note-margin-group" role="group" aria-label="Scripture note margin on desktop">
+        <button type="button" class="mob-theme-toggle" data-verse-note-margin="show" aria-pressed="${(verseNotesApiRef?.getShowMargin?.() ?? true) ? "true" : "false"}">Show margin on desktop</button>
+        <button type="button" class="mob-theme-toggle" data-verse-note-margin="hide" aria-pressed="${(verseNotesApiRef?.getShowMargin?.() ?? true) ? "false" : "true"}">Hide margin</button>
+      </div>
     </div>
     <div class="mob-settings-section">
       <p class="mob-settings-label">Translations</p>
@@ -857,6 +866,17 @@ const renderSettingsSheet = () => {
       <button class="mob-settings-action" id="mob-open-desktop" type="button">Switch to desktop view →</button>
     </div>
   `;
+
+  document.querySelector("#mob-verse-note-margin-group")?.addEventListener("click", (e) => {
+    const button = e.target.closest("[data-verse-note-margin]");
+    if (!button || !verseNotesApiRef) return;
+    const show = button.dataset.verseNoteMargin === "show";
+    verseNotesApiRef.setShowMargin(show);
+    document.querySelectorAll("#mob-verse-note-margin-group .mob-theme-toggle").forEach((toggle) => {
+      toggle.setAttribute("aria-pressed", String((toggle.dataset.verseNoteMargin === "show") === show));
+    });
+    viewerApiRef?.renderChapter?.();
+  });
 
   document.querySelector("#mob-open-desktop")?.addEventListener("click", () => {
     if (typeof window.ScriptoriaModules?.navigateToView === "function") {
@@ -1240,6 +1260,22 @@ const bootstrap = async () => {
   parseScriptureReference = referencesApi.parseScriptureReference;
   formatResolvedReference = referencesApi.formatResolvedReference;
 
+  // ── Verse notes ───────────────────────────────────────────────────────────
+  const verseNotesApi = window.ScriptoriaModules.createVerseNotes({
+    readStoredValue,
+    writeStoredValue,
+    verseNotesStorageKey,
+    showMarginStorageKey: showVerseNoteMarginStorageKey,
+    markLocalSettingsUpdated: () => {},
+    scheduleAutoCloudSync: () => {},
+    syncUiSettingsToCloud: () => syncCloudApi?.syncUiSettingsToCloud?.(),
+    parseScriptureReference,
+    getExplicitPattern: () => aliasesApi.getFullExplicitPattern?.() || aliasesApi.getExplicitPattern?.(),
+    jumpToScripture: (ref) => showScriptureSheet(ref),
+    isMobileShell: true
+  });
+  verseNotesApiRef = verseNotesApi;
+
   // ── Scripture viewer ──────────────────────────────────────────────────────
   viewerApi = window.ScriptoriaModules.createScriptureViewer({
     bookSelect,
@@ -1263,8 +1299,13 @@ const bootstrap = async () => {
     performScriptureSearch: (q) => scriptureSearchApiRef?.performScriptureSearch?.(q),
     getScriptureSearchQuery: () => scriptureSearchApiRef?.getQuery?.() ?? "",
     markLocalSettingsUpdated: () => {},
-    scheduleAutoCloudSync:    () => {}
+    scheduleAutoCloudSync:    () => {},
+    afterChapterRender: (root, book, chapter) => {
+      verseNotesApi.decorateChapter(root, book, chapter);
+    }
   });
+
+  verseNotesApi.setRefreshChapter(() => viewerApi.renderChapter());
 
   viewerApiRef       = viewerApi;
   applyTranslation   = viewerApi.applyTranslation;
@@ -1323,7 +1364,13 @@ const bootstrap = async () => {
     ensureWorkspaceConsistency,
     buildBookAliasMap:        () => aliasesApi.buildBookAliasMap(),
     renderWorkspace:          () => renderMobileApp(),
-    workspaceStorageKey
+    workspaceStorageKey,
+    getVerseNotesPayload: () => verseNotesApiRef?.getSyncPayload?.(),
+    applyVerseNotesPayload: (payload) => verseNotesApiRef?.applySyncPayload?.(payload),
+    getShowVerseNoteMargin: () => verseNotesApiRef?.getShowMargin?.() ?? true,
+    setShowVerseNoteMargin: (value, options) => verseNotesApiRef?.setShowMargin?.(value, options),
+    showVerseNoteMarginStorageKey,
+    refreshVerseNotesView: () => viewerApi?.renderChapter?.()
   });
 
   // ── Cloud sync ────────────────────────────────────────────────────────────
@@ -1404,12 +1451,14 @@ const bootstrap = async () => {
   applyColorTheme(await themeApi.getPreferredColorTheme());
   // Desktop layout preference — kept in memory so cloud sync does not wipe it.
   scriptureOnlyPreference = (await readStoredValue(scriptureOnlyStorageKey)) === true;
+  await verseNotesApiRef?.load?.();
 
   // Restore cloud sync settings from IDB
   await syncCloudApi.restoreCloudSyncSettings();
 
   // Show initial UI with local data while cloud reconnect happens in background
   await restoreWorkspace();
+  viewerApiRef?.renderChapter?.();
 
   // Attempt silent cloud reconnect
   activeProvider.waitForReady(async () => {
