@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "translationId": "en:YW",
+  "code": "YW",
+  "label": "YAHWEH\u0027S WORD",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 2,
+  "contentUrl": "bibles/content/en/YW/v2.json",
+  "contentHash": "sha256-833f4b138de5d562e0944a15863c4c7cce3d1e1542fd6e39c22bb1b8f0fbadb6",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": true,
+    "subheadings": true,
+    "superscriptions": false,
+    "html": true
+  },
+  "updatedAt": "2026-10-03T22:11:53.9297161Z"
+}

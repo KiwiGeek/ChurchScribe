@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "translationId": "es:LBLA",
-  "version": 11,
+  "version": 12,
   "books": {
     "Genesis": [
       {
@@ -138945,7 +138945,7 @@
           },
           {
             "verse": 15,
-            "heading": "La promesa, y el prop\u00F3sito de la ley",
+            "heading": "La promesa y el prop\u00F3sito de la ley",
             "text": "Hermanos, hablo en t\u00E9rminos humanos: un pacto, aunque sea humano, una vez ratificado nadie lo invalida ni le a\u00F1ade condiciones."
           },
           {

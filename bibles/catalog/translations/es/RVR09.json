@@ -6,9 +6,9 @@
   "languageTag": "es",
   "languageCode3": "spa",
   "sourceType": "official",
-  "version": 9,
-  "contentUrl": "bibles/content/es/RVR09/v9.json",
-  "contentHash": "sha256-3b70fa8da31612e74a242d7c40dd72997bbf1d1368e1b97fe3cf63ccae785ce4",
+  "version": 13,
+  "contentUrl": "bibles/content/es/RVR09/v13.json",
+  "contentHash": "sha256-c7b4d14f683315a57bd9b43d8bd14f1aa0e7d5849e85dda273e7be2e3aaaf437",
   "bookOrder": "protestant-66",
   "features": {
     "headings": true,
@@ -16,5 +16,5 @@
     "superscriptions": false,
     "html": true
   },
-  "updatedAt": "2026-05-10T23:54:27.4411278Z"
+  "updatedAt": "2026-10-03T22:11:58.6946534Z"
 }

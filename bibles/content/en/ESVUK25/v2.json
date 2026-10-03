@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "translationId": "en:ESVUK25",
-  "version": 1,
+  "version": 2,
   "books": {
     "Genesis": [
       {
@@ -35375,7 +35375,7 @@
           },
           {
             "verse": 6,
-            "text": "And thus you shall greet him:\u2018Peace be to you, and peace be to your house, and peace be to all that you have."
+            "text": "And thus you shall greet him: \u2018Peace be to you, and peace be to your house, and peace be to all that you have."
           },
           {
             "verse": 7,
@@ -67447,7 +67447,7 @@
           {
             "verse": 19,
             "text": "Blessed be his glorious name for ever; may the whole earth be filled with his glory! Amen and Amen!",
-            "html": "Blessed be his glorious name for ever; \u003Cbr/\u003E may the whole earth be filled with his glory! \u003Cspan class=\u0022verse-selah\u0022\u003EAmen and Amen!\u003C/span\u003E"
+            "html": "Blessed be his glorious name for ever; \u003Cbr/\u003E may the whole earth be filled with his glory! \u003Cspan class=\u0022verse-selah\u0022\u003EAmen and Amen! \u003C/span\u003E"
           },
           {
             "verse": 20,
@@ -69063,7 +69063,7 @@
           {
             "verse": 52,
             "text": "Blessed be the LORD for ever! Amen and Amen.",
-            "html": "Blessed be the \u003Cspan class=\u0022verse-divine-name\u0022\u003ELORD\u003C/span\u003E for ever! \u003Cspan class=\u0022verse-selah\u0022\u003EAmen and Amen.\u003C/span\u003E"
+            "html": "Blessed be the \u003Cspan class=\u0022verse-divine-name\u0022\u003ELORD\u003C/span\u003E for ever! \u003Cspan class=\u0022verse-selah\u0022\u003EAmen and Amen. \u003C/span\u003E"
           }
         ]
       },
@@ -84321,7 +84321,7 @@
           },
           {
             "verse": 9,
-            "text": "And they made his grave with the wicked and with a rich man in his death, althoughhe had done no violence, and there was no deceit in his mouth."
+            "text": "And they made his grave with the wicked and with a rich man in his death, although he had done no violence, and there was no deceit in his mouth."
           },
           {
             "verse": 10,
@@ -109324,7 +109324,7 @@
           {
             "verse": 30,
             "text": "And cast the worthless servant into the outer darkness. In that place there will be weeping and gnashing of teeth.\u2019",
-            "html": "\u003Cspan class=\u0022verse-red-letter\u0022\u003EAnd cast the worthless servant into the outer darkness. In that place there will be weeping and gnashing of teeth.\u2019\u003C/span\u003E"
+            "html": "\u003Cspan class=\u0022verse-red-letter\u0022\u003EAnd cast the worthless servant into the outer darkness. In that place there will be weeping and gnashing of teeth.\u2019 \u003C/span\u003E"
           },
           {
             "verse": 31,

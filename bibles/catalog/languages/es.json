@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "languageTag": "es",
   "displayName": "Spanish",
-  "catalogVersion": "2026-07-04T01:07:22.2819456\u002B00:00",
+  "catalogVersion": "2026-10-03T22:13:17.0948744\u002B00:00",
   "translations": [
     {
       "translationId": "es:JBS",
@@ -63,10 +63,10 @@
       "sourceType": "official",
       "languageTag": "es",
       "languageCode3": "spa",
-      "version": 9,
+      "version": 13,
       "copyright": "Reina-Valera 1909 - Dominio p\u00FAblico.\nFue realizada por Sociedades B\u00EDblicas Unidas y publicada por primera vez en 1909.",
-      "downloadSizeBytes": 4184819,
-      "contentHash": "sha256-3b70fa8da31612e74a242d7c40dd72997bbf1d1368e1b97fe3cf63ccae785ce4",
+      "downloadSizeBytes": 4186424,
+      "contentHash": "sha256-c7b4d14f683315a57bd9b43d8bd14f1aa0e7d5849e85dda273e7be2e3aaaf437",
       "manifestUrl": "bibles/catalog/translations/es/RVR09.json"
     },
     {
@@ -76,10 +76,10 @@
       "sourceType": "official",
       "languageTag": "es",
       "languageCode3": "spa",
-      "version": 23,
+      "version": 24,
       "copyright": "Texto b\u00EDblico Reina-Valera 1960\u00AE \u00A9 Sociedades B\u00EDblicas en Am\u00E9rica Latina, 1960. Derechos renovados 1988, Sociedades B\u00EDblicas Unidas.",
-      "downloadSizeBytes": 3480128,
-      "contentHash": "sha256-f9cc58fa57405bbec7e614600fab20b347c44f038d0b588b52c8f8362af3003b",
+      "downloadSizeBytes": 3480159,
+      "contentHash": "sha256-d134f3965b5017f341e76dd3abb652a5df335bd578b59682b177454ad0b5cba5",
       "manifestUrl": "bibles/catalog/translations/es/RVR1960.json"
     },
     {
@@ -102,10 +102,10 @@
       "sourceType": "official",
       "languageTag": "es",
       "languageCode3": "spa",
-      "version": 5,
+      "version": 7,
       "copyright": "Copyright: Dios habla hoy \u00AE, Cuarta edici\u00F3n \u00A9 Sociedades B\u00EDblicas Unidas, 2023. Otras ediciones: 1966, 1970, 1979, 1983, 1994.\nDios habla hoy \u00AE es una marca registrada de Sociedades B\u00EDblicas Unidas, y puede ser usada solamente bajo licencia.",
-      "downloadSizeBytes": 3721183,
-      "contentHash": "sha256-581c53e7cad6365323b64e8d6150544d8e840949a41fdb639869e7d5ce6fce8f",
+      "downloadSizeBytes": 3823773,
+      "contentHash": "sha256-0e0717c2a5214254da7b4b1a7037ed1e95bfc38186959565db28b46ddcf5a136",
       "manifestUrl": "bibles/catalog/translations/es/DHH23ST.json"
     },
     {
@@ -154,10 +154,10 @@
       "sourceType": "official",
       "languageTag": "es",
       "languageCode3": "spa",
-      "version": 11,
+      "version": 12,
       "copyright": "1986, 1995, 1997 by The Lockman Foundation",
-      "downloadSizeBytes": 3817645,
-      "contentHash": "sha256-04a77a3ecd5e4c40ed01723df2154459081a620df3a10678babf939398ab2f81",
+      "downloadSizeBytes": 3817641,
+      "contentHash": "sha256-ec1e6c5abd92d31e26210723b583f06910505b6dfea3d2f04609e23d26f61c80",
       "manifestUrl": "bibles/catalog/translations/es/LBLA.json"
     },
     {
@@ -245,10 +245,10 @@
       "sourceType": "official",
       "languageTag": "es",
       "languageCode3": "spa",
-      "version": 10,
+      "version": 11,
       "copyright": "Nueva Biblia Viva\n\u00A9 2006, 2008 por Biblica, Inc.\u00AE\nUsado con permiso de Biblica, Inc.\u00AE Reservados todos los derechos en todo el mundo.",
-      "downloadSizeBytes": 3244147,
-      "contentHash": "sha256-3974efbe87bb42186dfc49279ff3f983c35613d9fbece002911a702e5b226b45",
+      "downloadSizeBytes": 3244234,
+      "contentHash": "sha256-c188292bd2afc0850e2df24daa3067ddd8e34d221ec63fbbed276b62cdb0ab52",
       "manifestUrl": "bibles/catalog/translations/es/NBV.json"
     },
     {
@@ -323,10 +323,10 @@
       "sourceType": "official",
       "languageTag": "es",
       "languageCode3": "spa",
-      "version": 37,
+      "version": 39,
       "copyright": "Reina Valera Contempor\u00E1nea\u00AE \u00A9 Sociedades B\u00EDblicas Unidas, 2009, 2011, 2018, 2025.",
-      "downloadSizeBytes": 3681462,
-      "contentHash": "sha256-6aaf1330e78194617390f298c8a4048e2f43e5d86f41d1cec1887fbebe37b847",
+      "downloadSizeBytes": 3810533,
+      "contentHash": "sha256-c61b4d1688bcfeda0aa0429478eceff12379d9e80c6b8a44221974f3cff05b03",
       "manifestUrl": "bibles/catalog/translations/es/RVC.json"
     },
     {
@@ -349,10 +349,10 @@
       "sourceType": "official",
       "languageTag": "es",
       "languageCode3": "spa",
-      "version": 11,
-      "copyright": "Proyecto Evanggelio: Traducci\u00F3n Contempor\u00E1nea de la Biblia.\nCopyright \u00A9. 2022 por Yattenciy Bonilla.\nTodos los derechos reservados.\nhttps://proyectoevanggelio.org/",
-      "downloadSizeBytes": 1646512,
-      "contentHash": "sha256-bb38f9092afcb738dd3de16c3dd31fd7bc7f35bb3f1842810f839330f8e126f2",
+      "version": 12,
+      "copyright": "Proyecto Evanggelio: Traducci\u00F3n Contempor\u00E1nea de la Biblia.\nCopyright \u00A9. 2022 por Yattenciy Bonilla.\nTodos los derechos reservados.\nhttps://proyectoevanggelio.org/\nMichael Jonnathan Tapia Pav\u00F3n\n(webmaster)\nJunta Directiva\nYattenciy Bonilla Traductor principal\nEster Alice da Rocha Santos\nTraducci\u00F3n y Edici\u00F3n General\nJenniffer Contreras Flores\nDirecci\u00F3n Ejecutiva\nEquipo Operativo\nArmando Su\u00E1rez Molina\nJoel Martinez Reyes\nMaira Alejandra Reyes Molina\nLoifa C. Tse de Smart\nMichael Jonnathan Tapia Pav\u00F3n\nRaul Santiago Anchique Rojas\nOlga Adriana Bascu\u00F1\u00E1n C\u00E1ceres\nRevisi\u00F3n Exeg\u00E9tica y Literaria\nAng\u00E9lica Mar\u00EDa V\u00E1squez Ram\u00EDrez\nCarolyn Moreno Mattos\nDoris Nole Balseca\nIleana Cruz Fern\u00E1ndez\nLoifa C. Tse de Smart\nLuis Andr\u00E9s Bonilla\nNelson R. Figueroa Adorno\nOlga Adriana Bascu\u00F1\u00E1n C\u00E1ceres\nSanta Gonz\u00E1lez Bautista\nYadetzi Rodr\u00EDguez Sequera\nYuri Yadira Nieto Flores",
+      "downloadSizeBytes": 1711355,
+      "contentHash": "sha256-7050214705f131e867cdf8a7dd3d869e8829de83f7a3bc45cf405db43983f0aa",
       "manifestUrl": "bibles/catalog/translations/es/TCB.json"
     },
     {
@@ -375,10 +375,10 @@
       "sourceType": "official",
       "languageTag": "es",
       "languageCode3": "spa",
-      "version": 18,
+      "version": 19,
       "copyright": "Traducci\u00F3n en lenguaje actual \u00AE \u00A9 Sociedades B\u00EDblicas Unidas, 2002, 2004.",
-      "downloadSizeBytes": 3973802,
-      "contentHash": "sha256-09465dcd83958a25dd646cdba8bb43cc636ec1d010863b390a62f5efa8dd151e",
+      "downloadSizeBytes": 4137245,
+      "contentHash": "sha256-9e071282426aac8e2aa039b0db1a8e5b39684a590bd8222db883db5da777db1f",
       "manifestUrl": "bibles/catalog/translations/es/TLAI.json"
     },
     {

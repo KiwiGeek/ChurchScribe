@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "translationId": "es:RVR09",
-  "version": 9,
+  "version": 13,
   "books": {
     "Genesis": [
       {
@@ -327,7 +327,7 @@
           },
           {
             "verse": 20,
-            "text": "Y llam\u00F3 el hombre el nombre de su mujer, Eva; por cuanto ella era madre de todos lo vivientes."
+            "text": "Y llam\u00F3 el hombre el nombre de su mujer, Eva; por cuanto ella era madre de todos los vivientes."
           },
           {
             "verse": 21,
@@ -17414,7 +17414,7 @@
           {
             "verse": 24,
             "heading": "1 informan mal de Cana\u00E1n. / 2 Testimonio de Josu\u00E9 y Caleb.",
-            "text": "Y llegaron hasta el arroyo de Escol, y de all\u00ED cortaron un sarmiento con un racimo de uvas, el cual trejeron dos en un palo, y de las granadas y de los higos."
+            "text": "Y llegaron hasta el arroyo de Escol, y de all\u00ED cortaron un sarmiento con un racimo de uvas, el cual trajeron dos en un palo, y de las granadas y de los higos."
           },
           {
             "verse": 25,
@@ -24763,7 +24763,7 @@
           {
             "verse": 7,
             "text": "Y esta bendici\u00F3n para Jud\u00E1. Dijo as\u00ED: Oye, oh Jehov\u00E1, la voz de Jud\u00E1, Y ll\u00E9valo \u00E1 su pueblo; Sus manos le basten, Y t\u00FA seas ayuda contra sus enemigos.",
-            "html": "Y esta \u003Cspan class=\u0022verse-added-words\u0022\u003Ebendici\u00F3n\u003C/span\u003E para Jud\u00E1. \u003Cbr/\u003E Dijo as\u00ED: \u003Cbr/\u003E Oye, oh Jehov\u00E1, la voz de Jud\u00E1, \u003Cbr/\u003E Y ll\u00E9valo \u00E1 su pueblo; \u003Cbr/\u003E Sus manos le basten, \u003Cbr/\u003E Y t\u00FA seas ayuda contra sus enemigos."
+            "html": "Y esta \u003Cspan class=\u0022verse-added-words\u0022\u003Ebendici\u00F3n\u003C/span\u003E para Jud\u00E1. Dijo as\u00ED: \u003Cbr/\u003E Oye, oh Jehov\u00E1, la voz de Jud\u00E1, \u003Cbr/\u003E Y ll\u00E9valo \u00E1 su pueblo; \u003Cbr/\u003E Sus manos le basten, \u003Cbr/\u003E Y t\u00FA seas ayuda contra sus enemigos."
           },
           {
             "verse": 8,
@@ -25336,7 +25336,7 @@
           },
           {
             "verse": 15,
-            "text": "Y el Pr\u00EDncipe del ej\u00E9rcito de Jehov\u00E1 repondi\u00F3 \u00E1 Josu\u00E9: Quita tus zapatos de tus pies; porque el lugar donde est\u00E1s es santo. Y Josu\u00E9 lo hizo as\u00ED."
+            "text": "Y el Pr\u00EDncipe del ej\u00E9rcito de Jehov\u00E1 respondi\u00F3 \u00E1 Josu\u00E9: Quita tus zapatos de tus pies; porque el lugar donde est\u00E1s es santo. Y Josu\u00E9 lo hizo as\u00ED."
           }
         ]
       },
@@ -60055,7 +60055,8 @@
           },
           {
             "verse": 2,
-            "text": "Muchos dicen de mi vida: No hay para \u00E9l salud en Dios. (Selah.)"
+            "text": "Muchos dicen de mi vida: No hay para \u00E9l salud en Dios. (Selah.)",
+            "html": "Muchos dicen de mi vida: \u003Cbr/\u003E No hay para \u00E9l salud en Dios. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 3,
@@ -60063,7 +60064,8 @@
           },
           {
             "verse": 4,
-            "text": "Con mi voz clam\u00E9 \u00E1 Jehov\u00E1, Y \u00E9l me respondi\u00F3 desde el monte de su santidad. (Selah.)"
+            "text": "Con mi voz clam\u00E9 \u00E1 Jehov\u00E1, Y \u00E9l me respondi\u00F3 desde el monte de su santidad. (Selah.)",
+            "html": "Con mi voz clam\u00E9 \u00E1 Jehov\u00E1, \u003Cbr/\u003E Y \u00E9l me respondi\u00F3 desde el monte de su santidad. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 5,
@@ -60079,7 +60081,8 @@
           },
           {
             "verse": 8,
-            "text": "De Jehov\u00E1 es la salud: Sobre tu pueblo ser\u00E1 tu bendici\u00F3n. (Selah.)"
+            "text": "De Jehov\u00E1 es la salud: Sobre tu pueblo ser\u00E1 tu bendici\u00F3n. (Selah.)",
+            "html": "De Jehov\u00E1 es la salud: \u003Cbr/\u003E Sobre tu pueblo ser\u00E1 tu bendici\u00F3n. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           }
         ]
       },
@@ -60094,7 +60097,8 @@
           },
           {
             "verse": 2,
-            "text": "Hijos de los hombres, \u00BFhasta cu\u00E1ndo volver\u00E9is mi honra en infamia, Amar\u00E9is la vanidad, y buscar\u00E9is la mentira? (Selah.)"
+            "text": "Hijos de los hombres, \u00BFhasta cu\u00E1ndo volver\u00E9is mi honra en infamia, Amar\u00E9is la vanidad, y buscar\u00E9is la mentira? (Selah.)",
+            "html": "Hijos de los hombres, \u00BFhasta cu\u00E1ndo volver\u00E9is mi honra en infamia, \u003Cbr/\u003E Amar\u00E9is la vanidad, y buscar\u00E9is la mentira? \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 3,
@@ -60102,7 +60106,8 @@
           },
           {
             "verse": 4,
-            "text": "Temblad, y no pequ\u00E9is: Conversad en vuestro coraz\u00F3n sobre vuestra cama, y desistid. (Selah.)"
+            "text": "Temblad, y no pequ\u00E9is: Conversad en vuestro coraz\u00F3n sobre vuestra cama, y desistid. (Selah.)",
+            "html": "Temblad, y no pequ\u00E9is: \u003Cbr/\u003E Conversad en vuestro coraz\u00F3n sobre vuestra cama, y desistid. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 5,
@@ -60250,7 +60255,7 @@
           {
             "verse": 5,
             "text": "Persiga el enemigo mi alma, y alc\u00E1nce la; Y pise en tierra mi vida, Y mi honra ponga en el polvo. (Selah.)",
-            "html": "Persiga el enemigo mi alma, y alc\u00E1nce \u003Cspan class=\u0022verse-added-words\u0022\u003Ela;\u003C/span\u003E \u003Cbr/\u003E Y pise en tierra mi vida, \u003Cbr/\u003E Y mi honra ponga en el polvo. (Selah.)"
+            "html": "Persiga el enemigo mi alma, y alc\u00E1nce \u003Cspan class=\u0022verse-added-words\u0022\u003Ela;\u003C/span\u003E \u003Cbr/\u003E Y pise en tierra mi vida, \u003Cbr/\u003E Y mi honra ponga en el polvo. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 6,
@@ -60434,7 +60439,8 @@
           },
           {
             "verse": 20,
-            "text": "Pon, oh Jehov\u00E1, temor en ellos: Conozcan las gentes que son no m\u00E1s que hombres. (Selah.)"
+            "text": "Pon, oh Jehov\u00E1, temor en ellos: Conozcan las gentes que son no m\u00E1s que hombres. (Selah.)",
+            "html": "Pon, oh Jehov\u00E1, temor en ellos: \u003Cbr/\u003E Conozcan las gentes que son no m\u00E1s que hombres. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           }
         ]
       },
@@ -61099,7 +61105,8 @@
           },
           {
             "verse": 3,
-            "text": "Haga memoria de todos tus presentes, Y reduzca \u00E1 ceniza tu holocausto. (Selah.)"
+            "text": "Haga memoria de todos tus presentes, Y reduzca \u00E1 ceniza tu holocausto. (Selah.)",
+            "html": "Haga memoria de todos tus presentes, \u003Cbr/\u003E Y reduzca \u00E1 ceniza tu holocausto. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 4,
@@ -61138,7 +61145,8 @@
           },
           {
             "verse": 2,
-            "text": "El deseo de su coraz\u00F3n le diste, Y no le negaste lo que sus labios pronunciaron. (Selah.)"
+            "text": "El deseo de su coraz\u00F3n le diste, Y no le negaste lo que sus labios pronunciaron. (Selah.)",
+            "html": "El deseo de su coraz\u00F3n le diste, \u003Cbr/\u003E Y no le negaste lo que sus labios pronunciaron. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 3,
@@ -61384,7 +61392,7 @@
           {
             "verse": 6,
             "text": "Tal es la generaci\u00F3n de los que le buscan, De los que buscan tu rostro, oh Dios de Jacob. (Selah.)",
-            "html": "Tal es la generaci\u00F3n de los que le buscan, \u003Cbr/\u003E De los que buscan tu rostro, oh \u003Cspan class=\u0022verse-added-words\u0022\u003EDios de\u003C/span\u003E Jacob. (Selah.)"
+            "html": "Tal es la generaci\u00F3n de los que le buscan, \u003Cbr/\u003E De los que buscan tu rostro, oh \u003Cspan class=\u0022verse-added-words\u0022\u003EDios de\u003C/span\u003E Jacob. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 7,
@@ -61401,7 +61409,8 @@
           },
           {
             "verse": 10,
-            "text": "\u00BFQui\u00E9n es este Rey de gloria? Jehov\u00E1 de los ej\u00E9rcitos, El es el Rey de la gloria. (Selah.)"
+            "text": "\u00BFQui\u00E9n es este Rey de gloria? Jehov\u00E1 de los ej\u00E9rcitos, El es el Rey de la gloria. (Selah.)",
+            "html": "\u00BFQui\u00E9n es este Rey de gloria? Jehov\u00E1 de los ej\u00E9rcitos, \u003Cbr/\u003E El es el Rey de la gloria. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           }
         ]
       },
@@ -61893,11 +61902,13 @@
           },
           {
             "verse": 4,
-            "text": "Porque de d\u00EDa y de noche se agrav\u00F3 sobre m\u00ED tu mano; Volvi\u00F3se mi verdor en sequedades de est\u00EDo. (Selah.)"
+            "text": "Porque de d\u00EDa y de noche se agrav\u00F3 sobre m\u00ED tu mano; Volvi\u00F3se mi verdor en sequedades de est\u00EDo. (Selah.)",
+            "html": "Porque de d\u00EDa y de noche se agrav\u00F3 sobre m\u00ED tu mano; \u003Cbr/\u003E Volvi\u00F3se mi verdor en sequedades de est\u00EDo. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 5,
-            "text": "Mi pecado te declar\u00E9, y no encubr\u00ED mi iniquidad. Confesar\u00E9, dije, contra m\u00ED mis rebeliones \u00E1 Jehov\u00E1; Y t\u00FA perdonaste la maldad de mi pecado. (Selah.)"
+            "text": "Mi pecado te declar\u00E9, y no encubr\u00ED mi iniquidad. Confesar\u00E9, dije, contra m\u00ED mis rebeliones \u00E1 Jehov\u00E1; Y t\u00FA perdonaste la maldad de mi pecado. (Selah.)",
+            "html": "Mi pecado te declar\u00E9, y no encubr\u00ED mi iniquidad. Confesar\u00E9, dije, contra m\u00ED mis rebeliones \u00E1 Jehov\u00E1; \u003Cbr/\u003E Y t\u00FA perdonaste la maldad de mi pecado. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 6,
@@ -61905,7 +61916,8 @@
           },
           {
             "verse": 7,
-            "text": "T\u00FA eres mi refugio; me guardar\u00E1s de angustia; Con c\u00E1nticos de liberaci\u00F3n me rodear\u00E1s. (Selah.)"
+            "text": "T\u00FA eres mi refugio; me guardar\u00E1s de angustia; Con c\u00E1nticos de liberaci\u00F3n me rodear\u00E1s. (Selah.)",
+            "html": "T\u00FA eres mi refugio; me guardar\u00E1s de angustia; \u003Cbr/\u003E Con c\u00E1nticos de liberaci\u00F3n me rodear\u00E1s. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 8,
@@ -62584,7 +62596,8 @@
           {
             "verse": 5,
             "heading": "1 Brevedad de la vida. / 2 Obediencia y no sacrificio.",
-            "text": "He aqu\u00ED diste \u00E1 mis d\u00EDas t\u00E9rmino corto, Y mi edad es como nada delante de ti: Ciertamente es completa vanidad todo hombre que vive. (Selah.)"
+            "text": "He aqu\u00ED diste \u00E1 mis d\u00EDas t\u00E9rmino corto, Y mi edad es como nada delante de ti: Ciertamente es completa vanidad todo hombre que vive. (Selah.)",
+            "html": "He aqu\u00ED diste \u00E1 mis d\u00EDas t\u00E9rmino corto, Y mi edad es como nada delante de ti: \u003Cbr/\u003E Ciertamente es completa vanidad todo hombre que vive. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 6,
@@ -62608,7 +62621,8 @@
           },
           {
             "verse": 11,
-            "text": "Con castigos sobre el pecado corriges al hombre, Y haces consumirse como de polilla su grandeza: Ciertamente vanidad es todo hombre. (Selah.)"
+            "text": "Con castigos sobre el pecado corriges al hombre, Y haces consumirse como de polilla su grandeza: Ciertamente vanidad es todo hombre. (Selah.)",
+            "html": "Con castigos sobre el pecado corriges al hombre, Y haces consumirse como de polilla su grandeza: \u003Cbr/\u003E Ciertamente vanidad es todo hombre. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 12,
@@ -62870,7 +62884,8 @@
           },
           {
             "verse": 8,
-            "text": "En Dios nos gloriaremos todo tiempo, Y para siempre loaremos tu nombre. (Selah.)"
+            "text": "En Dios nos gloriaremos todo tiempo, Y para siempre loaremos tu nombre. (Selah.)",
+            "html": "En Dios nos gloriaremos todo tiempo, \u003Cbr/\u003E Y para siempre loaremos tu nombre. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 9,
@@ -63045,7 +63060,8 @@
           },
           {
             "verse": 3,
-            "text": "Bramar\u00E1n, turbar\u00E1nse sus aguas; Temblar\u00E1n los montes \u00E1 causa de su braveza. (Selah.)"
+            "text": "Bramar\u00E1n, turbar\u00E1nse sus aguas; Temblar\u00E1n los montes \u00E1 causa de su braveza. (Selah.)",
+            "html": "Bramar\u00E1n, turbar\u00E1nse sus aguas; \u003Cbr/\u003E Temblar\u00E1n los montes \u00E1 causa de su braveza. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 4,
@@ -63061,7 +63077,8 @@
           },
           {
             "verse": 7,
-            "text": "Jehov\u00E1 de los ej\u00E9rcitos es con nosotros; Nuestro refugio es el Dios de Jacob. (Selah.)"
+            "text": "Jehov\u00E1 de los ej\u00E9rcitos es con nosotros; Nuestro refugio es el Dios de Jacob. (Selah.)",
+            "html": "Jehov\u00E1 de los ej\u00E9rcitos es con nosotros; \u003Cbr/\u003E Nuestro refugio es el Dios de Jacob. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 8,
@@ -63077,7 +63094,8 @@
           },
           {
             "verse": 11,
-            "text": "Jehov\u00E1 de los ej\u00E9rcitos es con nosotros; Nuestro refugio es el Dios de Jacob. (Selah.)"
+            "text": "Jehov\u00E1 de los ej\u00E9rcitos es con nosotros; Nuestro refugio es el Dios de Jacob. (Selah.)",
+            "html": "Jehov\u00E1 de los ej\u00E9rcitos es con nosotros; \u003Cbr/\u003E Nuestro refugio es el Dios de Jacob. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           }
         ]
       },
@@ -63099,7 +63117,8 @@
           },
           {
             "verse": 4,
-            "text": "El nos elegir\u00E1 nuestras heredades; La hermosura de Jacob, al cual am\u00F3. (Selah.)"
+            "text": "El nos elegir\u00E1 nuestras heredades; La hermosura de Jacob, al cual am\u00F3. (Selah.)",
+            "html": "El nos elegir\u00E1 nuestras heredades; \u003Cbr/\u003E La hermosura de Jacob, al cual am\u00F3. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 5,
@@ -63160,7 +63179,7 @@
           {
             "verse": 8,
             "text": "Como lo o\u00EDmos, as\u00ED hemos visto En la ciudad de Jehov\u00E1 de los ej\u00E9rcitos, en la ciudad de nuestro Dios: Afirmar\u00E1la Dios para siempre. (Selah.)",
-            "html": "Como \u003Cspan class=\u0022verse-added-words\u0022\u003Elo\u003C/span\u003E o\u00EDmos, as\u00ED hemos visto \u003Cbr/\u003E En la ciudad de Jehov\u00E1 de los ej\u00E9rcitos, en la ciudad de nuestro Dios: \u003Cbr/\u003E Afirmar\u00E1la Dios para siempre. (Selah.)"
+            "html": "Como \u003Cspan class=\u0022verse-added-words\u0022\u003Elo\u003C/span\u003E o\u00EDmos, as\u00ED hemos visto \u003Cbr/\u003E En la ciudad de Jehov\u00E1 de los ej\u00E9rcitos, en la ciudad de nuestro Dios: \u003Cbr/\u003E Afirmar\u00E1la Dios para siempre. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 9,
@@ -63244,7 +63263,8 @@
           },
           {
             "verse": 13,
-            "text": "Este su camino es su locura: Con todo, corren sus descendientes por el dicho de ellos. (Selah.)"
+            "text": "Este su camino es su locura: Con todo, corren sus descendientes por el dicho de ellos. (Selah.)",
+            "html": "Este su camino es su locura: \u003Cbr/\u003E Con todo, corren sus descendientes por el dicho de ellos. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 14,
@@ -63253,7 +63273,8 @@
           },
           {
             "verse": 15,
-            "text": "Empero Dios redimir\u00E1 mi vida del poder de la sepultura, Cuando me tomar\u00E1. (Selah.)"
+            "text": "Empero Dios redimir\u00E1 mi vida del poder de la sepultura, Cuando me tomar\u00E1. (Selah.)",
+            "html": "Empero Dios redimir\u00E1 mi vida del poder de la sepultura, \u003Cbr/\u003E Cuando me tomar\u00E1. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 16,
@@ -63303,7 +63324,8 @@
           },
           {
             "verse": 6,
-            "text": "Y denunciar\u00E1n los cielos su justicia; Porque Dios es el juez. (Selah.)"
+            "text": "Y denunciar\u00E1n los cielos su justicia; Porque Dios es el juez. (Selah.)",
+            "html": "Y denunciar\u00E1n los cielos su justicia; \u003Cbr/\u003E Porque Dios es el juez. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 7,
@@ -63475,7 +63497,8 @@
           },
           {
             "verse": 3,
-            "text": "Amaste el mal m\u00E1s que el bien; La mentira m\u00E1s que hablar justicia. (Selah.)"
+            "text": "Amaste el mal m\u00E1s que el bien; La mentira m\u00E1s que hablar justicia. (Selah.)",
+            "html": "Amaste el mal m\u00E1s que el bien; \u003Cbr/\u003E La mentira m\u00E1s que hablar justicia. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 4,
@@ -63484,7 +63507,8 @@
           {
             "verse": 5,
             "heading": "1 Corrupci\u00F3n del hombre. / 2 David y sus enemigos.",
-            "text": "Por tanto Dios te derribar\u00E1 para siempre: Te asolar\u00E1 y te arrancar\u00E1 de tu morada, Y te desarraigar\u00E1 de la tierra de los vivientes. (Selah.)"
+            "text": "Por tanto Dios te derribar\u00E1 para siempre: Te asolar\u00E1 y te arrancar\u00E1 de tu morada, Y te desarraigar\u00E1 de la tierra de los vivientes. (Selah.)",
+            "html": "Por tanto Dios te derribar\u00E1 para siempre: Te asolar\u00E1 y te arrancar\u00E1 de tu morada, \u003Cbr/\u003E Y te desarraigar\u00E1 de la tierra de los vivientes. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 6,
@@ -63551,7 +63575,8 @@
           },
           {
             "verse": 3,
-            "text": "Porque extra\u00F1os se han levantado contra m\u00ED, Y fuertes buscan mi alma: No han puesto \u00E1 Dios delante de s\u00ED. (Selah.)"
+            "text": "Porque extra\u00F1os se han levantado contra m\u00ED, Y fuertes buscan mi alma: No han puesto \u00E1 Dios delante de s\u00ED. (Selah.)",
+            "html": "Porque extra\u00F1os se han levantado contra m\u00ED, Y fuertes buscan mi alma: \u003Cbr/\u003E No han puesto \u00E1 Dios delante de s\u00ED. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 4,
@@ -63603,7 +63628,8 @@
           },
           {
             "verse": 7,
-            "text": "Ciertamente huir\u00EDa lejos: Morar\u00EDa en el desierto. (Selah.)"
+            "text": "Ciertamente huir\u00EDa lejos: Morar\u00EDa en el desierto. (Selah.)",
+            "html": "Ciertamente huir\u00EDa lejos: \u003Cbr/\u003E Morar\u00EDa en el desierto. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 8,
@@ -63651,7 +63677,8 @@
           },
           {
             "verse": 19,
-            "text": "Dios oir\u00E1, y los quebrantar\u00E1 luego, El que desde la antig\u00FCedad permanece (Selah); Por cuanto no se mudan, Ni temen \u00E1 Dios."
+            "text": "Dios oir\u00E1, y los quebrantar\u00E1 luego, El que desde la antig\u00FCedad permanece (Selah); Por cuanto no se mudan, Ni temen \u00E1 Dios.",
+            "html": "Dios oir\u00E1, y los quebrantar\u00E1 luego, \u003Cbr/\u003E El que desde la antig\u00FCedad permanece \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah)\u003C/span\u003E; \u003Cbr/\u003E Por cuanto no se mudan, \u003Cbr/\u003E Ni temen \u00E1 Dios."
           },
           {
             "verse": 20,
@@ -63745,7 +63772,8 @@
           },
           {
             "verse": 3,
-            "text": "El enviar\u00E1 desde los cielos, y me salvar\u00E1 De la infamia del que me apura; (Selah) Dios enviar\u00E1 su misericordia y su verdad."
+            "text": "El enviar\u00E1 desde los cielos, y me salvar\u00E1 De la infamia del que me apura; (Selah) Dios enviar\u00E1 su misericordia y su verdad.",
+            "html": "El enviar\u00E1 desde los cielos, y me salvar\u00E1 \u003Cbr/\u003E De la infamia del que me apura; \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah)\u003C/span\u003E \u003Cbr/\u003E Dios enviar\u00E1 su misericordia y su verdad."
           },
           {
             "verse": 4,
@@ -63757,7 +63785,8 @@
           },
           {
             "verse": 6,
-            "text": "Red han armado \u00E1 mis pasos; Hase abatido mi alma: Hoyo han cavado delante de m\u00ED; En medio de \u00E9l han ca\u00EDdo. (Selah.)"
+            "text": "Red han armado \u00E1 mis pasos; Hase abatido mi alma: Hoyo han cavado delante de m\u00ED; En medio de \u00E9l han ca\u00EDdo. (Selah.)",
+            "html": "Red han armado \u00E1 mis pasos; Hase abatido mi alma: Hoyo han cavado delante de m\u00ED; \u003Cbr/\u003E En medio de \u00E9l han ca\u00EDdo. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 7,
@@ -63857,7 +63886,8 @@
           },
           {
             "verse": 5,
-            "text": "Y t\u00FA, Jehov\u00E1 Dios de los ej\u00E9rcitos, Dios de Israel, Despierta para visitar todas las gentes: No hayas misericordia de todos los que se rebelan con iniquidad. (Selah.)"
+            "text": "Y t\u00FA, Jehov\u00E1 Dios de los ej\u00E9rcitos, Dios de Israel, Despierta para visitar todas las gentes: No hayas misericordia de todos los que se rebelan con iniquidad. (Selah.)",
+            "html": "Y t\u00FA, Jehov\u00E1 Dios de los ej\u00E9rcitos, Dios de Israel, Despierta para visitar todas las gentes: \u003Cbr/\u003E No hayas misericordia de todos los que se rebelan con iniquidad. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 6,
@@ -63892,7 +63922,8 @@
           },
           {
             "verse": 13,
-            "text": "Ac\u00E1balos con furor, ac\u00E1balos, y no sean: Y sepan que Dios domina en Jacob Hasta los fines de la tierra. (Selah)."
+            "text": "Ac\u00E1balos con furor, ac\u00E1balos, y no sean: Y sepan que Dios domina en Jacob Hasta los fines de la tierra. (Selah).",
+            "html": "Ac\u00E1balos con furor, ac\u00E1balos, y no sean: Y sepan que Dios domina en Jacob \u003Cbr/\u003E Hasta los fines de la tierra. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah)\u003C/span\u003E."
           },
           {
             "verse": 14,
@@ -63932,7 +63963,8 @@
           {
             "verse": 4,
             "heading": "1 en medio de muchos peligros. / 2 \u201CEn Dios est\u00E1 acallada mi alma.\u201D",
-            "text": "Has dado \u00E1 los que te temen bandera Que alcen por la verdad. (Selah.)"
+            "text": "Has dado \u00E1 los que te temen bandera Que alcen por la verdad. (Selah.)",
+            "html": "Has dado \u00E1 los que te temen bandera \u003Cbr/\u003E Que alcen por la verdad. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 5,
@@ -64029,7 +64061,8 @@
           },
           {
             "verse": 4,
-            "text": "Solamente consultan de arrojarle de su grandeza; Aman la mentira, Con su boca bendicen, pero maldicen en sus entra\u00F1as. (Selah.)"
+            "text": "Solamente consultan de arrojarle de su grandeza; Aman la mentira, Con su boca bendicen, pero maldicen en sus entra\u00F1as. (Selah.)",
+            "html": "Solamente consultan de arrojarle de su grandeza; Aman la mentira, \u003Cbr/\u003E Con su boca bendicen, pero maldicen en sus entra\u00F1as. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 5,
@@ -64046,7 +64079,8 @@
           },
           {
             "verse": 8,
-            "text": "Esperad en \u00E9l en todo tiempo, oh pueblos; Derramad delante de \u00E9l vuestro coraz\u00F3n: Dios es nuestro amparo. (Selah.)"
+            "text": "Esperad en \u00E9l en todo tiempo, oh pueblos; Derramad delante de \u00E9l vuestro coraz\u00F3n: Dios es nuestro amparo. (Selah.)",
+            "html": "Esperad en \u00E9l en todo tiempo, oh pueblos; Derramad delante de \u00E9l vuestro coraz\u00F3n: \u003Cbr/\u003E Dios es nuestro amparo. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 9,
@@ -64252,7 +64286,8 @@
           },
           {
             "verse": 4,
-            "text": "Toda la tierra te adorar\u00E1, Y cantar\u00E1 \u00E1 ti; Cantar\u00E1n \u00E1 tu nombre. (Selah.)"
+            "text": "Toda la tierra te adorar\u00E1, Y cantar\u00E1 \u00E1 ti; Cantar\u00E1n \u00E1 tu nombre. (Selah.)",
+            "html": "Toda la tierra te adorar\u00E1, Y cantar\u00E1 \u00E1 ti; \u003Cbr/\u003E Cantar\u00E1n \u00E1 tu nombre. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 5,
@@ -64264,7 +64299,8 @@
           },
           {
             "verse": 7,
-            "text": "El se ense\u00F1orea con su fortaleza para siempre: Sus ojos atalayan sobre las gentes: Los rebeldes no ser\u00E1n ensalzados. (Selah.)"
+            "text": "El se ense\u00F1orea con su fortaleza para siempre: Sus ojos atalayan sobre las gentes: Los rebeldes no ser\u00E1n ensalzados. (Selah.)",
+            "html": "El se ense\u00F1orea con su fortaleza para siempre: Sus ojos atalayan sobre las gentes: \u003Cbr/\u003E Los rebeldes no ser\u00E1n ensalzados. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 8,
@@ -64297,7 +64333,8 @@
           },
           {
             "verse": 15,
-            "text": "Holocaustos de cebados te ofrecer\u00E9, Con perfume de carneros: Sacrificar\u00E9 bueyes y machos cabr\u00EDos. (Selah.)"
+            "text": "Holocaustos de cebados te ofrecer\u00E9, Con perfume de carneros: Sacrificar\u00E9 bueyes y machos cabr\u00EDos. (Selah.)",
+            "html": "Holocaustos de cebados te ofrecer\u00E9, Con perfume de carneros: \u003Cbr/\u003E Sacrificar\u00E9 bueyes y machos cabr\u00EDos. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 16,
@@ -64331,7 +64368,8 @@
           {
             "verse": 1,
             "subheading": "Al M\u00FAsico principal: en Neginoth: Salmo: C\u00E1ntico.",
-            "text": "DIOS tenga misericordia de nosotros, y nos bendiga; Haga resplandecer su rostro sobre nosotros (Selah);"
+            "text": "DIOS tenga misericordia de nosotros, y nos bendiga; Haga resplandecer su rostro sobre nosotros (Selah);",
+            "html": "DIOS tenga misericordia de nosotros, y nos bendiga; \u003Cbr/\u003E Haga resplandecer su rostro sobre nosotros \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah)\u003C/span\u003E;"
           },
           {
             "verse": 2,
@@ -64343,7 +64381,8 @@
           },
           {
             "verse": 4,
-            "text": "Al\u00E9grense y goc\u00E9nse las gentes; Porque juzgar\u00E1s los pueblos con equidad, Y pastorear\u00E1s las naciones en la tierra. (Selah.)"
+            "text": "Al\u00E9grense y goc\u00E9nse las gentes; Porque juzgar\u00E1s los pueblos con equidad, Y pastorear\u00E1s las naciones en la tierra. (Selah.)",
+            "html": "Al\u00E9grense y goc\u00E9nse las gentes; Porque juzgar\u00E1s los pueblos con equidad, \u003Cbr/\u003E Y pastorear\u00E1s las naciones en la tierra. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 5,
@@ -64445,7 +64484,7 @@
           {
             "verse": 19,
             "text": "Bendito el Se\u00F1or; cada d\u00EDa nos colma de beneficios El Dios de nuestra salud. (Selah.)",
-            "html": "Bendito el Se\u00F1or; cada d\u00EDa nos colma \u003Cspan class=\u0022verse-added-words\u0022\u003Ede beneficios\u003C/span\u003E \u003Cbr/\u003E El Dios de nuestra salud. (Selah.)"
+            "html": "Bendito el Se\u00F1or; cada d\u00EDa nos colma \u003Cspan class=\u0022verse-added-words\u0022\u003Ede beneficios\u003C/span\u003E \u003Cbr/\u003E El Dios de nuestra salud. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 20,
@@ -64500,7 +64539,8 @@
           },
           {
             "verse": 32,
-            "text": "Reinos de la tierra, cantad \u00E1 Dios, Cantad al Se\u00F1or (Selah);"
+            "text": "Reinos de la tierra, cantad \u00E1 Dios, Cantad al Se\u00F1or (Selah);",
+            "html": "Reinos de la tierra, cantad \u00E1 Dios, \u003Cbr/\u003E Cantad al Se\u00F1or \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah)\u003C/span\u003E;"
           },
           {
             "verse": 33,
@@ -65138,7 +65178,8 @@
           },
           {
             "verse": 3,
-            "text": "Arruin\u00E1base la tierra y sus moradores: Yo sostengo sus columnas. (Selah.)"
+            "text": "Arruin\u00E1base la tierra y sus moradores: Yo sostengo sus columnas. (Selah.)",
+            "html": "Arruin\u00E1base la tierra y sus moradores: \u003Cbr/\u003E Yo sostengo sus columnas. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 4,
@@ -65187,7 +65228,7 @@
           {
             "verse": 3,
             "text": "All\u00ED quebr\u00F3 las saetas del arco, El escudo, y la espada, y tren de guerra. (Selah.)",
-            "html": "All\u00ED quebr\u00F3 las saetas del arco, \u003Cbr/\u003E El escudo, y la espada, y \u003Cspan class=\u0022verse-added-words\u0022\u003Etren\u003C/span\u003E de guerra. (Selah.)"
+            "html": "All\u00ED quebr\u00F3 las saetas del arco, \u003Cbr/\u003E El escudo, y la espada, y \u003Cspan class=\u0022verse-added-words\u0022\u003Etren\u003C/span\u003E de guerra. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 4,
@@ -65211,7 +65252,8 @@
           },
           {
             "verse": 9,
-            "text": "Cuando te levantaste, oh Dios, al juicio, Para salvar \u00E1 todos los mansos de la tierra. (Selah.)"
+            "text": "Cuando te levantaste, oh Dios, al juicio, Para salvar \u00E1 todos los mansos de la tierra. (Selah.)",
+            "html": "Cuando te levantaste, oh Dios, al juicio, \u003Cbr/\u003E Para salvar \u00E1 todos los mansos de la tierra. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 10,
@@ -65241,7 +65283,8 @@
           },
           {
             "verse": 3,
-            "text": "Acord\u00E1bame de Dios, y gritaba: Quej\u00E1bame, y desmayaba mi esp\u00EDritu. (Selah.)"
+            "text": "Acord\u00E1bame de Dios, y gritaba: Quej\u00E1bame, y desmayaba mi esp\u00EDritu. (Selah.)",
+            "html": "Acord\u00E1bame de Dios, y gritaba: \u003Cbr/\u003E Quej\u00E1bame, y desmayaba mi esp\u00EDritu. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 4,
@@ -65266,7 +65309,8 @@
           {
             "verse": 9,
             "heading": "1 El recuerdo de lo pasado. / 2 Maravillas de Dios con Israel.",
-            "text": "\u00BFHa olvidado Dios el tener misericordia? \u00BFHa encerrado con ira sus piedades? (Selah.)"
+            "text": "\u00BFHa olvidado Dios el tener misericordia? \u00BFHa encerrado con ira sus piedades? (Selah.)",
+            "html": "\u00BFHa olvidado Dios el tener misericordia? \u003Cbr/\u003E \u00BFHa encerrado con ira sus piedades? \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 10,
@@ -65291,7 +65335,8 @@
           },
           {
             "verse": 15,
-            "text": "Con tu brazo redimiste \u00E1 tu pueblo, A los hijos de Jacob y de Jos\u00E9. (Selah.)"
+            "text": "Con tu brazo redimiste \u00E1 tu pueblo, A los hijos de Jacob y de Jos\u00E9. (Selah.)",
+            "html": "Con tu brazo redimiste \u00E1 tu pueblo, \u003Cbr/\u003E A los hijos de Jacob y de Jos\u00E9. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 16,
@@ -65793,7 +65838,8 @@
           },
           {
             "verse": 7,
-            "text": "En la calamidad clamaste, y yo te libr\u00E9: Te respond\u00ED en el secreto del trueno; Te prob\u00E9 sobre las aguas de Meriba. (Selah.)"
+            "text": "En la calamidad clamaste, y yo te libr\u00E9: Te respond\u00ED en el secreto del trueno; Te prob\u00E9 sobre las aguas de Meriba. (Selah.)",
+            "html": "En la calamidad clamaste, y yo te libr\u00E9: Te respond\u00ED en el secreto del trueno; \u003Cbr/\u003E Te prob\u00E9 sobre las aguas de Meriba. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 8,
@@ -65844,7 +65890,8 @@
           },
           {
             "verse": 2,
-            "text": "\u00BFHasta cu\u00E1ndo juzgar\u00E9is injustamente, Y aceptar\u00E9is las personas de los imp\u00EDos? (Selah.)"
+            "text": "\u00BFHasta cu\u00E1ndo juzgar\u00E9is injustamente, Y aceptar\u00E9is las personas de los imp\u00EDos? (Selah.)",
+            "html": "\u00BFHasta cu\u00E1ndo juzgar\u00E9is injustamente, \u003Cbr/\u003E Y aceptar\u00E9is las personas de los imp\u00EDos? \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 3,
@@ -65907,7 +65954,8 @@
           },
           {
             "verse": 8,
-            "text": "Tambi\u00E9n el Assur se ha juntado con ellos: Son por brazo \u00E1 los hijos de Lot. (Selah.)"
+            "text": "Tambi\u00E9n el Assur se ha juntado con ellos: Son por brazo \u00E1 los hijos de Lot. (Selah.)",
+            "html": "Tambi\u00E9n el Assur se ha juntado con ellos: \u003Cbr/\u003E Son por brazo \u00E1 los hijos de Lot. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 9,
@@ -65969,7 +66017,8 @@
           },
           {
             "verse": 4,
-            "text": "Bienaventurados los que habitan en tu casa: Perpetuamente te alabar\u00E1n (Selah.)"
+            "text": "Bienaventurados los que habitan en tu casa: Perpetuamente te alabar\u00E1n (Selah.)",
+            "html": "Bienaventurados los que habitan en tu casa: \u003Cbr/\u003E Perpetuamente te alabar\u00E1n \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 5,
@@ -65986,7 +66035,8 @@
           },
           {
             "verse": 8,
-            "text": "Jehov\u00E1 Dios de los ej\u00E9rcitos, oye mi oraci\u00F3n: Escucha, oh Dios de Jacob (Selah.)"
+            "text": "Jehov\u00E1 Dios de los ej\u00E9rcitos, oye mi oraci\u00F3n: Escucha, oh Dios de Jacob (Selah.)",
+            "html": "Jehov\u00E1 Dios de los ej\u00E9rcitos, oye mi oraci\u00F3n: \u003Cbr/\u003E Escucha, oh Dios de Jacob \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 9,
@@ -66018,7 +66068,8 @@
           },
           {
             "verse": 2,
-            "text": "Perdonaste la iniquidad de tu pueblo; Todos los pecados de ellos cubriste. (Selah.)"
+            "text": "Perdonaste la iniquidad de tu pueblo; Todos los pecados de ellos cubriste. (Selah.)",
+            "html": "Perdonaste la iniquidad de tu pueblo; \u003Cbr/\u003E Todos los pecados de ellos cubriste. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 3,
@@ -66156,7 +66207,8 @@
           },
           {
             "verse": 3,
-            "text": "Cosas ilustres son dichas de ti, Ciudad de Dios. (Selah.)"
+            "text": "Cosas ilustres son dichas de ti, Ciudad de Dios. (Selah.)",
+            "html": "Cosas ilustres son dichas de ti, \u003Cbr/\u003E Ciudad de Dios. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 4,
@@ -66168,7 +66220,8 @@
           },
           {
             "verse": 6,
-            "text": "Jehov\u00E1 contar\u00E1 cuando se escribieren los pueblos: Este naci\u00F3 all\u00ED. (Selah.)"
+            "text": "Jehov\u00E1 contar\u00E1 cuando se escribieren los pueblos: Este naci\u00F3 all\u00ED. (Selah.)",
+            "html": "Jehov\u00E1 contar\u00E1 cuando se escribieren los pueblos: \u003Cbr/\u003E Este naci\u00F3 all\u00ED. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 7,
@@ -66207,7 +66260,8 @@
           },
           {
             "verse": 7,
-            "text": "Sobre m\u00ED se ha acostado tu ira, Y me has afligido con todas tus ondas. (Selah.)"
+            "text": "Sobre m\u00ED se ha acostado tu ira, Y me has afligido con todas tus ondas. (Selah.)",
+            "html": "Sobre m\u00ED se ha acostado tu ira, \u003Cbr/\u003E Y me has afligido con todas tus ondas. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 8,
@@ -66219,7 +66273,8 @@
           },
           {
             "verse": 10,
-            "text": "\u00BFHar\u00E1s t\u00FA milagro \u00E1 los muertos? \u00BFLevantar\u00E1nse los muertos para alabarte? (Selah.)"
+            "text": "\u00BFHar\u00E1s t\u00FA milagro \u00E1 los muertos? \u00BFLevantar\u00E1nse los muertos para alabarte? (Selah.)",
+            "html": "\u00BFHar\u00E1s t\u00FA milagro \u00E1 los muertos? \u003Cbr/\u003E \u00BFLevantar\u00E1nse los muertos para alabarte? \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 11,
@@ -66276,7 +66331,8 @@
           },
           {
             "verse": 4,
-            "text": "Para siempre confirmar\u00E9 tu simiente, Y edificar\u00E9 tu trono por todas las generaciones. (Selah.)"
+            "text": "Para siempre confirmar\u00E9 tu simiente, Y edificar\u00E9 tu trono por todas las generaciones. (Selah.)",
+            "html": "Para siempre confirmar\u00E9 tu simiente, \u003Cbr/\u003E Y edificar\u00E9 tu trono por todas las generaciones. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 5,
@@ -66412,7 +66468,7 @@
           {
             "verse": 37,
             "text": "Como la luna ser\u00E1 firme para siempre, Y como un testigo fiel en el cielo. (Selah.)",
-            "html": "Como la luna ser\u00E1 firme para siempre, \u003Cbr/\u003E Y \u003Cspan class=\u0022verse-added-words\u0022\u003Ecomo\u003C/span\u003E un testigo fiel en el cielo. (Selah.)"
+            "html": "Como la luna ser\u00E1 firme para siempre, \u003Cbr/\u003E Y \u003Cspan class=\u0022verse-added-words\u0022\u003Ecomo\u003C/span\u003E un testigo fiel en el cielo. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 38,
@@ -66446,7 +66502,8 @@
           },
           {
             "verse": 45,
-            "text": "Has acortado los d\u00EDas de su juventud; Hasle cubierto de afrenta. (Selah.)"
+            "text": "Has acortado los d\u00EDas de su juventud; Hasle cubierto de afrenta. (Selah.)",
+            "html": "Has acortado los d\u00EDas de su juventud; \u003Cbr/\u003E Hasle cubierto de afrenta. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 46,
@@ -66458,7 +66515,8 @@
           },
           {
             "verse": 48,
-            "text": "\u00BFQu\u00E9 hombre vivir\u00E1 y no ver\u00E1 muerte? \u00BFLibrar\u00E1s su vida del poder del sepulcro? (Selah.)"
+            "text": "\u00BFQu\u00E9 hombre vivir\u00E1 y no ver\u00E1 muerte? \u00BFLibrar\u00E1s su vida del poder del sepulcro? (Selah.)",
+            "html": "\u00BFQu\u00E9 hombre vivir\u00E1 y no ver\u00E1 muerte? \u003Cbr/\u003E \u00BFLibrar\u00E1s su vida del poder del sepulcro? \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 49,
@@ -70489,7 +70547,8 @@
           },
           {
             "verse": 3,
-            "text": "Aguzaron su lengua como la serpiente; Veneno de \u00E1spid hay debajo de sus labios. (Selah.)"
+            "text": "Aguzaron su lengua como la serpiente; Veneno de \u00E1spid hay debajo de sus labios. (Selah.)",
+            "html": "Aguzaron su lengua como la serpiente; \u003Cbr/\u003E Veneno de \u00E1spid hay debajo de sus labios. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 4,
@@ -70497,7 +70556,8 @@
           },
           {
             "verse": 5,
-            "text": "Hanme escondido lazo y cuerdas los soberbios; Han tendido red junto \u00E1 la senda; Me han puesto lazos. (Selah.)"
+            "text": "Hanme escondido lazo y cuerdas los soberbios; Han tendido red junto \u00E1 la senda; Me han puesto lazos. (Selah.)",
+            "html": "Hanme escondido lazo y cuerdas los soberbios; Han tendido red junto \u00E1 la senda; \u003Cbr/\u003E Me han puesto lazos. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 6,
@@ -70510,7 +70570,7 @@
           {
             "verse": 8,
             "text": "No des, oh Jehov\u00E1, al imp\u00EDo sus deseos; No saques adelante su pensamiento, que no se ensoberbezca. (Selah.)",
-            "html": "No des, oh Jehov\u00E1, al imp\u00EDo sus deseos; \u003Cbr/\u003E No saques adelante su pensamiento, \u003Cspan class=\u0022verse-added-words\u0022\u003Eque no\u003C/span\u003E se ensoberbezca. (Selah.)"
+            "html": "No des, oh Jehov\u00E1, al imp\u00EDo sus deseos; \u003Cbr/\u003E No saques adelante su pensamiento, \u003Cspan class=\u0022verse-added-words\u0022\u003Eque no\u003C/span\u003E se ensoberbezca. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 9,
@@ -70644,7 +70704,8 @@
           },
           {
             "verse": 6,
-            "text": "Extend\u00ED mis manos \u00E1 ti; Mi alma \u00E1 ti como la tierra sedienta. (Selah.)"
+            "text": "Extend\u00ED mis manos \u00E1 ti; Mi alma \u00E1 ti como la tierra sedienta. (Selah.)",
+            "html": "Extend\u00ED mis manos \u00E1 ti; \u003Cbr/\u003E Mi alma \u00E1 ti como la tierra sedienta. \u003Cspan class=\u0022verse-selah\u0022\u003E(Selah.)\u003C/span\u003E"
           },
           {
             "verse": 7,
@@ -123005,7 +123066,7 @@
           {
             "verse": 9,
             "text": "Antes, como est\u00E1 escrito: Cosas que ojo no vi\u00F3, ni oreja oy\u00F3, Ni han subido en coraz\u00F3n de hombre, Son las que ha Dios preparado para aquellos que le aman.",
-            "html": "Antes, como est\u00E1 escrito: Cosas que ojo no vi\u00F3, ni oreja oy\u00F3, \u003Cbr/\u003E Ni han subido en coraz\u00F3n de hombre, \u003Cspan class=\u0022verse-added-words\u0022\u003ESon\u003C/span\u003E \u003Cbr/\u003E las que ha Dios preparado para aquellos que le aman."
+            "html": "Antes, como est\u00E1 escrito: Cosas que ojo no vi\u00F3, ni oreja oy\u00F3, Ni han subido en coraz\u00F3n de hombre, \u003Cbr/\u003E \u003Cspan class=\u0022verse-added-words\u0022\u003ESon\u003C/span\u003E las que ha Dios preparado para aquellos que le aman."
           },
           {
             "verse": 10,

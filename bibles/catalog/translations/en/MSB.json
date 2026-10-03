@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "translationId": "en:MSB",
+  "code": "MSB",
+  "label": "Majority Standard Bible",
+  "languageTag": "en",
+  "languageCode3": "eng",
+  "sourceType": "official",
+  "version": 3,
+  "contentUrl": "bibles/content/en/MSB/v3.json",
+  "contentHash": "sha256-3edb8aa48dafbec413fe950d2324934f3cdc26268cba0f7557fb25e5bbea9cb7",
+  "bookOrder": "protestant-66",
+  "features": {
+    "headings": true,
+    "subheadings": true,
+    "superscriptions": false,
+    "html": true
+  },
+  "updatedAt": "2026-10-03T22:11:47.5010838Z"
+}

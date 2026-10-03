@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "languageTag": "en",
   "displayName": "English",
-  "catalogVersion": "2026-07-04T01:07:22.2817818\u002B00:00",
+  "catalogVersion": "2026-10-03T22:13:17.0947094\u002B00:00",
   "translations": [
     {
       "translationId": "en:AFV",
@@ -89,10 +89,10 @@
       "sourceType": "official",
       "languageTag": "en",
       "languageCode3": "eng",
-      "version": 1,
+      "version": 2,
       "copyright": "Notification: The English text of the ESV Bible may not be translated in whole or in part into any other language or used as the basis of a derivative work or as the sole base English text from which any translation of the Bible is made. The ESV text may not be quoted in any publication made available to the public by a Creative Commons license. Outside of Paratext, users may not copy or download more than 500 consecutive verses of the ESV Bible or more than one half of any book of the ESV Bible. ESV\u00AE Bible, copyright \u00A9 2001 by Crossway, a publishing ministry of Good News Publishers. ESV Text Edition: 2025. Permission or license requests that exceed the above guidelines require written permission or a formal license. To obtain written permission or a formal license as required, please complete and submit Crossway\u2019s online form at www.crossway.org/permissions/.",
-      "downloadSizeBytes": 3344702,
-      "contentHash": "sha256-2e818c86743740cd780c008d2f81f7e1f13718be6d9a41f8d834e25c562c560b",
+      "downloadSizeBytes": 3420560,
+      "contentHash": "sha256-a418023df73e46f98d3ec613178a417761c60515ebc172e2741ae65b54fc2bbe",
       "manifestUrl": "bibles/catalog/translations/en/ESVUK25.json"
     },
     {
@@ -414,10 +414,10 @@
       "sourceType": "official",
       "languageTag": "en",
       "languageCode3": "eng",
-      "version": 22,
+      "version": 23,
       "copyright": "\u00A9 1999, 2000, 2002, 2003, 2009 by Holman Bible Publishers, Nashville, Tennessee. All rights reserved.",
       "downloadSizeBytes": 3900928,
-      "contentHash": "sha256-b03a6c08cd3737a6c50f030ee0f90982dd872e2808a29c1b4ce0a004699195d6",
+      "contentHash": "sha256-da603d69fb2763fef83ed3731cc53df2a191b25181ee828d018926491f0b71be",
       "manifestUrl": "bibles/catalog/translations/en/HCSB.json"
     },
     {
@@ -531,10 +531,10 @@
       "sourceType": "official",
       "languageTag": "en",
       "languageCode3": "eng",
-      "version": 10,
+      "version": 11,
       "copyright": "2012 by Baker Publishing Group. Lexham is a registered trademark of Baker Publishing Group. BakerPublishingGroup.com.",
       "downloadSizeBytes": 3602436,
-      "contentHash": "sha256-ed02f9e49b82f2c74c5a5a09fe328ef891368b27cdd3453c8c4ec3ec0bb227dc",
+      "contentHash": "sha256-e4b222506d4991644f8ef37f7f1fdc3b00e03f7b4ba56f3dcec9ad5bc263215a",
       "manifestUrl": "bibles/catalog/translations/en/LEB.json"
     },
     {
@@ -544,11 +544,24 @@
       "sourceType": "official",
       "languageTag": "en",
       "languageCode3": "eng",
-      "version": 1,
+      "version": 2,
       "copyright": "The Literal Standard Version of The Holy Bible is a registered copyright of Covenant Press and the Covenant Christian Coalition (\u00A9 2020), but has been subsequently released under the Creative Commons Attribution-ShareAlike license (CC BY-SA) per our desire to provide God\u2019s word freely. Covenant Press requests that the text remain unaltered in the English language and that translations based on the LSV maintain the same spirit of faithfulness to the original Hebrew, Aramaic, and Greek text. Attribution of minor citations for personal or non-commercial use can be provided as simply \u201CLSV\u201D or \u201CLiteral Standard Version.\u201D Citations for commercial use, or distribution of the entire LSV Bible or entire book(s) of the LSV Bible, must be fully attributed and include both \u201CLiteral Standard Version (LSV)\u201D and the name of our organization. Covenant Press is soliciting partnerships with Bible publishers that are interested in the LSV project. For queries about partnering with us, please email the translation team at covenantpress@ccc.one. To learn more, visit lsvbible.com. The purpose behind the LSV is to provide readers with a modern, easy-to-read, literal, and accurate translation of the Bible that is free to read, distribute, and translate from. We pray that God will use the LSV to illuminate the hearts and minds of multitudes with the good news that His Son Jesus Christ came in the flesh, died for our sins as a substitutionary sacrifice, rose bodily from the dead, and is coming back again.",
-      "downloadSizeBytes": 2843167,
-      "contentHash": "sha256-80682e6c07cd51b74093815d84e7e51c6b366aae36b40fbe473626716a4643f1",
+      "downloadSizeBytes": 2852631,
+      "contentHash": "sha256-41b82c2291c101e7054dff1d2f60b2a942a0fc9190055e0173f8b8580e42d899",
       "manifestUrl": "bibles/catalog/translations/en/LSV.json"
+    },
+    {
+      "translationId": "en:MSB",
+      "code": "MSB",
+      "label": "Majority Standard Bible",
+      "sourceType": "official",
+      "languageTag": "en",
+      "languageCode3": "eng",
+      "version": 3,
+      "copyright": "Public Domain",
+      "downloadSizeBytes": 3626072,
+      "contentHash": "sha256-3edb8aa48dafbec413fe950d2324934f3cdc26268cba0f7557fb25e5bbea9cb7",
+      "manifestUrl": "bibles/catalog/translations/en/MSB.json"
     },
     {
       "translationId": "en:MP1562",
@@ -635,10 +648,10 @@
       "sourceType": "official",
       "languageTag": "en",
       "languageCode3": "eng",
-      "version": 16,
+      "version": 17,
       "copyright": "1996 - 2007 by Biblical Studies Press, LLC",
       "downloadSizeBytes": 9143007,
-      "contentHash": "sha256-1fcd22618cde05406db58a7f76376615a204bce06da8c2d3d96c3720de45d242",
+      "contentHash": "sha256-86218df9332d539173d18cf974383e4cd1ee94099b757470b7c8c7f3db31c3c4",
       "manifestUrl": "bibles/catalog/translations/en/NET.json"
     },
     {
@@ -690,7 +703,7 @@
       "version": 19,
       "copyright": "The Holy Bible, New King James Version, Copyright \u00A9 1982 Thomas Nelson. All rights reserved.",
       "downloadSizeBytes": 3934821,
-      "contentHash": "sha256-3c2736db4cd38f7b0dc9e698d8af0512c87fc34f77da6490c1c0326e2e062e7a",
+      "contentHash": "sha256-397d3c90392b7aa15bcd37bc537626a9d0bc88a80d195961af63df9b58507ac1",
       "manifestUrl": "bibles/catalog/translations/en/NKJV.json"
     },
     {
@@ -765,10 +778,10 @@
       "sourceType": "official",
       "languageTag": "en",
       "languageCode3": "eng",
-      "version": 13,
+      "version": 14,
       "copyright": "\u00A9 2021, Wycliffe Bible Translators, Inc. All rights reserved.",
-      "downloadSizeBytes": 1070179,
-      "contentHash": "sha256-88c0d4d39f5a254f1d1c08c3aff9271c5785811697e7db46a501c5c9125d4c81",
+      "downloadSizeBytes": 1096097,
+      "contentHash": "sha256-d4f5bc3dfbf71b4cddf47b0f169edbc0513aad79b80e2936bf9176331fc425ac",
       "manifestUrl": "bibles/catalog/translations/en/PEV.json"
     },
     {
@@ -856,10 +869,10 @@
       "sourceType": "official",
       "languageTag": "en",
       "languageCode3": "eng",
-      "version": 10,
+      "version": 12,
       "copyright": "historical text maintained by the British and Foreign Bible Society",
-      "downloadSizeBytes": 3769137,
-      "contentHash": "sha256-7a03731a63ea229c40ffe24fa4714871ccfd0e0da0a3bc1abe50da3b0bef6493",
+      "downloadSizeBytes": 3768534,
+      "contentHash": "sha256-d7d3861e43f32d5cb3b3f0cea1ff5a8fbdd4eecc8371ad8fd8a5e47477282f3d",
       "manifestUrl": "bibles/catalog/translations/en/RV1895.json"
     },
     {
@@ -960,10 +973,10 @@
       "sourceType": "official",
       "languageTag": "en",
       "languageCode3": "eng",
-      "version": 8,
+      "version": 9,
       "copyright": "Copyright\u00A9 1993 \u2013 2015 by the Institute for Scripture Research (ISR). All rights reserved.",
       "downloadSizeBytes": 2952086,
-      "contentHash": "sha256-627253575f0ba24f6c5d03d40aa1f24dfcf15a377ff441091097b59de6e697dd",
+      "contentHash": "sha256-0423961be4d2ce3e8f63b2ee94565758f38c5b4cd05cade51219e2d169a295c4",
       "manifestUrl": "bibles/catalog/translations/en/TS2009.json"
     },
     {
@@ -1025,10 +1038,10 @@
       "sourceType": "official",
       "languageTag": "en",
       "languageCode3": "eng",
-      "version": 98,
+      "version": 107,
       "copyright": "PUBLIC DOMAIN. \u0022World English Bible\u0022 is trademark of eBible.org.",
-      "downloadSizeBytes": 5021633,
-      "contentHash": "sha256-9c5e9464b234fc893cae8c76bbd695c5298177943ccf62a8164039d4230850de",
+      "downloadSizeBytes": 5029662,
+      "contentHash": "sha256-7c203bf3dad7a8a47edf377d09f140e9f827d8ac8913dac6fde51d10301e4136",
       "manifestUrl": "bibles/catalog/translations/en/WEBBE.json"
     },
     {
@@ -1038,10 +1051,10 @@
       "sourceType": "official",
       "languageTag": "en",
       "languageCode3": "eng",
-      "version": 84,
+      "version": 95,
       "copyright": "PUBLIC DOMAIN (not copyrighted)",
-      "downloadSizeBytes": 3703771,
-      "contentHash": "sha256-d52937319f233828cde35ff3718b1701257c5d7e9b6aa6fc8e1c4e1b44862aa8",
+      "downloadSizeBytes": 3802549,
+      "contentHash": "sha256-7b9888c7b44dc136dc6b6301a811bcbd234b35a3793853e233f931e8180bfe0e",
       "manifestUrl": "bibles/catalog/translations/en/engWEBUS.json"
     },
     {
@@ -1051,10 +1064,10 @@
       "sourceType": "official",
       "languageTag": "en",
       "languageCode3": "eng",
-      "version": 98,
+      "version": 104,
       "copyright": "PUBLIC DOMAIN",
-      "downloadSizeBytes": 4602392,
-      "contentHash": "sha256-eb3838ebcf500cd2c86c0e00389e196908f53dedc5f73f9619a2f0d8f77237ee",
+      "downloadSizeBytes": 4301358,
+      "contentHash": "sha256-4155b5ccfc8b01a119b19c8e4fe2284c2a8a8f274c87ff66cd4083972357ad58",
       "manifestUrl": "bibles/catalog/translations/en/WMB.json"
     },
     {
@@ -1064,10 +1077,10 @@
       "sourceType": "official",
       "languageTag": "en",
       "languageCode3": "eng",
-      "version": 100,
+      "version": 105,
       "copyright": "PUBLIC DOMAIN. \u0022World Messianic Bible\u0022 is a trademark.",
-      "downloadSizeBytes": 4606039,
-      "contentHash": "sha256-2336ffab8e2aa0e61536ecbc6db2174f0ac9f83d277a2d0f880103fda2fbb8b9",
+      "downloadSizeBytes": 4305575,
+      "contentHash": "sha256-a245ff6510b924d9507e1f8b8fb8420068b633980417f5d4e199fd528865d130",
       "manifestUrl": "bibles/catalog/translations/en/WMBBE.json"
     },
     {
@@ -1095,6 +1108,19 @@
       "downloadSizeBytes": 3192134,
       "contentHash": "sha256-23b4f4345255a86136940ab198bfb6a79e5289fd5929010e7b7d8332937c9801",
       "manifestUrl": "bibles/catalog/translations/en/YALL.json"
+    },
+    {
+      "translationId": "en:YW",
+      "code": "YW",
+      "label": "YAHWEH\u0027S WORD",
+      "sourceType": "official",
+      "languageTag": "en",
+      "languageCode3": "eng",
+      "version": 2,
+      "copyright": "\u201CYAHWEH\u2019S WORD\u201D is in the Public Domain. This means it is not copyrighted. \u201CYAHWEH\u2019S WORD\u201D is not a Trademark owned by anyone. Just as with the World English Bible you may copy, publish, proclaim, distribute, sell, give away, quote, memorize, read publicly, broadcast, transmit, share, back up, post on the internet, print, reproduce, preach, teach from, and use \u201CYAHWEH\u2019S WORD\u201D as much as you want, and others may also do so. The Holy Scriptures are \u201CYAHWEH\u2019S WORD\u201D. They belong to YAHWEH and should be shared with anyone and everyone.\nEvery effort has been made in an attempt to produce an errorless transcript of \u201CYAHWEH\u2019S WORD\u201D. However, if anyone while reading this work finds a typo or any editing errors, please use the email address below to make them known to the Editor. Also, any comments whether pro or con can be sent to allenwboelter@gmail.com. All emails will be read but may not receive a response.",
+      "downloadSizeBytes": 3148460,
+      "contentHash": "sha256-833f4b138de5d562e0944a15863c4c7cce3d1e1542fd6e39c22bb1b8f0fbadb6",
+      "manifestUrl": "bibles/catalog/translations/en/YW.json"
     },
     {
       "translationId": "en:YLT98",

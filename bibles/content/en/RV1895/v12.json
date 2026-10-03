@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "translationId": "en:RV1895",
-  "version": 10,
+  "version": 12,
   "books": {
     "Genesis": [
       {
@@ -9,7 +9,7 @@
         "verses": [
           {
             "verse": 1,
-            "text": "In the beginning God created the heaven and the earth."
+            "text": "IN the beginning God created the heaven and the earth."
           },
           {
             "verse": 2,
@@ -367,7 +367,7 @@
           {
             "verse": 1,
             "text": "And the man knew Eve his wife; and she conceived, and bare Cain, and said, I have gotten a man with the help of the LORD.",
-            "html": "And the man knew Eve his wife; and she conceived, and bare Cain, and said, I have gotten a man with \u003Cspan class=\u0022verse-added-words\u0022\u003Ethe help of\u003C/span\u003E the \u003Cspan class=\u0022verse-divine-name\u0022\u003ELORD\u003C/span\u003E."
+            "html": "And the man knew Eve his wife; and she conceived, and bare Cain, and said, I have gotten a man with \u003Cspan class=\u0022verse-added-words\u0022\u003Ethe help of \u003C/span\u003Ethe \u003Cspan class=\u0022verse-divine-name\u0022\u003ELORD\u003C/span\u003E."
           },
           {
             "verse": 2,
@@ -547,7 +547,7 @@
           },
           {
             "verse": 16,
-            "text": "And Mahalalel lived after he begat Jared eight hundred and thirty years, and begat sons and daughters:"
+            "text": "and Mahalalel lived after he begat Jared eight hundred and thirty years, and begat sons and daughters:"
           },
           {
             "verse": 17,
@@ -563,7 +563,7 @@
           },
           {
             "verse": 20,
-            "text": "And all the days of Jared were nine hundred sixty and two years: and he died."
+            "text": "and all the days of Jared were nine hundred sixty and two years: and he died."
           },
           {
             "verse": 21,
@@ -591,7 +591,7 @@
           },
           {
             "verse": 27,
-            "text": "And all the days of Methuselah were nine hundred sixty and nine years: and he died."
+            "text": "and all the days of Methuselah were nine hundred sixty and nine years: and he died."
           },
           {
             "verse": 28,
@@ -608,7 +608,7 @@
           },
           {
             "verse": 31,
-            "text": "And all the days of Lamech were seven hundred seventy and seven years: and he died."
+            "text": "and all the days of Lamech were seven hundred seventy and seven years: and he died."
           },
           {
             "verse": 32,
@@ -658,8 +658,8 @@
           },
           {
             "verse": 9,
-            "text": "These are the generations of Noah. Noah was a righteous man, and perfect in his generations: Noah walked with God.",
-            "html": "These are the generations of Noah. Noah was a righteous man, \u003Cspan class=\u0022verse-added-words\u0022\u003Eand\u003C/span\u003E perfect in his generations: Noah walked with God."
+            "text": "These are the generations of Noah. Noah was a righteous man,and perfect in his generations: Noah walked with God.",
+            "html": "These are the generations of Noah. Noah was a righteous man,\u003Cspan class=\u0022verse-added-words\u0022\u003Eand\u003C/span\u003E perfect in his generations: Noah walked with God."
           },
           {
             "verse": 10,
@@ -1022,7 +1022,7 @@
           {
             "verse": 26,
             "text": "And he said, Blessed be the LORD, the God of Shem; And let Canaan be his servant.",
-            "html": "And he said, Blessed be the \u003Cspan class=\u0022verse-divine-name\u0022\u003ELORD\u003C/span\u003E, the God of Shem; And let Canaan be his servant."
+            "html": "And he said, \u003Cbr/\u003E Blessed be the \u003Cspan class=\u0022verse-divine-name\u0022\u003ELORD\u003C/span\u003E, the God of Shem; \u003Cbr/\u003E And let Canaan be his servant."
           },
           {
             "verse": 27,
@@ -2367,7 +2367,7 @@
           },
           {
             "verse": 26,
-            "text": "And Abimelech said, I know not who hath done this thing: neither didst thou tell me, neither yet heard I of it, but today."
+            "text": "And Abimelech said, I know not who hath done this thing: neither didst thou tell me, neither yet heard I of it, but to-day."
           },
           {
             "verse": 27,
@@ -2985,7 +2985,7 @@
           {
             "verse": 23,
             "text": "And the LORD said unto her, Two nations are in thy womb, And two peoples shall be separated even from thy bowels: And the one people shall be stronger than the other people; And the elder shall serve the younger.",
-            "html": "And the \u003Cspan class=\u0022verse-divine-name\u0022\u003ELORD\u003C/span\u003E said unto her, Two nations are in thy womb, And two peoples shall be separated even from thy bowels: And the one people shall be stronger than the other people; And the elder shall serve the younger."
+            "html": "And the \u003Cspan class=\u0022verse-divine-name\u0022\u003ELORD\u003C/span\u003E said unto her, \u003Cbr/\u003E Two nations are in thy womb, \u003Cbr/\u003E And two peoples shall be separated even from thy bowels: \u003Cbr/\u003E And the one people shall be stronger than the other people; \u003Cbr/\u003E And the elder shall serve the younger."
           },
           {
             "verse": 24,
@@ -3077,7 +3077,7 @@
           },
           {
             "verse": 10,
-            "text": "And Abimelech said, What is this thou hast done unto us? one of the people might lightly have lain with thy wife, and thou shouldest have brought guiltiness upon us."
+            "text": "And Abimelech said, What is this thou hast done unto us? one of the people might lightly have lien with thy wife, and thou shouldest have brought guiltiness upon us."
           },
           {
             "verse": 11,
@@ -3299,7 +3299,7 @@
           {
             "verse": 27,
             "text": "And he came near, and kissed him: and he smelled the smell of his raiment, and blessed him, and said, See, the smell of my son Is as the smell of a field which the LORD hath blessed:",
-            "html": "And he came near, and kissed him: and he smelled the smell of his raiment, and blessed him, and said, See, the smell of my son Is as the smell of a field which the \u003Cspan class=\u0022verse-divine-name\u0022\u003ELORD\u003C/span\u003E hath blessed:"
+            "html": "And he came near, and kissed him: and he smelled the smell of his raiment, and blessed him, and said, See, the smell of my son \u003Cbr/\u003E Is as the smell of a field which the \u003Cspan class=\u0022verse-divine-name\u0022\u003ELORD\u003C/span\u003E hath blessed:"
           },
           {
             "verse": 28,
@@ -3758,8 +3758,8 @@
           },
           {
             "verse": 32,
-            "text": "I will pass through all thy flock today, removing from thence every speckled and spotted one, and every black one among the sheep, and the spotted and speckled among the goats: and of such shall be my hire.",
-            "html": "I will pass through all thy flock today, removing from thence every speckled and spotted one, and every black one among the sheep, and the spotted and speckled among the goats: and \u003Cspan class=\u0022verse-added-words\u0022\u003Eof such\u003C/span\u003E shall be my hire."
+            "text": "I will pass through all thy flock to-day, removing from thence every speckled and spotted one, and every black one among the sheep, and the spotted and speckled among the goats: and of such shall be my hire.",
+            "html": "I will pass through all thy flock to-day, removing from thence every speckled and spotted one, and every black one among the sheep, and the spotted and speckled among the goats: and \u003Cspan class=\u0022verse-added-words\u0022\u003Eof such\u003C/span\u003E shall be my hire."
           },
           {
             "verse": 33,
@@ -4319,7 +4319,7 @@
           },
           {
             "verse": 15,
-            "text": "Only on this condition will we consent unto you: if ye will be as we be, that every male of you be circumcised;"
+            "text": "only on this condition will we consent unto you: if ye will be as we be, that every male of you be circumcised;"
           },
           {
             "verse": 16,
@@ -6384,7 +6384,7 @@
           },
           {
             "verse": 14,
-            "text": "Issachar is a strong ass, Couching down between the sheepfolds:"
+            "text": "Issachar is a strong ass, Crouching down between the sheepfolds:"
           },
           {
             "verse": 15,
@@ -31890,7 +31890,7 @@
         "verses": [
           {
             "verse": 1,
-            "text": "And it came to pass in the days when the judges judged, that there was a famine in the land. And a certain man of Beth-lehem-judah went to sojourn in the country of Moab, he, and his wife, and his two sons."
+            "text": "AND it came to pass in the days when the judges judged, that there was a famine in the land. And a certain man of Beth-lehem-judah went to sojourn in the country of Moab, he, and his wife, and his two sons."
           },
           {
             "verse": 2,
@@ -31954,7 +31954,7 @@
           },
           {
             "verse": 16,
-            "text": "And Ruth said, Entreat me not to leave thee, and to return from following after thee: for whither thou goest, I will go; and where thou lodgest, I will lodge: thy people shall be my people, and thy God my God:"
+            "text": "And Ruth said, Intreat me not to leave thee, and to return from following after thee: for whither thou goest, I will go; and where thou lodgest, I will lodge: thy people shall be my people, and thy God my God:"
           },
           {
             "verse": 17,
@@ -32015,7 +32015,7 @@
           },
           {
             "verse": 7,
-            "text": "And she said, Let me glean, I pray you, and gather after the reapers among the sheaves: so she came, and hath continued even from the morning until now, save that she tarried a little in the house."
+            "text": "and she said, Let me glean, I pray you, and gather after the reapers among the sheaves: so she came, and hath continued even from the morning until now, save that she tarried a little in the house."
           },
           {
             "verse": 8,
@@ -32098,7 +32098,7 @@
           },
           {
             "verse": 3,
-            "text": "Wash thyself therefore, and anoint thee, and put on thy raiment upon thee, and get thee down to the threshing-floor: but make not thyself known to the man, until he shall have done eating and drinking."
+            "text": "Wash thyself therefore, and anoint thee, and put on thy raiment upon thee, and get thee down to the threshing-floor: but make not thyself known unto the man, until he shall have done eating and drinking."
           },
           {
             "verse": 4,
@@ -35087,7 +35087,7 @@
           },
           {
             "verse": 20,
-            "text": "Now therefore, O king, come down, according to all the desire of thy soul to come down; and our part shall be to deriver him up into the king\u0027s hand."
+            "text": "Now therefore, O king, come down, according to all the desire of thy soul to come down; and our part shall be to deliver him up into the king\u0027s hand."
           },
           {
             "verse": 21,
@@ -40133,7 +40133,7 @@
           },
           {
             "verse": 36,
-            "text": "And on the plates of the stays thereof, and on the borders thereof, he graved cherubim, lions, and palm tress, according to the space of each, with wreaths round about."
+            "text": "And on the plates of the stays thereof, and on the borders thereof, he graved cherubim, lions, and palm trees, according to the space of each, with wreaths round about."
           },
           {
             "verse": 37,
@@ -57691,8 +57691,8 @@
           },
           {
             "verse": 8,
-            "text": "And the LORD said unto Satan, Hast thou considered my servant Job? for there is none like him in the earth, a perfect and an uptight man, one that feareth God, and escheweth evil.",
-            "html": "And the \u003Cspan class=\u0022verse-divine-name\u0022\u003ELORD\u003C/span\u003E said unto Satan, Hast thou considered my servant Job? for there is none like him in the earth, a perfect and an uptight man, one that feareth God, and escheweth evil."
+            "text": "And the LORD said unto Satan, Hast thou considered my servant Job? for there is none like him in the earth, a perfect and an upright man, one that feareth God, and escheweth evil.",
+            "html": "And the \u003Cspan class=\u0022verse-divine-name\u0022\u003ELORD\u003C/span\u003E said unto Satan, Hast thou considered my servant Job? for there is none like him in the earth, a perfect and an upright man, one that feareth God, and escheweth evil."
           },
           {
             "verse": 9,
@@ -73987,12 +73987,11 @@
         "verses": [
           {
             "verse": 1,
-            "subheading": "The proverbs of Solomon the son of David, king of Israel:",
-            "text": "The proverbs of Solomon the son of David, king of Israel:"
+            "text": "THE proverbs of Solomon the son of David, king of Israel:"
           },
           {
             "verse": 2,
-            "text": "To know wisdom and instruction; to discern the words of understanding;"
+            "text": "To know wisdom and instruction; To discern the words of understanding;"
           },
           {
             "verse": 3,
@@ -74053,7 +74052,7 @@
           },
           {
             "verse": 17,
-            "text": "For in vain is the net spread, in the eyes of any bird:"
+            "text": "For in vain is the net spread, In the eyes of any bird:"
           },
           {
             "verse": 18,
@@ -74225,7 +74224,7 @@
         "verses": [
           {
             "verse": 1,
-            "text": "My son, forget not my law; but let thine heart keep my commandments:"
+            "text": "My son, forget not my law; But let thine heart keep my commandments:"
           },
           {
             "verse": 2,
@@ -74264,7 +74263,7 @@
           },
           {
             "verse": 10,
-            "text": "So shall thy barns be filled with plenty, And thy vats shall overflow with new wine."
+            "text": "So shall thy barns be filled with plenty, And thy fats shall overflow with new wine."
           },
           {
             "verse": 11,
@@ -74655,7 +74654,7 @@
           },
           {
             "verse": 15,
-            "text": "Therefore shall his calamity come suddenly; On a sudden shall he be broken and that without remedy."
+            "text": "Therefore shall his calamity come suddenly; On a sudden shall he be broken, and that without remedy."
           },
           {
             "verse": 16,
@@ -74713,7 +74712,7 @@
           },
           {
             "verse": 29,
-            "text": "So he that goeth in to his nieghbour\u0027s wife; Whosoever toucheth her shall not be unpunished."
+            "text": "So he that goeth in to his neighbour\u0027s wife; Whosoever toucheth her shall not be unpunished."
           },
           {
             "verse": 30,
@@ -74967,7 +74966,7 @@
           },
           {
             "verse": 26,
-            "text": "While as yet he had not made the earth, Nor the fields, nor the beginning of the dust of the world."
+            "text": "While as yet he had not made the earth, nor the fields, Nor the beginning of the dust of the world."
           },
           {
             "verse": 27,
@@ -74975,7 +74974,7 @@
           },
           {
             "verse": 28,
-            "text": "When he made firm the sides above: When the fountains of the deep became strong:"
+            "text": "When he made firm the skies above: When the fountains of the deep became strong:"
           },
           {
             "verse": 29,
@@ -75101,7 +75100,6 @@
         "verses": [
           {
             "verse": 1,
-            "subheading": "The proverbs of Solomon.",
             "text": "The proverbs of Solomon. A wise son maketh a glad father: But a foolish son is the heaviness of his mother."
           },
           {
@@ -75181,7 +75179,8 @@
           },
           {
             "verse": 20,
-            "text": "The tongue of the righteous is as choice silver: The heart of the wicked is little worth."
+            "text": "The tongue of the righteous is as choice silver: The heart of the wicked is little worth.",
+            "html": "The tongue of the righteous is \u003Cspan class=\u0022verse-added-words\u0022\u003Eas\u003C/span\u003E choice silver: \u003Cbr/\u003E The heart of the wicked is little worth."
           },
           {
             "verse": 21,
@@ -75217,7 +75216,7 @@
           {
             "verse": 28,
             "text": "The hope of the righteous shall be gladness: But the expectation of the wicked shall perish.",
-            "html": "The hope of the righteous \u003Cspan class=\u0022verse-added-words\u0022\u003Eshall\u003C/span\u003E be gladness: \u003Cbr/\u003E But the expectation of the wicked shall perish."
+            "html": "The hope of the righteous \u003Cspan class=\u0022verse-added-words\u0022\u003Eshall be\u003C/span\u003E gladness: \u003Cbr/\u003E But the expectation of the wicked shall perish."
           },
           {
             "verse": 29,
@@ -75269,8 +75268,8 @@
           },
           {
             "verse": 7,
-            "text": "When a wicked man dieth his expectation shall perish: And the hope of iniquity perisheth.",
-            "html": "When a wicked man dieth \u003Cspan class=\u0022verse-added-words\u0022\u003Ehis\u003C/span\u003E expectation shall perish: \u003Cbr/\u003E And the hope of iniquity perisheth."
+            "text": "When a wicked man dieth,his expectation shall perish: And the hope of iniquity perisheth.",
+            "html": "When a wicked man dieth,\u003Cspan class=\u0022verse-added-words\u0022\u003Ehis\u003C/span\u003E expectation shall perish: \u003Cbr/\u003E And the hope of iniquity perisheth."
           },
           {
             "verse": 8,
@@ -75335,7 +75334,7 @@
           {
             "verse": 22,
             "text": "As a jewel of gold in a swine\u0027s snout, So is a fair woman which is without discretion.",
-            "html": "\u003Cspan class=\u0022verse-added-words\u0022\u003EAs a\u003C/span\u003E jewel of gold in a swine\u0027s snout, \u003Cbr/\u003E \u003Cspan class=\u0022verse-added-words\u0022\u003ESo is\u003C/span\u003E a fair woman which is without discretion."
+            "html": "\u003Cspan class=\u0022verse-added-words\u0022\u003EAs\u003C/span\u003E a jewel of gold in a swine\u0027s snout, \u003Cbr/\u003E \u003Cspan class=\u0022verse-added-words\u0022\u003ESo is\u003C/span\u003E a fair woman which is without discretion."
           },
           {
             "verse": 23,
@@ -75852,7 +75851,7 @@
           },
           {
             "verse": 19,
-            "text": "The way of the sluggard is as an hedge of thorns: But the path of the upright is made an highway."
+            "text": "The way of the sluggard is as an hedge of thorns: But the path of the upright is made an high way."
           },
           {
             "verse": 20,
@@ -75997,7 +75996,7 @@
           },
           {
             "verse": 17,
-            "text": "The highway of the upright is to depart from evil: He that keepeth his way preserveth his soul."
+            "text": "The high way of the upright is to depart from evil: He that keepeth his way preserveth his soul."
           },
           {
             "verse": 18,
@@ -76211,11 +76210,13 @@
           },
           {
             "verse": 3,
-            "text": "When the wicked cometh, there cometh also contempt, And with ignominy cometh reproach."
+            "text": "When the wicked cometh, there cometh also contempt, And with ignominy cometh reproach.",
+            "html": "When the wicked cometh, there cometh also contempt, \u003Cbr/\u003E And with ignominy \u003Cspan class=\u0022verse-added-words\u0022\u003Ecometh\u003C/span\u003E reproach."
           },
           {
             "verse": 4,
-            "text": "The words of a man\u0027s mouth are as deep waters; The wellspring of wisdom is as a flowing brook."
+            "text": "The words of a man\u0027s mouth are as deep waters; The wellspring of wisdom is as a flowing brook.",
+            "html": "The words of a man\u0027s mouth are \u003Cspan class=\u0022verse-added-words\u0022\u003Eas\u003C/span\u003E deep waters; \u003Cbr/\u003E The wellspring of wisdom is \u003Cspan class=\u0022verse-added-words\u0022\u003Eas\u003C/span\u003E a flowing brook."
           },
           {
             "verse": 5,
@@ -76232,7 +76233,7 @@
           },
           {
             "verse": 8,
-            "text": "The words of a whisperer are as dainty, morsels, And they go down into the innermost parts of the belly."
+            "text": "The words of a whisperer are as dainty morsels, And they go down into the innermost parts of the belly."
           },
           {
             "verse": 9,
@@ -76297,7 +76298,7 @@
           },
           {
             "verse": 23,
-            "text": "The poor useth entreaties: But the rich answereth roughly."
+            "text": "The poor useth intreaties: But the rich answereth roughly."
           },
           {
             "verse": 24,
@@ -76332,7 +76333,7 @@
           },
           {
             "verse": 6,
-            "text": "Many will entreat the favour of the liberal man: And every man is a friend to him that giveth gifts."
+            "text": "Many will intreat the favour of the liberal man: And every man is a friend to him that giveth gifts."
           },
           {
             "verse": 7,
@@ -77005,7 +77006,7 @@
         "verses": [
           {
             "verse": 1,
-            "text": "Be not thou envious against evil men, Neither desire to be with them."
+            "text": "Be not thou envious against evil men, Neither desire to be with them:"
           },
           {
             "verse": 2,
@@ -77057,7 +77058,7 @@
           },
           {
             "verse": 14,
-            "text": "So shalt thou know wisdom to be unto thy soul If thou hast found it, then shall there be a reward, And thy hope shall not be cut off."
+            "text": "So shalt thou know wisdom to be unto thy soul: If thou hast found it, then shall there be a reward, And thy hope shall not be cut off."
           },
           {
             "verse": 15,
@@ -77095,8 +77096,8 @@
           },
           {
             "verse": 23,
-            "text": "These also are sayings of the wise To have respect of persons in judgement is not good.",
-            "html": "These also are \u003Cspan class=\u0022verse-added-words\u0022\u003Esayings\u003C/span\u003E of the wise \u003Cbr/\u003E To have respect of persons in judgement is not good."
+            "text": "These also are sayings of the wise. To have respect of persons in judgement is not good.",
+            "html": "These also are \u003Cspan class=\u0022verse-added-words\u0022\u003Esayings\u003C/span\u003E of the wise. \u003Cbr/\u003E To have respect of persons in judgement is not good."
           },
           {
             "verse": 24,
@@ -77151,8 +77152,7 @@
         "verses": [
           {
             "verse": 1,
-            "subheading": "These also are proverbs of Solomon, which the men of Hezekiah king of Judah copied out",
-            "text": "These also are proverbs of Solomon, which the men of Hezekiah king of Judah copied out"
+            "text": "These also are proverbs of Solomon, which the men of Hezekiah king of Judah copied out."
           },
           {
             "verse": 2,
@@ -77773,7 +77773,6 @@
         "verses": [
           {
             "verse": 1,
-            "subheading": "The words of Agur the son of Jakeh; the oracle.",
             "text": "The words of Agur the son of Jakeh; the oracle. The man saith unto Ithiel, unto Ithiel and Ucal:"
           },
           {
@@ -77834,8 +77833,8 @@
           },
           {
             "verse": 15,
-            "text": "The horseleach hath two daughters, crying, Give, give There are three things that are never satisfied, Yea, four that say not, Enough:",
-            "html": "The horseleach hath two daughters, \u003Cspan class=\u0022verse-added-words\u0022\u003Ecrying\u003C/span\u003E, Give, give \u003Cbr/\u003E There are three things that are never satisfied, \u003Cbr/\u003E \u003Cspan class=\u0022verse-added-words\u0022\u003EYea\u003C/span\u003E, four that say not, Enough:"
+            "text": "The horseleach hath two daughters, crying, Give, give. There are three things that are never satisfied, Yea, four that say not, Enough:",
+            "html": "The horseleach hath two daughters, \u003Cspan class=\u0022verse-added-words\u0022\u003Ecrying\u003C/span\u003E, Give, give. \u003Cbr/\u003E There are three things that are never satisfied, \u003Cbr/\u003E \u003Cspan class=\u0022verse-added-words\u0022\u003EYea\u003C/span\u003E, four that say not, Enough:"
           },
           {
             "verse": 16,
@@ -77888,7 +77887,7 @@
           },
           {
             "verse": 28,
-            "text": "The lizard taketh hold with her hands, Yet is she in kings\u0027 palaces,"
+            "text": "The lizard taketh hold with her hands, Yet is she in kings\u0027 palaces."
           },
           {
             "verse": 29,
@@ -77918,7 +77917,6 @@
         "verses": [
           {
             "verse": 1,
-            "subheading": "The words of king Lemuel; the oracle which his mother taught him.",
             "text": "The words of king Lemuel; the oracle which his mother taught him."
           },
           {
@@ -109248,8 +109246,8 @@
           },
           {
             "verse": 3,
-            "text": "To the end that thine enemies, desiring food, Might for the hideousness of the creatures sent among them Loathe even the necessary appetite; But these, thy people, having for a short space sufferred want, Might even partake of food of rare taste.",
-            "html": "To the end that thine enemies, desiring food, \u003Cbr/\u003E Might for the hideousness of the \u003Cspan class=\u0022verse-added-words\u0022\u003Ecreatures\u003C/span\u003E sent among them \u003Cbr/\u003E Loathe even the necessary appetite; \u003Cbr/\u003E But these, \u003Cspan class=\u0022verse-added-words\u0022\u003Ethy people\u003C/span\u003E, having for a short space sufferred want, \u003Cbr/\u003E Might even partake of \u003Cspan class=\u0022verse-added-words\u0022\u003Efood of\u003C/span\u003E rare taste."
+            "text": "To the end that thine enemies, desiring food, Might for the hideousness of the creatures sent among them Loathe even the necessary appetite; But these, thy people, having for a short space suffered want, Might even partake of food of rare taste.",
+            "html": "To the end that thine enemies, desiring food, \u003Cbr/\u003E Might for the hideousness of the \u003Cspan class=\u0022verse-added-words\u0022\u003Ecreatures\u003C/span\u003E sent among them \u003Cbr/\u003E Loathe even the necessary appetite; \u003Cbr/\u003E But these, \u003Cspan class=\u0022verse-added-words\u0022\u003Ethy people\u003C/span\u003E, having for a short space suffered want, \u003Cbr/\u003E Might even partake of \u003Cspan class=\u0022verse-added-words\u0022\u003Efood of\u003C/span\u003E rare taste."
           },
           {
             "verse": 4,
@@ -115309,7 +115307,7 @@
         "verses": [
           {
             "verse": 1,
-            "heading": "A Prayer of Jesus the son of Sirach. / A Prayer of Jesus the son of Sirach.",
+            "heading": "A Prayer of Jesus the son of Sirach.",
             "text": "I will give thanks unto thee, O Lord, O King, And will praise thee, God my Saviour: I do give thanks unto thy name:"
           },
           {
@@ -116596,7 +116594,7 @@
         "verses": [
           {
             "verse": 1,
-            "text": "And king Astyages was gathered to his fathers, and Cyrus the Persian received his kingdom."
+            "text": "AND king Astyages was gathered to his fathers, and Cyrus the Persian received his kingdom."
           },
           {
             "verse": 2,
@@ -116640,7 +116638,7 @@
           },
           {
             "verse": 12,
-            "text": "And when thou comest in the morning, if thou find not that Bel hath eaten up all, we will suffer death: or else Daniel, that speaketh falsely against us."
+            "text": "and when thou comest in the morning, if thou find not that Bel hath eaten up all, we will suffer death: or else Daniel, that speaketh falsely against us."
           },
           {
             "verse": 13,
@@ -116677,7 +116675,7 @@
           },
           {
             "verse": 21,
-            "text": "And took the priests with their wives and children, who shewed him the privy doors, where they came in, and consumed such things as were upon the table."
+            "text": "and took the priests with their wives and children, who shewed him the privy doors, where they came in, and consumed such things as were upon the table."
           },
           {
             "verse": 22,
