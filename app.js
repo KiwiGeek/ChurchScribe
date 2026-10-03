@@ -139,7 +139,10 @@ const autoCloudSyncDelayMs = 10000;
 // in portrait (window < 900 but scripture pane still roomy) keeps the
 // Translation / Book / Chapter selects visible.
 const compactEditorThresholdPx = 900;
-const compactScriptureThresholdPx = 280;
+// iPad portrait with the default ~0.6 notes split leaves the scripture pane
+// around 250–320px. Stay expanded through that range; only collapse when the
+// pane is too narrow for usable side-by-side selects.
+const compactScriptureThresholdPx = 200;
 const chapterLabelPrefixPattern = /^Chapter\s+/i;
 let compactResizeFrame = null;
 let compactEditorActive = null;

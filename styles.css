@@ -3015,9 +3015,9 @@ body.is-compact-editor .compact-format-panel .color-picker-trigger {
  *
  * Compact notes chrome still densifies below 900px window width. Scripture
  * Translation / Book / Chapter combos collapse separately when the scripture
- * panel itself is narrower than ~280px, so iPad portrait keeps the selects
- * visible whenever the pane has room. Users can also opt into scripture-only
- * mode from Settings → Layout & Mode.
+ * panel itself is narrower than ~200px, so iPad portrait keeps the selects
+ * visible with the default split. Users can also opt into scripture-only mode
+ * from Settings → Layout & Mode.
  */
 
 /* ===================== UI SETTINGS PANEL ===================== */
