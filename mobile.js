@@ -22,6 +22,7 @@ const themeStorageKey            = "service-notes-theme";
 const themeMirrorStorageKey      = "service-notes-theme-mirror";
 const paneOrderStorageKey        = "service-notes-pane-order";
 const paneSplitStorageKey        = "service-notes-pane-split";
+const scriptureOnlyStorageKey    = "service-notes-scripture-only";
 const translationStorageKey      = "service-notes-translation";
 const translationRegistryStorageKey = "service-notes-translation-registry";
 const cloudSyncStorageKey        = "service-notes-cloud-sync";
@@ -148,6 +149,8 @@ const noteMetaFields = document.querySelector("#note-meta-fields");
 const noteEditor     = document.querySelector("#note-editor");
 const dummyPaneGrid  = document.createElement("div");
 dummyPaneGrid.className = "pane-grid";
+// Desktop-only preference kept in sync for cloud/backup compatibility.
+let scriptureOnlyPreference = false;
 
 // ── Late-bound module references ──────────────────────────────────────────────
 let syncStatusApi            = null;
@@ -1296,6 +1299,9 @@ const bootstrap = async () => {
     paneOrderStorageKey,
     applySplit:               () => {},   // no-op
     paneSplitStorageKey,
+    getScriptureOnly:         () => scriptureOnlyPreference,
+    applyScriptureOnly:       (enabled) => { scriptureOnlyPreference = Boolean(enabled); },
+    scriptureOnlyStorageKey,
     applyTranslation:         viewerApi.applyTranslation,
     translationStorageKey,
     applyColorTheme:          themeApi.applyColorTheme,
@@ -1383,6 +1389,8 @@ const bootstrap = async () => {
   buildBookAliasMap();
   await restoreLastBookChapter();
   applyColorTheme(await themeApi.getPreferredColorTheme());
+  // Desktop layout preference — kept in memory so cloud sync does not wipe it.
+  scriptureOnlyPreference = (await readStoredValue(scriptureOnlyStorageKey)) === true;
 
   // Restore cloud sync settings from IDB
   await syncCloudApi.restoreCloudSyncSettings();

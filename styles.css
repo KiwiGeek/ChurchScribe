@@ -310,6 +310,18 @@ h1 {
   order: 1;
 }
 
+/* Scripture-only mode: hide the notes editor and divider so scripture fills
+ * the main workspace. The prior split fraction is preserved in JS and restored
+ * when the mode is turned off. */
+.pane-grid.is-scripture-only {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.pane-grid.is-scripture-only .note-panel,
+.pane-grid.is-scripture-only .pane-divider {
+  display: none;
+}
+
 .panel {
   position: relative;
   display: flex;
@@ -2999,7 +3011,8 @@ body.is-compact-editor .compact-format-panel .color-picker-trigger {
  *
  * If a future "compact editor mode" is introduced (see GitHub issue: Compact
  * editor mode for narrow desktop windows) these breakpoints are where that
- * work would live. Until then, the desktop layout is unconditionally two-panel.
+ * work would live. Until then, the default desktop layout stays two-panel;
+ * users can opt into scripture-only mode from Settings → Layout & Mode.
  */
 
 /* ===================== UI SETTINGS PANEL ===================== */

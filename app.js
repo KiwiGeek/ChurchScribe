@@ -125,6 +125,7 @@ const themeStorageKey = "service-notes-theme";
 const themeMirrorStorageKey = "service-notes-theme-mirror";
 const paneOrderStorageKey = "service-notes-pane-order";
 const paneSplitStorageKey = "service-notes-pane-split";
+const scriptureOnlyStorageKey = "service-notes-scripture-only";
 const translationStorageKey = "service-notes-translation";
 const translationRegistryStorageKey = "service-notes-translation-registry";
 const cloudSyncStorageKey = "service-notes-cloud-sync";
@@ -389,6 +390,7 @@ const paneLayoutApi = window.ScriptoriaModules.createPaneLayout({
   migrateLegacyPreference,
   paneOrderStorageKey,
   paneSplitStorageKey,
+  scriptureOnlyStorageKey,
   // Late-bound through the syncCloudApi thunks declared above so they no-op
   // safely until the sync module is wired up later in this file.
   markLocalSettingsUpdated: (...args) => markLocalSettingsUpdated(...args),
@@ -398,9 +400,13 @@ const paneLayoutApi = window.ScriptoriaModules.createPaneLayout({
 const {
   applySplit,
   applyPaneOrder,
+  applyScriptureOnly,
   togglePaneOrder,
+  toggleScriptureOnly,
   getPreferredPaneOrder,
-  getPreferredSplit
+  getPreferredSplit,
+  getPreferredScriptureOnly,
+  isScriptureOnly
 } = paneLayoutApi;
 
 // normalizeBookName + addBookAlias moved to scripture/aliases.js.
@@ -1389,6 +1395,9 @@ syncPayloadApi = window.ScriptoriaModules.createSyncPayloads({
   paneOrderStorageKey,
   applySplit,
   paneSplitStorageKey,
+  getScriptureOnly: () => paneLayoutApi.isScriptureOnly(),
+  applyScriptureOnly,
+  scriptureOnlyStorageKey,
   applyTranslation,
   translationStorageKey,
   applyColorTheme,
@@ -1996,6 +2005,8 @@ const {
   getCurrentThemeMode: () => themeApi.getCurrentThemeMode(),
   paneGrid,
   togglePaneOrder,
+  toggleScriptureOnly,
+  isScriptureOnly,
   colorThemes,
   getCurrentColorThemeId: () => themeApi.getCurrentColorThemeId(),
   writeStoredValue,
@@ -2063,6 +2074,9 @@ const syncSetupWizardApi = window.ScriptoriaModules.createSyncSetupWizard({
   paneOrderStorageKey,
   applySplit,
   paneSplitStorageKey,
+  applyScriptureOnly,
+  scriptureOnlyStorageKey,
+  isScriptureOnly,
   applyTranslation,
   translationStorageKey,
   applyColorTheme,
@@ -2237,6 +2251,7 @@ const bootstrap = async () => {
   applyThemeMode(await getPreferredTheme(), { rerender: false });
   applyPaneOrder(await getPreferredPaneOrder());
   applySplit(await getPreferredSplit());
+  applyScriptureOnly(await getPreferredScriptureOnly());
   await applyTranslation(await getPreferredTranslation());
   buildBookAliasMap();
   await restoreLastBookChapter();

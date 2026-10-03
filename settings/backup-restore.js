@@ -16,6 +16,7 @@ window.ScriptoriaModules.createSettingsBackupRestore = (deps) => {
       theme: deps.getCurrentThemeMode(),
       paneOrder: deps.paneGrid.dataset.order === "scripture-first" ? "scripture-first" : "notes-first",
       paneSplit: deps.getCurrentPaneSplit(),
+      scriptureOnly: typeof deps.isScriptureOnly === "function" ? deps.isScriptureOnly() : false,
       selectedTranslationId: deps.getCurrentTranslationCode(),
       colorTheme: deps.getCurrentColorThemeId()
     },
@@ -77,6 +78,11 @@ window.ScriptoriaModules.createSettingsBackupRestore = (deps) => {
           void deps.writeStoredValue(deps.paneSplitStorageKey, deps.getCurrentPaneSplit());
         }
 
+        if (typeof preferences.scriptureOnly === "boolean" && typeof deps.applyScriptureOnly === "function") {
+          deps.applyScriptureOnly(preferences.scriptureOnly);
+          void deps.writeStoredValue(deps.scriptureOnlyStorageKey, preferences.scriptureOnly);
+        }
+
         const selectedTranslationId = preferences.selectedTranslationId ?? preferences.translation;
         if (selectedTranslationId) {
           await deps.applyTranslation(selectedTranslationId);
@@ -115,6 +121,7 @@ window.ScriptoriaModules.createSettingsBackupRestore = (deps) => {
       deps.deleteStoredValue(deps.themeStorageKey),
       deps.deleteStoredValue(deps.paneOrderStorageKey),
       deps.deleteStoredValue(deps.paneSplitStorageKey),
+      deps.deleteStoredValue(deps.scriptureOnlyStorageKey),
       deps.deleteStoredValue(deps.translationStorageKey),
       deps.deleteStoredValue(deps.colorThemeStorageKey),
       deps.deleteStoredValue(deps.lastBookChapterStorageKey),
@@ -184,6 +191,7 @@ window.ScriptoriaModules.createSettingsBackupRestore = (deps) => {
       deps.deleteStoredValue(deps.themeStorageKey),
       deps.deleteStoredValue(deps.paneOrderStorageKey),
       deps.deleteStoredValue(deps.paneSplitStorageKey),
+      deps.deleteStoredValue(deps.scriptureOnlyStorageKey),
       deps.deleteStoredValue(deps.translationStorageKey),
       deps.deleteStoredValue(deps.colorThemeStorageKey),
       deps.deleteStoredValue(deps.lastBookChapterStorageKey),
