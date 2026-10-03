@@ -59,16 +59,16 @@ window.ScriptoriaModules.createSettingsUi = (deps) => {
   const renderUiSettings = (container) => {
     container.innerHTML = "";
 
-    const toggleSection = document.createElement("div");
-    toggleSection.className = "ui-settings-section";
+    const appearanceSection = document.createElement("div");
+    appearanceSection.className = "ui-settings-section";
 
-    const toggleTitle = document.createElement("p");
-    toggleTitle.className = "ui-settings-section-title";
-    toggleTitle.textContent = "Layout & Mode";
-    toggleSection.append(toggleTitle);
+    const appearanceTitle = document.createElement("p");
+    appearanceTitle.className = "ui-settings-section-title";
+    appearanceTitle.textContent = "Appearance";
+    appearanceSection.append(appearanceTitle);
 
-    const toggleRow = document.createElement("div");
-    toggleRow.className = "ui-toggle-row";
+    const appearanceRow = document.createElement("div");
+    appearanceRow.className = "ui-toggle-row";
 
     const themeModeField = document.createElement("label");
     themeModeField.className = "ui-inline-select";
@@ -93,13 +93,31 @@ window.ScriptoriaModules.createSettingsUi = (deps) => {
       deps.applyThemeMode(themeModeSelect.value, { persist: true, markChange: true });
     });
     themeModeField.append(themeModeLabel, themeModeSelect);
-    toggleRow.append(themeModeField);
+    appearanceRow.append(themeModeField);
+    appearanceSection.append(appearanceRow);
+    container.append(appearanceSection);
+
+    const layoutSection = document.createElement("div");
+    layoutSection.className = "ui-settings-section";
+
+    const layoutTitle = document.createElement("p");
+    layoutTitle.className = "ui-settings-section-title";
+    layoutTitle.textContent = "Layout";
+    layoutSection.append(layoutTitle);
+
+    const layoutCopy = document.createElement("p");
+    layoutCopy.className = "settings-copy";
+    layoutCopy.textContent = "Choose which pane sits on the left, or hide the editor for scripture-only reading.";
+    layoutSection.append(layoutCopy);
+
+    const layoutRow = document.createElement("div");
+    layoutRow.className = "ui-toggle-row";
 
     const layoutField = document.createElement("label");
     layoutField.className = "ui-inline-select";
 
     const layoutLabel = document.createElement("span");
-    layoutLabel.textContent = "Layout";
+    layoutLabel.textContent = "Panes";
 
     const layoutSelect = document.createElement("select");
     layoutSelect.id = "ui-scripture-layout-select";
@@ -126,9 +144,9 @@ window.ScriptoriaModules.createSettingsUi = (deps) => {
       deps.setScriptureLayoutMode(layoutSelect.value);
     });
     layoutField.append(layoutLabel, layoutSelect);
-    toggleRow.append(layoutField);
-    toggleSection.append(toggleRow);
-    container.append(toggleSection);
+    layoutRow.append(layoutField);
+    layoutSection.append(layoutRow);
+    container.append(layoutSection);
 
     const themeSection = document.createElement("div");
     themeSection.className = "ui-settings-section";
@@ -142,10 +160,12 @@ window.ScriptoriaModules.createSettingsUi = (deps) => {
     themeGrid.className = "theme-grid";
 
     deps.colorThemes.forEach((theme) => {
+      const isActive = theme.id === deps.getCurrentColorThemeId();
       const card = document.createElement("button");
       card.type = "button";
-      card.className = `theme-card${theme.id === deps.getCurrentColorThemeId() ? " is-active" : ""}`;
+      card.className = `theme-card${isActive ? " is-active" : ""}`;
       card.dataset.themeId = theme.id;
+      card.setAttribute("aria-pressed", String(isActive));
 
       const swatch = document.createElement("div");
       swatch.className = "theme-swatch";
@@ -164,6 +184,7 @@ window.ScriptoriaModules.createSettingsUi = (deps) => {
       meta.className = "theme-card-meta";
       const modeLabel = theme.supports === "both" ? "Light & dark" : theme.supports === "dark" ? "Dark only" : "Light only";
       meta.textContent = modeLabel;
+      card.setAttribute("aria-label", `${theme.name}, ${modeLabel}`);
 
       const check = document.createElement("span");
       check.className = "theme-card-check";
@@ -174,6 +195,11 @@ window.ScriptoriaModules.createSettingsUi = (deps) => {
       card.addEventListener("click", () => {
         void deps.writeStoredValue(deps.colorThemeStorageKey, theme.id);
         deps.applyColorTheme(theme.id);
+        themeGrid.querySelectorAll(".theme-card").forEach((el) => {
+          const active = el.dataset.themeId === theme.id;
+          el.classList.toggle("is-active", active);
+          el.setAttribute("aria-pressed", String(active));
+        });
         deps.markLocalSettingsUpdated();
         deps.scheduleAutoCloudSync();
       });
@@ -187,16 +213,21 @@ window.ScriptoriaModules.createSettingsUi = (deps) => {
   const renderSettings = () => {
     deps.settingsTabNav.innerHTML = "";
     deps.settingsTabs.forEach((tab) => {
+      const isActive = tab.id === deps.getActiveSettingsTabId();
       const button = document.createElement("button");
       button.type = "button";
-      button.className = `settings-tab-button${tab.id === deps.getActiveSettingsTabId() ? " is-active" : ""}`;
+      button.className = `settings-tab-button${isActive ? " is-active" : ""}`;
       button.dataset.settingsTab = tab.id;
+      button.setAttribute("aria-selected", String(isActive));
       button.textContent = tab.label;
       deps.settingsTabNav.append(button);
     });
 
     deps.settingsPanels.forEach((panel) => {
-      panel.classList.toggle("is-active", panel.dataset.settingsPanel === deps.getActiveSettingsTabId());
+      const isActive = panel.dataset.settingsPanel === deps.getActiveSettingsTabId();
+      panel.classList.toggle("is-active", isActive);
+      panel.toggleAttribute("hidden", !isActive);
+      panel.setAttribute("aria-hidden", String(!isActive));
     });
 
     const uiContent = document.querySelector("#ui-settings-content");

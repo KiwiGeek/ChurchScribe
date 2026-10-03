@@ -767,8 +767,19 @@ const updateCompactReferenceChip = () => {
   const reference = `${book}${chapterNumber ? ` ${chapterNumber}` : ""}`.trim();
   const chipLabel = `${translationLabel}${reference ? ` · ${reference}` : ""}`.trim();
 
-  compactReferenceChip.textContent = chipLabel || "Reference";
-  compactReferenceChip.title = chipLabel || "Reference";
+  const label = chipLabel || "Reference";
+  let labelNode = compactReferenceChip.querySelector(".compact-reference-chip-label");
+
+  if (!labelNode) {
+    compactReferenceChip.replaceChildren();
+    labelNode = document.createElement("span");
+    labelNode.className = "compact-reference-chip-label";
+    compactReferenceChip.append(labelNode);
+  }
+
+  labelNode.textContent = label;
+  compactReferenceChip.title = label;
+  compactReferenceChip.setAttribute("aria-label", label);
 };
 
 const closeCompactFormatPanel = () => {

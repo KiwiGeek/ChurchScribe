@@ -121,6 +121,22 @@ window.ScriptoriaModules.createPaneLayout = (deps) => {
 
     if (notePanel) {
       notePanel.setAttribute("aria-hidden", String(scriptureOnly));
+
+      // Don't leave keyboard focus inside a display:none notes pane.
+      if (scriptureOnly) {
+        const active = documentObject.activeElement;
+        if (active && notePanel.contains(active)) {
+          const scripturePanel = paneGrid.querySelector(".scripture-panel");
+          const focusTarget = scripturePanel?.querySelector(
+            "select, button:not([hidden]), [href], input:not([type='hidden']), textarea, [tabindex]:not([tabindex='-1'])"
+          );
+          if (focusTarget && typeof focusTarget.focus === "function") {
+            focusTarget.focus({ preventScroll: true });
+          } else if (typeof active.blur === "function") {
+            active.blur();
+          }
+        }
+      }
     }
 
     if (paneDivider) {
