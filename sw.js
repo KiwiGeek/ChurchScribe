@@ -19,6 +19,11 @@
 //     the commit SHA in window.APP_COMMIT.  The SW imports version.js and uses
 //     that SHA as the cache name so each deploy gets a fresh cache and old
 //     ones are cleaned up on activate.
+//   • The same deploy also appends a "// Build <sha> …" stamp to this file.
+//     Browsers only detect a service-worker update when sw.js changes
+//     byte-for-byte; changing version.js alone is not enough, so without the
+//     stamp Check for update can report "up to date" while the shell stays on
+//     the previous deploy's cache-first assets.
 //   • In local dev (APP_COMMIT === "dev"), we use a Date.now() suffix captured
 //     at SW parse time so each SW reinstall gets a guaranteed-fresh cache.
 //     The browser reinstalls the SW whenever sw.js changes byte-for-byte, so
