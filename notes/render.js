@@ -137,21 +137,6 @@ window.ScriptoriaModules.createNotesRender = (deps) => {
       noteMetaFields.append(typeField);
     }
 
-    const createdField = document.createElement("label");
-    createdField.className = "field";
-
-    const createdLabel = document.createElement("span");
-    createdLabel.textContent = "Created";
-
-    const createdInput = document.createElement("input");
-    createdInput.type = "date";
-    createdInput.name = "created-date";
-    createdInput.dataset.createdDate = "true";
-    createdInput.value = deps.toDateInputValue(activeNote.createdAt);
-
-    createdField.append(createdLabel, createdInput);
-    noteMetaFields.append(createdField);
-
     type.fields.forEach((field) => {
       const label = document.createElement("label");
       label.className = "field";
@@ -169,6 +154,43 @@ window.ScriptoriaModules.createNotesRender = (deps) => {
       label.append(title, input);
       noteMetaFields.append(label);
     });
+
+    const createdRow = document.createElement("div");
+    createdRow.className = "note-created-row";
+
+    const createdCopy = document.createElement("p");
+    createdCopy.className = "note-created-copy";
+
+    const createdLabel = document.createElement("span");
+    createdLabel.className = "note-created-label";
+    createdLabel.textContent = "Created";
+
+    const createdValue = document.createElement("span");
+    createdValue.className = "note-created-value";
+    createdValue.dataset.createdDisplay = "true";
+    createdValue.textContent = deps.formatNoteDate(activeNote.createdAt);
+
+    createdCopy.append(createdLabel, document.createTextNode(" "), createdValue);
+
+    const createdInput = document.createElement("input");
+    createdInput.type = "date";
+    createdInput.className = "note-created-input";
+    createdInput.name = "created-date";
+    createdInput.dataset.createdDate = "true";
+    createdInput.value = deps.toDateInputValue(activeNote.createdAt);
+    createdInput.hidden = true;
+    createdInput.setAttribute("aria-label", "Created date");
+
+    const createdEdit = document.createElement("button");
+    createdEdit.type = "button";
+    createdEdit.className = "ghost-button note-created-edit";
+    createdEdit.dataset.createdEdit = "true";
+    createdEdit.textContent = "Edit";
+    createdEdit.setAttribute("aria-label", "Edit created date");
+    createdEdit.title = "Edit created date";
+
+    createdRow.append(createdCopy, createdInput, createdEdit);
+    noteMetaFields.append(createdRow);
   };
 
   const renderActiveNoteSummary = () => {
