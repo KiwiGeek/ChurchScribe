@@ -948,6 +948,12 @@ h1 {
   border-radius: var(--radius-md);
   background: var(--surface);
   box-shadow: var(--shadow);
+  touch-action: none;
+}
+
+.stream-dictation-panel.is-dragging {
+  opacity: 0.96;
+  user-select: none;
 }
 
 .stream-dictation-toolbar {
@@ -955,12 +961,35 @@ h1 {
   flex-wrap: wrap;
   gap: 6px;
   align-items: center;
+  cursor: grab;
+}
+
+.stream-dictation-panel.is-dragging .stream-dictation-toolbar,
+.stream-dictation-panel.is-dragging .stream-dictation-status {
+  cursor: grabbing;
+}
+
+.stream-dictation-drag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.25rem;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: grab;
+  user-select: none;
 }
 
 .stream-dictation-toolbar .ghost-button {
   min-height: 2rem;
   padding: 0.25rem 0.7rem;
   font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.stream-dictation-write[aria-pressed="false"] {
+  background: var(--surface-accent);
 }
 
 .stream-dictation-close {
@@ -991,6 +1020,7 @@ h1 {
   color: var(--muted);
   font-size: 0.78rem;
   line-height: 1.35;
+  cursor: grab;
 }
 
 #stream-dictation-dialog .field input {

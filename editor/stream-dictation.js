@@ -19,6 +19,7 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
   const MIN_SPEECH_FRAMES = 20;
   const HLS_SCRIPT = "https://cdn.jsdelivr.net/npm/hls.js@1.5.18/dist/hls.min.js";
   const LAST_URL_KEY = "service-notes-stream-dictation-url";
+  const PANEL_POS_KEY = "service-notes-stream-panel-pos";
 
   let hlsLoader = null;
 
@@ -133,6 +134,47 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
     }
   };
 
+  const readPanelPos = () => {
+    try {
+      const raw = windowObject.localStorage?.getItem(PANEL_POS_KEY);
+
+      if (!raw) {
+        return null;
+      }
+
+      const parsed = JSON.parse(raw);
+      const left = Number(parsed?.left);
+      const top = Number(parsed?.top);
+
+      if (!Number.isFinite(left) || !Number.isFinite(top)) {
+        return null;
+      }
+
+      return { left, top };
+    } catch {
+      return null;
+    }
+  };
+
+  const writePanelPos = (left, top) => {
+    try {
+      windowObject.localStorage?.setItem(PANEL_POS_KEY, JSON.stringify({ left, top }));
+    } catch {
+      // Optional convenience only.
+    }
+  };
+
+  const clampPanelPos = (left, top, width, height) => {
+    const margin = 8;
+    const maxLeft = Math.max(margin, windowObject.innerWidth - width - margin);
+    const maxTop = Math.max(margin, windowObject.innerHeight - height - margin);
+
+    return {
+      left: Math.min(maxLeft, Math.max(margin, left)),
+      top: Math.min(maxTop, Math.max(margin, top))
+    };
+  };
+
   const loadHlsConstructor = () => {
     if (windowObject.Hls) {
       return Promise.resolve(windowObject.Hls);
@@ -195,6 +237,7 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
     let panel = null;
     let video = null;
     let playButton = null;
+    let writeButton = null;
     let hearButton = null;
     let seekInput = null;
     let statusLine = null;
@@ -206,7 +249,8 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
     let hearGain = null;
     let ended = false;
     let flushing = false;
-    let capturePaused = false;
+    // Independent of video play/pause: stream can keep playing while writing stops.
+    let writingPaused = false;
     let hearEnabled = false;
     const pieces = [];
     let buffered = 0;
@@ -264,6 +308,7 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
       panel = null;
       video = null;
       playButton = null;
+      writeButton = null;
       hearButton = null;
       seekInput = null;
       statusLine = null;
@@ -283,9 +328,20 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
     let outcome = "";
     let modelStatus = "";
 
+    const clearCaptureBuffer = () => {
+      pieces.length = 0;
+      buffered = 0;
+      latestRms = 0;
+      heldRms = 0;
+    };
+
     const levelLabel = () => {
-      if (capturePaused || video?.paused) {
-        return "paused";
+      if (video?.paused) {
+        return "stream paused";
+      }
+
+      if (writingPaused) {
+        return "writing paused";
       }
 
       if (audioContext && audioContext.state !== "running") {
@@ -315,8 +371,12 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
       const signal = levelLabel();
       let audio;
 
-      if (signal === "paused") {
-        audio = "Stream paused · transcription waiting";
+      if (signal === "writing paused") {
+        audio = "Writing paused · stream still playing";
+      } else if (signal === "stream paused") {
+        audio = writingPaused
+          ? "Stream paused · writing paused"
+          : "Stream paused · transcription waiting";
       } else if (!receivedFrames) {
         audio = "Waiting for audio from the stream";
       } else if (phase === "transcribe") {
@@ -330,7 +390,12 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
 
       const parts = [];
 
-      if (outcome && phase !== "transcribe" && signal !== "paused") {
+      if (
+        outcome
+        && phase !== "transcribe"
+        && signal !== "writing paused"
+        && signal !== "stream paused"
+      ) {
         parts.push(outcome);
       }
 
@@ -360,7 +425,20 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
 
       const paused = video.paused || video.ended;
       playButton.textContent = paused ? "Play" : "Pause";
+      playButton.title = paused ? "Play the stream" : "Pause the stream";
       playButton.setAttribute("aria-label", paused ? "Play stream" : "Pause stream");
+    };
+
+    const syncWriteButton = () => {
+      if (!writeButton) {
+        return;
+      }
+
+      writeButton.setAttribute("aria-pressed", writingPaused ? "false" : "true");
+      writeButton.textContent = writingPaused ? "Resume writing" : "Pause writing";
+      writeButton.title = writingPaused
+        ? "Start writing from the stream again (playback keeps going either way)"
+        : "Stop writing into the note while the stream keeps playing";
     };
 
     const syncHearButton = () => {
@@ -456,7 +534,7 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
     };
 
     const pushSamples = (samples) => {
-      if (!samples.length || ended || flushing || capturePaused) {
+      if (!samples.length || ended || flushing || writingPaused || video?.paused) {
         return;
       }
 
@@ -474,10 +552,22 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
       const toolbar = documentObject.createElement("div");
       toolbar.className = "stream-dictation-toolbar";
 
+      const dragHandle = documentObject.createElement("span");
+      dragHandle.className = "stream-dictation-drag";
+      dragHandle.title = "Drag to move";
+      dragHandle.setAttribute("aria-hidden", "true");
+      dragHandle.textContent = "⠿";
+
       playButton = documentObject.createElement("button");
       playButton.type = "button";
       playButton.className = "ghost-button stream-dictation-play";
       playButton.textContent = "Pause";
+
+      writeButton = documentObject.createElement("button");
+      writeButton.type = "button";
+      writeButton.className = "ghost-button stream-dictation-write";
+      writeButton.textContent = "Pause writing";
+      writeButton.setAttribute("aria-pressed", "true");
 
       hearButton = documentObject.createElement("button");
       hearButton.type = "button";
@@ -492,7 +582,7 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
       closeButton.title = "Stop listening";
       closeButton.textContent = "Stop";
 
-      toolbar.append(playButton, hearButton, closeButton);
+      toolbar.append(dragHandle, playButton, writeButton, hearButton, closeButton);
 
       video = documentObject.createElement("video");
       video.className = "stream-dictation-video";
@@ -525,6 +615,89 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
       panel.append(toolbar, video, seekInput, statusLine);
       documentObject.body.append(panel);
 
+      const applyPanelPos = (left, top) => {
+        const box = panel.getBoundingClientRect();
+        const next = clampPanelPos(left, top, box.width, box.height);
+        panel.style.left = `${next.left}px`;
+        panel.style.top = `${next.top}px`;
+        panel.style.right = "auto";
+        panel.style.bottom = "auto";
+        return next;
+      };
+
+      const savedPos = readPanelPos();
+
+      if (savedPos) {
+        applyPanelPos(savedPos.left, savedPos.top);
+      }
+
+      let dragState = null;
+
+      const onDragMove = (event) => {
+        if (!dragState || !panel) {
+          return;
+        }
+
+        applyPanelPos(
+          event.clientX - dragState.offsetX,
+          event.clientY - dragState.offsetY
+        );
+      };
+
+      const onDragEnd = (event) => {
+        if (!dragState || !panel) {
+          return;
+        }
+
+        const next = applyPanelPos(
+          event.clientX - dragState.offsetX,
+          event.clientY - dragState.offsetY
+        );
+        writePanelPos(next.left, next.top);
+        panel.classList.remove("is-dragging");
+        dragState = null;
+        documentObject.removeEventListener("pointermove", onDragMove);
+        documentObject.removeEventListener("pointerup", onDragEnd);
+        documentObject.removeEventListener("pointercancel", onDragEnd);
+      };
+
+      const beginDrag = (event) => {
+        if (event.button !== 0 || !panel) {
+          return;
+        }
+
+        if (event.target.closest("button, input, video, a")) {
+          return;
+        }
+
+        const box = panel.getBoundingClientRect();
+        dragState = {
+          offsetX: event.clientX - box.left,
+          offsetY: event.clientY - box.top
+        };
+        panel.classList.add("is-dragging");
+        // Switch from right/bottom anchoring to left/top before the first move.
+        applyPanelPos(box.left, box.top);
+        documentObject.addEventListener("pointermove", onDragMove);
+        documentObject.addEventListener("pointerup", onDragEnd);
+        documentObject.addEventListener("pointercancel", onDragEnd);
+        event.preventDefault();
+      };
+
+      dragHandle.addEventListener("pointerdown", beginDrag);
+      toolbar.addEventListener("pointerdown", beginDrag);
+      statusLine.addEventListener("pointerdown", beginDrag);
+
+      windowObject.addEventListener("resize", () => {
+        if (!panel) {
+          return;
+        }
+
+        const box = panel.getBoundingClientRect();
+        const next = applyPanelPos(box.left, box.top);
+        writePanelPos(next.left, next.top);
+      });
+
       playButton.addEventListener("click", () => {
         if (!video) {
           return;
@@ -540,6 +713,21 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
         }
       });
 
+      writeButton.addEventListener("click", () => {
+        writingPaused = !writingPaused;
+
+        if (writingPaused) {
+          // Drop the open slice so a later resume does not write skipped audio.
+          clearCaptureBuffer();
+          outcome = "Writing paused";
+        } else {
+          outcome = "Writing resumed";
+        }
+
+        syncWriteButton();
+        reportCapture(true);
+      });
+
       hearButton.addEventListener("click", () => {
         hearEnabled = !hearEnabled;
         syncHearButton();
@@ -552,20 +740,17 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
       });
 
       video.addEventListener("play", () => {
-        capturePaused = false;
         syncPlayButton();
         void audioContext?.resume?.();
         reportCapture(true);
       });
 
       video.addEventListener("pause", () => {
-        capturePaused = true;
         syncPlayButton();
         reportCapture(true);
       });
 
       video.addEventListener("ended", () => {
-        capturePaused = true;
         syncPlayButton();
         reportCapture(true);
 
@@ -577,10 +762,7 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
       video.addEventListener("seeking", () => {
         // Drop the half-filled slice so a scrub does not glue old audio onto
         // the new position.
-        pieces.length = 0;
-        buffered = 0;
-        latestRms = 0;
-        heldRms = 0;
+        clearCaptureBuffer();
       });
 
       const syncSeek = () => {
@@ -624,6 +806,7 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
       });
 
       syncPlayButton();
+      syncWriteButton();
     };
 
     const attachMedia = async () => {
@@ -739,7 +922,7 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
       syncHearButton();
 
       processor.onaudioprocess = (event) => {
-        if (ended || flushing || capturePaused || video?.paused) {
+        if (ended || flushing || writingPaused || video?.paused) {
           return;
         }
 
@@ -769,7 +952,6 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
       try {
         await video.play();
       } catch {
-        capturePaused = true;
         syncPlayButton();
         onStatus("Press Play on the stream preview to start listening.");
         reportCapture(true);
@@ -780,8 +962,8 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
       // stays at 0 unless the user turns speakers on.
       video.muted = false;
       video.defaultMuted = false;
-      capturePaused = false;
       syncPlayButton();
+      syncWriteButton();
       reportCapture(true);
     })();
 
@@ -796,7 +978,7 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
       },
       finish: async () => {
         flushing = true;
-        capturePaused = true;
+        writingPaused = true;
         video?.pause?.();
         await ready.catch(() => {});
         await requestPump();
