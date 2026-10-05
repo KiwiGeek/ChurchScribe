@@ -206,6 +206,10 @@
                     <option value="turbo" title="Best quality that still runs in the browser. Largest download. A GPU helps a lot.">Large Turbo</option>
                   </select>
                 </label>
+                <label class="dictate-check" title="When on, spoken scripture references open in the scripture pane. Turn off to keep control of the passage yourself while listening.">
+                  <input type="checkbox" id="dictate-follow-scripture" checked>
+                  <span>Follow scriptures</span>
+                </label>
               </div>
             </div>
           </div>
@@ -599,7 +603,7 @@
             <span>Enable transcriptions</span>
             <span class="ui-toggle-state">Off</span>
           </button>
-          <p class="settings-copy">Listen with the microphone, a browser tab, or a stream URL, and write what is spoken into the open note.</p>
+          <p class="settings-copy">Listen with the microphone, a browser tab, or a stream URL, and write what is spoken into the open note. In the Listen menu, Follow scriptures can be turned off so spoken references do not jump the scripture pane.</p>
           <button class="ui-toggle-button" id="beta-concise-notes-toggle" type="button" aria-pressed="false">
             <span>Write concise notes</span>
             <span class="ui-toggle-state">Off</span>
