@@ -1039,19 +1039,10 @@ h1 {
 
 .stream-dictation-toolbar {
   display: flex;
-  flex-wrap: nowrap;
-  gap: 6px;
-  align-items: flex-start;
-  cursor: grab;
-}
-
-.stream-dictation-actions {
-  display: flex;
-  flex: 1 1 auto;
   flex-wrap: wrap;
   gap: 6px;
   align-items: center;
-  min-width: 0;
+  cursor: grab;
 }
 
 .stream-dictation-panel.is-dragging .stream-dictation-toolbar,
@@ -1066,7 +1057,6 @@ h1 {
   align-items: center;
   justify-content: center;
   min-width: 1.25rem;
-  margin-top: 0.35rem;
   color: var(--muted);
   font-size: 1rem;
   line-height: 1;
@@ -1080,10 +1070,19 @@ h1 {
   padding: 0.25rem 0.7rem;
   font-size: 0.82rem;
   cursor: pointer;
+  flex: 0 0 auto;
 }
 
 .stream-dictation-write[aria-pressed="false"] {
   background: var(--surface-accent);
+}
+
+.stream-dictation-toolbar-spacer {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 0;
+  margin: 0;
+  pointer-events: none;
 }
 
 .stream-dictation-close {

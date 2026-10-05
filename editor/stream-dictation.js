@@ -631,9 +631,6 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
       dragHandle.setAttribute("aria-hidden", "true");
       dragHandle.textContent = "⠿";
 
-      const actions = documentObject.createElement("div");
-      actions.className = "stream-dictation-actions";
-
       playButton = documentObject.createElement("button");
       playButton.type = "button";
       playButton.className = "ghost-button stream-dictation-play";
@@ -651,6 +648,12 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
       hearButton.textContent = "Hear";
       hearButton.setAttribute("aria-pressed", "false");
 
+      // Grows on the current row so Stop sits to the right when it fits, but
+      // stays behind when Stop wraps alone (so Stop is not orphaned right).
+      const toolbarSpacer = documentObject.createElement("span");
+      toolbarSpacer.className = "stream-dictation-toolbar-spacer";
+      toolbarSpacer.setAttribute("aria-hidden", "true");
+
       const closeButton = documentObject.createElement("button");
       closeButton.type = "button";
       closeButton.className = "ghost-button stream-dictation-close";
@@ -658,8 +661,14 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
       closeButton.title = "Stop listening";
       closeButton.textContent = "Stop";
 
-      actions.append(playButton, writeButton, hearButton);
-      toolbar.append(dragHandle, actions, closeButton);
+      toolbar.append(
+        dragHandle,
+        playButton,
+        writeButton,
+        hearButton,
+        toolbarSpacer,
+        closeButton
+      );
 
       video = documentObject.createElement("video");
       video.className = "stream-dictation-video";
