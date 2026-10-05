@@ -21,6 +21,14 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
   const HLS_SCRIPT = "https://cdn.jsdelivr.net/npm/hls.js@1.5.18/dist/hls.min.js";
   const LAST_URL_KEY = "service-notes-stream-dictation-url";
   const PANEL_POS_KEY = "service-notes-stream-panel-pos";
+  const PANEL_SIZE_KEY = "service-notes-stream-panel-size";
+  // Slow VOD hosts often need well beyond hls.js's 10s defaults.
+  const STREAM_OPEN_TIMEOUT_MS = 90000;
+  const HLS_MANIFEST_TIMEOUT_MS = 60000;
+  const HLS_LEVEL_TIMEOUT_MS = 60000;
+  const HLS_FRAG_TIMEOUT_MS = 45000;
+  const PANEL_MIN_WIDTH = 240;
+  const PANEL_MIN_HEIGHT = 180;
 
   let hlsLoader = null;
 
@@ -175,6 +183,66 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
       top: Math.min(maxTop, Math.max(margin, top))
     };
   };
+
+  const readPanelSize = () => {
+    try {
+      const raw = windowObject.localStorage?.getItem(PANEL_SIZE_KEY);
+
+      if (!raw) {
+        return null;
+      }
+
+      const parsed = JSON.parse(raw);
+      const width = Number(parsed?.width);
+      const height = Number(parsed?.height);
+
+      if (!Number.isFinite(width) || !Number.isFinite(height)) {
+        return null;
+      }
+
+      return { width, height };
+    } catch {
+      return null;
+    }
+  };
+
+  const writePanelSize = (width, height) => {
+    try {
+      windowObject.localStorage?.setItem(PANEL_SIZE_KEY, JSON.stringify({ width, height }));
+    } catch {
+      // Optional convenience only.
+    }
+  };
+
+  const clampPanelSize = (width, height) => {
+    const margin = 16;
+    const maxWidth = Math.max(PANEL_MIN_WIDTH, windowObject.innerWidth - margin);
+    const maxHeight = Math.max(PANEL_MIN_HEIGHT, windowObject.innerHeight - margin);
+
+    return {
+      width: Math.min(maxWidth, Math.max(PANEL_MIN_WIDTH, width)),
+      height: Math.min(maxHeight, Math.max(PANEL_MIN_HEIGHT, height))
+    };
+  };
+
+  const withTimeout = (promise, ms, message) => new Promise((resolve, reject) => {
+    const timer = windowObject.setTimeout(() => {
+      const error = new Error(message);
+      error.name = "StreamTimeout";
+      reject(error);
+    }, ms);
+
+    promise.then(
+      (value) => {
+        windowObject.clearTimeout(timer);
+        resolve(value);
+      },
+      (error) => {
+        windowObject.clearTimeout(timer);
+        reject(error);
+      }
+    );
+  });
 
   const loadHlsConstructor = () => {
     if (windowObject.Hls) {
@@ -580,6 +648,12 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
       hearButton.textContent = "Hear";
       hearButton.setAttribute("aria-pressed", "false");
 
+      // Grows on the current row so Stop sits to the right when it fits, but
+      // stays behind when Stop wraps alone (so Stop is not orphaned right).
+      const toolbarSpacer = documentObject.createElement("span");
+      toolbarSpacer.className = "stream-dictation-toolbar-spacer";
+      toolbarSpacer.setAttribute("aria-hidden", "true");
+
       const closeButton = documentObject.createElement("button");
       closeButton.type = "button";
       closeButton.className = "ghost-button stream-dictation-close";
@@ -587,7 +661,14 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
       closeButton.title = "Stop listening";
       closeButton.textContent = "Stop";
 
-      toolbar.append(dragHandle, playButton, writeButton, hearButton, closeButton);
+      toolbar.append(
+        dragHandle,
+        playButton,
+        writeButton,
+        hearButton,
+        toolbarSpacer,
+        closeButton
+      );
 
       video = documentObject.createElement("video");
       video.className = "stream-dictation-video";
@@ -617,8 +698,20 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
       statusLine.className = "stream-dictation-status";
       statusLine.textContent = "Opening stream…";
 
-      panel.append(toolbar, video, seekInput, statusLine);
+      const resizeHandle = documentObject.createElement("span");
+      resizeHandle.className = "stream-dictation-resize";
+      resizeHandle.title = "Drag to resize";
+      resizeHandle.setAttribute("aria-hidden", "true");
+
+      panel.append(toolbar, video, seekInput, statusLine, resizeHandle);
       documentObject.body.append(panel);
+
+      const applyPanelSize = (width, height) => {
+        const next = clampPanelSize(width, height);
+        panel.style.width = `${next.width}px`;
+        panel.style.height = `${next.height}px`;
+        return next;
+      };
 
       const applyPanelPos = (left, top) => {
         const box = panel.getBoundingClientRect();
@@ -629,6 +722,12 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
         panel.style.bottom = "auto";
         return next;
       };
+
+      const savedSize = readPanelSize();
+
+      if (savedSize) {
+        applyPanelSize(savedSize.width, savedSize.height);
+      }
 
       const savedPos = readPanelPos();
 
@@ -671,7 +770,7 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
           return;
         }
 
-        if (event.target.closest("button, input, video, a")) {
+        if (event.target.closest("button, input, video, a, .stream-dictation-resize")) {
           return;
         }
 
@@ -692,12 +791,71 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
       toolbar.addEventListener("pointerdown", beginDrag);
       statusLine.addEventListener("pointerdown", beginDrag);
 
+      let resizeState = null;
+
+      const onResizeMove = (event) => {
+        if (!resizeState || !panel) {
+          return;
+        }
+
+        const next = applyPanelSize(
+          event.clientX - resizeState.startX + resizeState.startWidth,
+          event.clientY - resizeState.startY + resizeState.startHeight
+        );
+        applyPanelPos(resizeState.left, resizeState.top);
+        resizeState.latest = next;
+      };
+
+      const onResizeEnd = () => {
+        if (!resizeState || !panel) {
+          return;
+        }
+
+        if (resizeState.latest) {
+          writePanelSize(resizeState.latest.width, resizeState.latest.height);
+        }
+
+        const box = panel.getBoundingClientRect();
+        writePanelPos(box.left, box.top);
+        panel.classList.remove("is-resizing");
+        resizeState = null;
+        documentObject.removeEventListener("pointermove", onResizeMove);
+        documentObject.removeEventListener("pointerup", onResizeEnd);
+        documentObject.removeEventListener("pointercancel", onResizeEnd);
+      };
+
+      resizeHandle.addEventListener("pointerdown", (event) => {
+        if (event.button !== 0 || !panel) {
+          return;
+        }
+
+        const box = panel.getBoundingClientRect();
+        applyPanelPos(box.left, box.top);
+        resizeState = {
+          startX: event.clientX,
+          startY: event.clientY,
+          startWidth: box.width,
+          startHeight: box.height,
+          left: box.left,
+          top: box.top,
+          latest: { width: box.width, height: box.height }
+        };
+        panel.classList.add("is-resizing");
+        documentObject.addEventListener("pointermove", onResizeMove);
+        documentObject.addEventListener("pointerup", onResizeEnd);
+        documentObject.addEventListener("pointercancel", onResizeEnd);
+        event.preventDefault();
+        event.stopPropagation();
+      });
+
       windowObject.addEventListener("resize", () => {
         if (!panel) {
           return;
         }
 
         const box = panel.getBoundingClientRect();
+        const size = applyPanelSize(box.width, box.height);
+        writePanelSize(size.width, size.height);
         const next = applyPanelPos(box.left, box.top);
         writePanelPos(next.left, next.top);
       });
@@ -822,6 +980,7 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
 
     const attachMedia = async () => {
       const nativeHls = Boolean(video.canPlayType("application/vnd.apple.mpegurl"));
+      const slowMessage = "The stream took too long to open. Check the URL, or try again if the host is slow.";
 
       if (looksLikeHls(mediaUrl) && !nativeHls) {
         const Hls = await loadHlsConstructor();
@@ -834,10 +993,16 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
 
         hls = new Hls({
           enableWorker: true,
-          lowLatencyMode: false
+          lowLatencyMode: false,
+          manifestLoadingTimeOut: HLS_MANIFEST_TIMEOUT_MS,
+          manifestLoadingMaxRetry: 4,
+          levelLoadingTimeOut: HLS_LEVEL_TIMEOUT_MS,
+          levelLoadingMaxRetry: 4,
+          fragLoadingTimeOut: HLS_FRAG_TIMEOUT_MS,
+          fragLoadingMaxRetry: 6
         });
 
-        await new Promise((resolve, reject) => {
+        await withTimeout(new Promise((resolve, reject) => {
           const onManifest = () => {
             cleanup();
             resolve();
@@ -863,12 +1028,12 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
           hls.on(Hls.Events.ERROR, onError);
           hls.loadSource(mediaUrl);
           hls.attachMedia(video);
-        });
+        }), STREAM_OPEN_TIMEOUT_MS, slowMessage);
 
         return;
       }
 
-      await new Promise((resolve, reject) => {
+      await withTimeout(new Promise((resolve, reject) => {
         const onReady = () => {
           cleanup();
           resolve();
@@ -888,7 +1053,7 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
         video.addEventListener("error", onError, { once: true });
         video.src = mediaUrl;
         video.load();
-      });
+      }), STREAM_OPEN_TIMEOUT_MS, slowMessage);
     };
 
     const ready = (async () => {
@@ -901,7 +1066,26 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
       writeLastUrl(mediaUrl);
       onStatus("Opening stream…");
       buildPanel();
-      await attachMedia();
+
+      const openStarted = windowObject.performance.now();
+      const openNudge = windowObject.setInterval(() => {
+        if (!isActive() || ended) {
+          return;
+        }
+
+        const waited = Math.round((windowObject.performance.now() - openStarted) / 1000);
+        onStatus(`Opening stream… still waiting (${waited}s)`);
+
+        if (statusLine) {
+          statusLine.textContent = `Opening stream… still waiting (${waited}s)`;
+        }
+      }, 5000);
+
+      try {
+        await attachMedia();
+      } finally {
+        windowObject.clearInterval(openNudge);
+      }
 
       if (!isActive()) {
         teardown();

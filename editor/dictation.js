@@ -474,7 +474,11 @@ window.ScriptoriaModules.createDictation = (deps) => {
       return error.message;
     }
 
-    if (error?.name === "NotSupportedError" || error?.name === "StreamLoadError") {
+    if (
+      error?.name === "NotSupportedError"
+      || error?.name === "StreamLoadError"
+      || error?.name === "StreamTimeout"
+    ) {
       return error.message;
     }
 

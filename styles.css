@@ -1019,6 +1019,10 @@ h1 {
   flex-direction: column;
   gap: 8px;
   width: min(20rem, calc(100vw - 24px));
+  min-width: 15rem;
+  min-height: 11.25rem;
+  max-width: calc(100vw - 16px);
+  max-height: calc(100vh - 16px);
   padding: 10px;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
@@ -1027,7 +1031,8 @@ h1 {
   touch-action: none;
 }
 
-.stream-dictation-panel.is-dragging {
+.stream-dictation-panel.is-dragging,
+.stream-dictation-panel.is-resizing {
   opacity: 0.96;
   user-select: none;
 }
@@ -1041,7 +1046,9 @@ h1 {
 }
 
 .stream-dictation-panel.is-dragging .stream-dictation-toolbar,
-.stream-dictation-panel.is-dragging .stream-dictation-status {
+.stream-dictation-panel.is-dragging .stream-dictation-status,
+.stream-dictation-panel.is-resizing .stream-dictation-toolbar,
+.stream-dictation-panel.is-resizing .stream-dictation-status {
   cursor: grabbing;
 }
 
@@ -1055,6 +1062,7 @@ h1 {
   line-height: 1;
   cursor: grab;
   user-select: none;
+  flex: 0 0 auto;
 }
 
 .stream-dictation-toolbar .ghost-button {
@@ -1062,20 +1070,32 @@ h1 {
   padding: 0.25rem 0.7rem;
   font-size: 0.82rem;
   cursor: pointer;
+  flex: 0 0 auto;
 }
 
 .stream-dictation-write[aria-pressed="false"] {
   background: var(--surface-accent);
 }
 
+.stream-dictation-toolbar-spacer {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 0;
+  margin: 0;
+  pointer-events: none;
+}
+
 .stream-dictation-close {
-  margin-left: auto;
+  flex: 0 0 auto;
+  margin-left: 0;
 }
 
 .stream-dictation-video {
   display: block;
   width: 100%;
-  max-height: 12rem;
+  flex: 1 1 auto;
+  min-height: 6rem;
+  max-height: none;
   border-radius: calc(var(--radius-md) - 2px);
   background: #111;
   object-fit: contain;
@@ -1085,6 +1105,7 @@ h1 {
   width: 100%;
   margin: 0;
   accent-color: var(--accent);
+  flex: 0 0 auto;
 }
 
 .stream-dictation-seek[hidden] {
@@ -1097,6 +1118,22 @@ h1 {
   font-size: 0.78rem;
   line-height: 1.35;
   cursor: grab;
+  flex: 0 0 auto;
+}
+
+.stream-dictation-resize {
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  width: 14px;
+  height: 14px;
+  cursor: nwse-resize;
+  background:
+    linear-gradient(135deg, transparent 50%, var(--border) 50%) no-repeat,
+    linear-gradient(135deg, transparent 65%, var(--muted) 65%) no-repeat;
+  background-position: right bottom, right bottom;
+  background-size: 12px 12px, 8px 8px;
+  border-radius: 2px;
 }
 
 #stream-dictation-dialog .field input {
