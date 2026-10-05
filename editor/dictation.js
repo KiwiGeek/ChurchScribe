@@ -13,6 +13,7 @@ window.ScriptoriaModules.createDictation = (deps) => {
     dictateSource,
     dictateModel,
     dictateModelField,
+    dictateFollowScripture,
     streamDictationDialog,
     streamDictationForm,
     streamDictationUrl,
@@ -272,7 +273,25 @@ window.ScriptoriaModules.createDictation = (deps) => {
     revealDictationLine(noteEditor.querySelector(INTERIM_SELECTOR));
   };
 
+  const FOLLOW_SCRIPTURE_KEY = "service-notes-dictate-follow-scripture";
+
+  const followScriptureEnabled = () => {
+    if (dictateFollowScripture) {
+      return Boolean(dictateFollowScripture.checked);
+    }
+
+    try {
+      return windowObject.localStorage?.getItem(FOLLOW_SCRIPTURE_KEY) !== "0";
+    } catch {
+      return true;
+    }
+  };
+
   const jumpToLastReference = (paragraph) => {
+    if (!followScriptureEnabled()) {
+      return;
+    }
+
     const links = paragraph.querySelectorAll("a[data-scripture-ref]");
     const last = links[links.length - 1];
 
@@ -1000,6 +1019,26 @@ window.ScriptoriaModules.createDictation = (deps) => {
 
       dictateModel.addEventListener("change", () => {
         windowObject.localStorage?.setItem("service-notes-whisper-model", dictateModel.value);
+      });
+    }
+
+    if (dictateFollowScripture) {
+      try {
+        dictateFollowScripture.checked =
+          windowObject.localStorage?.getItem(FOLLOW_SCRIPTURE_KEY) !== "0";
+      } catch {
+        dictateFollowScripture.checked = true;
+      }
+
+      dictateFollowScripture.addEventListener("change", () => {
+        try {
+          windowObject.localStorage?.setItem(
+            FOLLOW_SCRIPTURE_KEY,
+            dictateFollowScripture.checked ? "1" : "0"
+          );
+        } catch {
+          // Preference still applies for this page.
+        }
       });
     }
 

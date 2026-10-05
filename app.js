@@ -22,6 +22,7 @@ const dictateButton = document.querySelector("#dictate-button");
 const dictateSource = document.querySelector("#dictate-source");
 const dictateModel = document.querySelector("#dictate-model");
 const dictateModelField = document.querySelector("#dictate-model-field");
+const dictateFollowScripture = document.querySelector("#dictate-follow-scripture");
 const streamDictationDialog = document.querySelector("#stream-dictation-dialog");
 const streamDictationForm = document.querySelector("#stream-dictation-form");
 const streamDictationUrl = document.querySelector("#stream-dictation-url");
