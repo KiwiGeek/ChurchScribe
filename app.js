@@ -1126,6 +1126,7 @@ const ensureDictation = () => {
         dictateSource,
         dictateModel,
         dictateModelField,
+        dictateFollowScripture,
         streamDictationDialog,
         streamDictationForm,
         streamDictationUrl,
@@ -1730,6 +1731,48 @@ const applyCreatedDate = (input) => {
   refreshSaveStatus();
 };
 
+const setCreatedDateEditing = (row, editing) => {
+  if (!row) {
+    return;
+  }
+
+  const input = row.querySelector("[data-created-date]");
+  const editButton = row.querySelector("[data-created-edit]");
+  const display = row.querySelector("[data-created-display]");
+
+  if (!input || !editButton) {
+    return;
+  }
+
+  row.classList.toggle("is-editing", editing);
+  input.hidden = !editing;
+  editButton.textContent = editing ? "Done" : "Edit";
+  editButton.setAttribute("aria-label", editing ? "Done editing created date" : "Edit created date");
+  editButton.title = editing ? "Done" : "Edit created date";
+
+  if (display) {
+    display.hidden = editing;
+  }
+
+  if (editing) {
+    input.focus();
+    input.showPicker?.();
+  }
+};
+
+noteMetaFields.addEventListener("click", (event) => {
+  const editButton = event.target.closest("[data-created-edit]");
+
+  if (!editButton) {
+    return;
+  }
+
+  event.preventDefault();
+  const row = editButton.closest(".note-created-row");
+  const editing = !row?.classList.contains("is-editing");
+  setCreatedDateEditing(row, editing);
+});
+
 noteMetaFields.addEventListener("input", (event) => {
   const createdInput = event.target.closest("[data-created-date]");
 
@@ -1743,6 +1786,14 @@ noteMetaFields.addEventListener("change", (event) => {
 
   if (createdInput) {
     applyCreatedDate(createdInput);
+    const row = createdInput.closest(".note-created-row");
+    const display = row?.querySelector("[data-created-display]");
+    const activeNote = getActiveNote();
+
+    if (display && activeNote) {
+      display.textContent = formatNoteDate(activeNote.createdAt);
+    }
+
     return;
   }
 

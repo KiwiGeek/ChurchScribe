@@ -733,6 +733,62 @@ h1 {
   grid-column: 1 / -1;
 }
 
+.note-created-row {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-top: 4px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+
+.note-created-copy {
+  margin: 0;
+  flex: 1 1 auto;
+  min-width: 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.note-created-label {
+  font-weight: 600;
+}
+
+.note-created-value {
+  color: var(--muted);
+}
+
+.note-created-input {
+  width: auto;
+  min-width: 10.5rem;
+  height: 2.1rem;
+  padding: 0 0.55rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.85rem;
+}
+
+.note-created-input[hidden] {
+  display: none;
+}
+
+.note-created-edit {
+  margin-left: auto;
+  min-height: 2rem;
+  padding: 0.2rem 0.7rem;
+  font-size: 0.82rem;
+}
+
+.note-created-row.is-editing .note-created-value {
+  display: none;
+}
+
 .toolbar {
   display: flex;
   flex-wrap: wrap;
