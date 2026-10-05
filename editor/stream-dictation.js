@@ -684,7 +684,6 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
         event.preventDefault();
       };
 
-      dragHandle.addEventListener("pointerdown", beginDrag);
       toolbar.addEventListener("pointerdown", beginDrag);
       statusLine.addEventListener("pointerdown", beginDrag);
 
