@@ -758,10 +758,11 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
         modelStatus = "";
         reportCapture(true);
       }).catch((error) => {
-        modelStatus = "";
+        const message = error?.message || "The speech model couldn't load.";
+        modelStatus = message;
 
         if (isActive() && !ended) {
-          onStatus(error?.message || "The speech model couldn't load.");
+          reportCapture(true);
         }
       });
 
