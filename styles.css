@@ -934,6 +934,107 @@ h1 {
   display: none;
 }
 
+.stream-dictation-panel {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 240;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: min(20rem, calc(100vw - 24px));
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  touch-action: none;
+}
+
+.stream-dictation-panel.is-dragging {
+  opacity: 0.96;
+  user-select: none;
+}
+
+.stream-dictation-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  cursor: grab;
+}
+
+.stream-dictation-panel.is-dragging .stream-dictation-toolbar,
+.stream-dictation-panel.is-dragging .stream-dictation-status {
+  cursor: grabbing;
+}
+
+.stream-dictation-drag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.25rem;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: grab;
+  user-select: none;
+}
+
+.stream-dictation-toolbar .ghost-button {
+  min-height: 2rem;
+  padding: 0.25rem 0.7rem;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.stream-dictation-write[aria-pressed="false"] {
+  background: var(--surface-accent);
+}
+
+.stream-dictation-close {
+  margin-left: auto;
+}
+
+.stream-dictation-video {
+  display: block;
+  width: 100%;
+  max-height: 12rem;
+  border-radius: calc(var(--radius-md) - 2px);
+  background: #111;
+  object-fit: contain;
+}
+
+.stream-dictation-seek {
+  width: 100%;
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+.stream-dictation-seek[hidden] {
+  display: none;
+}
+
+.stream-dictation-status {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.35;
+  cursor: grab;
+}
+
+#stream-dictation-dialog .field input {
+  width: 100%;
+}
+
+@media (max-width: 720px) {
+  .stream-dictation-panel {
+    right: 12px;
+    bottom: 12px;
+    width: min(18rem, calc(100vw - 24px));
+  }
+}
+
 .sermon-title-choices {
   display: flex;
   flex-direction: column;

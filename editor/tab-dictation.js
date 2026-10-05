@@ -112,6 +112,36 @@ window.ScriptoriaModules.createTabDictation = (deps) => {
     return output;
   };
 
+  const canUseWebGpu = async () => {
+    if (!navigatorObject.gpu?.requestAdapter) {
+      return false;
+    }
+
+    try {
+      const adapter = await navigatorObject.gpu.requestAdapter();
+      return Boolean(adapter);
+    } catch {
+      // Chrome may expose navigator.gpu before WebGPU is actually usable
+      // (for example when the unsafe-webgpu flag is still off).
+      return false;
+    }
+  };
+
+  const friendlyLoadError = (error) => {
+    const raw = String(error?.message || error || "");
+    const lower = raw.toLowerCase();
+
+    if (lower.includes("unsafe") || lower.includes("webgpu") || lower.includes("gpu")) {
+      return "The speech model couldn't use the GPU in this browser. Try again, or pick a smaller model.";
+    }
+
+    if (raw && raw.length < 160 && !lower.includes("chrome://")) {
+      return raw;
+    }
+
+    return "The speech model couldn't load.";
+  };
+
   const loadTranscriber = (modelKey, onStatus) => {
     const key = WHISPER_MODELS[modelKey] ? modelKey : "small";
 
@@ -146,10 +176,23 @@ window.ScriptoriaModules.createTabDictation = (deps) => {
         modelIsCached = false;
       }
 
+      let downloadComplete = false;
+
       const progressCallback = (info) => {
         if (info?.status === "progress" && Number.isFinite(info.progress)) {
+          const percent = Math.round(info.progress);
           const verb = modelIsCached ? "Loading saved speech model" : "Downloading speech model";
-          onStatus(`${verb} ${Math.round(info.progress)}%`);
+          onStatus(`${verb} ${percent}%`);
+
+          if (percent >= 100) {
+            downloadComplete = true;
+          }
+
+          return;
+        }
+
+        if (downloadComplete || info?.status === "done" || info?.status === "ready") {
+          onStatus("Starting the speech model…");
         }
       };
       const dtypeFor = (device) => {
@@ -167,21 +210,23 @@ window.ScriptoriaModules.createTabDictation = (deps) => {
           decoder_model_merged: "q8"
         };
       };
-      // The encoder is the part that hears the audio. Full precision when it
-      // fits. Large Turbo's full encoder is too big for the browser, so that
-      // one uses half precision on the GPU.
-      const attempts = navigatorObject.gpu
-        ? [
-          { device: "webgpu", dtype: dtypeFor("webgpu") },
-          { device: "wasm", dtype: dtypeFor("wasm") }
-        ]
-        : [
-          { device: "wasm", dtype: dtypeFor("wasm") }
-        ];
+      // Only try WebGPU when an adapter is really available. navigator.gpu can
+      // exist while Chrome still needs a flag, and that failure used to flash
+      // an "enable unsafe" message before the CPU fallback continued.
+      const attempts = [];
+
+      if (await canUseWebGpu()) {
+        attempts.push({ device: "webgpu", dtype: dtypeFor("webgpu") });
+      }
+
+      attempts.push({ device: "wasm", dtype: dtypeFor("wasm") });
       let lastError = null;
 
-      for (const options of attempts) {
+      for (let index = 0; index < attempts.length; index += 1) {
+        const options = attempts[index];
+
         try {
+          downloadComplete = false;
           onStatus(options.device === "webgpu"
             ? "Loading the speech model on the GPU…"
             : "Loading the speech model…");
@@ -198,10 +243,14 @@ window.ScriptoriaModules.createTabDictation = (deps) => {
           return transcriber;
         } catch (error) {
           lastError = error;
+
+          if (index < attempts.length - 1) {
+            onStatus("GPU unavailable here — loading the CPU model…");
+          }
         }
       }
 
-      throw lastError || new Error("The speech model couldn't load.");
+      throw new Error(friendlyLoadError(lastError));
     })().catch((error) => {
       if (generation === loadTranscriber.generation) {
         transcriberPromise = null;
@@ -573,10 +622,10 @@ window.ScriptoriaModules.createTabDictation = (deps) => {
         modelStatus = "";
         reportCapture(true);
       }).catch((error) => {
-        modelStatus = "";
+        modelStatus = error?.message || "The speech model couldn't load.";
 
         if (isActive() && !ended) {
-          onStatus(error?.message || "The speech model couldn't load.");
+          reportCapture(true);
         }
       });
       reportCapture(true);

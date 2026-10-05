@@ -22,6 +22,9 @@ const dictateButton = document.querySelector("#dictate-button");
 const dictateSource = document.querySelector("#dictate-source");
 const dictateModel = document.querySelector("#dictate-model");
 const dictateModelField = document.querySelector("#dictate-model-field");
+const streamDictationDialog = document.querySelector("#stream-dictation-dialog");
+const streamDictationForm = document.querySelector("#stream-dictation-form");
+const streamDictationUrl = document.querySelector("#stream-dictation-url");
 const dictateNotesButton = document.querySelector("#dictate-notes-button");
 const sermonTitleDialog = document.querySelector("#sermon-title-dialog");
 const sermonTitleHeading = document.querySelector("#sermon-title-heading");
@@ -1112,6 +1115,7 @@ const ensureDictation = () => {
   if (!dictationLoad) {
     dictationLoad = (async () => {
       await loadScript("editor/tab-dictation.js");
+      await loadScript("editor/stream-dictation.js");
       await loadScript("editor/dictation.js");
       dictationApi = window.ScriptoriaModules.createDictation({
         noteEditor,
@@ -1121,6 +1125,9 @@ const ensureDictation = () => {
         dictateSource,
         dictateModel,
         dictateModelField,
+        streamDictationDialog,
+        streamDictationForm,
+        streamDictationUrl,
         linkifyScriptureReferences,
         parseScriptureReference,
         jumpToResolvedScripture,
