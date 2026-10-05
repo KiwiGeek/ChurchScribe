@@ -2,7 +2,8 @@ window.ScriptoriaModules = window.ScriptoriaModules || {};
 
 // Stream-URL dictation. An HLS (.m3u8) or direct media URL plays in a small
 // preview. Audio is tapped through Web Audio for Whisper and is silent unless
-// the user turns Hear on. Pausing the preview pauses transcription.
+// the user turns Hear on. Pause writing stops transcription while playback
+// continues; the preview can be dragged.
 window.ScriptoriaModules.createStreamDictation = (deps) => {
   const {
     windowObject,
@@ -452,6 +453,10 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
         ? "Mute stream speakers (transcription keeps going)"
         : "Play stream audio through the speakers";
       hearGain.gain.value = hearEnabled ? 1 : 0;
+
+      if (hearEnabled && audioContext?.state === "suspended") {
+        void audioContext.resume().catch(() => {});
+      }
     };
 
     const transcribeSlice = async (samples) => {
@@ -729,6 +734,13 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
 
       hearButton.addEventListener("click", () => {
         hearEnabled = !hearEnabled;
+
+        if (hearEnabled && video) {
+          // MediaElementSource still needs the element unmuted for samples.
+          video.muted = false;
+          video.defaultMuted = false;
+        }
+
         syncHearButton();
       });
 
@@ -910,30 +922,40 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
       }
 
       // Once MediaElementSource is created, element audio only flows through
-      // this graph. Hear gain stays at 0 unless the user turns speakers on.
+      // this graph. Analysis goes through the processor; speakers use a
+      // separate hear gain so ScriptProcessor silence does not mute Hear.
       source = audioContext.createMediaElementSource(video);
       processor = audioContext.createScriptProcessor(4096, 1, 1);
+      const pullGain = audioContext.createGain();
+      pullGain.gain.value = 0;
       hearGain = audioContext.createGain();
       hearGain.gain.value = 0;
       source.connect(processor);
-      processor.connect(hearGain);
+      processor.connect(pullGain);
+      pullGain.connect(audioContext.destination);
+      source.connect(hearGain);
       hearGain.connect(audioContext.destination);
       syncHearButton();
 
       processor.onaudioprocess = (event) => {
-        if (ended || flushing || writingPaused || video?.paused) {
+        if (ended || flushing || video?.paused) {
           return;
         }
 
         const channel = event.inputBuffer.getChannelData(0);
-        const copy = new Float32Array(channel.length);
-        copy.set(channel);
         const level = rms(channel);
         latestRms = latestRms === 0 ? level : (latestRms * 0.65) + (level * 0.35);
         heldRms = Math.max(latestRms, heldRms * 0.97);
         receivedFrames += 1;
-        pushSamples(resampleLinear(copy, audioContext.sampleRate, SAMPLE_RATE));
         reportCapture();
+
+        if (writingPaused) {
+          return;
+        }
+
+        const copy = new Float32Array(channel.length);
+        copy.set(channel);
+        pushSamples(resampleLinear(copy, audioContext.sampleRate, SAMPLE_RATE));
       };
 
       void loadTranscriber(modelKey, onModelStatus).then(() => {
