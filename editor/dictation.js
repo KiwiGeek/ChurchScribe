@@ -13,6 +13,9 @@ window.ScriptoriaModules.createDictation = (deps) => {
     dictateSource,
     dictateModel,
     dictateModelField,
+    streamDictationDialog,
+    streamDictationForm,
+    streamDictationUrl,
     linkifyScriptureReferences,
     parseScriptureReference,
     jumpToResolvedScripture,
@@ -25,6 +28,7 @@ window.ScriptoriaModules.createDictation = (deps) => {
   } = deps;
 
   const INTERIM_SELECTOR = "[data-dictation-interim]";
+  const WHISPER_SOURCES = new Set(["tab", "stream"]);
   let runId = 0;
   let listening = false;
   let starting = false;
@@ -32,6 +36,7 @@ window.ScriptoriaModules.createDictation = (deps) => {
   let activeSource = "microphone";
   let recognition = null;
   let tabSession = null;
+  let streamSession = null;
   let restartTimer = null;
   let wakeLock = null;
   let preferLocal = true;
@@ -49,13 +54,18 @@ window.ScriptoriaModules.createDictation = (deps) => {
 
   const setStatus = () => {};
 
+  const usesWhisper = (source = dictateSource?.value) => WHISPER_SOURCES.has(source);
+
   const renderButton = () => {
     const active = listening || starting || finishing;
+    const source = dictateSource?.value;
     const label = active
       ? "Stop dictation"
-      : dictateSource?.value === "tab"
+      : source === "tab"
         ? "Listen to tab audio"
-        : "Listen and write what is spoken";
+        : source === "stream"
+          ? "Listen to a stream URL"
+          : "Listen and write what is spoken";
 
     if (dictateButton) {
       dictateButton.classList.toggle("is-listening", active);
@@ -76,7 +86,7 @@ window.ScriptoriaModules.createDictation = (deps) => {
     }
 
     if (dictateModelField) {
-      dictateModelField.hidden = dictateSource?.value !== "tab";
+      dictateModelField.hidden = !usesWhisper(source);
     }
 
     if (dictateModel) {
@@ -375,6 +385,8 @@ window.ScriptoriaModules.createDictation = (deps) => {
     recognition = null;
     tabSession?.cancel();
     tabSession = null;
+    streamSession?.cancel();
+    streamSession = null;
     releaseWakeLock();
     commitInterimPhrase();
     const notify = onSessionEnd;
@@ -383,10 +395,12 @@ window.ScriptoriaModules.createDictation = (deps) => {
     notify?.({ keepRaw });
   };
 
-  const stop = ({ status = "", flushTab = false, keepRaw = false } = {}) => {
-    if (flushTab && tabSession && listening && !finishing) {
+  const stop = ({ status = "", flushCapture = false, keepRaw = false } = {}) => {
+    const captureSession = activeSource === "stream" ? streamSession : tabSession;
+
+    if (flushCapture && captureSession && listening && !finishing) {
       finishing = true;
-      const session = tabSession;
+      const session = captureSession;
       const capturedRun = runId;
       renderButton();
       showTabActivity("Finishing…");
@@ -414,6 +428,12 @@ window.ScriptoriaModules.createDictation = (deps) => {
     navigatorObject
   });
 
+  const streamDictation = windowObject.ScriptoriaModules.createStreamDictation({
+    windowObject,
+    documentObject,
+    loadTranscriber: tabDictation.loadTranscriber
+  });
+
   const describeTabError = (error) => {
     if (error?.name === "NoAudioTrack") {
       return error.message;
@@ -429,6 +449,78 @@ window.ScriptoriaModules.createDictation = (deps) => {
 
     return "Tab audio couldn't start.";
   };
+
+  const describeStreamError = (error) => {
+    if (error?.name === "InvalidUrl") {
+      return error.message;
+    }
+
+    if (error?.name === "NotSupportedError" || error?.name === "StreamLoadError") {
+      return error.message;
+    }
+
+    return "Stream listening couldn't start.";
+  };
+
+  const askForStreamUrl = () => new Promise((resolve) => {
+    if (!streamDictationDialog || !streamDictationForm || !streamDictationUrl) {
+      const fallback = windowObject.prompt(
+        "Stream URL (.m3u8 or media)",
+        streamDictation.readLastUrl()
+      );
+      resolve(streamDictation.normalizedUrl(fallback || ""));
+      return;
+    }
+
+    let settled = false;
+    const finish = (value) => {
+      if (settled) {
+        return;
+      }
+
+      settled = true;
+      streamDictationDialog.removeEventListener("close", onDialogClose);
+      streamDictationForm.removeEventListener("submit", onSubmit);
+      resolve(value);
+    };
+
+    const onDialogClose = () => {
+      finish("");
+    };
+
+    const onSubmit = (event) => {
+      event.preventDefault();
+      const submitter = event.submitter;
+      const action = submitter?.value || "start";
+
+      if (action === "cancel") {
+        streamDictationDialog.close();
+        finish("");
+        return;
+      }
+
+      const url = streamDictation.normalizedUrl(streamDictationUrl.value);
+
+      if (!url) {
+        streamDictationUrl.setCustomValidity("Enter a valid http(s) URL.");
+        streamDictationUrl.reportValidity();
+        streamDictationUrl.setCustomValidity("");
+        return;
+      }
+
+      streamDictationDialog.close();
+      finish(url);
+    };
+
+    streamDictationUrl.value = streamDictation.readLastUrl();
+    streamDictationForm.addEventListener("submit", onSubmit);
+    streamDictationDialog.addEventListener("close", onDialogClose);
+    streamDictationDialog.showModal();
+    windowObject.setTimeout(() => {
+      streamDictationUrl.focus();
+      streamDictationUrl.select();
+    }, 0);
+  });
 
   const startTab = async () => {
     if (listening || starting || finishing) {
@@ -470,7 +562,7 @@ window.ScriptoriaModules.createDictation = (deps) => {
       },
       onEnded: () => {
         if (capturedRun === runId && listening && !finishing) {
-          stop({ flushTab: true });
+          stop({ flushCapture: true });
         }
       }
     });
@@ -487,6 +579,86 @@ window.ScriptoriaModules.createDictation = (deps) => {
       const message = describeTabError(error);
       setStatus(message);
       showToast(message, { durationMs: 5200 });
+      return;
+    }
+
+    if (capturedRun !== runId) {
+      return;
+    }
+
+    starting = false;
+    listening = true;
+    pendingInterim = "";
+    renderButton();
+    void acquireWakeLock();
+    onSessionStart?.();
+  };
+
+  const startStream = async () => {
+    if (listening || starting || finishing) {
+      return;
+    }
+
+    if (!windowObject.isSecureContext) {
+      const message = "Dictation needs a secure connection.";
+      setStatus(message);
+      showToast(message, { durationMs: 4200 });
+      return;
+    }
+
+    const url = await askForStreamUrl();
+
+    if (!url) {
+      return;
+    }
+
+    const capturedRun = runId;
+    activeSource = "stream";
+    starting = true;
+    renderButton();
+    showTabActivity("Opening stream…");
+
+    const session = streamDictation.start({
+      url,
+      isActive: () => capturedRun === runId && (starting || listening || finishing),
+      modelKey: dictateModel?.value || "small",
+      onPhrase: (text) => {
+        if (capturedRun !== runId) {
+          return;
+        }
+
+        commitPhrase(text);
+      },
+      onStatus: (message) => {
+        if (capturedRun !== runId) {
+          return;
+        }
+
+        setStatus(message);
+
+        if (starting || listening) {
+          showTabActivity(message);
+        }
+      },
+      onEnded: () => {
+        if (capturedRun === runId && (listening || starting) && !finishing) {
+          stop({ flushCapture: true });
+        }
+      }
+    });
+    streamSession = session;
+
+    try {
+      await session.ready;
+    } catch (error) {
+      if (capturedRun !== runId) {
+        return;
+      }
+
+      endSession();
+      const message = describeStreamError(error);
+      setStatus(message);
+      showToast(message, { durationMs: 5600 });
       return;
     }
 
@@ -650,6 +822,11 @@ window.ScriptoriaModules.createDictation = (deps) => {
       return;
     }
 
+    if (dictateSource?.value === "stream") {
+      await startStream();
+      return;
+    }
+
     activeSource = "microphone";
 
     if (!recognitionCtor()) {
@@ -723,7 +900,7 @@ window.ScriptoriaModules.createDictation = (deps) => {
       return;
     }
 
-    if (activeSource === "tab") {
+    if (activeSource === "tab" || activeSource === "stream") {
       if (activityMessage) {
         setStatus(activityMessage);
         showTabActivity(activityMessage);
@@ -781,7 +958,7 @@ window.ScriptoriaModules.createDictation = (deps) => {
       }
 
       if (listening || starting) {
-        stop({ flushTab: activeSource === "tab" && listening });
+        stop({ flushCapture: usesWhisper(activeSource) && listening });
         setMenuOpen(false);
         return;
       }
@@ -801,7 +978,7 @@ window.ScriptoriaModules.createDictation = (deps) => {
       }
 
       if (listening || starting) {
-        stop({ flushTab: activeSource === "tab" && listening });
+        stop({ flushCapture: usesWhisper(activeSource) && listening });
         setMenuOpen(false);
         return;
       }
@@ -849,6 +1026,11 @@ window.ScriptoriaModules.createDictation = (deps) => {
 
       if (activeSource === "tab") {
         void tabSession?.resume();
+        return;
+      }
+
+      if (activeSource === "stream") {
+        void streamSession?.resume();
         return;
       }
 

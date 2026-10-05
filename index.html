@@ -193,6 +193,7 @@
                   <select class="dictate-source" id="dictate-source" aria-label="Dictation audio source">
                     <option value="microphone">Microphone</option>
                     <option value="tab" title="Record a browser tab's audio on this device. Works while the speakers are muted. Muting that tab itself stops the audio.">Tab audio</option>
+                    <option value="stream" title="Play an HLS (.m3u8) or media URL in a small preview. Transcription can stay silent; pause the preview to pause listening.">Stream URL</option>
                   </select>
                 </label>
                 <label class="dictate-field" id="dictate-model-field" hidden>
@@ -377,6 +378,28 @@
         </div>
         <div class="dialog-actions">
           <button class="ghost-button primary-button" id="table-insert-confirm-button" type="button">Insert table</button>
+        </div>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="management-dialog compact-dialog" id="stream-dictation-dialog">
+    <form class="dialog-shell compact-shell" method="dialog" id="stream-dictation-form">
+      <div class="dialog-header">
+        <div>
+          <p class="panel-kicker">Listen</p>
+          <h2>Stream URL</h2>
+        </div>
+        <button class="ghost-button" type="submit" value="cancel">Close</button>
+      </div>
+      <div class="dialog-body">
+        <p class="settings-copy">Paste an HLS (.m3u8) or media URL. A small preview appears so you can pause and resume. Speakers stay off unless you choose Hear.</p>
+        <label class="field">
+          <span>URL</span>
+          <input id="stream-dictation-url" type="url" inputmode="url" autocomplete="off" spellcheck="false" autocapitalize="off" placeholder="https://example.com/stream.m3u8" required>
+        </label>
+        <div class="dialog-actions">
+          <button class="ghost-button primary-button" id="stream-dictation-start" type="submit" value="start">Listen</button>
         </div>
       </div>
     </form>
@@ -576,7 +599,7 @@
             <span>Enable transcriptions</span>
             <span class="ui-toggle-state">Off</span>
           </button>
-          <p class="settings-copy">Listen with the microphone, or with a browser tab, and write what is spoken into the open note.</p>
+          <p class="settings-copy">Listen with the microphone, a browser tab, or a stream URL, and write what is spoken into the open note.</p>
           <button class="ui-toggle-button" id="beta-concise-notes-toggle" type="button" aria-pressed="false">
             <span>Write concise notes</span>
             <span class="ui-toggle-state">Off</span>
