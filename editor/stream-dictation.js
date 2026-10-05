@@ -500,6 +500,8 @@ window.ScriptoriaModules.createStreamDictation = (deps) => {
       video.setAttribute("playsinline", "");
       video.controls = false;
       video.preload = "auto";
+      // Required before load so Web Audio can read cross-origin stream audio.
+      video.crossOrigin = "anonymous";
       // Start muted so autoplay is allowed after the URL dialog. Once the
       // MediaElementSource graph is attached, speakers follow Hear gain only.
       video.muted = true;
